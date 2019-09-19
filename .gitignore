@@ -1,18 +1,8 @@
 
-*.cmake
-*.txt
-*.bin
-*.out
-*.c
-*.check_cache
-*.log
-*.cxx
-*.marks
-*.make
-*.o
-*.includecache
-*.internal
-CMakeFiles/Makefile2
+CMakeFiles/
+.vscode/
 Makefile
+CMakeCache.txt
+cmake_install.cmake
 RedSquare
-CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp
+RedSquare-Server

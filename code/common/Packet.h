@@ -1,0 +1,106 @@
+#ifndef REDSQUARE_COMMON_PACKET_H
+#define REDSQUARE_COMMON_PACKET_H
+
+#include <cstdint>
+#include <gf/Id.h>
+#include <gf/Vector.h>
+#include <boost/ptr_container/ptr_map.hpp>
+
+#include "World.h"
+
+namespace redsquare
+{
+    enum class MoveDirection : uint16_t
+    {
+        Right,
+        Left,
+        Up,
+        Down,
+        Nothing,
+    };
+
+    enum class PacketType : uint16_t
+    {
+        NewPlayer,
+        RequestMove,
+        ReceiveMove,
+        PlayerDisconnected,
+    };
+
+    struct NewPlayer
+    {
+        gf::Id playerID;
+        int world[redsquare::World::MapSize][redsquare::World::MapSize];
+    };
+
+    struct RequestMove
+    {
+        gf::Id playerID;
+        MoveDirection dir;
+    };
+
+    struct ReceiveMove
+    {
+        gf::Id playerID;
+        int posX;
+        int posY;
+    };
+
+    struct PlayerDisconnected
+    {
+        gf::Id playerID;
+    };
+
+    struct Packet
+    {
+        PacketType type;
+
+        union
+        {
+            NewPlayer newPlayer;
+            RequestMove requestMove;
+            ReceiveMove receiveMove;
+            PlayerDisconnected playerDisconnected;
+        };
+    };
+
+    template<class Archive>
+    Archive& operator|(Archive& ar, Packet& packet)
+    {
+        ar | packet.type;
+
+        switch (packet.type) {
+            case PacketType::NewPlayer:
+            {
+                ar | packet.newPlayer.playerID;
+                ar | packet.newPlayer.world;
+                break;
+            }
+
+            case PacketType::RequestMove:
+            {
+                ar | packet.requestMove.playerID;
+                ar | packet.requestMove.dir;
+                break;
+            }
+
+            case PacketType::ReceiveMove:
+            {
+                ar | packet.receiveMove.playerID;
+                ar | packet.receiveMove.posX;
+                ar | packet.receiveMove.posY;
+                break;
+            }
+                
+            case PacketType::PlayerDisconnected:
+            {
+                ar | packet.playerDisconnected.playerID;
+                break;
+            }
+        }
+
+        return ar;
+    }
+}
+
+#endif
