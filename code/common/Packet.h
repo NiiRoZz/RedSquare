@@ -4,7 +4,6 @@
 #include <cstdint>
 #include <gf/Id.h>
 #include <gf/Vector.h>
-#include <boost/ptr_container/ptr_map.hpp>
 
 #include "World.h"
 
