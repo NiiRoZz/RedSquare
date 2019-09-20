@@ -38,7 +38,7 @@ namespace redsquare
         packet.receiveMove.posY = newSquare->getPos()[1];
         sendPacketToAllPlayers( packet );
 
-        //HACKY, find best way, fake a move of all players inside the game to make them apparear
+        //HACKY, find best way, fake a move of all players inside the game to make them apparear in the new client
         boost::ptr_map<gf::Id, Square>::iterator it = m_Squares.begin();
         // Iterate over the map using Iterator till end.
         while (it != m_Squares.end())
