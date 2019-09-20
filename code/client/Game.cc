@@ -17,6 +17,8 @@ namespace redsquare
 
     void Game::render(gf::RenderTarget& target, const gf::RenderStates& states)
     {
+        m_World.render( target, states );
+        
         boost::ptr_map<gf::Id, Player>::iterator it = m_Players.begin();
  
         // Iterate over the map using Iterator till end.
@@ -26,8 +28,6 @@ namespace redsquare
 
             ++it;
         }
-
-        m_World.render( target, states );
     }
 
     void Game::update(gf::Time time)

@@ -12,6 +12,7 @@
 #include "../common/World.h"
 #include "Game.h"
 #include "../common/Packet.h"
+#include <gf/TileLayer.h>
 
 int main( int argc, char **argv )
 {
@@ -53,25 +54,25 @@ int main( int argc, char **argv )
     gf::Action leftAction("Left");
     leftAction.addScancodeKeyControl(gf::Scancode::A);
     leftAction.addScancodeKeyControl(gf::Scancode::Left);
-    leftAction.setContinuous();
+    //leftAction.setContinuous();
     actions.addAction(leftAction);
 
     gf::Action rightAction("Right");
     rightAction.addScancodeKeyControl(gf::Scancode::D);
     rightAction.addScancodeKeyControl(gf::Scancode::Right);
-    rightAction.setContinuous();
+    //rightAction.setContinuous();
     actions.addAction(rightAction);
 
     gf::Action upAction("Up");
     upAction.addScancodeKeyControl(gf::Scancode::W);
     upAction.addScancodeKeyControl(gf::Scancode::Up);
-    upAction.setContinuous();
+    //upAction.setContinuous();
     actions.addAction(upAction);
 
     gf::Action downAction("Down");
     downAction.addScancodeKeyControl(gf::Scancode::S);
     downAction.addScancodeKeyControl(gf::Scancode::Down);
-    downAction.setContinuous();
+    //downAction.setContinuous();
     actions.addAction(downAction);
 
     // entities

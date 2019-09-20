@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "../common/World.h"
+#include <iostream>
 
 namespace redsquare
 {
@@ -52,7 +53,13 @@ namespace redsquare
                 if ( newPosX >= 0 && newPosX < World::MapSize )
                 {
                     m_Pos[0] = newPosX;
+                    return true;
                 }
+                else
+                {
+                    return false;
+                }
+
                 break;
             }
 
@@ -62,7 +69,13 @@ namespace redsquare
                 if ( newPosX >= 0 && newPosX < World::MapSize )
                 {
                     m_Pos[0] = newPosX;
+                    return true;
                 }
+                else
+                {
+                    return false;
+                }
+
                 break;
             }
 
@@ -72,7 +85,13 @@ namespace redsquare
                 if ( newPosY >= 0 && newPosY < World::MapSize )
                 {
                     m_Pos[1] = newPosY;
+                    return true;
                 }
+                else
+                {
+                    return false;
+                }
+
                 break;
             }
 
@@ -82,10 +101,18 @@ namespace redsquare
                 if ( newPosY >= 0 && newPosY < World::MapSize )
                 {
                     m_Pos[1] = newPosY;
+                    return true;
                 }
+                else
+                {
+                    return false;
+                }
+                
                 break;
             }
         }
+
+        return false;
     }
 
     bool Player::playerDisconnected()
