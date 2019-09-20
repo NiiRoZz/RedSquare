@@ -13,8 +13,14 @@
 #include "Game.h"
 #include "../common/Packet.h"
 
-int main()
+int main( int argc, char **argv )
 {
+    if ( argc != 3 )
+    {
+        std::cerr << "Usage : ./RedSquare ip port" << std::endl;
+        return 1;
+    }
+
     static constexpr gf::Vector2f ViewSize(128.0f, 128.0f); // dummy values
     static constexpr gf::Vector2f ViewCenter(0.0f, 0.0f); // dummy values
 
@@ -71,7 +77,7 @@ int main()
     // entities
     gf::EntityContainer mainEntities;
     // add entities to mainEntities
-    redsquare::Game game( "127.0.0.1", "6025" );
+    redsquare::Game game( argv[1], argv[2] );
     game.startThreadCom();
     mainEntities.addEntity( game );
 
@@ -81,7 +87,7 @@ int main()
 
 
     // game loop
-    renderer.clear(gf::Color::White);
+    renderer.clear(gf::Color::Black);
     gf::Clock clock;
 	while (window.isOpen())
     {

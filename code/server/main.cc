@@ -5,11 +5,22 @@
 #include <gf/Clock.h>
 #include <iostream>
 
-int main()
+int main( int argc, char **argv )
 {
-    redsquare::Game game(6025);
+	if ( argc != 2 )
+	{
+		std::cerr << "Usage : ./RedSquare-Server port" << std::endl;
+		return 1;
+	}
 
-	std::cout << "Hello World!" << std::endl;
+	int port = atoi( argv[1] );
+	if ( port < 1024 )
+	{
+		std::cerr << "Port should be > 1024" << std::endl;
+		return 2;
+	}
+
+    redsquare::Game game(port);
 
 	gf::Clock clock;
 	for(;;)
