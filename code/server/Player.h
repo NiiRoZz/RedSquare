@@ -1,5 +1,5 @@
-#ifndef REDSQUARE_SERVER_SQUARE_H
-#define REDSQUARE_SERVER_SQUARE_H
+#ifndef REDSQUARE_SERVER_PLAYER_H
+#define REDSQUARE_SERVER_PLAYER_H
 
 #include "../common/Sockets.h"
 #include "../common/ThreadCom.h"
@@ -9,10 +9,10 @@
 
 namespace redsquare
 {
-    class Square
+    class Player
     {
     public:
-        Square(SocketTcp socket, gf::Queue<Packet> &queue, gf::Id playerID);
+        Player(SocketTcp socket, gf::Queue<Packet> &queue, gf::Id playerID);
 
         gf::Id getID() const;
 

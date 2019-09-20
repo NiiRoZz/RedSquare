@@ -1,5 +1,5 @@
 #include "../common/World.h"
-#include "Square.h"
+#include "Player.h"
 #include "Game.h"
 
 #include <gf/Clock.h>

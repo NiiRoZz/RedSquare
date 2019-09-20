@@ -7,7 +7,7 @@
 #include <gf/Time.h>
 #include <gf/Id.h>
 
-#include "Square.h"
+#include "Player.h"
 #include "../common/ThreadCom.h"
 #include "../common/Packet.h"
 #include <boost/ptr_container/ptr_map.hpp>
@@ -19,7 +19,7 @@ namespace redsquare
         public:
         Game( char* hostname, char *port );
 
-        Square* getPlayer( gf::Id playerID );
+        Player* getPlayer( gf::Id playerID );
 
         void startThreadCom();
 
@@ -35,9 +35,9 @@ namespace redsquare
         World m_World;
 
         //ID of current player
-        gf::Id m_SquareID;
+        gf::Id m_PlayerID;
         //All near players
-        boost::ptr_map<gf::Id, Square> m_Squares;
+        boost::ptr_map<gf::Id, Player> m_Players;
 
         //Thread for communication
         ThreadCom m_ThreadCom;

@@ -1,16 +1,16 @@
-#include "Square.h"
+#include "Player.h"
 #include "../common/World.h"
 
 namespace redsquare
 {
-    Square::Square(SocketTcp socket, gf::Queue<Packet> &queue, gf::Id playerID)
+    Player::Player(SocketTcp socket, gf::Queue<Packet> &queue, gf::Id playerID)
     : m_Com(std::move(socket), queue)
     , m_PlayerID(playerID)
     , m_Pos(0,0)
     {
     }
 
-    void Square::sendPacket(Packet &packet)
+    void Player::sendPacket(Packet &packet)
     {
         bool ok = m_Com.sendPacket(packet);
         assert(ok);
@@ -18,13 +18,13 @@ namespace redsquare
         throw std::runtime_error("!ok");
     }
 
-    void Square::receivePacket(Packet &packet)
+    void Player::receivePacket(Packet &packet)
     {
         bool ok = m_Com.receivePacket(packet);
         assert(ok);
     }
 
-    void Square::initialize()
+    void Player::initialize()
     {
         std::thread([this]()
         {
@@ -32,17 +32,17 @@ namespace redsquare
         }).detach();
     }
 
-    void Square::setPos( gf::Vector2i pos )
+    void Player::setPos( gf::Vector2i pos )
     {
         m_Pos = pos;
     }
 
-    gf::Vector2i Square::getPos()
+    gf::Vector2i Player::getPos()
     {
         return m_Pos;
     }
 
-    bool Square::applyMove( MoveDirection dir )
+    bool Player::applyMove( MoveDirection dir )
     {
         switch ( dir )
         {
@@ -88,7 +88,7 @@ namespace redsquare
         }
     }
 
-    bool Square::playerDisconnected()
+    bool Player::playerDisconnected()
     {
         return !m_Com.socketWorking();
     }

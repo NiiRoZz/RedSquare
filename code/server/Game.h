@@ -3,7 +3,7 @@
 
 #include "../common/Sockets.h"
 #include "../common/Packet.h"
-#include "Square.h"
+#include "Player.h"
 
 #include <gf/Queue.h>
 #include <boost/ptr_container/ptr_map.hpp>
@@ -20,7 +20,7 @@ namespace redsquare
         void doUpdate(gf::Time time);
         void processPackets();
 
-        Square* getPlayer( gf::Id playerID );
+        Player* getPlayer( gf::Id playerID );
 
         void sendPacketToAllPlayers( Packet &packet );
         void sendPacketToVisiblePlayers( Packet &packet, gf::Vector2i pos );
@@ -35,7 +35,7 @@ namespace redsquare
 
         gf::Queue<Packet> m_ComQueue;
 
-        boost::ptr_map<gf::Id, Square> m_Squares;
+        boost::ptr_map<gf::Id, Player> m_Players;
     };
 }
 

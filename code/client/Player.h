@@ -1,16 +1,16 @@
-#ifndef REDSQUARE_CLIENT_SQUARE_H
-#define REDSQUARE_CLIENT_SQUARE_H
+#ifndef REDSQUARE_CLIENT_PLAYER_H
+#define REDSQUARE_CLIENT_PLAYER_H
 
 #include <gf/Entity.h>
 #include <gf/Texture.h>
 
 namespace redsquare
 {
-    class Square: public gf::Entity
+    class Player: public gf::Entity
     {
     public:
-        Square();
-        Square( gf::Vector2i pos );
+        Player();
+        Player( gf::Vector2i pos );
 
         void setPos( gf::Vector2i pos );
         void loadTexture();

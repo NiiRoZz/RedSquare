@@ -17,10 +17,10 @@ namespace redsquare
 
     void Game::render(gf::RenderTarget& target, const gf::RenderStates& states)
     {
-        boost::ptr_map<gf::Id, Square>::iterator it = m_Squares.begin();
+        boost::ptr_map<gf::Id, Player>::iterator it = m_Players.begin();
  
         // Iterate over the map using Iterator till end.
-        while (it != m_Squares.end())
+        while (it != m_Players.end())
         {
             it->second->render( target, states );
 
@@ -36,7 +36,7 @@ namespace redsquare
         processPackets();
 
         //We update only the player we are controlling
-        Square* player = getPlayer( m_SquareID );
+        Player* player = getPlayer( m_PlayerID );
 
         if ( player != NULL )
         {
@@ -47,7 +47,7 @@ namespace redsquare
             {
                 Packet packet;
                 packet.type = PacketType::RequestMove;
-                packet.requestMove.playerID = m_SquareID;
+                packet.requestMove.playerID = m_PlayerID;
                 packet.requestMove.dir = m_DirMoving;
 
                 m_ThreadCom.sendPacket( packet );
@@ -70,20 +70,20 @@ namespace redsquare
                 case PacketType::NewPlayer:
                 {
                     std::cout << "Game::processPackets 2" << std::endl;
-                    m_SquareID = packet.newPlayer.playerID;
-                    Square *myNewPlayer = (Square *) malloc( sizeof(Square) );
-                    new ((void*)myNewPlayer) Square();
+                    m_PlayerID = packet.newPlayer.playerID;
+                    Player *myNewPlayer = (Player *) malloc( sizeof(Player) );
+                    new ((void*)myNewPlayer) Player();
 
                     std::cout << "Game::processPackets 3" << std::endl;
 
-                    m_Squares.insert( m_SquareID, myNewPlayer );
+                    m_Players.insert( m_PlayerID, myNewPlayer );
                     std::cout << "Game::processPackets 4" << std::endl;
                     break;
                 }
                 
                 case PacketType::ReceiveMove:
                 {
-                    Square* player = getPlayer( packet.receiveMove.playerID );
+                    Player* player = getPlayer( packet.receiveMove.playerID );
                     if ( player != NULL )
                     {
                         player->setPos( gf::Vector2i( packet.receiveMove.posX, packet.receiveMove.posY ) );
@@ -91,21 +91,21 @@ namespace redsquare
                     else
                     {
                         gf::Id newPlayerID = packet.receiveMove.playerID;
-                        Square *newPlayer = (Square *) malloc( sizeof(Square) );
-                        new ((void*)newPlayer) Square();
+                        Player *newPlayer = (Player *) malloc( sizeof(Player) );
+                        new ((void*)newPlayer) Player();
                         newPlayer->setPos( gf::Vector2i( packet.receiveMove.posX, packet.receiveMove.posY ) );
 
-                        m_Squares.insert( newPlayerID, newPlayer );
+                        m_Players.insert( newPlayerID, newPlayer );
                     }
                     break;
                 }
 
                 case PacketType::PlayerDisconnected:
                 {
-                    Square* player = getPlayer( packet.playerDisconnected.playerID );
+                    Player* player = getPlayer( packet.playerDisconnected.playerID );
                     if ( player != NULL )
                     {
-                        m_Squares.erase( packet.playerDisconnected.playerID );
+                        m_Players.erase( packet.playerDisconnected.playerID );
                     }
                     break;
                 }
@@ -118,13 +118,13 @@ namespace redsquare
         m_DirMoving = dir;
     }
 
-    Square* Game::getPlayer( gf::Id playerID )
+    Player* Game::getPlayer( gf::Id playerID )
     {
-        auto square = m_Squares.find( playerID );
+        auto player = m_Players.find( playerID );
 
-        if ( square != m_Squares.end() )
+        if ( player != m_Players.end() )
         {
-            return square->second;
+            return player->second;
         }
 
         return NULL;

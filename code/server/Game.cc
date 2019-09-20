@@ -20,28 +20,28 @@ namespace redsquare
         gf::Id id = generateId();
 
         // Create a new player
-        Square *newSquare = (Square *) malloc( sizeof(Square) );
-        new ((void*)newSquare) Square(std::move(socket), m_ComQueue, id);
-        newSquare->initialize();
-        m_Squares.insert( id, newSquare );
+        Player *newPlayer = (Player *) malloc( sizeof(Player) );
+        new ((void*)newPlayer) Player(std::move(socket), m_ComQueue, id);
+        newPlayer->initialize();
+        m_Players.insert( id, newPlayer );
 
         // Send to the client his ID
         Packet packet;
         packet.type = PacketType::NewPlayer;
         packet.newPlayer.playerID = id;
-        newSquare->sendPacket(packet);
+        newPlayer->sendPacket(packet);
 
         //HACKY, too, sending fake move to all other players INCLUDE HIMSELF!!! Should be reworked
         packet.type = PacketType::ReceiveMove;
         packet.receiveMove.playerID = id;
-        packet.receiveMove.posX = newSquare->getPos()[0];
-        packet.receiveMove.posY = newSquare->getPos()[1];
+        packet.receiveMove.posX = newPlayer->getPos()[0];
+        packet.receiveMove.posY = newPlayer->getPos()[1];
         sendPacketToAllPlayers( packet );
 
         //HACKY, find best way, fake a move of all players inside the game to make them apparear in the new client
-        boost::ptr_map<gf::Id, Square>::iterator it = m_Squares.begin();
+        boost::ptr_map<gf::Id, Player>::iterator it = m_Players.begin();
         // Iterate over the map using Iterator till end.
-        while (it != m_Squares.end())
+        while (it != m_Players.end())
         {
             if ( it->first != id )
             {
@@ -49,7 +49,7 @@ namespace redsquare
                 packet.receiveMove.playerID = it->first;
                 packet.receiveMove.posX = it->second->getPos()[0];
                 packet.receiveMove.posY = it->second->getPos()[1];
-                newSquare->sendPacket( packet );
+                newPlayer->sendPacket( packet );
             }
 
             ++it;
@@ -84,7 +84,7 @@ namespace redsquare
             {
                 case PacketType::RequestMove:
                 {
-                    Square *player = getPlayer( packet.requestMove.playerID );
+                    Player *player = getPlayer( packet.requestMove.playerID );
                     if ( player != NULL )
                     {
                         bool moved = player->applyMove( packet.requestMove.dir );
@@ -108,10 +108,10 @@ namespace redsquare
 
     void Game::sendPacketToAllPlayers( Packet &packet )
     {
-        boost::ptr_map<gf::Id, Square>::iterator it = m_Squares.begin();
+        boost::ptr_map<gf::Id, Player>::iterator it = m_Players.begin();
  
         // Iterate over the map using Iterator till end.
-        while ( it != m_Squares.end() )
+        while ( it != m_Players.end() )
         {
             it->second->sendPacket( packet );
 
@@ -121,10 +121,10 @@ namespace redsquare
 
     void Game::detectDisonnection()
     {
-        boost::ptr_map<gf::Id, Square>::iterator it = m_Squares.begin();
+        boost::ptr_map<gf::Id, Player>::iterator it = m_Players.begin();
  
         // Iterate over the map using Iterator till end.
-        while ( it != m_Squares.end() )
+        while ( it != m_Players.end() )
         {
             if ( it->second->playerDisconnected() )
             {
@@ -132,7 +132,7 @@ namespace redsquare
                 //Should use free ?
                 //free( it->second );
 
-                m_Squares.erase( disconnectID );
+                m_Players.erase( disconnectID );
 
                 Packet sendPacket;
                 sendPacket.type = PacketType::PlayerDisconnected;
@@ -145,13 +145,13 @@ namespace redsquare
         }
     }
 
-    Square* Game::getPlayer( gf::Id playerID )
+    Player* Game::getPlayer( gf::Id playerID )
     {
-        auto square = m_Squares.find( playerID );
+        auto player = m_Players.find( playerID );
 
-        if ( square != m_Squares.end() )
+        if ( player != m_Players.end() )
         {
-            return square->second;
+            return player->second;
         }
 
         return NULL;

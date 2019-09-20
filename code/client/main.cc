@@ -10,7 +10,6 @@
 #include <iostream>
 
 #include "../common/World.h"
-#include "Square.h"
 #include "Game.h"
 #include "../common/Packet.h"
 

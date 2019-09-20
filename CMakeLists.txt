@@ -8,7 +8,7 @@ find_package(Boost REQUIRED COMPONENTS locale)
 
 add_executable(RedSquare
   code/client/main.cc
-  code/client/Square.cc
+  code/client/Player.cc
   code/client/Game.cc
   code/common/World.cc
   code/common/Sockets.cc
@@ -21,7 +21,7 @@ target_link_libraries(RedSquare
 
 add_executable(RedSquare-Server
   code/server/main.cc
-  code/server/Square.cc
+  code/server/Player.cc
   code/server/Game.cc
   code/common/World.cc
   code/common/Sockets.cc

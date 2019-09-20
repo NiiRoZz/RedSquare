@@ -1,4 +1,4 @@
-#include "Square.h"
+#include "Player.h"
 #include "../common/World.h"
 
 #include <gf/Sprite.h>
@@ -6,7 +6,7 @@
 
 namespace redsquare
 {
-    void Square::render(gf::RenderTarget& target, const gf::RenderStates& states)
+    void Player::render(gf::RenderTarget& target, const gf::RenderStates& states)
     {
         gf::Sprite sprite;
 
@@ -17,36 +17,36 @@ namespace redsquare
         target.draw(sprite, states);
     }
 
-    void Square::update(gf::Time time)
+    void Player::update(gf::Time time)
     {
         //Do something
     }
 
-    void Square::loadTexture()
+    void Player::loadTexture()
     {
         testTexture.loadFromFile("data/redsquare/img/redsquare.png");
     }
 
-    gf::Vector2i Square::getPos()
+    gf::Vector2i Player::getPos()
     {
         return m_Pos;
     }
 
-    Square::Square()
+    Player::Player()
     {
         setPos( gf::Vector2i( 0, 0 ) );
 
         loadTexture();
     }
 
-    Square::Square( gf::Vector2i pos )
+    Player::Player( gf::Vector2i pos )
     {
         setPos( pos );
 
         loadTexture();
     }
 
-    void Square::setPos( gf::Vector2i pos )
+    void Player::setPos( gf::Vector2i pos )
     {
         m_Pos = pos;
     }
