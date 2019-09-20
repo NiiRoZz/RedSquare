@@ -31,6 +31,13 @@ namespace redsquare
         packet.newPlayer.playerID = id;
         newSquare->sendPacket(packet);
 
+        //HACKY, too, sending fake move to all other players INCLUDE HIMSELF!!! Should be reworked
+        packet.type = PacketType::ReceiveMove;
+        packet.receiveMove.playerID = id;
+        packet.receiveMove.posX = newSquare->getPos()[0];
+        packet.receiveMove.posY = newSquare->getPos()[1];
+        sendPacketToAllPlayers( packet );
+
         //HACKY, find best way, fake a move of all players inside the game to make them apparear
         boost::ptr_map<gf::Id, Square>::iterator it = m_Squares.begin();
         // Iterate over the map using Iterator till end.
