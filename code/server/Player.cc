@@ -33,16 +33,6 @@ namespace redsquare
         }).detach();
     }
 
-    void Player::setPos( gf::Vector2i pos )
-    {
-        m_Pos = pos;
-    }
-
-    gf::Vector2i Player::getPos()
-    {
-        return m_Pos;
-    }
-
     bool Player::applyMove( MoveDirection dir )
     {
         switch ( dir )

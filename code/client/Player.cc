@@ -27,27 +27,16 @@ namespace redsquare
         testTexture.loadFromFile("data/redsquare/img/redsquare.png");
     }
 
-    gf::Vector2i Player::getPos()
-    {
-        return m_Pos;
-    }
-
     Player::Player()
+    : m_Pos( gf::Vector2i( 0, 0 ) )
     {
-        setPos( gf::Vector2i( 0, 0 ) );
 
         loadTexture();
     }
 
     Player::Player( gf::Vector2i pos )
+    : m_Pos( pos )
     {
-        setPos( pos );
-
         loadTexture();
-    }
-
-    void Player::setPos( gf::Vector2i pos )
-    {
-        m_Pos = pos;
     }
 }

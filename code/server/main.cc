@@ -1,4 +1,5 @@
 #include "../common/World.h"
+#include "../common/Singletons.h"
 #include "Player.h"
 #include "Game.h"
 
@@ -7,9 +8,9 @@
 
 int main( int argc, char **argv )
 {
-	if ( argc != 2 )
+	if ( argc != 3 )
 	{
-		std::cerr << "Usage : ./RedSquare-Server port" << std::endl;
+		std::cerr << "Usage : ./RedSquare-Server port numberOfPlayers" << std::endl;
 		return 1;
 	}
 
@@ -19,6 +20,16 @@ int main( int argc, char **argv )
 		std::cerr << "Port should be > 1024" << std::endl;
 		return 2;
 	}
+
+	int nmbPlayers = atoi( argv[2] );
+	if ( nmbPlayers <= 0 )
+	{
+		std::cerr << "Number of players should be > 0" << std::endl;
+		return 3;
+	}
+
+	// Init singleton
+  	gf::SingletonStorage<gf::Random> storageForRandom(redsquare::gRandom);
 
     redsquare::Game game(port);
 

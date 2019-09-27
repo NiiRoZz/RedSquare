@@ -12,6 +12,8 @@ namespace redsquare
     class Player
     {
     public:
+        gf::Vector2i m_Pos;
+        
         Player(SocketTcp socket, gf::Queue<Packet> &queue, gf::Id playerID);
 
         gf::Id getID() const;
@@ -21,9 +23,6 @@ namespace redsquare
 
         void initialize();
 
-        void setPos( gf::Vector2i pos );
-        gf::Vector2i getPos();
-
         bool applyMove( MoveDirection dir );
 
         bool playerDisconnected();
@@ -31,7 +30,6 @@ namespace redsquare
     private:
         ThreadCom m_Com;
         gf::Id m_PlayerID;
-        gf::Vector2i m_Pos;
     };
 }
 

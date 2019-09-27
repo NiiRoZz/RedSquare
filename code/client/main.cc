@@ -78,7 +78,7 @@ int main( int argc, char **argv )
     // entities
     gf::EntityContainer mainEntities;
     // add entities to mainEntities
-    redsquare::Game game( argv[1], argv[2] );
+    redsquare::Game game( argv[1], argv[2], mainView );
     game.startThreadCom();
     mainEntities.addEntity( game );
 
@@ -130,8 +130,6 @@ int main( int argc, char **argv )
         gf::Time time = clock.restart();
         mainEntities.update(time);
         hudEntities.update(time);
-
-        //mainView.setCenter( square.GetPos() );
 
         // 3. draw
         renderer.clear();

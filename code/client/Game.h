@@ -2,22 +2,23 @@
 #define REDSQUARE_CLIENT_GAME_H
 
 #include <vector>
+#include <map>
 
 #include <gf/Entity.h>
 #include <gf/Time.h>
 #include <gf/Id.h>
+#include <gf/Views.h>
 
 #include "Player.h"
 #include "../common/ThreadCom.h"
 #include "../common/Packet.h"
-#include <boost/ptr_container/ptr_map.hpp>
 
 namespace redsquare
 {
     class Game: public gf::Entity
     {
         public:
-        Game( char* hostname, char *port );
+        Game( char* hostname, char *port, gf::ExtendView &view );
 
         Player* getPlayer( gf::Id playerID );
 
@@ -37,7 +38,7 @@ namespace redsquare
         //ID of current player
         gf::Id m_PlayerID;
         //All near players
-        boost::ptr_map<gf::Id, Player> m_Players;
+        std::map<gf::Id, Player> m_Players;
 
         //Thread for communication
         ThreadCom m_ThreadCom;
@@ -46,6 +47,8 @@ namespace redsquare
 
         //Move of player
         MoveDirection m_DirMoving;
+
+        gf::ExtendView* m_View;
     };
 }
 

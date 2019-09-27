@@ -9,20 +9,18 @@ namespace redsquare
     class Player: public gf::Entity
     {
     public:
+        gf::Vector2i m_Pos;
+        
         Player();
         Player( gf::Vector2i pos );
 
-        void setPos( gf::Vector2i pos );
         void loadTexture();
-        gf::Vector2i getPos();
 
         virtual void update(gf::Time time) override;
 
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
     private:
-        gf::Vector2i m_Pos;
-
         gf::Texture testTexture;
     };
 }

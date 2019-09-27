@@ -37,6 +37,7 @@ add_executable(RedSquare-Server
   code/common/World.cc
   code/common/Sockets.cc
   code/common/ThreadCom.cc
+  code/common/Singletons.cc
 )
 
 target_link_libraries(RedSquare-Server

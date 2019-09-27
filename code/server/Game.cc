@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "../common/Singletons.h"
 
 #include <gf/Random.h>
 #include <iostream>
@@ -18,28 +19,29 @@ namespace redsquare
     {
         // Generate a new ID
         gf::Id id = generateId();
+        std::map<gf::Id, Player>::iterator itNewPlayer;
 
         // Create a new player
-        Player *newPlayer = (Player *) malloc( sizeof(Player) );
-        new ((void*)newPlayer) Player(std::move(socket), m_ComQueue, id);
-        newPlayer->initialize();
-        m_Players.insert( id, newPlayer );
+        {
+            std::tie(itNewPlayer, std::ignore) = m_Players.emplace(id, Player(std::move(socket), m_ComQueue, id));
+        }
+        itNewPlayer->second.initialize();
 
         // Send to the client his ID
         Packet packet;
         packet.type = PacketType::NewPlayer;
         packet.newPlayer.playerID = id;
-        newPlayer->sendPacket(packet);
+        itNewPlayer->second.sendPacket(packet);
 
         //HACKY, too, sending fake move to all other players INCLUDE HIMSELF!!! Should be reworked
         packet.type = PacketType::ReceiveMove;
         packet.receiveMove.playerID = id;
-        packet.receiveMove.posX = newPlayer->getPos()[0];
-        packet.receiveMove.posY = newPlayer->getPos()[1];
+        packet.receiveMove.posX = itNewPlayer->second.m_Pos[0];
+        packet.receiveMove.posY = itNewPlayer->second.m_Pos[1];
         sendPacketToAllPlayers( packet );
 
         //HACKY, find best way, fake a move of all players inside the game to make them apparear in the new client
-        boost::ptr_map<gf::Id, Player>::iterator it = m_Players.begin();
+        auto it = m_Players.begin();
         // Iterate over the map using Iterator till end.
         while (it != m_Players.end())
         {
@@ -47,9 +49,9 @@ namespace redsquare
             {
                 packet.type = PacketType::ReceiveMove;
                 packet.receiveMove.playerID = it->first;
-                packet.receiveMove.posX = it->second->getPos()[0];
-                packet.receiveMove.posY = it->second->getPos()[1];
-                newPlayer->sendPacket( packet );
+                packet.receiveMove.posX = it->second.m_Pos[0];
+                packet.receiveMove.posY = it->second.m_Pos[1];
+                itNewPlayer->second.sendPacket( packet );
             }
 
             ++it;
@@ -58,12 +60,9 @@ namespace redsquare
 
     gf::Id Game::generateId() const
     {
-        // Get the ID
-        gf::Random random;
-
         uint64_t min = std::numeric_limits<uint64_t>::min();
         uint64_t max = std::numeric_limits<uint64_t>::max();
-        uint64_t number = random.computeUniformInteger(min, max);
+        uint64_t number = gRandom().computeUniformInteger(min, max);
 
         return number;
     }
@@ -71,8 +70,6 @@ namespace redsquare
     void Game::doUpdate( gf::Time time )
     {
         processPackets();
-
-        detectDisonnection();
     }
 
     void Game::processPackets()
@@ -85,7 +82,7 @@ namespace redsquare
                 case PacketType::RequestMove:
                 {
                     Player *player = getPlayer( packet.requestMove.playerID );
-                    if ( player != NULL )
+                    if ( player != nullptr )
                     {
                         bool moved = player->applyMove( packet.requestMove.dir );
 
@@ -94,8 +91,8 @@ namespace redsquare
                             Packet sendPacket;
                             sendPacket.type = PacketType::ReceiveMove;
                             sendPacket.receiveMove.playerID = packet.requestMove.playerID;
-                            sendPacket.receiveMove.posX = player->getPos()[0];
-                            sendPacket.receiveMove.posY = player->getPos()[1];
+                            sendPacket.receiveMove.posX = player->m_Pos[0];
+                            sendPacket.receiveMove.posY = player->m_Pos[1];
 
                             sendPacketToAllPlayers( sendPacket );
                         }
@@ -108,38 +105,12 @@ namespace redsquare
 
     void Game::sendPacketToAllPlayers( Packet &packet )
     {
-        boost::ptr_map<gf::Id, Player>::iterator it = m_Players.begin();
+        auto it = m_Players.begin();
  
         // Iterate over the map using Iterator till end.
         while ( it != m_Players.end() )
         {
-            it->second->sendPacket( packet );
-
-            ++it;
-        }
-    }
-
-    void Game::detectDisonnection()
-    {
-        boost::ptr_map<gf::Id, Player>::iterator it = m_Players.begin();
- 
-        // Iterate over the map using Iterator till end.
-        while ( it != m_Players.end() )
-        {
-            if ( it->second->playerDisconnected() )
-            {
-                gf::Id disconnectID = it->first;
-                //Should use free ?
-                //free( it->second );
-
-                m_Players.erase( disconnectID );
-
-                Packet sendPacket;
-                sendPacket.type = PacketType::PlayerDisconnected;
-                sendPacket.receiveMove.playerID = disconnectID;
-
-                sendPacketToAllPlayers( sendPacket );
-            }
+            it->second.sendPacket( packet );
 
             ++it;
         }
@@ -151,9 +122,9 @@ namespace redsquare
 
         if ( player != m_Players.end() )
         {
-            return player->second;
+            return &player->second;
         }
 
-        return NULL;
+        return nullptr;
     }
 }

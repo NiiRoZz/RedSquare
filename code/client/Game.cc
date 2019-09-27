@@ -1,11 +1,13 @@
 #include "Game.h"
 
 #include <iostream>
+#include <utility>
 
 namespace redsquare
 {
-    Game::Game( char* hostname, char *port )
+    Game::Game( char* hostname, char *port, gf::ExtendView &view )
     : m_ThreadCom(hostname, port, m_ComQueue)
+    , m_View(&view)
     {
         m_DirMoving = MoveDirection::Nothing;
     }
@@ -19,12 +21,12 @@ namespace redsquare
     {
         m_World.render( target, states );
         
-        boost::ptr_map<gf::Id, Player>::iterator it = m_Players.begin();
+        auto it = m_Players.begin();
  
         // Iterate over the map using Iterator till end.
         while (it != m_Players.end())
         {
-            it->second->render( target, states );
+            it->second.render( target, states );
 
             ++it;
         }
@@ -38,7 +40,7 @@ namespace redsquare
         //We update only the player we are controlling
         Player* player = getPlayer( m_PlayerID );
 
-        if ( player != NULL )
+        if ( player != nullptr )
         {
             player->update( time );
 
@@ -54,6 +56,8 @@ namespace redsquare
 
                 m_DirMoving = MoveDirection::Nothing;
             }
+
+            m_View->setCenter( { player->m_Pos[0] * World::TileSize, player->m_Pos[1] * World::TileSize } );
         }
 
         m_World.update( time );
@@ -62,40 +66,32 @@ namespace redsquare
     void Game::processPackets()
     {
         Packet packet;
-        while (m_ComQueue.poll(packet))
+        while ( m_ComQueue.poll(packet) )
         {
-            std::cout << "Game::processPackets 1" << std::endl;
             switch (packet.type)
             {
                 case PacketType::NewPlayer:
                 {
-                    std::cout << "Game::processPackets 2" << std::endl;
                     m_PlayerID = packet.newPlayer.playerID;
-                    Player *myNewPlayer = (Player *) malloc( sizeof(Player) );
-                    new ((void*)myNewPlayer) Player();
 
-                    std::cout << "Game::processPackets 3" << std::endl;
-
-                    m_Players.insert( m_PlayerID, myNewPlayer );
-                    std::cout << "Game::processPackets 4" << std::endl;
+                    m_Players.insert( std::make_pair( m_PlayerID, Player() ) );
                     break;
                 }
                 
                 case PacketType::ReceiveMove:
                 {
                     Player* player = getPlayer( packet.receiveMove.playerID );
-                    if ( player != NULL )
+                    if ( player != nullptr )
                     {
-                        player->setPos( gf::Vector2i( packet.receiveMove.posX, packet.receiveMove.posY ) );
+                        player->m_Pos[0] = packet.receiveMove.posX;
+                        player->m_Pos[1] = packet.receiveMove.posY;
                     }
                     else
                     {
                         gf::Id newPlayerID = packet.receiveMove.playerID;
-                        Player *newPlayer = (Player *) malloc( sizeof(Player) );
-                        new ((void*)newPlayer) Player();
-                        newPlayer->setPos( gf::Vector2i( packet.receiveMove.posX, packet.receiveMove.posY ) );
 
-                        m_Players.insert( newPlayerID, newPlayer );
+                        auto it = m_Players.insert( std::make_pair( newPlayerID, Player( gf::Vector2i(packet.receiveMove.posX, packet.receiveMove.posY) ) ) );
+                        assert( it.second );
                     }
                     break;
                 }
@@ -103,7 +99,7 @@ namespace redsquare
                 case PacketType::PlayerDisconnected:
                 {
                     Player* player = getPlayer( packet.playerDisconnected.playerID );
-                    if ( player != NULL )
+                    if ( player != nullptr )
                     {
                         m_Players.erase( packet.playerDisconnected.playerID );
                     }
@@ -124,9 +120,9 @@ namespace redsquare
 
         if ( player != m_Players.end() )
         {
-            return player->second;
+            return &player->second;
         }
 
-        return NULL;
+        return nullptr;
     }
 }

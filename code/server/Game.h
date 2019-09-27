@@ -6,7 +6,6 @@
 #include "Player.h"
 
 #include <gf/Queue.h>
-#include <boost/ptr_container/ptr_map.hpp>
 
 namespace redsquare
 {
@@ -35,7 +34,7 @@ namespace redsquare
 
         gf::Queue<Packet> m_ComQueue;
 
-        boost::ptr_map<gf::Id, Player> m_Players;
+        std::map<gf::Id, Player> m_Players;
     };
 }
 
