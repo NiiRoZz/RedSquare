@@ -19,6 +19,17 @@ target_link_libraries(RedSquare
   gf::gf0
 )
 
+target_include_directories(RedSquare
+  PRIVATE
+    ${Boost_INCLUDE_DIRS}
+    ${CMAKE_CURRENT_BINARY_DIR}
+)
+
+install(
+  TARGETS RedSquare
+  RUNTIME DESTINATION games
+)
+
 add_executable(RedSquare-Server
   code/server/main.cc
   code/server/Player.cc
@@ -30,4 +41,16 @@ add_executable(RedSquare-Server
 
 target_link_libraries(RedSquare-Server
   gf::gf0
+  ${Boost_LIBRARIES}
+)
+
+target_include_directories(RedSquare-Server
+  PRIVATE
+    ${Boost_INCLUDE_DIRS}
+    ${CMAKE_CURRENT_BINARY_DIR}
+)
+
+install(
+  TARGETS RedSquare-Server
+  RUNTIME DESTINATION games
 )
