@@ -13,7 +13,7 @@ namespace redsquare
     {
         public:
         std::map<gf::Id, Player> m_Players;
-        
+
         Game( std::uint16_t port );
 
         void addNewPlayer(SocketTcp socket);
@@ -24,8 +24,6 @@ namespace redsquare
 
         void sendPacketToAllPlayers( Packet &packet );
         void sendPacketToVisiblePlayers( Packet &packet, gf::Vector2i pos );
-
-        void detectDisonnection();
 
         private:
         gf::Id generateId() const;

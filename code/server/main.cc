@@ -97,8 +97,40 @@ int main( int argc, char **argv )
 				packet.playerTurn.playerTurn = true;
 				it->second.sendPacket( packet );
 
+				//Detect if the connection has been closed
+				if ( it->second.playerDisconnected() )
+				{
+					gf::Id disconnectedID = it->first;
+
+					game.m_Players.erase(it--);
+
+					Packet sendPacket;
+					sendPacket.type = PacketType::PlayerDisconnected;
+					sendPacket.receiveMove.playerID = disconnectedID;
+
+					game.sendPacketToAllPlayers( sendPacket );
+
+					continue;
+				}
+
 				//3.2: wait until his reply
 				it->second.receivePacket( packet );
+
+				//Detect if the connection has been closed
+				if ( it->second.playerDisconnected() )
+				{
+					gf::Id disconnectedID = it->first;
+
+					game.m_Players.erase(it--);
+
+					Packet sendPacket;
+					sendPacket.type = PacketType::PlayerDisconnected;
+					sendPacket.receiveMove.playerID = disconnectedID;
+
+					game.sendPacketToAllPlayers( sendPacket );
+
+					continue;
+				}
 
 				actionMade = game.processPackets( packet );
 			}

@@ -76,10 +76,10 @@ namespace redsquare
     boost::system::error_code error;
     boost::asio::write(m_Socket, boost::asio::buffer(data, MaxLength), error);
 
-    if (error == boost::asio::error::eof)
+    if (error == boost::asio::error::eof || error == boost::asio::error::broken_pipe)
     {
       m_State = SocketState::Disconnected;
-      return; // Connection closed cleanly by peer
+      return; // Connection closed by peer
     } else if (error)
     {
       throw boost::system::system_error(error);
