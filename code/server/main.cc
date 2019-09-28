@@ -50,8 +50,20 @@ int main( int argc, char **argv )
 			packet.playerTurn.playerTurn = true;
 			it->second.sendPacket( packet );
 
+			//Detect if the connection has been closed
+			if ( it->second.playerDisconnected() )
+			{
+				game.m_Players.erase(it--);
+			}
+
 			//2: wait until his reply
 			it->second.receivePacket( packet );
+
+			//Detect if the connection has been closed
+			if ( it->second.playerDisconnected() )
+			{
+				game.m_Players.erase(it--);
+			}
 
 			//3: check if his action is possible, if it's not go to 1 and if it is just finish the turn
 			bool actionMade = game.processPackets( packet );

@@ -95,6 +95,6 @@ namespace redsquare
 
     bool Player::playerDisconnected() const
     {
-        return !(m_Socket.getState() == SocketState::Disconnected);
+        return (m_Socket.getState() == SocketState::Disconnected);
     }
 }
