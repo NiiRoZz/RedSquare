@@ -12,6 +12,7 @@
 #include "Player.h"
 #include "ThreadCom.h"
 #include "../common/Packet.h"
+#include "World.h"
 
 namespace redsquare
 {

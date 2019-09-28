@@ -1,5 +1,5 @@
 #include "Player.h"
-#include "../common/World.h"
+#include "World.h"
 
 #include <gf/Sprite.h>
 #include <gf/RenderTarget.h>

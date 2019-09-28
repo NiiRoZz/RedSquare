@@ -1,4 +1,4 @@
-#include "../common/World.h"
+#include "World.h"
 #include "../common/Singletons.h"
 #include "../common/Packet.h"
 #include "Player.h"

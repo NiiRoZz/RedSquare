@@ -5,8 +5,6 @@
 #include <gf/Id.h>
 #include <gf/Vector.h>
 
-#include "World.h"
-
 namespace redsquare
 {
     enum class MoveDirection : uint16_t
@@ -30,7 +28,7 @@ namespace redsquare
     struct NewPlayer
     {
         gf::Id playerID;
-        int world[redsquare::World::MapSize][redsquare::World::MapSize];
+        int world[128][128];
     };
 
     struct RequestMove

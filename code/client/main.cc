@@ -9,7 +9,7 @@
 #include <gf/Window.h>
 #include <iostream>
 
-#include "../common/World.h"
+#include "World.h"
 #include "Game.h"
 #include "../common/Packet.h"
 #include <gf/TileLayer.h>

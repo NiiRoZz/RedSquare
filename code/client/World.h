@@ -1,5 +1,5 @@
-#ifndef REDSQUARE_COMMON_WORLD_H
-#define REDSQUARE_COMMON_WORLD_H
+#ifndef REDSQUARE_CLIENT_WORLD_H
+#define REDSQUARE_CLIENT_WORLD_H
 
 #include <gf/Entity.h>
 #include <gf/TileLayer.h>
