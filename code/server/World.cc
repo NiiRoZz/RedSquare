@@ -6,6 +6,7 @@
 namespace redsquare
 {
     World::World()
+    : m_SquareWorld( {MapSize, MapSize} )
     {
     }
 }

@@ -4,6 +4,7 @@
 #include "../common/Packet.h"
 
 #include <gf/Array2D.h>
+#include <gf/Map.h>
 
 namespace redsquare
 {
@@ -16,6 +17,7 @@ namespace redsquare
 
     private:
         gf::Array2D<Tile> m_World;
+        gf::SquareMap m_SquareWorld;
     };
 }
 
