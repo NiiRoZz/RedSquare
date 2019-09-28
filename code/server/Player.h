@@ -2,7 +2,6 @@
 #define REDSQUARE_SERVER_PLAYER_H
 
 #include "../common/Sockets.h"
-#include "../common/ThreadCom.h"
 
 #include <gf/Queue.h>
 #include <gf/Id.h>
@@ -14,21 +13,19 @@ namespace redsquare
     public:
         gf::Vector2i m_Pos;
         
-        Player(SocketTcp socket, gf::Queue<Packet> &queue, gf::Id playerID);
+        Player(SocketTcp socket, gf::Id playerID);
 
         gf::Id getID() const;
 
         void sendPacket(Packet &packet);
         void receivePacket(Packet &packet);
 
-        void initialize();
-
         bool applyMove( MoveDirection dir );
 
-        bool playerDisconnected();
+        bool playerDisconnected() const;
 
     private:
-        ThreadCom m_Com;
+        SocketTcp m_Socket;
         gf::Id m_PlayerID;
     };
 }

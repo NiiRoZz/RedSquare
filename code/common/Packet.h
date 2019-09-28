@@ -24,6 +24,7 @@ namespace redsquare
         RequestMove,
         ReceiveMove,
         PlayerDisconnected,
+        PlayerTurn,
     };
 
     struct NewPlayer
@@ -50,6 +51,11 @@ namespace redsquare
         gf::Id playerID;
     };
 
+    struct PlayerTurn
+    {
+        bool playerTurn;
+    };
+
     struct Packet
     {
         PacketType type;
@@ -60,6 +66,7 @@ namespace redsquare
             RequestMove requestMove;
             ReceiveMove receiveMove;
             PlayerDisconnected playerDisconnected;
+            PlayerTurn playerTurn;
         };
     };
 
@@ -94,6 +101,12 @@ namespace redsquare
             case PacketType::PlayerDisconnected:
             {
                 ar | packet.playerDisconnected.playerID;
+                break;
+            }
+
+            case PacketType::PlayerTurn:
+            {
+                ar | packet.playerTurn.playerTurn;
                 break;
             }
         }

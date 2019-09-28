@@ -12,12 +12,13 @@ namespace redsquare
     class Game
     {
         public:
+        std::map<gf::Id, Player> m_Players;
+        
         Game( std::uint16_t port );
 
         void addNewPlayer(SocketTcp socket);
 
-        void doUpdate(gf::Time time);
-        void processPackets();
+        bool processPackets( Packet &packet );
 
         Player* getPlayer( gf::Id playerID );
 
@@ -29,12 +30,9 @@ namespace redsquare
         private:
         gf::Id generateId() const;
 
-        private:
         ListenerTcp m_Listener;
 
         gf::Queue<Packet> m_ComQueue;
-
-        std::map<gf::Id, Player> m_Players;
     };
 }
 

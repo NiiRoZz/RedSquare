@@ -10,9 +10,9 @@ add_executable(RedSquare
   code/client/main.cc
   code/client/Player.cc
   code/client/Game.cc
+  code/client/ThreadCom.cc
   code/common/World.cc
   code/common/Sockets.cc
-  code/common/ThreadCom.cc
 )
 
 target_link_libraries(RedSquare
@@ -36,7 +36,6 @@ add_executable(RedSquare-Server
   code/server/Game.cc
   code/common/World.cc
   code/common/Sockets.cc
-  code/common/ThreadCom.cc
   code/common/Singletons.cc
 )
 

@@ -10,7 +10,7 @@
 #include <gf/Views.h>
 
 #include "Player.h"
-#include "../common/ThreadCom.h"
+#include "ThreadCom.h"
 #include "../common/Packet.h"
 
 namespace redsquare
@@ -48,7 +48,13 @@ namespace redsquare
         //Move of player
         MoveDirection m_DirMoving;
 
+        //View of the game
         gf::ExtendView* m_View;
+
+        //Value if it's his turn and he can play
+        bool m_CanPlay;
+
+        void doAction();
     };
 }
 

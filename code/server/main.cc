@@ -1,9 +1,9 @@
 #include "../common/World.h"
 #include "../common/Singletons.h"
+#include "../common/Packet.h"
 #include "Player.h"
 #include "Game.h"
 
-#include <gf/Clock.h>
 #include <iostream>
 
 int main( int argc, char **argv )
@@ -33,12 +33,42 @@ int main( int argc, char **argv )
 
     redsquare::Game game(port);
 
-	gf::Clock clock;
-	for(;;)
+	//Maybe a way more perf friendly ?
+	while( game.m_Players.size() != nmbPlayers )
 	{
-		// 1. update
-		gf::Time time = clock.restart();
-		game.doUpdate( time );
+
+	}
+
+	//Start the game
+	while ( game.m_Players.size() > 0 )
+	{
+		for (auto it = game.m_Players.begin(); it != game.m_Players.end(); ++it)
+		{
+			//1: send to the player it's his turn
+			redsquare::Packet packet;
+			packet.type = redsquare::PacketType::PlayerTurn;
+			packet.playerTurn.playerTurn = true;
+			it->second.sendPacket( packet );
+
+			//2: wait until his reply
+			it->second.receivePacket( packet );
+
+			//3: check if his action is possible, if it's not go to 1 and if it is just finish the turn
+			bool actionMade = game.processPackets( packet );
+			while ( !actionMade )
+			{
+				//3.1: send to the player it's his turn
+				redsquare::Packet packet;
+				packet.type = redsquare::PacketType::PlayerTurn;
+				packet.playerTurn.playerTurn = true;
+				it->second.sendPacket( packet );
+
+				//3.2: wait until his reply
+				it->second.receivePacket( packet );
+
+				actionMade = game.processPackets( packet );
+			}
+		}
 	}
 
 	return 0;

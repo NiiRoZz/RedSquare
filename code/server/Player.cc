@@ -4,8 +4,8 @@
 
 namespace redsquare
 {
-    Player::Player(SocketTcp socket, gf::Queue<Packet> &queue, gf::Id playerID)
-    : m_Com(std::move(socket), queue)
+    Player::Player(SocketTcp socket, gf::Id playerID)
+    : m_Socket(std::move(socket))
     , m_PlayerID(playerID)
     , m_Pos(0,0)
     {
@@ -13,24 +13,12 @@ namespace redsquare
 
     void Player::sendPacket(Packet &packet)
     {
-        bool ok = m_Com.sendPacket(packet);
-        assert(ok);
-        if (!ok)
-        throw std::runtime_error("!ok");
+        m_Socket.send(packet);
     }
 
     void Player::receivePacket(Packet &packet)
     {
-        bool ok = m_Com.receivePacket(packet);
-        assert(ok);
-    }
-
-    void Player::initialize()
-    {
-        std::thread([this]()
-        {
-            m_Com.start();
-        }).detach();
+        m_Socket.receive(packet);
     }
 
     bool Player::applyMove( MoveDirection dir )
@@ -105,8 +93,8 @@ namespace redsquare
         return false;
     }
 
-    bool Player::playerDisconnected()
+    bool Player::playerDisconnected() const
     {
-        return !m_Com.socketWorking();
+        return !(m_Socket.getState() == SocketState::Disconnected);
     }
 }

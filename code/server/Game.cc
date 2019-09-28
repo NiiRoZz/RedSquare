@@ -22,10 +22,7 @@ namespace redsquare
         std::map<gf::Id, Player>::iterator itNewPlayer;
 
         // Create a new player
-        {
-            std::tie(itNewPlayer, std::ignore) = m_Players.emplace(id, Player(std::move(socket), m_ComQueue, id));
-        }
-        itNewPlayer->second.initialize();
+        std::tie(itNewPlayer, std::ignore) = m_Players.emplace(id, Player(std::move(socket), id));
 
         // Send to the client his ID
         Packet packet;
@@ -67,40 +64,35 @@ namespace redsquare
         return number;
     }
 
-    void Game::doUpdate( gf::Time time )
+    bool Game::processPackets( Packet &packet )
     {
-        processPackets();
-    }
-
-    void Game::processPackets()
-    {
-        Packet packet;
-        while ( m_ComQueue.poll(packet) )
+        switch ( packet.type )
         {
-            switch ( packet.type )
+            case PacketType::RequestMove:
             {
-                case PacketType::RequestMove:
+                Player *player = getPlayer( packet.requestMove.playerID );
+                if ( player != nullptr )
                 {
-                    Player *player = getPlayer( packet.requestMove.playerID );
-                    if ( player != nullptr )
+                    bool moved = player->applyMove( packet.requestMove.dir );
+
+                    if ( moved )
                     {
-                        bool moved = player->applyMove( packet.requestMove.dir );
+                        Packet sendPacket;
+                        sendPacket.type = PacketType::ReceiveMove;
+                        sendPacket.receiveMove.playerID = packet.requestMove.playerID;
+                        sendPacket.receiveMove.posX = player->m_Pos[0];
+                        sendPacket.receiveMove.posY = player->m_Pos[1];
 
-                        if ( moved )
-                        {
-                            Packet sendPacket;
-                            sendPacket.type = PacketType::ReceiveMove;
-                            sendPacket.receiveMove.playerID = packet.requestMove.playerID;
-                            sendPacket.receiveMove.posX = player->m_Pos[0];
-                            sendPacket.receiveMove.posY = player->m_Pos[1];
-
-                            sendPacketToAllPlayers( sendPacket );
-                        }
+                        sendPacketToAllPlayers( sendPacket );
                     }
-                    break;
+
+                    return moved;
                 }
+                break;
             }
         }
+
+        return true;
     }
 
     void Game::sendPacketToAllPlayers( Packet &packet )

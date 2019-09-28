@@ -8,8 +8,9 @@ namespace redsquare
     Game::Game( char* hostname, char *port, gf::ExtendView &view )
     : m_ThreadCom(hostname, port, m_ComQueue)
     , m_View(&view)
+    , m_CanPlay( false )
+    , m_DirMoving( MoveDirection::Nothing )
     {
-        m_DirMoving = MoveDirection::Nothing;
     }
 
     void Game::startThreadCom()
@@ -40,27 +41,42 @@ namespace redsquare
         //We update only the player we are controlling
         Player* player = getPlayer( m_PlayerID );
 
+        m_World.update( time );
+
         if ( player != nullptr )
         {
             player->update( time );
 
-            //Player want to move
-            if ( m_DirMoving != MoveDirection::Nothing )
-            {
-                Packet packet;
-                packet.type = PacketType::RequestMove;
-                packet.requestMove.playerID = m_PlayerID;
-                packet.requestMove.dir = m_DirMoving;
-
-                m_ThreadCom.sendPacket( packet );
-
-                m_DirMoving = MoveDirection::Nothing;
-            }
-
             m_View->setCenter( { player->m_Pos[0] * World::TileSize, player->m_Pos[1] * World::TileSize } );
+
+            //Do all actions stuff here
+            doAction();
+        }
+    }
+
+    void Game::doAction()
+    {
+        if ( !m_CanPlay )
+        {
+            return;
         }
 
-        m_World.update( time );
+        //Player want to move
+        if ( m_DirMoving != MoveDirection::Nothing )
+        {
+            Packet packet;
+            packet.type = PacketType::RequestMove;
+            packet.requestMove.playerID = m_PlayerID;
+            packet.requestMove.dir = m_DirMoving;
+
+            m_ThreadCom.sendPacket( packet );
+
+            m_DirMoving = MoveDirection::Nothing;
+
+            //don't forget to call m_CanPlay false when sent action
+            m_CanPlay = false;
+        }
+        //else if ( )
     }
 
     void Game::processPackets()
@@ -103,6 +119,13 @@ namespace redsquare
                     {
                         m_Players.erase( packet.playerDisconnected.playerID );
                     }
+                    break;
+                }
+
+                case PacketType::PlayerTurn:
+                {
+                    m_CanPlay = packet.playerTurn.playerTurn;
+                    std::cout << "It's your turn!!!" << std::endl;
                     break;
                 }
             }

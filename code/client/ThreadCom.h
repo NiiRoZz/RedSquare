@@ -1,12 +1,12 @@
-#ifndef REDSQUARE_COMMON_THREADCOM_H
-#define REDSQUARE_COMMON_THREADCOM_H
+#ifndef REDSQUARE_CLIENT_THREADCOM_H
+#define REDSQUARE_CLIENT_THREADCOM_H
 
 #include <functional>
 #include <gf/Id.h>
 #include <gf/Queue.h>
 
-#include "Packet.h"
-#include "Sockets.h"
+#include "../common/Packet.h"
+#include "../common/Sockets.h"
 
 namespace redsquare
 {
@@ -23,7 +23,7 @@ namespace redsquare
     bool receivePacket(Packet &packet);
     void receivePackets();
 
-    bool socketWorking();
+    bool socketWorking() const;
 
   private:
     SocketTcp m_socket;
