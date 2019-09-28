@@ -6,6 +6,8 @@
 
 #include <iostream>
 
+using namespace redsquare;
+
 int main( int argc, char **argv )
 {
 	if ( argc != 3 )
@@ -29,9 +31,9 @@ int main( int argc, char **argv )
 	}
 
 	// Init singleton
-  	gf::SingletonStorage<gf::Random> storageForRandom(redsquare::gRandom);
+  	gf::SingletonStorage<gf::Random> storageForRandom(gRandom);
 
-    redsquare::Game game(port);
+    Game game(port);
 
 	//Maybe a way more perf friendly ?
 	while( game.m_Players.size() != nmbPlayers )
@@ -39,21 +41,31 @@ int main( int argc, char **argv )
 
 	}
 
-	//Start the game
+	//Start the game and play until all players has disconnected
 	while ( game.m_Players.size() > 0 )
 	{
 		for (auto it = game.m_Players.begin(); it != game.m_Players.end(); ++it)
 		{
 			//1: send to the player it's his turn
-			redsquare::Packet packet;
-			packet.type = redsquare::PacketType::PlayerTurn;
+			Packet packet;
+			packet.type = PacketType::PlayerTurn;
 			packet.playerTurn.playerTurn = true;
 			it->second.sendPacket( packet );
 
 			//Detect if the connection has been closed
 			if ( it->second.playerDisconnected() )
 			{
+				gf::Id disconnectedID = it->first;
+
 				game.m_Players.erase(it--);
+
+				Packet sendPacket;
+                sendPacket.type = PacketType::PlayerDisconnected;
+                sendPacket.receiveMove.playerID = disconnectedID;
+
+                game.sendPacketToAllPlayers( sendPacket );
+
+				continue;
 			}
 
 			//2: wait until his reply
@@ -62,7 +74,17 @@ int main( int argc, char **argv )
 			//Detect if the connection has been closed
 			if ( it->second.playerDisconnected() )
 			{
+				gf::Id disconnectedID = it->first;
+
 				game.m_Players.erase(it--);
+
+				Packet sendPacket;
+                sendPacket.type = PacketType::PlayerDisconnected;
+                sendPacket.receiveMove.playerID = disconnectedID;
+
+                game.sendPacketToAllPlayers( sendPacket );
+
+				continue;
 			}
 
 			//3: check if his action is possible, if it's not go to 1 and if it is just finish the turn
@@ -70,8 +92,8 @@ int main( int argc, char **argv )
 			while ( !actionMade )
 			{
 				//3.1: send to the player it's his turn
-				redsquare::Packet packet;
-				packet.type = redsquare::PacketType::PlayerTurn;
+				Packet packet;
+				packet.type = PacketType::PlayerTurn;
 				packet.playerTurn.playerTurn = true;
 				it->second.sendPacket( packet );
 

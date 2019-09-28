@@ -14,6 +14,8 @@
 #include "../common/Packet.h"
 #include <gf/TileLayer.h>
 
+using namespace redsquare;
+
 int main( int argc, char **argv )
 {
     if ( argc != 3 )
@@ -78,7 +80,7 @@ int main( int argc, char **argv )
     // entities
     gf::EntityContainer mainEntities;
     // add entities to mainEntities
-    redsquare::Game game( argv[1], argv[2], mainView );
+    Game game( argv[1], argv[2], mainView );
     game.startThreadCom();
     mainEntities.addEntity( game );
 
@@ -111,16 +113,16 @@ int main( int argc, char **argv )
 
         if (rightAction.isActive())
         {
-            game.movePlayer( redsquare::MoveDirection::Right );
+            game.movePlayer( MoveDirection::Right );
         } else if (leftAction.isActive())
         {
-            game.movePlayer( redsquare::MoveDirection::Left );
+            game.movePlayer( MoveDirection::Left );
         } else if (upAction.isActive())
         {
-            game.movePlayer( redsquare::MoveDirection::Up );
+            game.movePlayer( MoveDirection::Up );
         } else if (downAction.isActive())
         {
-            game.movePlayer( redsquare::MoveDirection::Down );
+            game.movePlayer( MoveDirection::Down );
         } else
         {
             // do something
