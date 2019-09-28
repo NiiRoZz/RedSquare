@@ -1,6 +1,10 @@
 #ifndef REDSQUARE_SERVER_WORLD_H
 #define REDSQUARE_SERVER_WORLD_H
 
+#include "../common/Packet.h"
+
+#include <gf/Array2D.h>
+
 namespace redsquare
 {
     class World
@@ -11,7 +15,7 @@ namespace redsquare
         World();
 
     private:
-        int m_World[MapSize][MapSize];
+        gf::Array2D<Tile> m_World;
     };
 }
 

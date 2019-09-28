@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <gf/Id.h>
 #include <gf/Vector.h>
+#include <gf/Array2D.h>
 
 namespace redsquare
 {
@@ -14,6 +15,12 @@ namespace redsquare
         Up,
         Down,
         Nothing,
+    };
+
+    enum class Tile: uint8_t
+    {
+        Wall,
+        Ground,
     };
 
     enum class PacketType : uint16_t
@@ -28,7 +35,8 @@ namespace redsquare
     struct NewPlayer
     {
         gf::Id playerID;
-        int world[128][128];
+        //Should add gf::Array2D<Tile> here but not working for now until solution
+        int world;
     };
 
     struct RequestMove
