@@ -134,6 +134,11 @@ namespace redsquare
 
     void Game::movePlayer( MoveDirection dir )
     {
+        if ( !m_CanPlay )
+        {
+            return;
+        }
+        
         m_DirMoving = dir;
     }
 
