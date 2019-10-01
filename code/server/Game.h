@@ -4,6 +4,7 @@
 #include "../common/Sockets.h"
 #include "../common/Packet.h"
 #include "Player.h"
+#include "World.h"
 
 #include <gf/Queue.h>
 
@@ -14,7 +15,7 @@ namespace redsquare
         public:
         std::map<gf::Id, Player> m_Players;
 
-        Game( std::uint16_t port );
+        Game();
 
         void addNewPlayer(SocketTcp socket);
 
@@ -28,9 +29,9 @@ namespace redsquare
         private:
         gf::Id generateId() const;
 
-        ListenerTcp m_Listener;
-
         gf::Queue<Packet> m_ComQueue;
+
+        World m_World;
     };
 }
 

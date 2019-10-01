@@ -15,14 +15,19 @@ namespace redsquare
     public:
         static constexpr int MapSize = 128;
         static constexpr int TileSize = 16;
+
         World();
+
+        void generateWorld( gf::Array2D<Tile> world );
 
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
     private:
         gf::Array2D<Tile> m_World;
+
+        gf::Texture tileTexture;
         gf::TileLayer m_GroundLayer;
-        gf::Texture testTexture;
+        gf::TileLayer m_WallLayer;
     };
 }
 

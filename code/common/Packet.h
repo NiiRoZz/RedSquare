@@ -2,6 +2,7 @@
 #define REDSQUARE_COMMON_PACKET_H
 
 #include <cstdint>
+#include <iostream>
 #include <gf/Id.h>
 #include <gf/Vector.h>
 #include <gf/Array2D.h>
@@ -25,7 +26,6 @@ namespace redsquare
 
     enum class PacketType : uint16_t
     {
-        NewPlayer,
         RequestMove,
         ReceiveMove,
         PlayerDisconnected,
@@ -35,8 +35,17 @@ namespace redsquare
     struct NewPlayer
     {
         gf::Id playerID;
-        //Should add gf::Array2D<Tile> here but not working for now until solution
-        int world;
+        gf::Array2D<Tile> world;
+
+        NewPlayer( gf::Array2D<Tile> &tile, gf::Id id )
+        : world( tile )
+        , playerID( id )
+        {
+        }
+
+        NewPlayer()
+        {
+        }
     };
 
     struct RequestMove
@@ -68,7 +77,6 @@ namespace redsquare
 
         union
         {
-            NewPlayer newPlayer;
             RequestMove requestMove;
             ReceiveMove receiveMove;
             PlayerDisconnected playerDisconnected;
@@ -81,14 +89,8 @@ namespace redsquare
     {
         ar | packet.type;
 
-        switch (packet.type) {
-            case PacketType::NewPlayer:
-            {
-                ar | packet.newPlayer.playerID;
-                ar | packet.newPlayer.world;
-                break;
-            }
-
+        switch (packet.type)
+        {
             case PacketType::RequestMove:
             {
                 ar | packet.requestMove.playerID;
@@ -116,6 +118,15 @@ namespace redsquare
                 break;
             }
         }
+
+        return ar;
+    }
+
+    template<class Archive>
+    Archive& operator|(Archive& ar, NewPlayer& packet)
+    {
+        ar | packet.playerID;
+        ar | packet.world;
 
         return ar;
     }

@@ -6,13 +6,9 @@
 
 namespace redsquare
 {
-    Game::Game(std::uint16_t port)
-    : m_Listener(port)
+    Game::Game()
     {
         std::cout << "Game::Game" << std::endl;
-        m_Listener.handleNewConnection([this](SocketTcp clientSocket){
-            this->addNewPlayer(std::move(clientSocket));
-        });
     }
 
     void Game::addNewPlayer(SocketTcp socket)
@@ -25,12 +21,14 @@ namespace redsquare
         std::tie(itNewPlayer, std::ignore) = m_Players.emplace(id, Player(std::move(socket), id));
 
         // Send to the client his ID
-        Packet packet;
-        packet.type = PacketType::NewPlayer;
-        packet.newPlayer.playerID = id;
-        itNewPlayer->second.sendPacket(packet);
+        auto size = m_World.m_World.getSize();
+        std::cout << "size: " << size.width << 'x' << size.height << std::endl;
+
+        NewPlayer packetNewPlayer( m_World.m_World, id );
+        itNewPlayer->second.sendPacket(packetNewPlayer);
 
         //HACKY, too, sending fake move to all other players INCLUDE HIMSELF!!! Should be reworked
+        Packet packet;
         packet.type = PacketType::ReceiveMove;
         packet.receiveMove.playerID = id;
         packet.receiveMove.posX = itNewPlayer->second.m_Pos[0];

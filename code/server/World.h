@@ -13,10 +13,11 @@ namespace redsquare
     public:
         static constexpr int MapSize = 128;
         static constexpr int TileSize = 16;
+        gf::Array2D<Tile> m_World;
+        
         World();
 
     private:
-        gf::Array2D<Tile> m_World;
         gf::SquareMap m_SquareWorld;
     };
 }

@@ -81,6 +81,10 @@ int main( int argc, char **argv )
     gf::EntityContainer mainEntities;
     // add entities to mainEntities
     Game game( argv[1], argv[2], mainView );
+
+    //Client pause here until receive world
+    game.receiveWorld();
+
     game.startThreadCom();
     mainEntities.addEntity( game );
 

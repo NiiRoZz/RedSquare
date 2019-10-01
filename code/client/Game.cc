@@ -18,6 +18,19 @@ namespace redsquare
         m_ThreadCom.start();
     }
 
+    void Game::receiveWorld()
+    {
+        NewPlayer newPlayerData;
+
+        m_ThreadCom.receivePacket( newPlayerData );
+
+        auto size = newPlayerData.world.getSize();
+        std::cout << "size: " << size.width << 'x' << size.height << std::endl;
+
+        m_PlayerID = newPlayerData.playerID;
+        m_World.generateWorld( std::move( newPlayerData.world ) );
+    }
+
     void Game::render(gf::RenderTarget& target, const gf::RenderStates& states)
     {
         m_World.render( target, states );
@@ -85,15 +98,7 @@ namespace redsquare
         while ( m_ComQueue.poll(packet) )
         {
             switch (packet.type)
-            {
-                case PacketType::NewPlayer:
-                {
-                    m_PlayerID = packet.newPlayer.playerID;
-
-                    m_Players.insert( std::make_pair( m_PlayerID, Player() ) );
-                    break;
-                }
-                
+            {   
                 case PacketType::ReceiveMove:
                 {
                     Player* player = getPlayer( packet.receiveMove.playerID );

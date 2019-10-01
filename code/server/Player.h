@@ -20,6 +20,8 @@ namespace redsquare
         void sendPacket(Packet &packet);
         void receivePacket(Packet &packet);
 
+        void sendPacket(NewPlayer &packet);
+
         bool applyMove( MoveDirection dir );
 
         bool playerDisconnected() const;

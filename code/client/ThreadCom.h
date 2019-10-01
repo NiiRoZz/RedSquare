@@ -21,6 +21,7 @@ namespace redsquare
     void start();
     bool sendPacket(Packet &packet);
     bool receivePacket(Packet &packet);
+    bool receivePacket(NewPlayer &packet);
     void receivePackets();
 
     bool socketWorking() const;

@@ -21,6 +21,11 @@ namespace redsquare
         m_Socket.receive(packet);
     }
 
+    void Player::sendPacket( NewPlayer &packet )
+    {
+        m_Socket.send(packet);
+    }
+
     bool Player::applyMove( MoveDirection dir )
     {
         switch ( dir )

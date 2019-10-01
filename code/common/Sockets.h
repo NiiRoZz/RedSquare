@@ -31,28 +31,13 @@ namespace redsquare {
     void send(Packet &packet);
     void receive(Packet &packet);
 
+    void send(NewPlayer &packet);
+    void receive(NewPlayer &packet);
+
   private:
     boost::asio::io_service m_IoService;
     boost::asio::ip::tcp::socket m_Socket;
     SocketState m_State;
-  };
-
-  class ListenerTcp
-  {
-    public:
-    ListenerTcp(std::uint16_t port);
-
-    ListenerTcp(const SocketTcp&) = delete;
-    ListenerTcp& operator=(const SocketTcp&) = delete;
-
-    ListenerTcp(SocketTcp&& other) = delete;
-    ListenerTcp& operator=(SocketTcp&& other) = delete;
-
-    void handleNewConnection(std::function<void(SocketTcp)> handler);
-
-    private:
-    boost::asio::io_service m_IoService;
-    boost::asio::ip::tcp::acceptor m_Acceptor;
   };
 }
 

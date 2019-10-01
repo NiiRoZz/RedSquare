@@ -25,6 +25,8 @@ namespace redsquare
 
         void startThreadCom();
 
+        void receiveWorld();
+
         void movePlayer( MoveDirection dir );
 
         void processPackets();
