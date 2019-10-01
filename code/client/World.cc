@@ -8,8 +8,8 @@ namespace redsquare
 {
     void World::render(gf::RenderTarget& target, const gf::RenderStates& states)
     {
-        m_GroundLayer.draw( target, states );
-        m_WallLayer.draw( target, states );
+        target.draw( m_GroundLayer, states );
+        target.draw( m_WallLayer, states );
     }
 
     World::World()
@@ -25,7 +25,7 @@ namespace redsquare
 
         m_WallLayer.setTileSize({ TileSize, TileSize });
         m_WallLayer.setTilesetTileSize({ TileSize, TileSize });
-        m_WallLayer.setMargin({ 0, 0 });
+        m_WallLayer.setMargin({ 32, 32 });
         m_WallLayer.setSpacing({ 0, 0 });
         m_WallLayer.setTexture( tileTexture );
     }
