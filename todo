@@ -1,0 +1,22 @@
+
+
+
+-Connection entre serveur/Client , envoie de la map , gestion des pthread . do
+-Génération du monde (Lucas)
+-Déplacement, dirjska etc  (Vincent)
+-Menu,Inventaire, objet et autres
+-actions par tour
+
+
+
+-Les Entitées:	-Définir les formules de dégats entre personnages.
+		-état
+		-Caractéristiques
+		-classes
+		-autres...
+
+
+-textures(modèles, sprites, thème),affichages joueurs ...
+-son de fond, histoire (si y'a le time)
+
+A COMPLETER
