@@ -8,26 +8,18 @@ namespace redsquare
 {
     void World::render(gf::RenderTarget& target, const gf::RenderStates& states)
     {
-        target.draw( m_GroundLayer, states );
-        target.draw( m_WallLayer, states );
+        target.draw( m_TileSet, states );
     }
 
     World::World()
-    : m_GroundLayer({ MapSize, MapSize })
-    , m_WallLayer({ MapSize, MapSize })
+    : m_TileSet({ MapSize, MapSize })
     {
-        tileTexture.loadFromFile( "data/redsquare/img/TileLayer.png" );
-        m_GroundLayer.setTileSize({ TileSize, TileSize });
-        m_GroundLayer.setTilesetTileSize({ TileSize, TileSize });
-        m_GroundLayer.setMargin({ 0, 0 });
-        m_GroundLayer.setSpacing({ 0, 0 });
-        m_GroundLayer.setTexture( tileTexture );
-
-        m_WallLayer.setTileSize({ TileSize, TileSize });
-        m_WallLayer.setTilesetTileSize({ TileSize, TileSize });
-        m_WallLayer.setMargin({ 32, 32 });
-        m_WallLayer.setSpacing({ 0, 0 });
-        m_WallLayer.setTexture( tileTexture );
+        tileTexture.loadFromFile( "data/redsquare/img/NewLayerTest.png" );
+        m_TileSet.setTilesetTileSize({ TileSetSize, TileSetSize });
+        m_TileSet.setTileSize({ TileSize, TileSize });
+        m_TileSet.setMargin({ 0, 0 });
+        m_TileSet.setSpacing({ 0, 0 });
+        m_TileSet.setTexture( tileTexture );
     }
 
     void World::generateWorld( gf::Array2D<Tile> world )
@@ -40,12 +32,16 @@ namespace redsquare
             {     
                 if ( m_World( { i, j } ) == Tile::Ground )
                 {
-                    m_GroundLayer.setTile( {i, j}, 0 );
+                    m_TileSet.setTile( {i, j}, 0 );
                 }
                 else if ( m_World( { i, j } ) == Tile::Wall )
                 {
                     std::cout << "Wall at {" << i << "," << j << "}\n";
-                    m_WallLayer.setTile( {i, j}, 0 );
+                    m_TileSet.setTile( {i, j}, 2 );
+
+                }else if( m_World( { i, j } ) == Tile::Void){
+                    std::cout << "Void at {" << i << "," << j << "}\n";
+                    m_TileSet.setTile( {i, j}, 3);
                 }
             }
         }

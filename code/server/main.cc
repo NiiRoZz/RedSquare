@@ -3,6 +3,8 @@
 #include "../common/Packet.h"
 #include "Player.h"
 #include "Game.h"
+#include <time.h>
+#include <stdlib.h>
 
 #include <iostream>
 #include <gf/Streams.h>
@@ -32,6 +34,8 @@ int main( int argc, char **argv )
 		std::cerr << "Number of players should be > 0" << std::endl;
 		return 3;
 	}
+
+	srand(time(nullptr));
 
 	// Init singleton
   	gf::SingletonStorage<gf::Random> storageForRandom(gRandom);

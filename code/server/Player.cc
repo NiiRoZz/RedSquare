@@ -81,7 +81,7 @@ namespace redsquare
             case MoveDirection::Down:
             {
                 int newPosY = m_Pos[1] + 1;
-                if ( newPosY >= 0 && newPosY < World::MapSize-1 )
+                if ( newPosY >= 0 && newPosY < World::MapSize-1)
                 {
                     m_Pos[1] = newPosY;
                     return true;

@@ -20,6 +20,7 @@ namespace redsquare
 
     enum class Tile: uint8_t
     {
+        Void,
         Wall,
         Ground,
     };
