@@ -5,6 +5,7 @@
 
 #include <gf/Queue.h>
 #include <gf/Id.h>
+#include <gf/Map.h>
 
 namespace redsquare
 {
@@ -22,7 +23,7 @@ namespace redsquare
 
         void sendPacket(NewPlayer &packet);
 
-        bool applyMove( MoveDirection dir );
+        bool applyMove( MoveDirection dir, gf::SquareMap &map );
 
         bool playerDisconnected() const;
 
