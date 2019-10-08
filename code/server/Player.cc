@@ -33,7 +33,7 @@ namespace redsquare
             case MoveDirection::Right:
             {
                 int newPosX = m_Pos[0] + 1;
-                if ( newPosX >= 0 && newPosX < World::MapSize-1 && map.isWalkable( {newPosX, m_Pos[1]} ) )
+                if ( newPosX >= 0 && newPosX < World::MapSize-1 /*&& map.isWalkable( {newPosX, m_Pos[1]} )*/ )
                 {
                     m_Pos[0] = newPosX;
                     return true;
@@ -49,7 +49,7 @@ namespace redsquare
             case MoveDirection::Left:
             {
                 int newPosX = m_Pos[0] - 1;
-                if ( newPosX >= 0 && newPosX < World::MapSize && map.isWalkable( {newPosX, m_Pos[1]} ) )
+                if ( newPosX >= 0 && newPosX < World::MapSize /* && map.isWalkable( {newPosX, m_Pos[1]} )*/  )
                 {
                     m_Pos[0] = newPosX;
                     return true;
@@ -65,7 +65,7 @@ namespace redsquare
             case MoveDirection::Up:
             {
                 int newPosY = m_Pos[1] - 1;
-                if ( newPosY >= 0 && newPosY < World::MapSize && map.isWalkable( {m_Pos[0], newPosY} ) )
+                if ( newPosY >= 0 && newPosY < World::MapSize /* && map.isWalkable( {m_Pos[0], newPosY} )*/  )
                 {
                     m_Pos[1] = newPosY;
                     return true;
@@ -81,7 +81,7 @@ namespace redsquare
             case MoveDirection::Down:
             {
                 int newPosY = m_Pos[1] + 1;
-                if ( newPosY >= 0 && newPosY < World::MapSize-1 && map.isWalkable( {m_Pos[0], newPosY} ) )
+                if ( newPosY >= 0 && newPosY < World::MapSize-1 /*&& map.isWalkable( {m_Pos[0], newPosY} )*/ )
                 {
                     m_Pos[1] = newPosY;
                     return true;

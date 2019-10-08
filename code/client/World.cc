@@ -33,17 +33,20 @@ namespace redsquare
                 if ( m_World( { i, j } ) == Tile::Ground )
                 {
                     m_TileSet.setTile( {i, j}, 0 );
+                    std::cout << "X";
                 }
                 else if ( m_World( { i, j } ) == Tile::Wall )
                 {
-                    std::cout << "Wall at {" << i << "," << j << "}\n";
-                    m_TileSet.setTile( {i, j}, 2 );
-
+                    //std::cout << "Wall at {" << i << "," << j << "}\n";
+                    m_TileSet.setTile( {i, j}, 1 );
+                    
                 }else if( m_World( { i, j } ) == Tile::Void){
-                    std::cout << "Void at {" << i << "," << j << "}\n";
+                    //std::cout << "Void at {" << i << "," << j << "}\n";
                     m_TileSet.setTile( {i, j}, 3);
+                    std::cout << " ";
                 }
             }
+            std::cout << "\n";
         }
     }
 }

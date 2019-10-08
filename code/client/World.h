@@ -13,7 +13,7 @@ namespace redsquare
     class World: public gf::Entity
     {
     public:
-        static constexpr int MapSize = 16; // size of the map composed of tile
+        static constexpr int MapSize = 50; // size of the map composed of tile
         static constexpr int TileSize = 16; // size of a tile
         static constexpr int TileSetSize = 16; // size of a tileset
 
@@ -27,7 +27,7 @@ namespace redsquare
         gf::Array2D<Tile> m_World;
 
         gf::Texture tileTexture;
-        gf::TileLayer m_TileSet; //
+        gf::TileLayer m_TileSet;
     };
 }
 
