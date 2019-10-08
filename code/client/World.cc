@@ -34,9 +34,9 @@ namespace redsquare
     {
         m_World = std::move(world);
 
-        for(uint i = 0; i <= MapSize; ++i)
+        for(uint i = 0; i < MapSize; ++i)
         {
-            for (uint j = 0; j <= MapSize; ++j)
+            for (uint j = 0; j < MapSize; ++j)
             {     
                 if ( m_World( { i, j } ) == Tile::Ground )
                 {
