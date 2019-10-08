@@ -11,7 +11,7 @@ namespace redsquare
     class World
     {
     public:
-        static constexpr int MapSize = 128;
+        static constexpr int MapSize = 16;
         static constexpr int TileSize = 16;
         gf::Array2D<Tile> m_World;
         
