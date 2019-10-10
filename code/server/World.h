@@ -11,18 +11,22 @@ namespace redsquare
     class World
     {
     public:
-        static constexpr int MapSize = 50;
+        static constexpr int MapSize = 60;
         static constexpr int TileSize = 16;
         gf::Array2D<Tile> m_World; // first coordinate is for column and the second is for row
-        World();
         gf::SquareMap m_SquareWorld;
+
+        World();
         
 
 
         private:
-            void generateFloor(int nbRoom,int maxLength,int maxWidth);
-            bool isOnRoom( std::vector<gf::Vector4i> &AllRoom , gf::Vector4i &TestRoom);
 
+            std::vector<gf::Vector4i> grid(uint sizeGrid); // return all the cell of the grid in a vector
+            std::vector<gf::Vector4i> generateFloorV2(uint nbRoom, uint sizeGrind, std::vector<gf::Vector4i> MapGrind); // return all the room in a vector
+            std::vector<gf::Vector4i> buildWall(std::vector<gf::Vector4i> TabRoom); // return all the room with wall in a vector
+            void destroyGrid(); // destroy the grid
+            void prettyPrint(); // print the map with char in the console
     };
 }
 
