@@ -23,6 +23,7 @@ namespace redsquare
         Void,
         Wall,
         Ground,
+        Grid,
     };
 
     enum class PacketType : uint16_t
