@@ -4,7 +4,7 @@ project(RedSquare
 )
 
 find_package(gf REQUIRED)
-find_package(Boost REQUIRED COMPONENTS system)
+find_package(Boost REQUIRED COMPONENTS system filesystem)
 
 add_executable(RedSquare
   code/client/main.cc
