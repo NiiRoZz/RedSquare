@@ -22,7 +22,9 @@ namespace redsquare
     {
         Void,
         Wall,
-        Ground,
+        Room,
+        Corridor,
+        Stair,
         Grid,
         Test,
     };

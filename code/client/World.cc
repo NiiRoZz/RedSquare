@@ -26,24 +26,16 @@ namespace redsquare
     {
         m_World = std::move(world);
 
-        for(uint i = 0; i < MapSize; ++i)
-        {
-            for (uint j = 0; j < MapSize; ++j)
-            {     
-                if ( m_World( { i, j } ) == Tile::Ground )
-                {
+        for(uint i = 0; i < MapSize; ++i){
+            for (uint j = 0; j < MapSize; ++j){     
+                if ( m_World( { i, j } ) == Tile::Room || m_World( { i, j } ) == Tile::Corridor ){
                     m_TileSet.setTile( {i, j}, 1 );
-                    //std::cout << "X";
-                }
-                else if ( m_World( { i, j } ) == Tile::Wall )
-                {
-                    //std::cout << "Wall at {" << i << "," << j << "}\n";
+                }else if ( m_World( { i, j } ) == Tile::Wall ){
                     m_TileSet.setTile( {i, j}, 2 );
-                    
                 }else if( m_World( { i, j } ) == Tile::Void){
-                    //std::cout << "Void at {" << i << "," << j << "}\n";
                     m_TileSet.setTile( {i, j}, 3);
-                    std::cout << " ";
+                }else if( m_World( { i, j } ) == Tile::Stair){
+                    m_TileSet.setTile( {i, j}, 3);
                 }
             }
             std::cout << "\n";

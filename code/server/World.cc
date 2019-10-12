@@ -33,18 +33,11 @@ namespace redsquare
         destroyGrid(); // destroy the grid
 
         road(TabRoom);
-        road(TabRoom);
-        road(TabRoom);
-        road(TabRoom);
-        road(TabRoom);
-        road(TabRoom);
-        road(TabRoom);
-        road(TabRoom);
-
-        // TODO decide when to stop the genretion of corridor 
         // TODO set a tile unwalkable 
 
         buildWallCorridor(); // build the wall of corridor
+
+        putStair();
        
         /**** GENERATE ****/
 
@@ -131,7 +124,7 @@ namespace redsquare
         for(gf::Vector4u room : TabRoom){ // set the floor on map
             for(uint length = 0; length < room[2]; ++length){
                 for(uint width = 0; width < room[3]; ++width){
-                    m_World( {room[0]+length, room[1]+width} ) = Tile::Ground;
+                    m_World( {room[0]+length, room[1]+width} ) = Tile::Room;
                     m_SquareWorld.setEmpty({room[0]+length, room[1]+width} );  
                 }
             }
@@ -187,35 +180,43 @@ namespace redsquare
 
     void World::road(std::vector<gf::Vector4u> TabRoom){ // take 2 room and link them with a corridor
 
-        uint random = rand()%TabRoom.size();
-        uint tmp = random;
-
-        gf::Vector2i start = MiddleRoom(TabRoom,random); // center of the first room
+        uint cpt = 0;
         do{
-            random = rand()%TabRoom.size();
-        }while(tmp == random);
-        gf::Vector2i end = MiddleRoom(TabRoom,random); // center of the second room
+            uint random = rand()%TabRoom.size();
+            uint tmp = random;
+
+            gf::Vector2i start = MiddleRoom(TabRoom,random); // center of the first room
+            do{
+                random = rand()%TabRoom.size();
+            }while(tmp == random);
+            gf::Vector2i end = MiddleRoom(TabRoom,random); // center of the second room
 
 
-        gf::Vector2i start2({start[0]-1,start[1]-1}); // tile next to the middle of the first room
-        gf::Vector2i end2({end[0]-1,end[1]-1}); // tile next to the middle of the second room
+            gf::Vector2i start2({start[0]-1,start[1]-1}); // tile next to the middle of the first room
+            gf::Vector2i end2({end[0]-1,end[1]-1}); // tile next to the middle of the second room
 
-        //start2 and end2 are there to make a 2 tile width corridor who's better in my opinion =)
+            //start2 and end2 are there to make a 2 tile width corridor who's better in my opinion =)
 
 
-        std::vector<gf::Vector2i> points = m_SquareWorld.computeRoute(start, end, 0.0); // first set of tile for the corridor
-        std::vector<gf::Vector2i> points2 = m_SquareWorld.computeRoute(start2, end2, 0.0); // second set of tile for the corridor
-        
+            std::vector<gf::Vector2i> points = m_SquareWorld.computeRoute(start, end, 0.0); // first set of tile for the corridor
+            std::vector<gf::Vector2i> points2 = m_SquareWorld.computeRoute(start2, end2, 0.0); // second set of tile for the corridor
+            
 
-        for(gf::Vector2i road : points){
-            m_SquareWorld.setEmpty({road[0],road[1]});
-            m_World({road[0],road[1]}) = Tile::Ground; // set tile to Ground        
-        }
+            for(gf::Vector2i road : points){
+                m_SquareWorld.setEmpty({road[0],road[1]});
+                if(m_World({road[0],road[1]}) != Tile::Room){
+                    m_World({road[0],road[1]}) = Tile::Corridor; // set tile to Corridor   
+                } // set tile to Ground        
+            }
 
-        for(gf::Vector2i road2 : points2){
-            m_SquareWorld.setEmpty({road2[0],road2[1]});
-            m_World({road2[0],road2[1]}) = Tile::Ground; // set tile to Ground        
-        }
+            for(gf::Vector2i road2 : points2){
+                m_SquareWorld.setEmpty({road2[0],road2[1]});
+                 if(m_World({road2[0],road2[1]}) != Tile::Room){
+                    m_World({road2[0],road2[1]}) = Tile::Corridor; // set tile to Corridor   
+                }       
+            }
+            cpt++;
+        }while(cpt != TabRoom.size()*3);
     }
 
     void World::buildWallCorridor(){ // put wall where there should be a wall
@@ -230,20 +231,32 @@ namespace redsquare
         }
     }
 
+    void World::putStair(){
+        uint x = rand() % MapSize;
+        uint y = rand() % MapSize;
+
+        do{
+            x = rand() % MapSize;
+            y = rand() % MapSize;
+        }while(m_World( { x, y } ) != Tile::Room);
+
+        m_World( { x, y } ) = Tile::Stair;
+    }
+
     bool World::nextToGround(uint x, uint y){ // check if the current tile is newt to a tile ground
         if( x == 0 || y == 0 || x == MapSize-1 || y == MapSize-1){
             return false;   
         }
-        if(m_World( { x-1, y } ) == Tile::Ground){
+        if(m_World( { x-1, y } ) == Tile::Room || m_World( { x-1, y } ) == Tile::Corridor){
             return true;    
         }
-        if(m_World( { x+1, y } ) == Tile::Ground){
+        if(m_World( { x+1, y } ) == Tile::Room || m_World( { x+1, y } ) == Tile::Corridor){
             return true;    
         }
-        if(m_World( { x, y-1 } ) == Tile::Ground){
+        if(m_World( { x, y-1 } ) == Tile::Room || m_World( { x, y-1 } ) == Tile::Corridor){
             return true;    
         }
-        if(m_World( { x, y+1 } ) == Tile::Ground){
+        if(m_World( { x, y+1 } ) == Tile::Room || m_World( { x, y+1 } ) == Tile::Corridor){
             return true;    
         }
         return false;
@@ -253,16 +266,20 @@ namespace redsquare
         std::cout << "\n";
         for(uint i = 0; i < MapSize; ++i){
             for (uint j = 0; j < MapSize; ++j){     
-                if (m_World( { j, i } ) == Tile::Ground) {
-                    std::cout << "O";
-                }else if ( m_World( { j, i } ) == Tile::Wall){
-                    std::cout << "X";
+                if (m_World( { j, i } ) == Tile::Room) {
+                    std::cout << "R";
+                }else if( m_World( { j, i } ) == Tile::Wall){
+                    std::cout << "W";
                 }else if( m_World( { j, i } ) == Tile::Void){
                     std::cout << " ";
                 }else if( m_World( { j, i } ) == Tile::Grid){
                     std::cout << "=";
-                }else if ( m_World( { j, i } ) == Tile::Test){
-                    std::cout << "@";
+                }else if( m_World( { j, i } ) == Tile::Test){
+                    std::cout << " ";
+                }else if( m_World( { j, i } ) == Tile::Corridor){
+                    std::cout << "C";
+                }else if( m_World( { j, i } ) == Tile::Stair){
+                    std::cout << " ";
                 }
             }
             std::cout << "\n";

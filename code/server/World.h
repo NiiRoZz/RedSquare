@@ -28,6 +28,7 @@ namespace redsquare
             void road(std::vector<gf::Vector4u> TabRoom); // link two room together
             void buildWallCorridor(); // build wall around ground
             bool nextToGround(uint x, uint y); // check if the tile is next to a ground tile
+            void putStair();
             void prettyPrint(); // print the map with char in the console
     };
 }
