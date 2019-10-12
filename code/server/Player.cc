@@ -26,72 +26,28 @@ namespace redsquare
         m_Socket.send(packet);
     }
 
-    bool Player::applyMove( MoveDirection dir, gf::SquareMap &map )
+    bool Player::applyMove(int dirX, int dirY, gf::SquareMap &map )
     {
-        switch ( dir )
+        //MouseClic
+        if(dirX !=0 && dirY !=0)
         {
-            case MoveDirection::Right:
+            
+        }
+        //
+        else
+        {
+            
+            int newPosY = m_Pos[1] + dirY;
+            int newPosX = m_Pos[0] + dirX;
+            if ( newPosY >= 0 && newPosY < World::MapSize-1 && newPosX >= 0 && newPosX < World::MapSize-1/*&& map.isWalkable( {m_Pos[0], newPosY} )*/ )
             {
-                int newPosX = m_Pos[0] + 1;
-                if ( newPosX >= 0 && newPosX < World::MapSize-1 /*&& map.isWalkable( {newPosX, m_Pos[1]} )*/ )
-                {
-                    m_Pos[0] = newPosX;
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-
-                break;
+                m_Pos[1] = newPosY;
+                m_Pos[0] = newPosX;
+                return true;
             }
-
-            case MoveDirection::Left:
+            else
             {
-                int newPosX = m_Pos[0] - 1;
-                if ( newPosX >= 0 && newPosX < World::MapSize /* && map.isWalkable( {newPosX, m_Pos[1]} )*/  )
-                {
-                    m_Pos[0] = newPosX;
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-
-                break;
-            }
-
-            case MoveDirection::Up:
-            {
-                int newPosY = m_Pos[1] - 1;
-                if ( newPosY >= 0 && newPosY < World::MapSize /* && map.isWalkable( {m_Pos[0], newPosY} )*/  )
-                {
-                    m_Pos[1] = newPosY;
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-
-                break;
-            }
-
-            case MoveDirection::Down:
-            {
-                int newPosY = m_Pos[1] + 1;
-                if ( newPosY >= 0 && newPosY < World::MapSize-1 /*&& map.isWalkable( {m_Pos[0], newPosY} )*/ )
-                {
-                    m_Pos[1] = newPosY;
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-                
-                break;
+                return false;
             }
         }
 

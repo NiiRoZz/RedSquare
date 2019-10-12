@@ -23,7 +23,7 @@ namespace redsquare
 
         void sendPacket(NewPlayer &packet);
 
-        bool applyMove( MoveDirection dir, gf::SquareMap &map );
+        bool applyMove( int dirX, int dirY, gf::SquareMap &map );
 
         bool playerDisconnected() const;
 

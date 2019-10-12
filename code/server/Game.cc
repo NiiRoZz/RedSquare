@@ -71,7 +71,7 @@ namespace redsquare
                 Player *player = getPlayer( packet.requestMove.playerID );
                 if ( player != nullptr )
                 {
-                    bool moved = player->applyMove( packet.requestMove.dir, m_World.m_SquareWorld );
+                    bool moved = player->applyMove( packet.requestMove.dirX,packet.requestMove.dirY, m_World.m_SquareWorld );
 
                     if ( moved )
                     {

@@ -9,14 +9,14 @@
 
 namespace redsquare
 {
-    enum class MoveDirection : uint16_t
+   /* enum class MoveDirection : uint16_t
     {
         Right,
         Left,
         Up,
         Down,
         Nothing,
-    };
+    };*/
 
     enum class Tile: uint8_t
     {
@@ -54,7 +54,8 @@ namespace redsquare
     struct RequestMove
     {
         gf::Id playerID;
-        MoveDirection dir;
+        int dirX;
+        int dirY;
     };
 
     struct ReceiveMove
@@ -97,7 +98,8 @@ namespace redsquare
             case PacketType::RequestMove:
             {
                 ar | packet.requestMove.playerID;
-                ar | packet.requestMove.dir;
+                ar | packet.requestMove.dirX;
+                ar | packet.requestMove.dirY;
                 break;
             }
 

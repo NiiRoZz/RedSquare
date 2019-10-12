@@ -117,16 +117,16 @@ int main( int argc, char **argv )
 
         if (rightAction.isActive())
         {
-            game.movePlayer( MoveDirection::Right );
+            game.movePlayer( 1,0);
         } else if (leftAction.isActive())
         {
-            game.movePlayer( MoveDirection::Left );
+            game.movePlayer( -1,0 );
         } else if (upAction.isActive())
         {
-            game.movePlayer( MoveDirection::Up );
+            game.movePlayer( 0, -1 );
         } else if (downAction.isActive())
         {
-            game.movePlayer( MoveDirection::Down );
+            game.movePlayer( 0,1);
         } else
         {
             // do something

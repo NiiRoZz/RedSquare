@@ -27,7 +27,7 @@ namespace redsquare
 
         void receiveWorld();
 
-        void movePlayer( MoveDirection dir );
+        void movePlayer( int dirX, int dirY);
 
         void processPackets();
 
@@ -49,7 +49,9 @@ namespace redsquare
         gf::Queue<Packet> m_ComQueue;
 
         //Move of player
-        MoveDirection m_DirMoving;
+        //MoveDirection m_DirMoving;
+        int m_dirX;
+        int m_dirY;
 
         //View of the game
         gf::ExtendView* m_View;

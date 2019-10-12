@@ -9,7 +9,8 @@ namespace redsquare
     : m_ThreadCom(hostname, port, m_ComQueue)
     , m_View(&view)
     , m_CanPlay( false )
-    , m_DirMoving( MoveDirection::Nothing )
+    , m_dirX(0)
+    , m_dirY(0)
     {
     }
 
@@ -75,16 +76,18 @@ namespace redsquare
         }
 
         //Player want to move
-        if ( m_DirMoving != MoveDirection::Nothing )
+        if ( m_dirX!=0 ||m_dirY!= 0 )
         {
             Packet packet;
             packet.type = PacketType::RequestMove;
             packet.requestMove.playerID = m_PlayerID;
-            packet.requestMove.dir = m_DirMoving;
+            packet.requestMove.dirX = m_dirX;
+            packet.requestMove.dirY = m_dirY;
 
             m_ThreadCom.sendPacket( packet );
 
-            m_DirMoving = MoveDirection::Nothing;
+            m_dirX=0;
+            m_dirY=0;
 
             //don't forget to call m_CanPlay false when sent action
             m_CanPlay = false;
@@ -137,14 +140,15 @@ namespace redsquare
         }
     }
 
-    void Game::movePlayer( MoveDirection dir )
+    void Game::movePlayer( int dirX, int dirY )
     {
         if ( !m_CanPlay )
         {
             return;
         }
         
-        m_DirMoving = dir;
+        m_dirX=dirX;
+        m_dirY=dirY;
     }
 
     Player* Game::getPlayer( gf::Id playerID )
