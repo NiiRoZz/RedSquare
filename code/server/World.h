@@ -11,23 +11,26 @@ namespace redsquare
     class World
     {
     public:
-        static constexpr int MapSize = 60;
-        static constexpr int TileSize = 16;
+        static constexpr uint MapSize = 100; // size of the map in tile
+        static constexpr uint TileSize = 16;
         gf::Array2D<Tile> m_World; // first coordinate is for column and the second is for row
         gf::SquareMap m_SquareWorld;
 
-        World();
-        
 
+        World();
 
         private:
-
-            std::vector<gf::Vector4i> grid(uint sizeGrid); // return all the cell of the grid in a vector
-            std::vector<gf::Vector4i> generateFloorV2(uint nbRoom, uint sizeGrind, std::vector<gf::Vector4i> MapGrind); // return all the room in a vector
-            std::vector<gf::Vector4i> buildWall(std::vector<gf::Vector4i> TabRoom); // return all the room with wall in a vector
+            std::vector<gf::Vector4u> grid(uint sizeGrid); // return all the cell of the grid in a vector
+            std::vector<gf::Vector4u> generateFloorV2(uint nbRoom, uint sizeGrind, std::vector<gf::Vector4u> MapGrind); // return all the room in a vector
+            std::vector<gf::Vector4u> buildWall(std::vector<gf::Vector4u> TabRoom); // return all the room with wall in a vector
             void destroyGrid(); // destroy the grid
+            gf::Vector2i MiddleRoom(std::vector<gf::Vector4u> TabRoom,uint random); // select the middle of a random room
+            void road(std::vector<gf::Vector4u> TabRoom); // link two room together
+            void buildWallCorridor(); // build wall around ground
+            bool nextToGround(uint x, uint y); // check if the tile is next to a ground tile
             void prettyPrint(); // print the map with char in the console
     };
 }
 
 #endif
+

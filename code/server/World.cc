@@ -1,9 +1,12 @@
 #include "World.h"
 
-#include <gf/Sprite.h>
-#include <gf/RenderTarget.h>
-#include <gf/Vector.h>
 #include <stdlib.h>
+#include <cstdlib>
+#include <cstdio>
+
+#include <gf/Vector.h>
+#include <gf/Map.h>
+
 
 #define MINSIZE 6
 
@@ -14,14 +17,35 @@ namespace redsquare
     : m_SquareWorld({MapSize, MapSize})
     , m_World({MapSize, MapSize})
     {
-        int SizeGrind = 20; // sizegrind must divide MapSize to be usefull
-        int numberRoom = 5; // number of room whi must be < TabRoom.size()
+        uint SizeGrind = 20; // sizegrind must divide MapSize to be usefull
+        uint numberRoom = 10; // number of room, must be < TabRoom.size()
+
+        for(uint i = 0; i < MapSize; ++i){
+            for (uint j = 0; j < MapSize; ++j){  
+                m_SquareWorld.setWalkable({i,j}); // every tile are walkable at the start the the generation
+            }
+        }
 
         /**** GENERATE ****/
-        std::vector<gf::Vector4i> TabGrind = grid(SizeGrind); // build grind
-        std::vector<gf::Vector4i> TabRoom = generateFloorV2(numberRoom,SizeGrind,TabGrind); // generate the room
-        buildWall(TabRoom); // build wall around room
-        destroyGrid(); // destroy the grid 
+        std::vector<gf::Vector4u> TabGrid = grid(SizeGrind); // build grind
+        std::vector<gf::Vector4u> TabRoom = generateFloorV2(numberRoom,SizeGrind,TabGrid); // generate the room
+        TabRoom = buildWall(TabRoom); // build wall around room
+        destroyGrid(); // destroy the grid
+
+        road(TabRoom);
+        road(TabRoom);
+        road(TabRoom);
+        road(TabRoom);
+        road(TabRoom);
+        road(TabRoom);
+        road(TabRoom);
+        road(TabRoom);
+
+        // TODO decide when to stop the genretion of corridor 
+        // TODO set a tile unwalkable 
+
+        buildWallCorridor(); // build the wall of corridor
+       
         /**** GENERATE ****/
 
         /**** PRINT ****/
@@ -29,9 +53,9 @@ namespace redsquare
         /**** PRINT ****/
     }
 
-    std::vector<gf::Vector4i> World::grid(uint sizeGrind){ // sizegrind must divide MapSize to be usefull
+    std::vector<gf::Vector4u> World::grid(uint sizeGrind){ // sizegrind must divide MapSize to be usefull
 
-        std::cout << "grid STARTED\n";
+        //std::cout << "grid STARTED\n";
         uint gridX = 0;
         uint gridY = 0;
 
@@ -55,34 +79,34 @@ namespace redsquare
             }
         }
 
-        std::vector<gf::Vector4i> TabCell; //  number of the cell in the grid / coord x / coor y / is filled
+        std::vector<gf::Vector4u> TabCell; //  number of the cell in the grid / coord x / coor y / is filled
 
-        int number = 0;
-        for(int i = 0; i < MapSize ; i +=sizeGrind){
-            for(int j = 0; j < MapSize ; j +=sizeGrind){
+        uint number = 0;
+        for(uint i = 0; i < MapSize ; i +=sizeGrind){
+            for(uint j = 0; j < MapSize ; j +=sizeGrind){
                 TabCell.push_back({number,i,j,false});
                 //std::cout << "number :" << number <<" coordonnée : " << i << "," << j << '\n' ;
                 number++;
             }
         }
-        std::cout << "grid ENDED\n";
+        //std::cout << "grid ENDED\n";
         return TabCell;
     }
 
-    std::vector<gf::Vector4i> World::generateFloorV2(uint nbRoom,uint sizeGrind,std::vector<gf::Vector4i> MapGrind){
+    std::vector<gf::Vector4u> World::generateFloorV2(uint nbRoom,uint sizeGrind,std::vector<gf::Vector4u> MapGrind){
 
-        std::cout << "generateFloorV2 STARTED\n";
+        //std::cout << "generateFloorV2 STARTED\n";
         
-        int numberCell = MapGrind.size(); // number of cell in the grind
+        uint numberCell = MapGrind.size(); // number of cell in the grind
 
-        int randNumCase;
-        int length;
-        int width;
+        uint randNumCase;
+        uint length;
+        uint width;
 
-        int posX;
-        int posY;
+        uint posX;
+        uint posY;
 
-        std::vector<gf::Vector4i> TabRoom;
+        std::vector<gf::Vector4u> TabRoom;
 
 
         for(uint room = 0; room < nbRoom ; room++){
@@ -99,56 +123,130 @@ namespace redsquare
             }while(posX+length > (MapGrind[randNumCase][1]+sizeGrind)-2|| posY+width > (MapGrind[randNumCase][2]+sizeGrind)-2 ||  posY+width == MapSize);
 
 
-            gf::Vector4i Room({posX,posY,length,width});
+            gf::Vector4u Room({posX,posY,length,width});
             TabRoom.push_back(Room);
             MapGrind[randNumCase][3] = 1; // set the cell N°randNumCase to 1 because he is now filled with a room 
         }
 
-        for(gf::Vector4i room : TabRoom){ // set the floor on map
+        for(gf::Vector4u room : TabRoom){ // set the floor on map
             for(uint length = 0; length < room[2]; ++length){
                 for(uint width = 0; width < room[3]; ++width){
                     m_World( {room[0]+length, room[1]+width} ) = Tile::Ground;
-                    m_SquareWorld.setWalkable({room[0]+length, room[1]+width} );
-                    m_SquareWorld.setTransparent({room[0]+length, room[1]+width});   
+                    m_SquareWorld.setEmpty({room[0]+length, room[1]+width} );  
                 }
             }
             //std::cout << "X :"  << room[0] << " Y : " << room[1] << " Taille : " << room[2] << "x" << room[3] << "\n" ;
         }
-        std::cout << "generateFloorV2 ENDED\n";
+        //std::cout << "generateFloorV2 ENDED\n";
         return TabRoom;
     }
 
 
-     std::vector<gf::Vector4i> World::buildWall(std::vector<gf::Vector4i> TabRoom){ // build wall around all the room
-        std::cout << "buildWall STARTED\n";
-        int length , width;
-        for(gf::Vector4i room : TabRoom){
+     std::vector<gf::Vector4u> World::buildWall(std::vector<gf::Vector4u> TabRoom){ // TODO 
+        //std::cout << "buildWall STARTED\n";
+        uint length , width;
+        std::vector<gf::Vector4u> fullRoom;
+
+        for(gf::Vector4u room : TabRoom){
             length = room[2] + 2; // length of the room + 2 to put wall on both side
             width = room[3] + 2; // width of the room + 2 to put wall on both side
             //std::cout << "length: " << length << " width : " << width << "\n";
-            for(int i = 0; i < length; ++i){
-                for(int j = 0; j < width; ++j){
+            for(uint i = 0; i < length; ++i){
+                for(uint j = 0; j < width; ++j){
                     if(i == 0 || j == 0 || i == length-1 || j == width-1){
                         m_World({(room[0] -1)+i,(room[1]-1)+j}) = Tile::Wall; // set tile to wall
                         //std::cout << "SET WALL\n";
                     }
                 }
             }
+            gf::Vector4u wall({(room[0]-1),(room[1]-1),length,width});
+            fullRoom.push_back(wall);
         }
-        std::cout << "buildWall ENDED\n";
-        return TabRoom;
+        //std::cout << "buildWall ENDED\n";
+        return fullRoom;
      }
 
     void World::destroyGrid(){ // destroy the grid 
-        std::cout << "buildWall STARTED\n";
-        for(int i = 0; i < MapSize; ++i){
-            for(int j = 0; j < MapSize; ++j){
+        //std::cout << "destroyGrid STARTED\n";
+        for(uint i = 0; i < MapSize; ++i){
+            for(uint j = 0; j < MapSize; ++j){
                 if(m_World({i,j}) == Tile::Grid){
                     m_World({i,j}) = Tile::Void; // set tile to Void
                 }
             }
         }
-        std::cout << "buildWall ENDED\n";
+        //std::cout << "destroyGrid ENDED\n";
+    }
+
+    gf::Vector2i World::MiddleRoom(std::vector<gf::Vector4u> TabRoom , uint random){
+        gf::Vector4u firstRoom = TabRoom[random]; // random room
+        gf::Vector2i road({firstRoom[0]+(firstRoom[2]/2),firstRoom[1]+(firstRoom[3]/2)}); // will stock the tile int the middle of the selected room
+
+        return road;    
+    }
+
+    void World::road(std::vector<gf::Vector4u> TabRoom){ // take 2 room and link them with a corridor
+
+        uint random = rand()%TabRoom.size();
+        uint tmp = random;
+
+        gf::Vector2i start = MiddleRoom(TabRoom,random); // center of the first room
+        do{
+            random = rand()%TabRoom.size();
+        }while(tmp == random);
+        gf::Vector2i end = MiddleRoom(TabRoom,random); // center of the second room
+
+
+        gf::Vector2i start2({start[0]-1,start[1]-1}); // tile next to the middle of the first room
+        gf::Vector2i end2({end[0]-1,end[1]-1}); // tile next to the middle of the second room
+
+        //start2 and end2 are there to make a 2 tile width corridor who's better in my opinion =)
+
+
+        std::vector<gf::Vector2i> points = m_SquareWorld.computeRoute(start, end, 0.0); // first set of tile for the corridor
+        std::vector<gf::Vector2i> points2 = m_SquareWorld.computeRoute(start2, end2, 0.0); // second set of tile for the corridor
+        
+
+        for(gf::Vector2i road : points){
+            m_SquareWorld.setEmpty({road[0],road[1]});
+            m_World({road[0],road[1]}) = Tile::Ground; // set tile to Ground        
+        }
+
+        for(gf::Vector2i road2 : points2){
+            m_SquareWorld.setEmpty({road2[0],road2[1]});
+            m_World({road2[0],road2[1]}) = Tile::Ground; // set tile to Ground        
+        }
+    }
+
+    void World::buildWallCorridor(){ // put wall where there should be a wall
+        for(uint i = 0; i < MapSize; ++i){
+            for (uint j = 0; j < MapSize; ++j){
+                if(m_World( { i, j } ) == Tile::Void){
+                    if(nextToGround(i,j) == true){ // check if the tile next to this one is a ground 
+                        m_World( { i, j } ) = Tile::Wall; // set the current tile to a wall
+                    }
+                }
+            }
+        }
+    }
+
+    bool World::nextToGround(uint x, uint y){ // check if the current tile is newt to a tile ground
+        if( x == 0 || y == 0 || x == MapSize-1 || y == MapSize-1){
+            return false;   
+        }
+        if(m_World( { x-1, y } ) == Tile::Ground){
+            return true;    
+        }
+        if(m_World( { x+1, y } ) == Tile::Ground){
+            return true;    
+        }
+        if(m_World( { x, y-1 } ) == Tile::Ground){
+            return true;    
+        }
+        if(m_World( { x, y+1 } ) == Tile::Ground){
+            return true;    
+        }
+        return false;
     }
 
     void World::prettyPrint(){ // printing the map on server's console
@@ -156,13 +254,15 @@ namespace redsquare
         for(uint i = 0; i < MapSize; ++i){
             for (uint j = 0; j < MapSize; ++j){     
                 if (m_World( { j, i } ) == Tile::Ground) {
-                    std::cout << " ";
+                    std::cout << "O";
                 }else if ( m_World( { j, i } ) == Tile::Wall){
                     std::cout << "X";
                 }else if( m_World( { j, i } ) == Tile::Void){
                     std::cout << " ";
                 }else if( m_World( { j, i } ) == Tile::Grid){
                     std::cout << "=";
+                }else if ( m_World( { j, i } ) == Tile::Test){
+                    std::cout << "@";
                 }
             }
             std::cout << "\n";

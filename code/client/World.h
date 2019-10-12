@@ -13,7 +13,7 @@ namespace redsquare
     class World: public gf::Entity
     {
     public:
-        static constexpr int MapSize = 60; // size of the map composed of tile
+        static constexpr int MapSize = 100; // size of the map composed of tile
         static constexpr int TileSize = 16; // size of a tile
         static constexpr int TileSetSize = 16; // size of a tileset
 
