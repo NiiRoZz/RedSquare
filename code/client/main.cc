@@ -18,6 +18,8 @@
 #include <gf/Views.h>
 #include <gf/Window.h>
 #include <iostream>
+#include <gf/Shapes.h>
+#include <gf/VectorOps.h>
 #include <gf/VertexArray.h>
 
 #include "World.h"
