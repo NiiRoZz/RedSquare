@@ -1,3 +1,13 @@
+#include <cstdlib>
+#include <cstdio>
+#include <vector>
+#include <deque>
+#include <gf/Geometry.h>
+#include <gf/Grid.h>
+#include <gf/Math.h>
+#include <gf/Random.h>
+#include <chrono>
+
 #include <gf/Action.h>
 #include <gf/Clock.h>
 #include <gf/Color.h>
@@ -8,11 +18,14 @@
 #include <gf/Views.h>
 #include <gf/Window.h>
 #include <iostream>
+#include <gf/VertexArray.h>
 
 #include "World.h"
 #include "Game.h"
 #include "../common/Packet.h"
 #include <gf/TileLayer.h>
+
+
 
 using namespace redsquare;
 
@@ -76,6 +89,9 @@ int main( int argc, char **argv )
     downAction.addScancodeKeyControl(gf::Scancode::Down);
     //downAction.setContinuous();
     actions.addAction(downAction);
+    
+    gf::Action clicAction("Clic");
+    clicAction.addMouseButtonControl(gf::MouseButton::Left);
 
     // entities
     gf::EntityContainer mainEntities;
@@ -96,10 +112,13 @@ int main( int argc, char **argv )
     // game loop
     renderer.clear(gf::Color::Black);
     gf::Clock clock;
-	while (window.isOpen())
+    std::chrono::time_point<std::chrono::system_clock> start, end;
+	start = std::chrono::system_clock::now();
+    while (window.isOpen())
     {
         // 1. input
         gf::Event event;
+        
         while (window.pollEvent(event))
         {
             actions.processEvent(event);
@@ -127,9 +146,22 @@ int main( int argc, char **argv )
         } else if (downAction.isActive())
         {
             game.movePlayer( 0,1);
-        } else
+        } else if (event.type == gf::EventType::MouseButtonPressed)
         {
-            // do something
+             
+            end = std::chrono::system_clock::now();
+            int elapsed_seconds = std::chrono::duration_cast<std::chrono::milliseconds>
+                             (end-start).count();
+            std::cout<<elapsed_seconds<<std::endl;
+            if(elapsed_seconds>500){
+                start = std::chrono::system_clock::now();
+                gf::Vector2i coord=renderer.mapPixelToCoords(event.mouseButton.coords,mainView) / World::TileSize;
+
+                int x =coord[0];
+                int y=coord[1];
+                printf("x : %d\n,y : %d\n",x,y);
+                game.movePlayer(x,y);// do something
+            }
         }
         
         // 2. update
