@@ -20,12 +20,6 @@ namespace redsquare
         uint SizeGrind = 20; // sizegrind must divide MapSize to be usefull
         uint numberRoom = 10; // number of room, must be < TabRoom.size()
 
-        for(uint i = 0; i < MapSize; ++i){
-            for (uint j = 0; j < MapSize; ++j){  
-                m_SquareWorld.setWalkable({i,j}); // every tile are walkable at the start the the generation
-            }
-        }
-
         /**** GENERATE ****/
         std::vector<gf::Vector4u> TabGrid = grid(SizeGrind); // build grind
         std::vector<gf::Vector4u> TabRoom = generateFloorV2(numberRoom,SizeGrind,TabGrid); // generate the room
@@ -37,7 +31,7 @@ namespace redsquare
 
         buildWallCorridor(); // build the wall of corridor
 
-        putStair();
+        putStair(); // put stair on the map
        
         /**** GENERATE ****/
 
@@ -171,7 +165,7 @@ namespace redsquare
         //std::cout << "destroyGrid ENDED\n";
     }
 
-    gf::Vector2i World::MiddleRoom(std::vector<gf::Vector4u> TabRoom , uint random){
+    gf::Vector2i World::MiddleRoom(std::vector<gf::Vector4u> TabRoom , uint random){ // take the tile in the miidle of the room
         gf::Vector4u firstRoom = TabRoom[random]; // random room
         gf::Vector2i road({firstRoom[0]+(firstRoom[2]/2),firstRoom[1]+(firstRoom[3]/2)}); // will stock the tile int the middle of the selected room
 
@@ -179,6 +173,14 @@ namespace redsquare
     }
 
     void World::road(std::vector<gf::Vector4u> TabRoom){ // take 2 room and link them with a corridor
+        gf::SquareMap tampon = m_SquareWorld;
+
+        for(uint i = 0; i < MapSize; ++i){
+            for (uint j = 0; j < MapSize; ++j){  
+                tampon.setWalkable({i,j}); // every tile are walkable at the start the the generation
+            }
+        }
+
 
         uint cpt = 0;
         do{
@@ -198,25 +200,25 @@ namespace redsquare
             //start2 and end2 are there to make a 2 tile width corridor who's better in my opinion =)
 
 
-            std::vector<gf::Vector2i> points = m_SquareWorld.computeRoute(start, end, 0.0); // first set of tile for the corridor
-            std::vector<gf::Vector2i> points2 = m_SquareWorld.computeRoute(start2, end2, 0.0); // second set of tile for the corridor
+            std::vector<gf::Vector2i> points = tampon.computeRoute(start, end, 0.0); // first set of tile for the corridor
+            std::vector<gf::Vector2i> points2 = tampon.computeRoute(start2, end2, 0.0); // second set of tile for the corridor
             
 
             for(gf::Vector2i road : points){
-                m_SquareWorld.setEmpty({road[0],road[1]});
+                tampon.setEmpty({road[0],road[1]});
                 if(m_World({road[0],road[1]}) != Tile::Room){
                     m_World({road[0],road[1]}) = Tile::Corridor; // set tile to Corridor   
                 } // set tile to Ground        
             }
 
             for(gf::Vector2i road2 : points2){
-                m_SquareWorld.setEmpty({road2[0],road2[1]});
+                tampon.setEmpty({road2[0],road2[1]});
                  if(m_World({road2[0],road2[1]}) != Tile::Room){
                     m_World({road2[0],road2[1]}) = Tile::Corridor; // set tile to Corridor   
                 }       
             }
             cpt++;
-        }while(cpt != TabRoom.size()*3);
+        }while(cpt != TabRoom.size()*3); // dummy ways to be sure that no room is isolated.   implemtation can be better with graphe algorithm
     }
 
     void World::buildWallCorridor(){ // put wall where there should be a wall
@@ -231,16 +233,16 @@ namespace redsquare
         }
     }
 
-    void World::putStair(){
+    void World::putStair(){ // put a stair somewhere on the map
         uint x = rand() % MapSize;
         uint y = rand() % MapSize;
 
         do{
             x = rand() % MapSize;
             y = rand() % MapSize;
-        }while(m_World( { x, y } ) != Tile::Room);
+        }while(m_World( { x, y } ) != Tile::Room); // only putting stair on a  randon room's tile
 
-        m_World( { x, y } ) = Tile::Stair;
+        m_World( { x, y } ) = Tile::Stair; // 1 stair for a floor
     }
 
     bool World::nextToGround(uint x, uint y){ // check if the current tile is newt to a tile ground

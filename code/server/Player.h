@@ -2,11 +2,11 @@
 #define REDSQUARE_SERVER_PLAYER_H
 
 #include "../common/Sockets.h"
+#include "World.h"
 
 #include <gf/Queue.h>
 #include <gf/Id.h>
 #include <gf/Map.h>
-
 namespace redsquare
 {
     class Player

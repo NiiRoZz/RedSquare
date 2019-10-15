@@ -52,7 +52,16 @@ namespace redsquare
 
     void Player::loadTexture()
     {
-        testTexture.loadFromFile("data/redsquare/img/redsquare.png");
+        uint test = rand()%4; // TODO select correctly with player ID
+        if(test == 0){
+            testTexture.loadFromFile("data/redsquare/img/goblin.png");
+        }else if(test == 1){
+            testTexture.loadFromFile("data/redsquare/img/knight.png");
+        }else if(test == 2){
+            testTexture.loadFromFile("data/redsquare/img/bat.png");
+        }else if(test == 3){
+            testTexture.loadFromFile("data/redsquare/img/slime.png");
+        }
     }
 
     Player::Player()
