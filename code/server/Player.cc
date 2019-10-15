@@ -35,7 +35,7 @@ namespace redsquare
             int newPosY =  dirY;
             
             
-            if ( newPosY >= 0 && newPosY < World::MapSize-1 && newPosX >= 0 && newPosX < World::MapSize-1 /*&& map.isWalkable( {m_Pos[0], newPosY})*/ )
+            if ( newPosY >= 0 && newPosY < World::MapSize-1 && newPosX >= 0 && newPosX < World::MapSize-1 && map.isWalkable( {m_Pos[0], newPosY}))
             {
                 m_Pos[1] = newPosY;
                 m_Pos[0] = newPosX;
@@ -52,7 +52,7 @@ namespace redsquare
             
             int newPosY = m_Pos[1] + dirY;
             int newPosX = m_Pos[0] + dirX;
-            if ( newPosY >= 0 && newPosY < World::MapSize-1 && newPosX >= 0 && newPosX < World::MapSize-1 /*&& map.isWalkable( {m_Pos[0], newPosY} )*/ )
+            if ( newPosY >= 0 && newPosY < World::MapSize-1 && newPosX >= 0 && newPosX < World::MapSize-1 && map.isWalkable( {m_Pos[0], newPosY} ) )
             {
                 m_Pos[1] = newPosY;
                 m_Pos[0] = newPosX;

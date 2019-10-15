@@ -26,17 +26,16 @@ namespace redsquare
         TabRoom = buildWall(TabRoom); // build wall around room
         destroyGrid(); // destroy the grid
 
-        road(TabRoom);
-        // TODO set a tile unwalkable 
-
+        road(TabRoom); // build the road
         buildWallCorridor(); // build the wall of corridor
-
         putStair(); // put stair on the map
+        SetWalkable(); // Set walkable the tile that should be
        
         /**** GENERATE ****/
 
         /**** PRINT ****/
         prettyPrint(); // print the map
+        prettyPrintWalkable(); // print all the tile that are walkable
         /**** PRINT ****/
     }
 
@@ -173,14 +172,13 @@ namespace redsquare
     }
 
     void World::road(std::vector<gf::Vector4u> TabRoom){ // take 2 room and link them with a corridor
-        gf::SquareMap tampon = m_SquareWorld;
+        gf::SquareMap tampon = m_SquareWorld; // using tampon to not modify m_squareworld flags
 
         for(uint i = 0; i < MapSize; ++i){
             for (uint j = 0; j < MapSize; ++j){  
-                tampon.setWalkable({i,j}); // every tile are walkable at the start the the generation
+                tampon.setWalkable({i,j}); // every tile are walkable  on the tampon
             }
         }
-
 
         uint cpt = 0;
         do{
@@ -213,7 +211,7 @@ namespace redsquare
 
             for(gf::Vector2i road2 : points2){
                 tampon.setEmpty({road2[0],road2[1]});
-                 if(m_World({road2[0],road2[1]}) != Tile::Room){
+                if(m_World({road2[0],road2[1]}) != Tile::Room){
                     m_World({road2[0],road2[1]}) = Tile::Corridor; // set tile to Corridor   
                 }       
             }
@@ -264,6 +262,16 @@ namespace redsquare
         return false;
     }
 
+    void World::SetWalkable(){ // set walkable all the tile that should be
+        for(uint i = 0; i < MapSize; ++i){
+            for (uint j = 0; j < MapSize; ++j){    
+                if( m_World( { i, j } ) == Tile::Corridor || m_World( { i, j} ) == Tile::Stair || m_World( { i, j } ) == Tile::Room){ // room and corridor and stair are walkable
+                   m_SquareWorld.setWalkable({i,j});
+                }
+            }
+        }
+    }
+
     void World::prettyPrint(){ // printing the map on server's console
         std::cout << "\n";
         for(uint i = 0; i < MapSize; ++i){
@@ -281,6 +289,21 @@ namespace redsquare
                 }else if( m_World( { j, i } ) == Tile::Corridor){
                     std::cout << "C";
                 }else if( m_World( { j, i } ) == Tile::Stair){
+                    std::cout << " ";
+                }
+            }
+            std::cout << "\n";
+        }
+    }
+
+    void World::prettyPrintWalkable(){ // printing the walkable tile on server's console
+        std::cout << "\n";
+        for(uint i = 0; i < MapSize; ++i){
+            for (uint j = 0; j < MapSize; ++j){    
+                gf::Vector2i pair({j,i});
+                if( m_SquareWorld.isWalkable(pair) ){
+                    std::cout << "W";
+                }else{
                     std::cout << " ";
                 }
             }

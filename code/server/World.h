@@ -29,6 +29,8 @@ namespace redsquare
             void buildWallCorridor(); // build wall around ground
             bool nextToGround(uint x, uint y); // check if the tile is next to a ground tile
             void putStair();
+            void SetWalkable();
+            void prettyPrintWalkable();
             void prettyPrint(); // print the map with char in the console
     };
 }
