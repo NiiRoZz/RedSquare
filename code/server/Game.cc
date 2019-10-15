@@ -18,7 +18,7 @@ namespace redsquare
         std::map<gf::Id, Player>::iterator itNewPlayer;
 
         // Create a new player
-        std::tie(itNewPlayer, std::ignore) = m_Players.emplace(id, Player(std::move(socket), id));
+        std::tie(itNewPlayer, std::ignore) = m_Players.emplace(id, Player(std::move(socket), id, m_World.getSpawnPoint()));
 
         // Send to the client his ID
         auto size = m_World.m_World.getSize();

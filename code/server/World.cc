@@ -118,7 +118,7 @@ namespace redsquare
             for(uint length = 0; length < room[2]; ++length){
                 for(uint width = 0; width < room[3]; ++width){
                     m_World( {room[0]+length, room[1]+width} ) = Tile::Room;
-                    m_SquareWorld.setEmpty({room[0]+length, room[1]+width} );  
+                    m_SquareWorld.setEmpty({(int) (room[0]+length), (int) (room[1]+width)} );  
                 }
             }
             //std::cout << "X :"  << room[0] << " Y : " << room[1] << " Taille : " << room[2] << "x" << room[3] << "\n" ;
@@ -164,9 +164,9 @@ namespace redsquare
         //std::cout << "destroyGrid ENDED\n";
     }
 
-    gf::Vector2i World::MiddleRoom(std::vector<gf::Vector4u> TabRoom , uint random){ // take the tile in the miidle of the room
+    gf::Vector2u World::MiddleRoom(std::vector<gf::Vector4u> TabRoom , uint random){ // take the tile in the miidle of the room
         gf::Vector4u firstRoom = TabRoom[random]; // random room
-        gf::Vector2i road({firstRoom[0]+(firstRoom[2]/2),firstRoom[1]+(firstRoom[3]/2)}); // will stock the tile int the middle of the selected room
+        gf::Vector2u road({firstRoom[0]+(firstRoom[2]/2),firstRoom[1]+(firstRoom[3]/2)}); // will stock the tile int the middle of the selected room
 
         return road;    
     }
@@ -174,8 +174,8 @@ namespace redsquare
     void World::road(std::vector<gf::Vector4u> TabRoom){ // take 2 room and link them with a corridor
         gf::SquareMap tampon = m_SquareWorld; // using tampon to not modify m_squareworld flags
 
-        for(uint i = 0; i < MapSize; ++i){
-            for (uint j = 0; j < MapSize; ++j){  
+        for(int i = 0; i < MapSize; ++i){
+            for (int j = 0; j < MapSize; ++j){  
                 tampon.setWalkable({i,j}); // every tile are walkable  on the tampon
             }
         }
@@ -204,15 +204,15 @@ namespace redsquare
 
             for(gf::Vector2i road : points){
                 tampon.setEmpty({road[0],road[1]});
-                if(m_World({road[0],road[1]}) != Tile::Room){
-                    m_World({road[0],road[1]}) = Tile::Corridor; // set tile to Corridor   
+                if(m_World({(uint)road[0],(uint)road[1]}) != Tile::Room){
+                    m_World({(uint)road[0],(uint)road[1]}) = Tile::Corridor; // set tile to Corridor   
                 } // set tile to Ground        
             }
 
             for(gf::Vector2i road2 : points2){
                 tampon.setEmpty({road2[0],road2[1]});
-                if(m_World({road2[0],road2[1]}) != Tile::Room){
-                    m_World({road2[0],road2[1]}) = Tile::Corridor; // set tile to Corridor   
+                if(m_World({(uint)road2[0],(uint)road2[1]}) != Tile::Room){
+                    m_World({(uint)road2[0],(uint)road2[1]}) = Tile::Corridor; // set tile to Corridor   
                 }       
             }
             cpt++;
@@ -266,10 +266,23 @@ namespace redsquare
         for(uint i = 0; i < MapSize; ++i){
             for (uint j = 0; j < MapSize; ++j){    
                 if( m_World( { i, j } ) == Tile::Corridor || m_World( { i, j} ) == Tile::Stair || m_World( { i, j } ) == Tile::Room){ // room and corridor and stair are walkable
-                   m_SquareWorld.setWalkable({i,j});
+                   m_SquareWorld.setWalkable({(int)i,(int)j});
                 }
             }
         }
+    }
+
+    gf::Vector2i World::getSpawnPoint(){
+        
+        int x = rand() % MapSize;
+        int y = rand() % MapSize;
+
+        do{
+            x = rand() % MapSize;
+            y = rand() % MapSize;
+        }while(m_World( { (uint)x,(uint) y } ) != Tile::Room); // only putting stair on a  randon room's tile
+        gf::Vector2i spawn({x,y});
+        return spawn; 
     }
 
     void World::prettyPrint(){ // printing the map on server's console
@@ -300,7 +313,7 @@ namespace redsquare
         std::cout << "\n";
         for(uint i = 0; i < MapSize; ++i){
             for (uint j = 0; j < MapSize; ++j){    
-                gf::Vector2i pair({j,i});
+                gf::Vector2i pair({(int)j,(int)i});
                 if( m_SquareWorld.isWalkable(pair) ){
                     std::cout << "W";
                 }else{
