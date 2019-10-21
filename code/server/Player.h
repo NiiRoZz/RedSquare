@@ -2,6 +2,7 @@
 #define REDSQUARE_SERVER_PLAYER_H
 
 #include "../common/Sockets.h"
+#include "World.h"
 
 #include <gf/Queue.h>
 #include <gf/Id.h>
@@ -14,7 +15,8 @@ namespace redsquare
     public:
         gf::Vector2i m_Pos;
         
-        Player(SocketTcp socket, gf::Id playerID);
+        
+        Player(SocketTcp socket, gf::Id playerID, gf::Vector2i pos );
 
         gf::Id getID() const;
 
@@ -26,6 +28,7 @@ namespace redsquare
         bool applyMove( int dirX, int dirY, gf::SquareMap &map );
 
         bool playerDisconnected() const;
+        void spawn();
 
     private:
         SocketTcp m_Socket;

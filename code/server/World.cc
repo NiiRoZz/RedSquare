@@ -20,29 +20,22 @@ namespace redsquare
         uint SizeGrind = 20; // sizegrind must divide MapSize to be usefull
         uint numberRoom = 10; // number of room, must be < TabRoom.size()
 
-        for(uint i = 0; i < MapSize; ++i){
-            for (uint j = 0; j < MapSize; ++j){  
-                m_SquareWorld.setWalkable({i,j}); // every tile are walkable at the start the the generation
-            }
-        }
-
         /**** GENERATE ****/
         std::vector<gf::Vector4u> TabGrid = grid(SizeGrind); // build grind
         std::vector<gf::Vector4u> TabRoom = generateFloorV2(numberRoom,SizeGrind,TabGrid); // generate the room
         TabRoom = buildWall(TabRoom); // build wall around room
         destroyGrid(); // destroy the grid
 
-        road(TabRoom);
-        // TODO set a tile unwalkable 
-
+        road(TabRoom); // build the road
         buildWallCorridor(); // build the wall of corridor
-
-        putStair();
+        putStair(); // put stair on the map
+        SetWalkable(); // Set walkable the tile that should be
        
         /**** GENERATE ****/
 
         /**** PRINT ****/
         prettyPrint(); // print the map
+        prettyPrintWalkable(); // print all the tile that are walkable
         /**** PRINT ****/
     }
 
@@ -125,7 +118,7 @@ namespace redsquare
             for(uint length = 0; length < room[2]; ++length){
                 for(uint width = 0; width < room[3]; ++width){
                     m_World( {room[0]+length, room[1]+width} ) = Tile::Room;
-                    m_SquareWorld.setEmpty({room[0]+length, room[1]+width} );  
+                    m_SquareWorld.setEmpty({(int) (room[0]+length), (int) (room[1]+width)} );  
                 }
             }
             //std::cout << "X :"  << room[0] << " Y : " << room[1] << " Taille : " << room[2] << "x" << room[3] << "\n" ;
@@ -171,14 +164,21 @@ namespace redsquare
         //std::cout << "destroyGrid ENDED\n";
     }
 
-    gf::Vector2i World::MiddleRoom(std::vector<gf::Vector4u> TabRoom , uint random){
+    gf::Vector2u World::MiddleRoom(std::vector<gf::Vector4u> TabRoom , uint random){ // take the tile in the miidle of the room
         gf::Vector4u firstRoom = TabRoom[random]; // random room
-        gf::Vector2i road({firstRoom[0]+(firstRoom[2]/2),firstRoom[1]+(firstRoom[3]/2)}); // will stock the tile int the middle of the selected room
+        gf::Vector2u road({firstRoom[0]+(firstRoom[2]/2),firstRoom[1]+(firstRoom[3]/2)}); // will stock the tile int the middle of the selected room
 
         return road;    
     }
 
     void World::road(std::vector<gf::Vector4u> TabRoom){ // take 2 room and link them with a corridor
+        gf::SquareMap tampon = m_SquareWorld; // using tampon to not modify m_squareworld flags
+
+        for(int i = 0; i < MapSize; ++i){
+            for (int j = 0; j < MapSize; ++j){  
+                tampon.setWalkable({i,j}); // every tile are walkable  on the tampon
+            }
+        }
 
         uint cpt = 0;
         do{
@@ -198,25 +198,25 @@ namespace redsquare
             //start2 and end2 are there to make a 2 tile width corridor who's better in my opinion =)
 
 
-            std::vector<gf::Vector2i> points = m_SquareWorld.computeRoute(start, end, 0.0); // first set of tile for the corridor
-            std::vector<gf::Vector2i> points2 = m_SquareWorld.computeRoute(start2, end2, 0.0); // second set of tile for the corridor
+            std::vector<gf::Vector2i> points = tampon.computeRoute(start, end, 0.0); // first set of tile for the corridor
+            std::vector<gf::Vector2i> points2 = tampon.computeRoute(start2, end2, 0.0); // second set of tile for the corridor
             
 
             for(gf::Vector2i road : points){
-                m_SquareWorld.setEmpty({road[0],road[1]});
-                if(m_World({road[0],road[1]}) != Tile::Room){
-                    m_World({road[0],road[1]}) = Tile::Corridor; // set tile to Corridor   
+                tampon.setEmpty({road[0],road[1]});
+                if(m_World({(uint)road[0],(uint)road[1]}) != Tile::Room){
+                    m_World({(uint)road[0],(uint)road[1]}) = Tile::Corridor; // set tile to Corridor   
                 } // set tile to Ground        
             }
 
             for(gf::Vector2i road2 : points2){
-                m_SquareWorld.setEmpty({road2[0],road2[1]});
-                 if(m_World({road2[0],road2[1]}) != Tile::Room){
-                    m_World({road2[0],road2[1]}) = Tile::Corridor; // set tile to Corridor   
+                tampon.setEmpty({road2[0],road2[1]});
+                if(m_World({(uint)road2[0],(uint)road2[1]}) != Tile::Room){
+                    m_World({(uint)road2[0],(uint)road2[1]}) = Tile::Corridor; // set tile to Corridor   
                 }       
             }
             cpt++;
-        }while(cpt != TabRoom.size()*3);
+        }while(cpt != TabRoom.size()*3); // dummy ways to be sure that no room is isolated.   implemtation can be better with graphe algorithm
     }
 
     void World::buildWallCorridor(){ // put wall where there should be a wall
@@ -231,16 +231,16 @@ namespace redsquare
         }
     }
 
-    void World::putStair(){
+    void World::putStair(){ // put a stair somewhere on the map
         uint x = rand() % MapSize;
         uint y = rand() % MapSize;
 
         do{
             x = rand() % MapSize;
             y = rand() % MapSize;
-        }while(m_World( { x, y } ) != Tile::Room);
+        }while(m_World( { x, y } ) != Tile::Room); // only putting stair on a  randon room's tile
 
-        m_World( { x, y } ) = Tile::Stair;
+        m_World( { x, y } ) = Tile::Stair; // 1 stair for a floor
     }
 
     bool World::nextToGround(uint x, uint y){ // check if the current tile is newt to a tile ground
@@ -262,6 +262,29 @@ namespace redsquare
         return false;
     }
 
+    void World::SetWalkable(){ // set walkable all the tile that should be
+        for(uint i = 0; i < MapSize; ++i){
+            for (uint j = 0; j < MapSize; ++j){    
+                if( m_World( { i, j } ) == Tile::Corridor || m_World( { i, j} ) == Tile::Stair || m_World( { i, j } ) == Tile::Room){ // room and corridor and stair are walkable
+                   m_SquareWorld.setWalkable({(int)i,(int)j});
+                }
+            }
+        }
+    }
+
+    gf::Vector2i World::getSpawnPoint(){
+        
+        int x = rand() % MapSize;
+        int y = rand() % MapSize;
+
+        do{
+            x = rand() % MapSize;
+            y = rand() % MapSize;
+        }while(m_World( { (uint)x,(uint) y } ) != Tile::Room); // only putting stair on a  randon room's tile
+        gf::Vector2i spawn({x,y});
+        return spawn; 
+    }
+
     void World::prettyPrint(){ // printing the map on server's console
         std::cout << "\n";
         for(uint i = 0; i < MapSize; ++i){
@@ -279,6 +302,21 @@ namespace redsquare
                 }else if( m_World( { j, i } ) == Tile::Corridor){
                     std::cout << "C";
                 }else if( m_World( { j, i } ) == Tile::Stair){
+                    std::cout << " ";
+                }
+            }
+            std::cout << "\n";
+        }
+    }
+
+    void World::prettyPrintWalkable(){ // printing the walkable tile on server's console
+        std::cout << "\n";
+        for(uint i = 0; i < MapSize; ++i){
+            for (uint j = 0; j < MapSize; ++j){    
+                gf::Vector2i pair({(int)j,(int)i});
+                if( m_SquareWorld.isWalkable(pair) ){
+                    std::cout << "W";
+                }else{
                     std::cout << " ";
                 }
             }

@@ -28,6 +28,9 @@ namespace redsquare
 
         gf::Texture tileTexture;
         gf::TileLayer m_TileSet;
+
+        /*gf::Texture tileTexture2;
+        gf::TileLayer m_TileSet2; TODO */
     };
 }
 
