@@ -25,9 +25,6 @@ namespace redsquare
 
         m_ThreadCom.receivePacket( newPlayerData );
 
-        auto size = newPlayerData.world.getSize();
-        std::cout << "size: " << size.width << 'x' << size.height << std::endl;
-
         m_PlayerID = newPlayerData.playerID;
         m_World.generateWorld( std::move( newPlayerData.world ) );
     }
@@ -105,28 +102,19 @@ namespace redsquare
                 case PacketType::ReceiveMove:
                 {
                     Player* player = getPlayer( packet.receiveMove.playerID );
-                    if ( player != nullptr )
-                    {
-                        player->m_Pos[0] = packet.receiveMove.posX;
-                        player->m_Pos[1] = packet.receiveMove.posY;
-                    }
-                    else
-                    {
-                        gf::Id newPlayerID = packet.receiveMove.playerID;
-
-                        auto it = m_Players.insert( std::make_pair( newPlayerID, Player( gf::Vector2i(packet.receiveMove.posX, packet.receiveMove.posY) ) ) );
-                        assert( it.second );
-                    }
+                    assert( player != nullptr );
+                    
+                    player->m_Pos[0] = packet.receiveMove.posX;
+                    player->m_Pos[1] = packet.receiveMove.posY;
                     break;
                 }
 
                 case PacketType::PlayerDisconnected:
                 {
                     Player* player = getPlayer( packet.playerDisconnected.playerID );
-                    if ( player != nullptr )
-                    {
-                        m_Players.erase( packet.playerDisconnected.playerID );
-                    }
+                    assert( player != nullptr );
+                    
+                    m_Players.erase( packet.playerDisconnected.playerID );
                     break;
                 }
 
@@ -135,6 +123,12 @@ namespace redsquare
                     m_CanPlay = packet.playerTurn.playerTurn;
                     std::cout << "It's your turn!!!" << std::endl;
                     break;
+                }
+
+                case PacketType::SpawnPlayer:
+                {
+                    auto it = m_Players.insert( std::make_pair( packet.spawnPlayer.playerID, Player( gf::Vector2i(packet.spawnPlayer.posX, packet.spawnPlayer.posY), packet.spawnPlayer.typePlayer ) ) );
+                    assert( it.second );
                 }
             }
         }
@@ -158,6 +152,24 @@ namespace redsquare
         if ( player != m_Players.end() )
         {
             return &player->second;
+        }
+
+        return nullptr;
+    }
+
+    Player* Game::getPlayer( gf::Vector2i pos )
+    {
+        auto it = m_Players.begin();
+ 
+        // Iterate over the map using Iterator till end.
+        while ( it != m_Players.end() )
+        {
+            if ( it->second.m_Pos[0] == pos[0] && it->second.m_Pos[1] == pos[1] )
+            {
+                return &it->second;
+            }
+
+            ++it;
         }
 
         return nullptr;

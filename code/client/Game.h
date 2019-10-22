@@ -22,6 +22,7 @@ namespace redsquare
         Game( char* hostname, char *port, gf::ExtendView &view );
 
         Player* getPlayer( gf::Id playerID );
+        Player* getPlayer( gf::Vector2i pos );
 
         void startThreadCom();
 

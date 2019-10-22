@@ -14,7 +14,7 @@ namespace redsquare
     {
     public:
         gf::Vector2i m_Pos;
-        
+        const uint8_t m_TypeOfPlayer;
         
         Player(SocketTcp socket, gf::Id playerID, gf::Vector2i pos );
 
@@ -30,9 +30,18 @@ namespace redsquare
         bool playerDisconnected() const;
         void spawn();
 
+        int getLife() const;
+        int getMana() const;
+
+        bool canAttack(gf::Vector2i m_TargetPos);
+        void attack();
+
     private:
         SocketTcp m_Socket;
         gf::Id m_PlayerID;
+
+        int m_Life;
+        int m_Mana;
     };
 }
 

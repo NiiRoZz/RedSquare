@@ -60,12 +60,7 @@ namespace redsquare
         bar2.setColor(color);
         bar2.setPosition(m_Pos * World::TileSize-BarOffsetMana1);
         bar2.setAnchor(gf::Anchor::TopLeft);
-        target.draw(bar2, states); 
-
-
-        
-
-    
+        target.draw(bar2, states);
     }
 
     void Player::update(gf::Time time)
@@ -73,17 +68,38 @@ namespace redsquare
         //Do something
     }
 
-    void Player::loadTexture()
+    void Player::loadTexture( uint8_t type )
     {
-        uint test = rand()%4; // TODO select correctly with player ID
-        if(test == 0){
-            testTexture.loadFromFile("data/redsquare/img/goblin.png");
-        }else if(test == 1){
-            testTexture.loadFromFile("data/redsquare/img/knight.png");
-        }else if(test == 2){
-            testTexture.loadFromFile("data/redsquare/img/bat.png");
-        }else if(test == 3){
-            testTexture.loadFromFile("data/redsquare/img/slime.png");
+        switch (type)
+        {
+            case 0:
+            {
+                testTexture.loadFromFile("data/redsquare/img/goblin.png");
+                break;
+            }
+
+            case 1:
+            {
+                testTexture.loadFromFile("data/redsquare/img/knight.png");
+                break;
+            }
+
+            case 2:
+            {
+                testTexture.loadFromFile("data/redsquare/img/bat.png");
+                break;
+            }
+
+            case 3:
+            {
+                testTexture.loadFromFile("data/redsquare/img/slime.png");
+                break;
+            }
+        
+            default:
+            {
+                break;
+            }
         }
     }
 
@@ -93,9 +109,9 @@ namespace redsquare
         loadTexture();
     }
 
-    Player::Player( gf::Vector2i pos )
+    Player::Player( gf::Vector2i pos, uint8_t type )
     : m_Pos( pos )
     {
-        loadTexture();
+        loadTexture(type);
     }
 }

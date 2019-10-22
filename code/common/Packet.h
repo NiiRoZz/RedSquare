@@ -35,6 +35,7 @@ namespace redsquare
         ReceiveMove,
         PlayerDisconnected,
         PlayerTurn,
+        SpawnPlayer,
     };
 
     struct NewPlayer
@@ -77,6 +78,14 @@ namespace redsquare
         bool playerTurn;
     };
 
+    struct SpawnPlayer
+    {
+        gf::Id playerID;
+        uint8_t typePlayer;
+        int posX;
+        int posY;
+    };
+
     struct Packet
     {
         PacketType type;
@@ -87,6 +96,7 @@ namespace redsquare
             ReceiveMove receiveMove;
             PlayerDisconnected playerDisconnected;
             PlayerTurn playerTurn;
+            SpawnPlayer spawnPlayer;
         };
     };
 
@@ -122,6 +132,15 @@ namespace redsquare
             case PacketType::PlayerTurn:
             {
                 ar | packet.playerTurn.playerTurn;
+                break;
+            }
+
+            case PacketType::SpawnPlayer:
+            {
+                ar | packet.spawnPlayer.playerID;
+                ar | packet.spawnPlayer.typePlayer;
+                ar | packet.spawnPlayer.posX;
+                ar | packet.spawnPlayer.posY;
                 break;
             }
         }

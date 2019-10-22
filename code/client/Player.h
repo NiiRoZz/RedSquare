@@ -12,16 +12,25 @@ namespace redsquare
         gf::Vector2i m_Pos;
         
         Player();
-        Player( gf::Vector2i pos );
+        Player( gf::Vector2i pos, uint8_t type );
 
-        void loadTexture();
+        void loadTexture(uint8_t type = 0);
 
         virtual void update(gf::Time time) override;
 
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
+        int getLife() const;
+        int getMana() const;
+
+        bool canAttack(gf::Vector2i m_TargetPos);
+        void attack();
+
     private:
         gf::Texture testTexture;
+
+        int m_Life;
+        int m_Mana;
     };
 }
 

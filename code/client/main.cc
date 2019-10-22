@@ -21,6 +21,7 @@
 #include <gf/Shapes.h>
 #include <gf/VectorOps.h>
 #include <gf/VertexArray.h>
+#include <gf/Cursor.h>
 
 #include "World.h"
 #include "Game.h"
@@ -111,6 +112,19 @@ int main( int argc, char **argv )
     // add entities to hudEntities
 
 
+    gf::Cursor defaultCursor;
+    gf::Image attackImage;
+    gf::Cursor attackCursor;
+
+    if (attackImage.loadFromFile("data/redsquare/img/knight.png"))
+    {
+        attackCursor.loadFromImage(attackImage, { 8u, 8u });
+    }
+
+    defaultCursor.loadFromSystem( gf::Cursor::Type::Arrow );
+
+    window.setMouseCursor(defaultCursor);
+
     // game loop
     renderer.clear(gf::Color::Black);
     gf::Clock clock;
@@ -125,45 +139,65 @@ int main( int argc, char **argv )
         {
             actions.processEvent(event);
             views.processEvent(event);
+
+            switch (event.type)
+            {
+                case gf::EventType::MouseButtonPressed:
+                {
+                    end = std::chrono::system_clock::now();
+                    int elapsed_seconds = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count();
+                    if( elapsed_seconds >= 500 )
+                    {
+                        start = std::chrono::system_clock::now();
+                        gf::Vector2i coord = renderer.mapPixelToCoords(event.mouseButton.coords,mainView) / World::TileSize;
+                        game.movePlayer(coord[0],coord[1]);
+                    }
+                    break;
+                }
+
+                case gf::EventType::MouseMoved:
+                {
+                    gf::Vector2i pos = renderer.mapPixelToCoords(event.mouseCursor.coords,mainView) / World::TileSize;
+
+                    Player* targetPlayer = game.getPlayer(pos);
+                    if ( targetPlayer != nullptr )
+                    {
+                        window.setMouseCursor(attackCursor);
+                    }
+                    else
+                    {
+                        window.setMouseCursor(defaultCursor);
+                    }
+                    break;
+                }
+            }
         }
 
-
-        if (closeWindowAction.isActive()) {
+        if (closeWindowAction.isActive())
+        {
             window.close();
         }
 
-        if (fullscreenAction.isActive()) {
+        if (fullscreenAction.isActive())
+        {
             window.toggleFullscreen();
         }
 
         if (rightAction.isActive())
         {
             game.movePlayer( 1,0);
-        } else if (leftAction.isActive())
+        } 
+        else if (leftAction.isActive())
         {
             game.movePlayer( -1,0 );
-        } else if (upAction.isActive())
+        } 
+        else if (upAction.isActive())
         {
             game.movePlayer( 0, -1 );
-        } else if (downAction.isActive())
+        } 
+        else if (downAction.isActive())
         {
             game.movePlayer( 0,1);
-        } else if (event.type == gf::EventType::MouseButtonPressed)
-        {
-             
-            end = std::chrono::system_clock::now();
-            int elapsed_seconds = std::chrono::duration_cast<std::chrono::milliseconds>
-                             (end-start).count();
-            std::cout<<elapsed_seconds<<std::endl;
-            if(elapsed_seconds>500){
-                start = std::chrono::system_clock::now();
-                gf::Vector2i coord=renderer.mapPixelToCoords(event.mouseButton.coords,mainView) / World::TileSize;
-
-                int x =coord[0];
-                int y=coord[1];
-                printf("x : %d\n,y : %d\n",x,y);
-                game.movePlayer(x,y);// do something
-            }
         }
         
         // 2. update

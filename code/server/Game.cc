@@ -29,10 +29,11 @@ namespace redsquare
 
         //HACKY, too, sending fake move to all other players INCLUDE HIMSELF!!! Should be reworked
         Packet packet;
-        packet.type = PacketType::ReceiveMove;
-        packet.receiveMove.playerID = id;
-        packet.receiveMove.posX = itNewPlayer->second.m_Pos[0];
-        packet.receiveMove.posY = itNewPlayer->second.m_Pos[1];
+        packet.type = PacketType::SpawnPlayer;
+        packet.spawnPlayer.playerID = id;
+        packet.spawnPlayer.typePlayer = itNewPlayer->second.m_TypeOfPlayer;
+        packet.spawnPlayer.posX = itNewPlayer->second.m_Pos[0];
+        packet.spawnPlayer.posY = itNewPlayer->second.m_Pos[1];
         sendPacketToAllPlayers( packet );
 
         //HACKY, find best way, fake a move of all players inside the game to make them apparear in the new client
@@ -42,10 +43,11 @@ namespace redsquare
         {
             if ( it->first != id )
             {
-                packet.type = PacketType::ReceiveMove;
-                packet.receiveMove.playerID = it->first;
-                packet.receiveMove.posX = it->second.m_Pos[0];
-                packet.receiveMove.posY = it->second.m_Pos[1];
+                packet.type = PacketType::SpawnPlayer;
+                packet.spawnPlayer.playerID = it->first;
+                packet.spawnPlayer.typePlayer = it->second.m_TypeOfPlayer;
+                packet.spawnPlayer.posX = it->second.m_Pos[0];
+                packet.spawnPlayer.posY = it->second.m_Pos[1];
                 itNewPlayer->second.sendPacket( packet );
             }
 

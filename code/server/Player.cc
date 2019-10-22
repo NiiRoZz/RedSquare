@@ -7,6 +7,7 @@ namespace redsquare
     : m_Socket(std::move(socket))
     , m_PlayerID(playerID)
     , m_Pos(pos)
+    , m_TypeOfPlayer((uint8_t)(rand() % 4))
     {
     }
 
