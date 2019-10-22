@@ -22,8 +22,8 @@ namespace redsquare
         m_MaxAttackPoint = 50;
         m_MaxDefensePoint = 50;
 
-        m_MovePoint = 50;
-        m_Range = 50;
+        m_MovePoint = 6;
+        m_Range = 1;
     }
 
     void Player::sendPacket(Packet &packet)
