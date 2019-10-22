@@ -115,10 +115,17 @@ int main( int argc, char **argv )
     gf::Cursor defaultCursor;
     gf::Image attackImage;
     gf::Cursor attackCursor;
+    gf::Image moveImage;
+    gf::Cursor moveCursor;
 
-    if (attackImage.loadFromFile("data/redsquare/img/knight.png"))
+    if (attackImage.loadFromFile("data/redsquare/img/attackCursor.png"))
     {
         attackCursor.loadFromImage(attackImage, { 8u, 8u });
+    }
+
+    if (moveImage.loadFromFile("data/redsquare/img/moveCursor.png"))
+    {
+        moveCursor.loadFromImage(moveImage, { 8u, 8u });
     }
 
     defaultCursor.loadFromSystem( gf::Cursor::Type::Arrow );
@@ -160,9 +167,20 @@ int main( int argc, char **argv )
                     gf::Vector2i pos = renderer.mapPixelToCoords(event.mouseCursor.coords,mainView) / World::TileSize;
 
                     Player* myPlayer = game.getPlayer(game.m_PlayerID);
-                    if ( myPlayer != nullptr && myPlayer->canAttack(pos) )
+                    if ( myPlayer != nullptr )
                     {
-                        window.setMouseCursor(attackCursor);
+                        if ( myPlayer->canAttack(pos) )
+                        {
+                            window.setMouseCursor(attackCursor);
+                        }
+                        /*else ( myPlayer->canMove(pos) )
+                        {
+
+                        }*/
+                        else
+                        {
+                            window.setMouseCursor(defaultCursor);
+                        }
                     }
                     else
                     {
