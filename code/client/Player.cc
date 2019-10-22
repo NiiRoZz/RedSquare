@@ -122,7 +122,7 @@ namespace redsquare
             return false;
         }
         
-        gf::Distance2<int> distFn = gf::manhattanDistance<int, 2>;
+        gf::Distance2<int> distFn = gf::euclideanDistance<int, 2>;
 
         float distance = distFn(m_Pos, m_TargetPos);
 
