@@ -14,6 +14,29 @@ namespace redsquare
     {
     public:
         gf::Vector2i m_Pos;
+
+        /* Characteristic */
+        int m_LifePoint;
+        int m_ManaPoint;
+
+        int m_MaxLifePoint;
+        int m_MaxManaPoint;
+
+
+        int m_AttackPoint;
+        int m_DefensePoint;
+
+        int m_MaxAttackPoint;
+        int m_MaxDefensePoint;
+
+        int m_MovePoint;
+        int m_Range;
+        /* Characteristic*/
+
+
+        void createCarPacket(Packet &packet);
+
+
         const uint8_t m_TypeOfPlayer;
         
         Player(SocketTcp socket, gf::Id playerID, gf::Vector2i pos );
@@ -30,11 +53,9 @@ namespace redsquare
         bool playerDisconnected() const;
         void spawn();
 
-        int getLife() const;
-        int getMana() const;
-
         bool canAttack(gf::Vector2i m_TargetPos);
         void attack();
+        void levelUp();
 
     private:
         SocketTcp m_Socket;

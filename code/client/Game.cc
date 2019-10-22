@@ -130,6 +130,22 @@ namespace redsquare
                     auto it = m_Players.insert( std::make_pair( packet.spawnPlayer.playerID, Player( gf::Vector2i(packet.spawnPlayer.posX, packet.spawnPlayer.posY), packet.spawnPlayer.typePlayer ) ) );
                     assert( it.second );
                 }
+
+                case PacketType::PlayerCar:
+                {
+                    Player* player = getPlayer(m_PlayerID);
+                    assert(player != nullptr);
+
+                    player->m_LifePoint = packet.playerCar.m_LifePoint;
+                    player->m_ManaPoint = packet.playerCar.m_ManaPoint;
+
+                    player->m_MaxLifePoint = packet.playerCar.m_MaxLifePoint;
+                    player->m_MaxManaPoint = packet.playerCar.m_MaxManaPoint;
+
+                    player->m_AttackPoint = packet.playerCar.m_AttackPoint;
+                    player->m_DefensePoint = packet.playerCar.m_DefensePoint;
+                    player->m_MovePoint = packet.playerCar.m_MovePoint;
+                    player->m_Range = packet.playerCar.m_Range;                }
             }
         }
     }

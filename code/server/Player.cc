@@ -9,6 +9,21 @@ namespace redsquare
     , m_Pos(pos)
     , m_TypeOfPlayer((uint8_t)(rand() % 4))
     {
+        m_LifePoint = 100;
+        m_ManaPoint = 100;
+
+        m_MaxLifePoint = 100;
+        m_MaxManaPoint = 100;
+
+
+        m_AttackPoint = 50;
+        m_DefensePoint = 50;
+
+        m_MaxAttackPoint = 50;
+        m_MaxDefensePoint = 50;
+
+        m_MovePoint = 50;
+        m_Range = 50;
     }
 
     void Player::sendPacket(Packet &packet)
@@ -71,5 +86,32 @@ namespace redsquare
     bool Player::playerDisconnected() const
     {
         return (m_Socket.getState() == SocketState::Disconnected);
+    }
+
+     void Player::levelUp(){
+        m_MaxLifePoint += 2;
+        m_LifePoint += 2;
+
+        m_MaxManaPoint += 2;
+        m_ManaPoint += 2;
+
+        m_AttackPoint += 50;
+        m_DefensePoint += 50;
+        m_Range = 1; // MELEE IF 1
+    }
+
+    void Player::createCarPacket(Packet &packet){
+        packet.type = PacketType::PlayerCar;
+        packet.playerCar.m_LifePoint = m_LifePoint;
+        packet.playerCar.m_ManaPoint = m_ManaPoint;
+
+        packet.playerCar.m_MaxLifePoint = m_MaxLifePoint;
+        packet.playerCar.m_MaxManaPoint = m_MaxManaPoint;
+
+        packet.playerCar.m_AttackPoint = m_AttackPoint;
+        packet.playerCar.m_DefensePoint = m_DefensePoint;
+        packet.playerCar.m_MovePoint = m_MovePoint;
+        packet.playerCar.m_Range = m_Range;
+
     }
 }

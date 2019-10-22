@@ -113,36 +113,6 @@ namespace redsquare
     : m_Pos( pos )
     {
         loadTexture(type);
-        m_LifePoint = 100;
-        m_ManaPoint = 100;
-        m_MovePoint = 6;
-        m_AttackPoint = 50;
-        m_DefensePoint = 50;
-        m_Range = 1; // MELEE IF 1
-    }
-
-    int Player::getLife() const{
-        return m_LifePoint;
-    }
-
-    int Player::getMana() const{
-        return m_ManaPoint;
-    }
-
-    int Player::getAttack() const{
-        return m_AttackPoint;
-    }
-
-    int Player::getDefense() const{
-        return m_DefensePoint;
-    }
-
-    int Player::getMove() const{
-        return m_MovePoint;
-    }
-
-    int Player::getRange() const{
-        return m_Range;
     }
 
     bool Player::canAttack(gf::Vector2i m_TargetPos)
