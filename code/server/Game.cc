@@ -22,19 +22,22 @@ namespace redsquare
 
         // Send to the client his ID
         auto size = m_World.m_World.getSize();
-        std::cout << "size: " << size.width << 'x' << size.height << std::endl;
 
         NewPlayer packetNewPlayer( m_World.m_World, id );
         itNewPlayer->second.sendPacket(packetNewPlayer);
 
         //HACKY, too, sending fake move to all other players INCLUDE HIMSELF!!! Should be reworked
         Packet packet;
+
         packet.type = PacketType::SpawnPlayer;
         packet.spawnPlayer.playerID = id;
         packet.spawnPlayer.typePlayer = itNewPlayer->second.m_TypeOfPlayer;
         packet.spawnPlayer.posX = itNewPlayer->second.m_Pos[0];
         packet.spawnPlayer.posY = itNewPlayer->second.m_Pos[1];
         sendPacketToAllPlayers( packet );
+
+        itNewPlayer->second.createCarPacket(packet);
+        itNewPlayer->second.sendPacket(packet);
 
         //HACKY, find best way, fake a move of all players inside the game to make them apparear in the new client
         auto it = m_Players.begin();

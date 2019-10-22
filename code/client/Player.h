@@ -9,7 +9,22 @@ namespace redsquare
     class Player: public gf::Entity
     {
     public:
+        /*POS*/
         gf::Vector2i m_Pos;
+        /*POS*/
+        /* Characteristic */
+        int m_LifePoint;
+        int m_ManaPoint;
+
+        int m_MaxLifePoint;
+        int m_MaxManaPoint;
+
+
+        int m_AttackPoint;
+        int m_DefensePoint;
+        int m_MovePoint;
+        int m_Range;
+        /* Characteristic*/
         
         Player();
         Player( gf::Vector2i pos, uint8_t type );
@@ -20,25 +35,11 @@ namespace redsquare
 
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
-        int getLife() const;
-        int getMana() const;
-        int getAttack() const;
-        int getDefense() const;
-        int getMove() const;
-        int getRange() const;
-
         bool canAttack(gf::Vector2i m_TargetPos);
         void attack();
 
     private:
         gf::Texture testTexture;
-
-        int m_LifePoint;
-        int m_ManaPoint;
-        int m_AttackPoint;
-        int m_DefensePoint;
-        int m_MovePoint;
-        int m_Range;
 
     };
 }
