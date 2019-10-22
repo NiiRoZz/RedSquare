@@ -290,17 +290,17 @@ namespace redsquare
         for(uint i = 0; i < MapSize; ++i){
             for (uint j = 0; j < MapSize; ++j){     
                 if (m_World( { j, i } ) == Tile::Room) {
-                    std::cout << "R";
+                    std::cout << " ";
                 }else if( m_World( { j, i } ) == Tile::Wall){
                     std::cout << "W";
                 }else if( m_World( { j, i } ) == Tile::Void){
                     std::cout << " ";
                 }else if( m_World( { j, i } ) == Tile::Grid){
-                    std::cout << "=";
+                    std::cout << " ";
                 }else if( m_World( { j, i } ) == Tile::Test){
                     std::cout << " ";
                 }else if( m_World( { j, i } ) == Tile::Corridor){
-                    std::cout << "C";
+                    std::cout << " ";
                 }else if( m_World( { j, i } ) == Tile::Stair){
                     std::cout << " ";
                 }

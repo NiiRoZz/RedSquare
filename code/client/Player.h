@@ -22,6 +22,10 @@ namespace redsquare
 
         int getLife() const;
         int getMana() const;
+        int getAttack() const;
+        int getDefense() const;
+        int getMove() const;
+        int getRange() const;
 
         bool canAttack(gf::Vector2i m_TargetPos);
         void attack();
@@ -29,8 +33,13 @@ namespace redsquare
     private:
         gf::Texture testTexture;
 
-        int m_Life;
-        int m_Mana;
+        int m_LifePoint;
+        int m_ManaPoint;
+        int m_AttackPoint;
+        int m_DefensePoint;
+        int m_MovePoint;
+        int m_Range;
+
     };
 }
 
