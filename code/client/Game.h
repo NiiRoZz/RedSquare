@@ -18,7 +18,10 @@ namespace redsquare
 {
     class Game: public gf::Entity
     {
-        public:
+    public:
+        //ID of current player
+        gf::Id m_PlayerID;
+        
         Game( char* hostname, char *port, gf::ExtendView &view );
 
         Player* getPlayer( gf::Id playerID );
@@ -36,11 +39,9 @@ namespace redsquare
 
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
-        private:
+    private:
         World m_World;
 
-        //ID of current player
-        gf::Id m_PlayerID;
         //All near players
         std::map<gf::Id, Player> m_Players;
 

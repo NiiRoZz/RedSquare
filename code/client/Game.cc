@@ -58,7 +58,7 @@ namespace redsquare
         {
             player->update( time );
 
-            m_View->setCenter( { player->m_Pos[0] * World::TileSize, player->m_Pos[1] * World::TileSize } );
+            m_View->setCenter( { (float)(player->m_Pos[0] * World::TileSize), (float)(player->m_Pos[1] * World::TileSize )} );
 
             //Do all actions stuff here
             doAction();

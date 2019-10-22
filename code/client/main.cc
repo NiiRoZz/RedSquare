@@ -159,8 +159,8 @@ int main( int argc, char **argv )
                 {
                     gf::Vector2i pos = renderer.mapPixelToCoords(event.mouseCursor.coords,mainView) / World::TileSize;
 
-                    Player* targetPlayer = game.getPlayer(pos);
-                    if ( targetPlayer != nullptr )
+                    Player* myPlayer = game.getPlayer(game.m_PlayerID);
+                    if ( myPlayer != nullptr && myPlayer->canAttack(pos) )
                     {
                         window.setMouseCursor(attackCursor);
                     }

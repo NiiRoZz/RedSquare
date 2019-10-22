@@ -145,4 +145,22 @@ namespace redsquare
         return m_Range;
     }
 
+    bool Player::canAttack(gf::Vector2i m_TargetPos)
+    {
+        if ( m_Pos == m_TargetPos )
+        {
+            return false;
+        }
+        
+        gf::Distance2<int> distFn = gf::manhattanDistance<int, 2>;
+
+        float distance = distFn(m_Pos, m_TargetPos);
+
+        if ( distance > m_Range )
+        {
+            return false;
+        }
+
+        return true;
+    }
 }
