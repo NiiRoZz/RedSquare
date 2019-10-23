@@ -59,10 +59,10 @@ namespace redsquare
         //Checking if we have received a message from server
         processPackets();
 
+        m_World.update( time );
+
         //We update only the player we are controlling
         Player* player = getPlayer( m_PlayerID );
-
-        m_World.update( time );
 
         if ( player != nullptr )
         {
@@ -135,10 +135,13 @@ namespace redsquare
                     break;
                 }
 
-                case PacketType::SpawnPlayer:
+                case PacketType::SpawnEntity:
                 {
-                    auto it = m_Players.insert( std::make_pair( packet.spawnPlayer.playerID, Player( gf::Vector2i(packet.spawnPlayer.posX, packet.spawnPlayer.posY), packet.spawnPlayer.typePlayer ) ) );
-                    assert( it.second );
+                    if ( packet.spawnEntity.typeEntity == EntityType::Player )
+                    {
+                        auto it = m_Players.insert( std::make_pair( packet.spawnEntity.playerID, Player( gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY), packet.spawnEntity.typeOfEntity ) ) );
+                        assert( it.second );
+                    }
                 }
 
                 case PacketType::PlayerCar:

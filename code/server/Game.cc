@@ -29,11 +29,12 @@ namespace redsquare
         //HACKY, too, sending fake move to all other players INCLUDE HIMSELF!!! Should be reworked
         Packet packet;
 
-        packet.type = PacketType::SpawnPlayer;
-        packet.spawnPlayer.playerID = id;
-        packet.spawnPlayer.typePlayer = itNewPlayer->second.m_TypeOfPlayer;
-        packet.spawnPlayer.posX = itNewPlayer->second.m_Pos[0];
-        packet.spawnPlayer.posY = itNewPlayer->second.m_Pos[1];
+        packet.type = PacketType::SpawnEntity;
+        packet.spawnEntity.playerID = id;
+        packet.spawnEntity.typeEntity = EntityType::Player;
+        packet.spawnEntity.typeOfEntity = itNewPlayer->second.m_TypeOfPlayer;
+        packet.spawnEntity.posX = itNewPlayer->second.m_Pos[0];
+        packet.spawnEntity.posY = itNewPlayer->second.m_Pos[1];
         sendPacketToAllPlayers( packet );
 
         itNewPlayer->second.createCarPacket(packet);
@@ -46,11 +47,12 @@ namespace redsquare
         {
             if ( it->first != id )
             {
-                packet.type = PacketType::SpawnPlayer;
-                packet.spawnPlayer.playerID = it->first;
-                packet.spawnPlayer.typePlayer = it->second.m_TypeOfPlayer;
-                packet.spawnPlayer.posX = it->second.m_Pos[0];
-                packet.spawnPlayer.posY = it->second.m_Pos[1];
+                packet.type = PacketType::SpawnEntity;
+                packet.spawnEntity.playerID = it->first;
+                packet.spawnEntity.typeEntity = EntityType::Player;
+                packet.spawnEntity.typeOfEntity = it->second.m_TypeOfPlayer;
+                packet.spawnEntity.posX = it->second.m_Pos[0];
+                packet.spawnEntity.posY = it->second.m_Pos[1];
                 itNewPlayer->second.sendPacket( packet );
             }
 

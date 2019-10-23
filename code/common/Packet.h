@@ -18,6 +18,12 @@ namespace redsquare
         Nothing,
     };*/
 
+    enum class EntityType: uint8_t
+    {
+        Player,
+        Monster,
+    };
+
     enum class Tile: uint8_t
     {
         Void,
@@ -36,7 +42,7 @@ namespace redsquare
         PlayerDisconnected,
         PlayerCar,
         PlayerTurn,
-        SpawnPlayer,
+        SpawnEntity,
     };
 
     struct NewPlayer
@@ -100,10 +106,11 @@ namespace redsquare
         bool playerTurn;
     };
 
-    struct SpawnPlayer
+    struct SpawnEntity
     {
         gf::Id playerID;
-        uint8_t typePlayer;
+        EntityType typeEntity;
+        uint8_t typeOfEntity;
         int posX;
         int posY;
     };
@@ -118,7 +125,7 @@ namespace redsquare
             ReceiveMove receiveMove;
             PlayerDisconnected playerDisconnected;
             PlayerTurn playerTurn;
-            SpawnPlayer spawnPlayer;
+            SpawnEntity spawnEntity;
             PlayerCar playerCar;
         };
     };
@@ -158,12 +165,13 @@ namespace redsquare
                 break;
             }
 
-            case PacketType::SpawnPlayer:
+            case PacketType::SpawnEntity:
             {
-                ar | packet.spawnPlayer.playerID;
-                ar | packet.spawnPlayer.typePlayer;
-                ar | packet.spawnPlayer.posX;
-                ar | packet.spawnPlayer.posY;
+                ar | packet.spawnEntity.playerID;
+                ar | packet.spawnEntity.typeEntity;
+                ar | packet.spawnEntity.typeOfEntity;
+                ar | packet.spawnEntity.posX;
+                ar | packet.spawnEntity.posY;
                 break;
             }
             case PacketType::PlayerCar:
