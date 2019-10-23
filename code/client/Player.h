@@ -24,6 +24,9 @@ namespace redsquare
         int m_DefensePoint;
         int m_MovePoint;
         int m_Range;
+
+        int m_XP;
+        int m_Max_XP;
         /* Characteristic*/
         
         Player();

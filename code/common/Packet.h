@@ -57,6 +57,7 @@ namespace redsquare
 
     struct PlayerCar
     {
+        gf::Id Id;
         int m_LifePoint;
         int m_ManaPoint;
 
@@ -66,8 +67,12 @@ namespace redsquare
 
         int m_AttackPoint;
         int m_DefensePoint;
+
         int m_MovePoint;
         int m_Range;
+
+        int m_XP;
+        int m_MaxXP;
     };
 
     struct RequestMove
@@ -162,15 +167,23 @@ namespace redsquare
             }
             case PacketType::PlayerCar:
             {
+                ar | packet.playerCar.Id;
+
                 ar | packet.playerCar.m_LifePoint;
                 ar | packet.playerCar.m_ManaPoint;
+
                 ar | packet.playerCar.m_MaxLifePoint;
                 ar | packet.playerCar.m_MaxManaPoint;
 
                 ar | packet.playerCar.m_AttackPoint;
                 ar | packet.playerCar.m_DefensePoint;
+
                 ar | packet.playerCar.m_MovePoint;
                 ar | packet.playerCar.m_Range;
+
+
+                ar | packet.playerCar.m_XP;
+                ar | packet.playerCar.m_MaxXP;
 
                 break;
             }

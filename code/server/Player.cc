@@ -24,6 +24,9 @@ namespace redsquare
 
         m_MovePoint = 6;
         m_Range = 1;
+
+        m_XP = 0;
+        m_MaxXP = 100;
     }
 
     void Player::sendPacket(Packet &packet)
@@ -89,19 +92,25 @@ namespace redsquare
     }
 
      void Player::levelUp(){
+
         m_MaxLifePoint += 2;
         m_LifePoint += 2;
 
         m_MaxManaPoint += 2;
         m_ManaPoint += 2;
 
-        m_AttackPoint += 50;
-        m_DefensePoint += 50;
-        m_Range = 1; // MELEE IF 1
+        m_AttackPoint += 2;
+        m_DefensePoint += 2;
+
+        m_XP = 0;
+        m_MaxXP += 100;
     }
 
     void Player::createCarPacket(Packet &packet){
         packet.type = PacketType::PlayerCar;
+
+        packet.playerCar.Id = m_PlayerID;
+
         packet.playerCar.m_LifePoint = m_LifePoint;
         packet.playerCar.m_ManaPoint = m_ManaPoint;
 
@@ -113,5 +122,7 @@ namespace redsquare
         packet.playerCar.m_MovePoint = m_MovePoint;
         packet.playerCar.m_Range = m_Range;
 
+        packet.playerCar.m_XP = m_XP;
+        packet.playerCar.m_MaxXP= m_MaxXP;
     }
 }
