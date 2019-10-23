@@ -42,6 +42,16 @@ namespace redsquare
 
             ++it;
         }
+
+        auto it2 = m_Monsters.begin();
+ 
+        // Iterate over the map using Iterator till end.
+        while (it2 != m_Monsters.end())
+        {
+            it2->second.render( target, states );
+
+            ++it2;
+        }
     }
 
     void Game::update(gf::Time time)
