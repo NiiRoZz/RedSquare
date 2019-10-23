@@ -4,6 +4,7 @@
 #include "../common/Sockets.h"
 #include "../common/Packet.h"
 #include "Player.h"
+#include "Monster.h"
 #include "World.h"
 
 #include <gf/Queue.h>
@@ -14,6 +15,7 @@ namespace redsquare
     {
         public:
         std::map<gf::Id, Player> m_Players;
+        std::map<gf::Id, Monster> m_Monsters;
 
         Game();
 

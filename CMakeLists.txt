@@ -12,6 +12,7 @@ add_executable(RedSquare
   code/client/Game.cc
   code/client/ThreadCom.cc
   code/client/World.cc
+  code/client/Monster.cc
   code/common/Sockets.cc
   code/common/Entity.cc
 )
@@ -36,6 +37,7 @@ add_executable(RedSquare-Server
   code/server/Player.cc
   code/server/Game.cc
   code/server/World.cc
+  code/server/Monster.cc
   code/common/Sockets.cc
   code/common/Singletons.cc
   code/common/Entity.cc

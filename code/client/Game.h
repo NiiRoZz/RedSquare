@@ -9,6 +9,7 @@
 #include <gf/Id.h>
 #include <gf/Views.h>
 
+#include "Monster.h"
 #include "Player.h"
 #include "ThreadCom.h"
 #include "../common/Packet.h"
@@ -42,8 +43,10 @@ namespace redsquare
     private:
         World m_World;
 
-        //All near players
+        //All players
         std::map<gf::Id, Player> m_Players;
+        //All monsters
+        std::map<gf::Id, Monster> m_Monsters;
 
         //Thread for communication
         ThreadCom m_ThreadCom;
