@@ -26,6 +26,8 @@ namespace redsquare
 
         int m_XP;
         int m_Max_XP;
+
+        int m_Level;
         /* Characteristic*/
         
         Player();

@@ -103,6 +103,8 @@ namespace redsquare
 
         m_XP = 0;
         m_MaxXP += 100;
+
+        m_Level++;
     }
 
     void Player::createCarPacket(Packet &packet)
@@ -124,5 +126,7 @@ namespace redsquare
 
         packet.playerCar.m_XP = m_XP;
         packet.playerCar.m_MaxXP= m_MaxXP;
+
+        packet.playerCar.m_Level = m_Level;
     }
 }

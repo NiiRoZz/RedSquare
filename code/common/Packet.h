@@ -73,6 +73,7 @@ namespace redsquare
 
         int m_XP;
         int m_MaxXP;
+        int m_Level;
     };
 
     struct RequestMove
@@ -184,6 +185,9 @@ namespace redsquare
 
                 ar | packet.playerCar.m_XP;
                 ar | packet.playerCar.m_MaxXP;
+
+
+                ar | packet.playerCar.m_Level;
 
                 break;
             }

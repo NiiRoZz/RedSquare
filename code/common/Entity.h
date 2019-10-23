@@ -21,6 +21,8 @@ namespace redsquare
         int m_MovePoint;
         int m_Range;
 
+        int m_Level;
+
         Entity();
     };
 }
