@@ -2,6 +2,7 @@
 #define REDSQUARE_SERVER_PLAYER_H
 
 #include "../common/Sockets.h"
+#include "../common/Entity.h"
 #include "World.h"
 
 #include <gf/Queue.h>
@@ -10,35 +11,15 @@
 
 namespace redsquare
 {
-    class Player
+    class Player: public Entity
     {
     public:
-        gf::Vector2i m_Pos;
-
         /* Characteristic */
-        int m_LifePoint;
         int m_ManaPoint;
-
-        int m_MaxLifePoint;
         int m_MaxManaPoint;
-
-
-        int m_AttackPoint;
-        int m_DefensePoint;
-
-        int m_MaxAttackPoint;
-        int m_MaxDefensePoint;
-
-        int m_MovePoint;
-        int m_Range;
-
-        int m_XP;
-        int m_MaxXP;
         /* Characteristic*/
 
-
         void createCarPacket(Packet &packet);
-
 
         const uint8_t m_TypeOfPlayer;
         
@@ -56,14 +37,12 @@ namespace redsquare
 
         bool canAttack(gf::Vector2i m_TargetPos);
         void attack();
+        
         void levelUp();
 
     private:
         SocketTcp m_Socket;
         gf::Id m_PlayerID;
-
-        int m_Life;
-        int m_Mana;
     };
 }
 

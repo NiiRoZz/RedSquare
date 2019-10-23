@@ -1,17 +1,16 @@
 #ifndef REDSQUARE_CLIENT_PLAYER_H
 #define REDSQUARE_CLIENT_PLAYER_H
 
+#include "../common/Entity.h"
+
 #include <gf/Entity.h>
 #include <gf/Texture.h>
 
 namespace redsquare
 {
-    class Player: public gf::Entity
+    class Player: public gf::Entity, public redsquare::Entity
     {
     public:
-        /*POS*/
-        gf::Vector2i m_Pos;
-        /*POS*/
         /* Characteristic */
         int m_LifePoint;
         int m_ManaPoint;

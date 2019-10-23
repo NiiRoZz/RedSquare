@@ -6,9 +6,9 @@ namespace redsquare
     Player::Player(SocketTcp socket, gf::Id playerID, gf::Vector2i pos)
     : m_Socket(std::move(socket))
     , m_PlayerID(playerID)
-    , m_Pos(pos)
     , m_TypeOfPlayer((uint8_t)(rand() % 4))
     {
+        m_Pos = pos;
         m_LifePoint = 100;
         m_ManaPoint = 100;
 
@@ -49,7 +49,6 @@ namespace redsquare
         //MouseClic
         if(dirX !=0 && dirY !=0)
         {
-            printf("actual position x: %d\nactual position y: %d\n",m_Pos[0] ,m_Pos[1]);
             int newPosX =  dirX ;
             int newPosY =  dirY;
             
@@ -106,7 +105,8 @@ namespace redsquare
         m_MaxXP += 100;
     }
 
-    void Player::createCarPacket(Packet &packet){
+    void Player::createCarPacket(Packet &packet)
+    {
         packet.type = PacketType::PlayerCar;
 
         packet.playerCar.Id = m_PlayerID;
