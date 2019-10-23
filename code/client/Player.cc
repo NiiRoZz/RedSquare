@@ -104,14 +104,14 @@ namespace redsquare
     }
 
     Player::Player()
-    : m_Pos( gf::Vector2i( 0, 0 ) )
     {
+        m_Pos = gf::Vector2i( 0, 0 );
         loadTexture();
     }
 
     Player::Player( gf::Vector2i pos, uint8_t type )
-    : m_Pos( pos )
     {
+        m_Pos = pos;
         loadTexture(type);
     }
 
