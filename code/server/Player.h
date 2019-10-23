@@ -17,6 +17,9 @@ namespace redsquare
         /* Characteristic */
         int m_ManaPoint;
         int m_MaxManaPoint;
+
+        int m_XP;
+        int m_MaxXP;
         /* Characteristic*/
 
         void createCarPacket(Packet &packet);
