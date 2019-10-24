@@ -13,9 +13,14 @@ namespace redsquare
     public:
         Monster();
 
+        void loadTexture(uint8_t type = 0);
+
         virtual void update(gf::Time time) override;
 
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
+
+    private:
+        gf::Texture monsterTexture;
     };
 }
 

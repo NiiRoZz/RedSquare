@@ -24,6 +24,9 @@ namespace redsquare
         bool processPackets( Packet &packet );
 
         Player* getPlayer( gf::Id playerID );
+        Player* getPlayer( gf::Vector2i pos );
+
+        Monster* getMonster( gf::Vector2i pos );
 
         void sendPacketToAllPlayers( Packet &packet );
         void sendPacketToVisiblePlayers( Packet &packet, gf::Vector2i pos );

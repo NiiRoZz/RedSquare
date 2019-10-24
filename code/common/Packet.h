@@ -39,6 +39,7 @@ namespace redsquare
     {
         RequestMove,
         ReceiveMove,
+        RequestAttack,
         PlayerDisconnected,
         PlayerCar,
         PlayerTurn,
@@ -63,7 +64,7 @@ namespace redsquare
 
     struct PlayerCar
     {
-        gf::Id Id;
+        gf::Id playerID;
         int m_LifePoint;
         int m_ManaPoint;
 
@@ -90,6 +91,13 @@ namespace redsquare
     };
 
     struct ReceiveMove
+    {
+        gf::Id playerID;
+        int posX;
+        int posY;
+    };
+
+    struct RequestAttack
     {
         gf::Id playerID;
         int posX;
@@ -123,6 +131,7 @@ namespace redsquare
         {
             RequestMove requestMove;
             ReceiveMove receiveMove;
+            RequestAttack requestAttack;
             PlayerDisconnected playerDisconnected;
             PlayerTurn playerTurn;
             SpawnEntity spawnEntity;
@@ -159,6 +168,14 @@ namespace redsquare
                 break;
             }
 
+            case PacketType::RequestAttack:
+            {
+                ar | packet.requestAttack.playerID;
+                ar | packet.requestAttack.posX;
+                ar | packet.requestAttack.posY;
+                break;
+            }
+
             case PacketType::PlayerTurn:
             {
                 ar | packet.playerTurn.playerTurn;
@@ -176,7 +193,7 @@ namespace redsquare
             }
             case PacketType::PlayerCar:
             {
-                ar | packet.playerCar.Id;
+                ar | packet.playerCar.playerID;
 
                 ar | packet.playerCar.m_LifePoint;
                 ar | packet.playerCar.m_ManaPoint;

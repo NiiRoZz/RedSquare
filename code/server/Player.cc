@@ -110,7 +110,7 @@ namespace redsquare
     {
         packet.type = PacketType::PlayerCar;
 
-        packet.playerCar.Id = m_PlayerID;
+        packet.playerCar.playerID = m_PlayerID;
 
         packet.playerCar.m_LifePoint = m_LifePoint;
         packet.playerCar.m_ManaPoint = m_ManaPoint;
@@ -128,9 +128,6 @@ namespace redsquare
 
         packet.playerCar.m_Level = m_Level;
     }
-
-
-
 
     void Player::playerSpawn(std::map<gf::Id,Player> &m_Players,World &world){ // set spawn for a player 
         switch (m_Players.size())

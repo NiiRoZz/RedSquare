@@ -11,6 +11,8 @@ namespace redsquare
     , m_CanPlay( false )
     , m_dirX(0)
     , m_dirY(0)
+    , m_AttackX(0)
+    , m_AttackY(0)
     {
     }
 
@@ -84,23 +86,38 @@ namespace redsquare
         }
 
         //Player want to move
-        if ( m_dirX!=0 ||m_dirY!= 0 )
+        if ( m_dirX != 0 || m_dirY != 0 )
         {
+            //don't forget to call m_CanPlay false when sent action
+            m_CanPlay = false;
+
             Packet packet;
             packet.type = PacketType::RequestMove;
             packet.requestMove.playerID = m_PlayerID;
             packet.requestMove.dirX = m_dirX;
             packet.requestMove.dirY = m_dirY;
 
+            m_dirX = 0;
+            m_dirY = 0;
+
             m_ThreadCom.sendPacket( packet );
-
-            m_dirX=0;
-            m_dirY=0;
-
+        }
+        else if ( m_AttackX != 0 || m_AttackY != 0 )
+        {
             //don't forget to call m_CanPlay false when sent action
             m_CanPlay = false;
+            
+            Packet packet;
+            packet.type = PacketType::RequestAttack;
+            packet.requestAttack.playerID = m_PlayerID;
+            packet.requestAttack.posX = m_AttackX;
+            packet.requestAttack.posY = m_AttackY;
+
+            m_AttackX = 0;
+            m_AttackY = 0;
+
+            m_ThreadCom.sendPacket( packet );
         }
-        //else if ( )
     }
 
     void Game::processPackets()
@@ -143,11 +160,12 @@ namespace redsquare
                         auto it = m_Players.insert( std::make_pair( packet.spawnEntity.playerID, Player( gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY), packet.spawnEntity.typeOfEntity ) ) );
                         assert( it.second );
                     }
+                    break;
                 }
 
                 case PacketType::PlayerCar:
                 {
-                    Player* player = getPlayer(m_PlayerID);
+                    Player* player = getPlayer(packet.playerCar.playerID);
                     assert(player != nullptr);
 
                     player->m_LifePoint = packet.playerCar.m_LifePoint;
@@ -159,7 +177,10 @@ namespace redsquare
                     player->m_AttackPoint = packet.playerCar.m_AttackPoint;
                     player->m_DefensePoint = packet.playerCar.m_DefensePoint;
                     player->m_MovePoint = packet.playerCar.m_MovePoint;
-                    player->m_Range = packet.playerCar.m_Range;                }
+                    player->m_Range = packet.playerCar.m_Range;
+
+                    break;
+                }
             }
         }
     }
