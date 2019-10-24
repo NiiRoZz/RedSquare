@@ -183,8 +183,7 @@ namespace redsquare
                                 targetMonster->createCarPacket(sendPacket);
                             }
                             else
-                            {
-                                
+                            {   
                                 sendPacket.type = PacketType::EntityDisconnected;
                                 sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
                                 sendPacket.entityDisconnected.entityID = targetMonster->m_EntityID;

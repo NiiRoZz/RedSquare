@@ -15,10 +15,10 @@ namespace redsquare
             m_MaxLifePoint = 100;
             m_MaxManaPoint = 20;
 
-            m_AttackPoint = 5;
+            m_AttackPoint = 30;
             m_DefensePoint = 5;
 
-            m_MaxAttackPoint = 5;
+            m_MaxAttackPoint = 30;
             m_MaxDefensePoint = 5;
 
             m_Range = 2;
@@ -31,10 +31,10 @@ namespace redsquare
             m_MaxLifePoint = 150;
             m_MaxManaPoint = 5;
 
-            m_AttackPoint = 5;
+            m_AttackPoint = 20;
             m_DefensePoint = 10;
 
-            m_MaxAttackPoint = 5;
+            m_MaxAttackPoint = 20;
             m_MaxDefensePoint = 10;
 
             m_Range = 1;
@@ -195,7 +195,7 @@ namespace redsquare
         m_PointInRound -= 1;
         m_AttackedInRound = true;
 
-        target->m_LifePoint -= 50;
+        target->m_LifePoint -= (m_AttackPoint - target->m_DefensePoint);
         if(target->m_LifePoint <= 0){
             m_XP += 10;
             if(m_XP >= m_MaxXP){

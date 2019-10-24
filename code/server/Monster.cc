@@ -8,11 +8,11 @@ namespace redsquare
         m_LifePoint = 100;
         m_MaxLifePoint = 100;
 
-        m_AttackPoint = 50;
-        m_MaxAttackPoint = 50;
+        m_AttackPoint = 20;
+        m_MaxAttackPoint = 20;
 
-        m_DefensePoint = 50;
-        m_MaxDefensePoint = 50;
+        m_DefensePoint = 20;
+        m_MaxDefensePoint = 20;
 
         m_Range = 1;
 
