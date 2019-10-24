@@ -285,8 +285,8 @@ namespace redsquare
         }while(m_World( { (uint)x,(uint) y } ) != Tile::Room); // only putting stair on a  randon room's tile 
 
         bool clear = true;
-        for(uint i = 0; i < 2 ; ++i){ // check if all the tile around are corridor or room
-            for(uint j = 0; j < 2; ++j){
+        for(uint i = 0; i < 3 ; ++i){ // check if all the tile around are corridor or room
+            for(uint j = 0; j < 3; ++j){
                 if( m_World( { (uint)((m_Spawn[0])-1+i),(uint) ((m_Spawn[1])-1+j) } ) != Tile::Room && m_World( { (uint)((m_Spawn[0])-1+i),(uint) ((m_Spawn[1])-1+j) } ) != Tile::Corridor ){
                     clear = false;
                 }
