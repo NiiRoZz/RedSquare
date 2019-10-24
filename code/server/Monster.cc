@@ -21,11 +21,6 @@ namespace redsquare
         m_Level = 1;
     }
 
-    void Monster::playTurn()
-    {
-        // do AI here
-    }
-
     void Monster::createCarPacket(Packet &packet)
     {
         packet.type = PacketType::EntityCar;
@@ -71,6 +66,41 @@ namespace redsquare
                 }
             }
             ++it;
+        }
+        drawRoutine(world);
+    }
+
+    void Monster::drawRoutine(World &world){
+        int x;
+        int y;
+
+        do{
+            x = rand() % World::MapSize;
+            y = rand() % World::MapSize;
+            gf::Vector2i spawn({x,y});
+            m_Routine = spawn;
+        }while(world.m_World( { (uint)x,(uint) y } ) != Tile::Room); // only putting stair on a  randon room's tile 
+    }
+
+    bool Monster::checkRoutine(){
+        if(m_Pos[0] == m_Routine[0] && m_Pos[1] == m_Routine[1]){
+            return true;
+        }
+        return false;
+    }
+
+
+    void Monster::playTurn(World &world)
+    {
+        if(checkRoutine()){
+            drawRoutine(world);
+        }else{
+            std::vector<gf::Vector2i> points = world.m_SquareWorld.computeRoute(m_Pos, m_Routine, 0.0);
+            if( (points.size()-1) <= m_MovePoint  ){
+                m_Pos = m_Routine;
+            }else{
+                m_Pos = points[m_MovePoint];
+            }
         }
     }
 }

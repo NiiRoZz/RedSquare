@@ -155,7 +155,7 @@ int main( int argc, char **argv )
 
 		for (auto it = game.m_Monsters.begin(); it != game.m_Monsters.end(); ++it)
 		{
-			it->second.playTurn();
+			it->second.playTurn(game.m_World);
 		}
 	}
 

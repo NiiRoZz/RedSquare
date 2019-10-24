@@ -15,8 +15,13 @@ namespace redsquare
         Monster(gf::Id monsterID);
 
         virtual void createCarPacket(Packet &packet) override;
-        void playTurn();
+        void playTurn(World &world);
         void monsterSpawn(std::map<gf::Id,Monster> &m_Monsters,World &world);
+
+        void drawRoutine(World &world);
+        gf::Vector2i m_bait;
+        gf::Vector2i m_Routine;
+        bool checkRoutine();
        
 
     private:
