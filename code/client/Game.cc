@@ -170,18 +170,24 @@ namespace redsquare
                         gf::Vector2i pos = m_TempMove.front();
                         m_TempMove.pop();
 
-                        Packet packet;
-                        packet.type = PacketType::RequestMove;
-                        packet.requestMove.playerID = m_PlayerID;
-                        packet.requestMove.dirX = pos[0];
-                        packet.requestMove.dirY = pos[1];
+                        if ( getPlayer(pos) == nullptr && getMonster(pos) == nullptr )
+                        {
+                            Packet packet;
+                            packet.type = PacketType::RequestMove;
+                            packet.requestMove.playerID = m_PlayerID;
+                            packet.requestMove.dirX = pos[0];
+                            packet.requestMove.dirY = pos[1];
 
-                        m_ThreadCom.sendPacket( packet );
-                        break;
+                            m_ThreadCom.sendPacket( packet );
+                            break;
+                        }
+
+                        m_TempMove.empty();
                     }
-
+                    
                     m_CanPlay = packet.playerTurn.playerTurn;
                     std::cout << "It's your turn!!!" << std::endl;
+
                     break;
                 }
 
@@ -335,6 +341,24 @@ namespace redsquare
         if ( monster != m_Monsters.end() )
         {
             return &monster->second;
+        }
+
+        return nullptr;
+    }
+
+    Monster* Game::getMonster( gf::Vector2i pos )
+    {
+        auto it = m_Monsters.begin();
+ 
+        // Iterate over the map using Iterator till end.
+        while ( it != m_Monsters.end() )
+        {
+            if ( it->second.m_Pos[0] == pos[0] && it->second.m_Pos[1] == pos[1] )
+            {
+                return &it->second;
+            }
+
+            ++it;
         }
 
         return nullptr;

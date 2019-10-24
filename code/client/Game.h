@@ -41,6 +41,7 @@ namespace redsquare
         Player* getPlayer( gf::Vector2i pos );
 
         Monster* getMonster( gf::Id monsterID );
+        Monster* getMonster( gf::Vector2i pos );
 
         bool monsterNear();
 
