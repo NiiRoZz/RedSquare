@@ -3,12 +3,11 @@
 
 namespace redsquare
 {
-    Player::Player(SocketTcp socket, gf::Id playerID, gf::Vector2i pos)
+    Player::Player(SocketTcp socket, gf::Id playerID)
     : m_Socket(std::move(socket))
     , m_PlayerID(playerID)
     , m_TypeOfPlayer((uint8_t)(rand() % 4))
     {
-        m_Pos = pos;
         m_LifePoint = 100;
         m_ManaPoint = 100;
 
@@ -128,5 +127,43 @@ namespace redsquare
         packet.playerCar.m_MaxXP= m_MaxXP;
 
         packet.playerCar.m_Level = m_Level;
+    }
+
+
+
+
+    void Player::playerSpawn(std::map<gf::Id,Player> &m_Players,World &world){ // set spawn for a player 
+        switch (m_Players.size())
+        {
+        case 1:
+            m_Pos = {(world.m_Spawn[0]-1),(world.m_Spawn[1]-1)};
+            break;
+        case 2:
+            m_Pos = {(world.m_Spawn[0]),(world.m_Spawn[1]-1)};
+            break;
+        case 3:
+            m_Pos = {(world.m_Spawn[0]+1),(world.m_Spawn[1]-1)};
+            break;
+        case 4:
+            m_Pos = {(world.m_Spawn[0]-1),(world.m_Spawn[1])};
+            break;
+        case 5:
+            m_Pos = {(world.m_Spawn[0]),(world.m_Spawn[1])};
+            break;
+        case 6:
+            m_Pos = {(world.m_Spawn[0]+1),(world.m_Spawn[1])};
+            break;
+        case 7:
+            m_Pos = {(world.m_Spawn[0]-1),(world.m_Spawn[1]+1)};
+            break;
+        case 8:
+            m_Pos = {(world.m_Spawn[0]),(world.m_Spawn[1]+1)};
+            break;
+        case 9:
+            m_Pos = {(world.m_Spawn[0]+1),(world.m_Spawn[1]+1)};
+            break;                        
+        default: // can only manage 10 or 9 player
+            break;
+        }
     }
 }
