@@ -97,7 +97,8 @@ namespace redsquare
 
     struct ReceiveMove
     {
-        gf::Id playerID;
+        gf::Id entityID;
+        EntityType typeEntity;
         int posX;
         int posY;
     };
@@ -162,7 +163,8 @@ namespace redsquare
 
             case PacketType::ReceiveMove:
             {
-                ar | packet.receiveMove.playerID;
+                ar | packet.receiveMove.entityID;
+                ar | packet.receiveMove.typeEntity;
                 ar | packet.receiveMove.posX;
                 ar | packet.receiveMove.posY;
                 break;

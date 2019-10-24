@@ -159,7 +159,28 @@ int main( int argc, char **argv )
 
 		for (auto it = game.m_Monsters.begin(); it != game.m_Monsters.end(); ++it)
 		{
-			it->second.playTurn(game.m_World);
+			if(it->second.checkRoutine())
+			{
+            	it->second.drawRoutine(game.m_World);
+			}else{
+				std::vector<gf::Vector2i> points = game.m_World.m_SquareWorld.computeRoute(it->second.m_Pos, it->second.m_Routine, 0.0);
+				if( (points.size()-1) <= it->second.m_MovePoint )
+				{
+					it->second.m_Pos = it->second.m_Routine;
+				}else
+				{
+					it->second.m_Pos = points[it->second.m_MovePoint];
+				}
+
+				Packet sendPacket;
+				sendPacket.type = PacketType::ReceiveMove;
+				sendPacket.receiveMove.entityID = it->second.m_MonsterID;
+				sendPacket.receiveMove.typeEntity = EntityType::Monster;
+				sendPacket.receiveMove.posX = it->second.m_Pos[0];
+				sendPacket.receiveMove.posY = it->second.m_Pos[1];
+
+				game.sendPacketToAllPlayers( sendPacket );
+			}
 		}
 	}
 

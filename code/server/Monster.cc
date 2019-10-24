@@ -88,19 +88,4 @@ namespace redsquare
         }
         return false;
     }
-
-
-    void Monster::playTurn(World &world)
-    {
-        if(checkRoutine()){
-            drawRoutine(world);
-        }else{
-            std::vector<gf::Vector2i> points = world.m_SquareWorld.computeRoute(m_Pos, m_Routine, 0.0);
-            if( (points.size()-1) <= m_MovePoint  ){
-                m_Pos = m_Routine;
-            }else{
-                m_Pos = points[m_MovePoint];
-            }
-        }
-    }
 }

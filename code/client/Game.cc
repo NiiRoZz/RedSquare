@@ -129,11 +129,22 @@ namespace redsquare
             {   
                 case PacketType::ReceiveMove:
                 {
-                    Player* player = getPlayer( packet.receiveMove.playerID );
-                    assert( player != nullptr );
-                    
-                    player->m_Pos[0] = packet.receiveMove.posX;
-                    player->m_Pos[1] = packet.receiveMove.posY;
+                    if (packet.receiveMove.typeEntity == EntityType::Player)
+                    {
+                        Player* player = getPlayer( packet.receiveMove.entityID );
+                        assert( player != nullptr );
+                        
+                        player->m_Pos[0] = packet.receiveMove.posX;
+                        player->m_Pos[1] = packet.receiveMove.posY;
+                    }
+                    else if (packet.receiveMove.typeEntity == EntityType::Monster)
+                    {
+                        Monster* monster = getMonster( packet.receiveMove.entityID );
+                        assert( monster != nullptr );
+                        
+                        monster->m_Pos[0] = packet.receiveMove.posX;
+                        monster->m_Pos[1] = packet.receiveMove.posY;
+                    }
                     break;
                 }
 

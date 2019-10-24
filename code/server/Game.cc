@@ -122,7 +122,8 @@ namespace redsquare
                     {
                         Packet sendPacket;
                         sendPacket.type = PacketType::ReceiveMove;
-                        sendPacket.receiveMove.playerID = packet.requestMove.playerID;
+                        sendPacket.receiveMove.entityID = packet.requestMove.playerID;
+                        sendPacket.receiveMove.typeEntity = EntityType::Player;
                         sendPacket.receiveMove.posX = player->m_Pos[0];
                         sendPacket.receiveMove.posY = player->m_Pos[1];
 
