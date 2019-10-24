@@ -85,4 +85,10 @@ namespace redsquare
         }
         return false;
     }
+
+    void Monster::attack(ServerEntity *target)
+    {
+        target->m_LifePoint -= (m_AttackPoint - target->m_DefensePoint);
+    }
+
 }

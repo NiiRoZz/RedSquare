@@ -20,6 +20,7 @@ namespace redsquare
         gf::Vector2i m_bait;
         gf::Vector2i m_Routine;
         bool checkRoutine();
+        void attack(ServerEntity *target);
        
 
     private:

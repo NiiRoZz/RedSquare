@@ -2,6 +2,7 @@
 #include "../common/Singletons.h"
 
 #include <gf/Random.h>
+#include <gf/VectorOps.h>
 #include <iostream>
 
 namespace redsquare
@@ -261,5 +262,36 @@ namespace redsquare
         }
 
         return nullptr;
+    }
+
+    bool Game::canAttack(Monster &monster, gf::Vector2i targetPos)
+    {
+        if ( monster.m_Pos == targetPos )
+        {
+            return false;
+        }
+        
+        gf::Distance2<int> distFn = gf::manhattanDistance<int, 2>;
+
+        float distance = distFn(monster.m_Pos, targetPos);
+
+        if ( distance > monster.m_Range )
+        {
+            return false;
+        }
+
+        auto it = m_Players.begin();
+ 
+        while ( it != m_Players.end() )
+        {
+            if ( it->second.m_Pos == targetPos )
+            {
+                return true;
+            }
+
+            ++it;
+        }
+
+        return false;
     }
 }

@@ -118,26 +118,53 @@ int main( int argc, char **argv )
 
 		for (auto it = game.m_Monsters.begin(); it != game.m_Monsters.end(); ++it)
 		{
-			if(it->second.checkRoutine())
+			bool hasFocus = false;
+			bool hasAttacked = false;
+			game.m_World.m_SquareWorld.clearFieldOfVision();
+			game.m_World.m_SquareWorld.computeLocalFieldOfVision(it->second.m_Pos,7);
+
+			auto it2 = game.m_Players.begin();
+			while ( it2 != game.m_Players.end() )
 			{
-            	it->second.drawRoutine(game.m_World);
+				if(game.m_World.m_SquareWorld.isInFieldOfVision(it2->second.m_Pos)){
+					hasFocus = true;
+					break;
+				}
+				++it2;
 			}
-			else
-			{
-				std::vector<gf::Vector2i> points = game.m_World.m_SquareWorld.computeRoute(it->second.m_Pos, it->second.m_Routine, 0.0);
-				it->second.m_Pos = points[1];
+			if(hasFocus){
+				if(game.canAttack(it->second,it2->second.m_Pos)){
+                    ServerEntity *targetServerEntity = dynamic_cast<ServerEntity*>(&it2->second);
+					it->second.attack(targetServerEntity);
+					hasAttacked = true;
+					Packet sendPacket;
+					it2->second.createCarPacket(sendPacket);
+					game.sendPacketToAllPlayers( sendPacket );
+				}else{
+					it->second.m_Routine = it2->second.m_Pos;
+				}
+			}
+			if(!hasAttacked){
+				if(it->second.checkRoutine())
+				{
+					it->second.drawRoutine(game.m_World);
+				}
+				else
+				{
+					std::vector<gf::Vector2i> points = game.m_World.m_SquareWorld.computeRoute(it->second.m_Pos, it->second.m_Routine, 0.0);
+					it->second.m_Pos = points[1];
 
-				Packet sendPacket;
-				sendPacket.type = PacketType::ReceiveMove;
-				sendPacket.receiveMove.entityID = it->second.m_EntityID;
-				sendPacket.receiveMove.typeEntity = EntityType::Monster;
-				sendPacket.receiveMove.posX = it->second.m_Pos[0];
-				sendPacket.receiveMove.posY = it->second.m_Pos[1];
+					Packet sendPacket;
+					sendPacket.type = PacketType::ReceiveMove;
+					sendPacket.receiveMove.entityID = it->second.m_EntityID;
+					sendPacket.receiveMove.typeEntity = EntityType::Monster;
+					sendPacket.receiveMove.posX = it->second.m_Pos[0];
+					sendPacket.receiveMove.posY = it->second.m_Pos[1];
 
-				game.sendPacketToAllPlayers( sendPacket );
+					game.sendPacketToAllPlayers( sendPacket );
+				}
 			}
 		}
 	}
-
 	return 0;
 }
