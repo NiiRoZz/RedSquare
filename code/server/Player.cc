@@ -3,8 +3,8 @@
 
 namespace redsquare
 {
-    Player::Player(SocketTcp socket, gf::Id playerID)
-    : ServerEntity(playerID,static_cast<EntityClass>(rand() % static_cast<int>(EntityClass::EntityClassCount)))
+    Player::Player(SocketTcp socket, gf::Id playerID, const EntityClass type)
+    : ServerEntity(playerID,type)
     , m_Socket(std::move(socket))
     {
         m_LifePoint = 100;

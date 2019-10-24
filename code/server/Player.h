@@ -28,7 +28,7 @@ namespace redsquare
 
         virtual void createCarPacket(Packet &packet) override;
         
-        Player(SocketTcp socket, gf::Id playerID);
+        Player(SocketTcp socket, gf::Id playerID, const EntityClass type);
 
         void sendPacket(Packet &packet);
         void receivePacket(Packet &packet);

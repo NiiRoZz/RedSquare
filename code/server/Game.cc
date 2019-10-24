@@ -17,16 +17,18 @@ namespace redsquare
         gf::Id id = generateId();
         std::map<gf::Id, Player>::iterator itNewPlayer;
 
+        Packet packet;
+
+        socket.receive(packet);
+
         // Create a new player
-        std::tie(itNewPlayer, std::ignore) = m_Players.emplace(id, Player(std::move(socket), id));
+        std::tie(itNewPlayer, std::ignore) = m_Players.emplace(id, Player(std::move(socket), id, packet.playerInfoConnection.entityClass));
         itNewPlayer->second.playerSpawn(m_Players,m_World);
 
         NewPlayer packetNewPlayer( m_World.m_World, id );
         itNewPlayer->second.sendPacket(packetNewPlayer);
 
         //HACKY, too, sending fake move to all other players INCLUDE HIMSELF!!! Should be reworked
-        Packet packet;
-
         packet.type = PacketType::SpawnEntity;
         packet.spawnEntity.entityID = id;
         packet.spawnEntity.typeEntity = EntityType::Player;

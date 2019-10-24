@@ -44,6 +44,7 @@ namespace redsquare
 
     enum class PacketType : uint16_t
     {
+        PlayerInfoConnection,
         RequestMove,
         ReceiveMove,
         RequestAttack,
@@ -67,6 +68,12 @@ namespace redsquare
         NewPlayer()
         {
         }
+    };
+
+    struct PlayerInfoConnection
+    {
+        EntityClass entityClass;
+        char name[20];
     };
 
     struct EntityCar
@@ -142,6 +149,7 @@ namespace redsquare
 
         union
         {
+            PlayerInfoConnection playerInfoConnection;
             RequestMove requestMove;
             ReceiveMove receiveMove;
             RequestAttack requestAttack;
@@ -159,6 +167,13 @@ namespace redsquare
 
         switch (packet.type)
         {
+            case PacketType::PlayerInfoConnection:
+            {
+                ar | packet.playerInfoConnection.entityClass;
+                ar | packet.playerInfoConnection.name;
+                break;
+            }
+
             case PacketType::RequestMove:
             {
                 ar | packet.requestMove.playerID;

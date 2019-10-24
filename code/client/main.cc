@@ -36,9 +36,9 @@ using namespace redsquare;
 
 int main( int argc, char **argv )
 {
-    if ( argc != 4 )
+    if ( argc != 5 )
     {
-        std::cerr << "Usage : ./RedSquare ip port playerName" << std::endl;
+        std::cerr << "Usage : ./RedSquare ip port playerName typePlayer" << std::endl;
         return 1;
     }
 
@@ -106,6 +106,9 @@ int main( int argc, char **argv )
     gf::EntityContainer mainEntities;
     // add entities to mainEntities
     Game game( argv[1], argv[2], mainView );
+
+    //Send info about us, before get world
+    game.sendInfoConnection(static_cast<EntityClass>(atoi(argv[4])), argv[3]);
 
     //Client pause here until receive world
     game.receiveWorld();
