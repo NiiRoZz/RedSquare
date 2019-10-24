@@ -18,7 +18,7 @@ namespace redsquare
         
         static gf::Color4f comboColor1 = gf::Color::fromRgba32(255, 255, 255, 100);
        if( chatUI.begin("Chat", gf::RectF(0, 360, 220, 220), gf::UIWindow::Border | gf::UIWindow::Title|gf::UIWindow::NoScrollbar)){
-           std::cout << "Hello" << std::endl;
+           
            static gf::UICollapse groupCollapsed = gf::UICollapse::Minimized;
            
                 chatUI.layoutRowStatic(180, 210, 1);
