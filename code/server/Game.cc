@@ -153,7 +153,12 @@ namespace redsquare
                     Monster *monster = getMonster(posTarget);
                     if (monster != nullptr)
                     {
-                        
+                        monster->m_LifePoint -= 50;
+
+                        Packet sendPacket;
+                        monster->createCarPacket(sendPacket);
+
+                        sendPacketToAllPlayers( sendPacket );
                     }
                     else
                     {
