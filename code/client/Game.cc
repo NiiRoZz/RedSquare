@@ -29,9 +29,11 @@ namespace redsquare
     void Game::sendInfoConnection(EntityClass type, char *name)
     {
         Packet sendPacket;
-
+        sendPacket.type = PacketType::PlayerInfoConnection;
         sendPacket.playerInfoConnection.entityClass = type;
         strncpy(sendPacket.playerInfoConnection.name, name, 20);
+
+        m_ThreadCom.sendPacket(sendPacket);
     }
 
     void Game::receiveWorld()

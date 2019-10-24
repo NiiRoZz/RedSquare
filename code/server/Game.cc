@@ -19,6 +19,7 @@ namespace redsquare
 
         Packet packet;
 
+        //Receive info of client, freeze until we receive them
         socket.receive(packet);
 
         // Create a new player
