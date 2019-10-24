@@ -4,6 +4,7 @@
 #include <gf/Shapes.h>
 #include <gf/Sprite.h>
 #include <gf/RenderTarget.h>
+#include <gf/Color.h>
 
 namespace redsquare
 {
@@ -57,11 +58,33 @@ namespace redsquare
     void Monster::render(gf::RenderTarget& target, const gf::RenderStates& states)
     {
         gf::Sprite sprite;
+        static constexpr gf::Vector2f BarSize = { 20.0f, 3.0f } ;
+         static constexpr gf::Vector2f BarOffset = { 2.0f, 6.0f };
+        static constexpr gf::Vector2f BarOffset2 = { 2.0f, 6.0f };
 
         sprite.setPosition( m_Pos * World::TileSize );
         sprite.setScale( 1 );
         sprite.setTexture( monsterTexture );
         target.draw(sprite, states);
+
+        gf::Color4f color(255,0,0,174);
+        gf::RectangleShape bar;
+
+        bar.setSize({BarSize.width * 1 , BarSize.height});
+        bar.setColor(color);
+        bar.setOutlineColor(gf::Color::darker(color));
+        bar.setPosition(m_Pos * World::TileSize-BarOffset);
+        bar.setAnchor(gf::Anchor::TopLeft);
+        target.draw(bar, states);   
+
+        gf::RectangleShape bar2;
+        color = gf::Color::Green;
+        
+        bar2.setSize({BarSize.width * (static_cast<float>(m_LifePoint)/static_cast<float>(m_MaxLifePoint)), BarSize.height});
+        bar2.setColor(color);
+        bar2.setPosition(m_Pos * World::TileSize-BarOffset2);
+        bar2.setAnchor(gf::Anchor::TopLeft);
+        target.draw(bar2, states); 
     }
 
     void Monster::update(gf::Time time)
