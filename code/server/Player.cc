@@ -8,7 +8,7 @@ namespace redsquare
     , m_Socket(std::move(socket))
     {
         switch (m_TypeOfEntity){
-        case EntityClass::Magus :
+        case EntityClass::Magus : // ------------------- Magus -------------------
             m_LifePoint = 100;
             m_ManaPoint = 20;
 
@@ -24,7 +24,7 @@ namespace redsquare
             m_Range = 2;
             break;
 
-        case EntityClass::Warrior :
+        case EntityClass::Warrior : // ------------------- Warrior -------------------
             m_LifePoint = 150;
             m_ManaPoint = 5;
 
@@ -44,7 +44,6 @@ namespace redsquare
             break;
         }
        
-
         m_XP = 0;
         m_MaxXP = 100;
 
