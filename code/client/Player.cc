@@ -37,7 +37,7 @@ namespace redsquare
         gf::RectangleShape bar2;
         color = gf::Color::Green;
         
-        bar2.setSize({BarSize.width * 0.5 , BarSize.height});
+        bar2.setSize({BarSize.width * (static_cast<float>(m_LifePoint)/static_cast<float>(m_MaxLifePoint)), BarSize.height});
         bar2.setColor(color);
         bar2.setPosition(m_Pos * World::TileSize-BarOffset2);
         bar2.setAnchor(gf::Anchor::TopLeft);
@@ -55,7 +55,7 @@ namespace redsquare
         gf::RectangleShape barMana1;
         color = gf::Color::Blue;
         
-        bar2.setSize({BarSize2.width * 0.75 , BarSize2.height});
+        bar2.setSize({BarSize2.width * (static_cast<float>(m_ManaPoint)/static_cast<float>(m_MaxManaPoint)) , BarSize2.height});
         bar2.setColor(color);
         bar2.setPosition(m_Pos * World::TileSize-BarOffsetMana1);
         bar2.setAnchor(gf::Anchor::TopLeft);
