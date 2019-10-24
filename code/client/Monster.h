@@ -5,7 +5,7 @@
 
 #include <gf/Entity.h>
 #include <gf/Texture.h>
-
+#include <gf/Font.h>
 namespace redsquare
 {
     class Monster: public gf::Entity, public redsquare::Entity
@@ -22,6 +22,7 @@ namespace redsquare
 
     private:
         gf::Texture monsterTexture;
+        gf::Font m_Font;
     };
 }
 

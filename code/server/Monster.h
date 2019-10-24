@@ -11,6 +11,7 @@ namespace redsquare
     class Monster: public ServerEntity
     {
     public:
+        gf::Id m_MonsterID;
         const uint8_t m_TypeOfMonster;
         Monster(gf::Id monsterID);
 
@@ -25,7 +26,7 @@ namespace redsquare
        
 
     private:
-        gf::Id m_MonsterID;
+        
     };
 }
 

@@ -77,8 +77,9 @@ int main( int argc, char **argv )
 				game.m_Players.erase(it--);
 
 				Packet sendPacket;
-                sendPacket.type = PacketType::PlayerDisconnected;
-                sendPacket.receiveMove.playerID = disconnectedID;
+				sendPacket.type = PacketType::EntityDisconnected;
+				sendPacket.entityDisconnected.typeEntity = EntityType::Player;
+                sendPacket.entityDisconnected.entityID = disconnectedID;
 
                 game.sendPacketToAllPlayers( sendPacket );
 
@@ -96,8 +97,9 @@ int main( int argc, char **argv )
 				game.m_Players.erase(it--);
 
 				Packet sendPacket;
-                sendPacket.type = PacketType::PlayerDisconnected;
-                sendPacket.receiveMove.playerID = disconnectedID;
+				sendPacket.type = PacketType::EntityDisconnected;
+				sendPacket.entityDisconnected.typeEntity = EntityType::Player;
+                sendPacket.entityDisconnected.entityID = disconnectedID;
 
                 game.sendPacketToAllPlayers( sendPacket );
 
@@ -122,8 +124,9 @@ int main( int argc, char **argv )
 					game.m_Players.erase(it--);
 
 					Packet sendPacket;
-					sendPacket.type = PacketType::PlayerDisconnected;
-					sendPacket.receiveMove.playerID = disconnectedID;
+					sendPacket.type = PacketType::EntityDisconnected;
+					sendPacket.entityDisconnected.typeEntity = EntityType::Player;
+                	sendPacket.entityDisconnected.entityID = disconnectedID;
 
 					game.sendPacketToAllPlayers( sendPacket );
 
@@ -141,8 +144,9 @@ int main( int argc, char **argv )
 					game.m_Players.erase(it--);
 
 					Packet sendPacket;
-					sendPacket.type = PacketType::PlayerDisconnected;
-					sendPacket.receiveMove.playerID = disconnectedID;
+					sendPacket.type = PacketType::EntityDisconnected;
+					sendPacket.entityDisconnected.typeEntity = EntityType::Player;
+                	sendPacket.entityDisconnected.entityID = disconnectedID;
 
 					game.sendPacketToAllPlayers( sendPacket );
 

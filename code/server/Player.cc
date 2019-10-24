@@ -26,6 +26,8 @@ namespace redsquare
 
         m_XP = 0;
         m_MaxXP = 100;
+
+        m_Level = 100;
     }
 
     void Player::sendPacket(Packet &packet)
