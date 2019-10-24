@@ -272,7 +272,7 @@ namespace redsquare
         }
     }
 
-    void World::getSpawnPoint(){
+    void World::getSpawnPoint(){ // set a spawn point and check if all tile around him is a room or a corrdior to make palyer spawnanble on these tile
         
         int x = rand() % MapSize;
         int y = rand() % MapSize;
@@ -280,20 +280,21 @@ namespace redsquare
         do{
             x = rand() % MapSize;
             y = rand() % MapSize;
-        }while(m_World( { (uint)x,(uint) y } ) != Tile::Room /*&& World::spawnCheck()*/); // only putting stair on a  randon room's tile
-        gf::Vector2i spawn({x,y});
-        m_Spawn = spawn; 
-    }
+            gf::Vector2i spawn({x,y});
+            m_Spawn = spawn;
+        }while(m_World( { (uint)x,(uint) y } ) != Tile::Room); // only putting stair on a  randon room's tile 
 
-    bool World::spawnCheck(){
+        bool clear = true;
         for(uint i = 0; i < 2 ; ++i){
             for(uint j = 0; j < 2; ++j){
-                if( m_World( { (uint)((m_Spawn[0])-1+i),(uint) ((m_Spawn[1])-1+j) } ) != Tile::Room){
-                    return false;
+                if( m_World( { (uint)((m_Spawn[0])-1+i),(uint) ((m_Spawn[1])-1+j) } ) != Tile::Room && m_World( { (uint)((m_Spawn[0])-1+i),(uint) ((m_Spawn[1])-1+j) } ) != Tile::Corridor ){
+                    clear = false;
                 }
             }
         }
-        return true;
+        if(clear == false){
+            World::getSpawnPoint();
+        }
     }
 
     void World::prettyPrint(){ // printing the map on server's console
