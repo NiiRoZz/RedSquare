@@ -19,7 +19,6 @@ namespace redsquare
         void getSpawnPoint();
 
         gf::Vector2i m_Spawn;
-        bool spawnCheck();
 
     private:
         std::vector<gf::Vector4u> grid(uint sizeGrid); // return all the cell of the grid in a vector

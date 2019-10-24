@@ -162,7 +162,7 @@ namespace redsquare
         case 9:
             m_Pos = {(world.m_Spawn[0]+1),(world.m_Spawn[1]+1)};
             break;                        
-        default: // can only manage 10 or 9 player
+        default: // can only manage 9 player
             break;
         }
     }
