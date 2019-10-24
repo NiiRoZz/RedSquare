@@ -89,7 +89,7 @@ namespace redsquare
         return (m_Socket.getState() == SocketState::Disconnected);
     }
 
-     void Player::levelUp(){
+     void Player::levelUp(){ // method to level up a player
 
         m_MaxLifePoint += 2;
         m_LifePoint += 2;
@@ -106,7 +106,7 @@ namespace redsquare
         m_Level++;
     }
 
-    void Player::createCarPacket(Packet &packet)
+    void Player::createCarPacket(Packet &packet) // create the packet of the caracteristic who will be send to player
     {
         packet.type = PacketType::PlayerCar;
 
@@ -136,33 +136,33 @@ namespace redsquare
         switch (m_Players.size())
         {
         case 1:
-            m_Pos = {(world.m_Spawn[0]-1),(world.m_Spawn[1]-1)};
+            m_Pos = {(world.m_Spawn[0]-1),(world.m_Spawn[1]-1)};// the first player to connect to the game spawn on this case
             break;
         case 2:
-            m_Pos = {(world.m_Spawn[0]),(world.m_Spawn[1]-1)};
+            m_Pos = {(world.m_Spawn[0]),(world.m_Spawn[1]-1)}; // the second player to connect to the game spawn on this case
             break;
         case 3:
-            m_Pos = {(world.m_Spawn[0]+1),(world.m_Spawn[1]-1)};
+            m_Pos = {(world.m_Spawn[0]+1),(world.m_Spawn[1]-1)}; // the third player to connect to the game spawn on this case
             break;
         case 4:
-            m_Pos = {(world.m_Spawn[0]-1),(world.m_Spawn[1])};
+            m_Pos = {(world.m_Spawn[0]-1),(world.m_Spawn[1])}; // the fourth player to connect to the game spawn on this case
             break;
-        case 5:
-            m_Pos = {(world.m_Spawn[0]),(world.m_Spawn[1])};
+        case 5: 
+            m_Pos = {(world.m_Spawn[0]),(world.m_Spawn[1])}; // the fifth player to connect to the game spawn on this case
             break;
         case 6:
-            m_Pos = {(world.m_Spawn[0]+1),(world.m_Spawn[1])};
+            m_Pos = {(world.m_Spawn[0]+1),(world.m_Spawn[1])};// the sixth player to connect to the game spawn on this case
             break;
         case 7:
-            m_Pos = {(world.m_Spawn[0]-1),(world.m_Spawn[1]+1)};
+            m_Pos = {(world.m_Spawn[0]-1),(world.m_Spawn[1]+1)}; // the seventh player to connect to the game spawn on this case
             break;
         case 8:
-            m_Pos = {(world.m_Spawn[0]),(world.m_Spawn[1]+1)};
+            m_Pos = {(world.m_Spawn[0]),(world.m_Spawn[1]+1)}; // the eigth player to connect to the game spawn on this case
             break;
         case 9:
-            m_Pos = {(world.m_Spawn[0]+1),(world.m_Spawn[1]+1)};
+            m_Pos = {(world.m_Spawn[0]+1),(world.m_Spawn[1]+1)}; // the ninth player to connect to the game spawn on this case
             break;                        
-        default: // can only manage 9 player
+        default: // cant manage more than 9 player
             break;
         }
     }
