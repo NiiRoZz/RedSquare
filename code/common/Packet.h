@@ -41,7 +41,7 @@ namespace redsquare
         ReceiveMove,
         RequestAttack,
         PlayerDisconnected,
-        PlayerCar,
+        EntityCar,
         PlayerTurn,
         SpawnEntity,
     };
@@ -62,15 +62,16 @@ namespace redsquare
         }
     };
 
-    struct PlayerCar
+    struct EntityCar
     {
-        gf::Id playerID;
+        gf::Id entityID;
+        EntityType entityType;
+
         int m_LifePoint;
         int m_ManaPoint;
 
         int m_MaxLifePoint;
         int m_MaxManaPoint;
-
 
         int m_AttackPoint;
         int m_DefensePoint;
@@ -116,7 +117,7 @@ namespace redsquare
 
     struct SpawnEntity
     {
-        gf::Id playerID;
+        gf::Id entityID;
         EntityType typeEntity;
         uint8_t typeOfEntity;
         int posX;
@@ -135,7 +136,7 @@ namespace redsquare
             PlayerDisconnected playerDisconnected;
             PlayerTurn playerTurn;
             SpawnEntity spawnEntity;
-            PlayerCar playerCar;
+            EntityCar entityCar;
         };
     };
 
@@ -184,35 +185,34 @@ namespace redsquare
 
             case PacketType::SpawnEntity:
             {
-                ar | packet.spawnEntity.playerID;
+                ar | packet.spawnEntity.entityID;
                 ar | packet.spawnEntity.typeEntity;
                 ar | packet.spawnEntity.typeOfEntity;
                 ar | packet.spawnEntity.posX;
                 ar | packet.spawnEntity.posY;
                 break;
             }
-            case PacketType::PlayerCar:
+            case PacketType::EntityCar:
             {
-                ar | packet.playerCar.playerID;
+                ar | packet.entityCar.entityID;
+                ar | packet.entityCar.entityType;
 
-                ar | packet.playerCar.m_LifePoint;
-                ar | packet.playerCar.m_ManaPoint;
+                ar | packet.entityCar.m_LifePoint;
+                ar | packet.entityCar.m_ManaPoint;
 
-                ar | packet.playerCar.m_MaxLifePoint;
-                ar | packet.playerCar.m_MaxManaPoint;
+                ar | packet.entityCar.m_MaxLifePoint;
+                ar | packet.entityCar.m_MaxManaPoint;
 
-                ar | packet.playerCar.m_AttackPoint;
-                ar | packet.playerCar.m_DefensePoint;
+                ar | packet.entityCar.m_AttackPoint;
+                ar | packet.entityCar.m_DefensePoint;
 
-                ar | packet.playerCar.m_MovePoint;
-                ar | packet.playerCar.m_Range;
+                ar | packet.entityCar.m_MovePoint;
+                ar | packet.entityCar.m_Range;
 
+                ar | packet.entityCar.m_XP;
+                ar | packet.entityCar.m_MaxXP;
 
-                ar | packet.playerCar.m_XP;
-                ar | packet.playerCar.m_MaxXP;
-
-
-                ar | packet.playerCar.m_Level;
+                ar | packet.entityCar.m_Level;
 
                 break;
             }

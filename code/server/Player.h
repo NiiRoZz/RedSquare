@@ -2,7 +2,7 @@
 #define REDSQUARE_SERVER_PLAYER_H
 
 #include "../common/Sockets.h"
-#include "../common/Entity.h"
+#include "ServerEntity.h"
 #include "World.h"
 
 #include <gf/Queue.h>
@@ -11,7 +11,7 @@
 
 namespace redsquare
 {
-    class Player: public Entity
+    class Player: public ServerEntity
     {
     public:
         /* Characteristic */
@@ -22,7 +22,7 @@ namespace redsquare
         int m_MaxXP;
         /* Characteristic*/
 
-        void createCarPacket(Packet &packet);
+        virtual void createCarPacket(Packet &packet) override;
 
         const uint8_t m_TypeOfPlayer;
         

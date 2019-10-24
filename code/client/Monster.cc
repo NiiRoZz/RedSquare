@@ -9,6 +9,14 @@ namespace redsquare
 {
     Monster::Monster()
     {
+        m_Pos = gf::Vector2i( 0, 0 );
+        loadTexture();
+    }
+
+    Monster::Monster( gf::Vector2i pos, uint8_t type )
+    {
+        m_Pos = pos;
+        loadTexture(type);
     }
 
     void Monster::loadTexture( uint8_t type )
@@ -17,25 +25,25 @@ namespace redsquare
         {
             case 0:
             {
-                monsterTexture.loadFromFile("data/redsquare/img/goblin.png");
+                monsterTexture.loadFromFile("data/redsquare/img/knifeSkull.png");
                 break;
             }
 
             case 1:
             {
-                monsterTexture.loadFromFile("data/redsquare/img/knight.png");
+                monsterTexture.loadFromFile("data/redsquare/img/pickAxeSkull.png");
                 break;
             }
 
             case 2:
             {
-                monsterTexture.loadFromFile("data/redsquare/img/bat.png");
+                monsterTexture.loadFromFile("data/redsquare/img/spirit.png");
                 break;
             }
 
             case 3:
             {
-                monsterTexture.loadFromFile("data/redsquare/img/slime.png");
+                monsterTexture.loadFromFile("data/redsquare/img/vampire.png");
                 break;
             }
         

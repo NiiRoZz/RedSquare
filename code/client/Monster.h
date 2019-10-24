@@ -12,6 +12,7 @@ namespace redsquare
     {
     public:
         Monster();
+        Monster(gf::Vector2i pos, uint8_t type);
 
         void loadTexture(uint8_t type = 0);
 
