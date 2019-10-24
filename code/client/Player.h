@@ -34,7 +34,7 @@ namespace redsquare
         bool canMove( gf::Vector2i targetPos, std::map<gf::Id, Player> &players, std::map<gf::Id, Monster> &monsters, gf::SquareMap &map );
 
     private:
-        gf::Texture testTexture;
+        gf::Texture playerTexture;
 
     };
 }

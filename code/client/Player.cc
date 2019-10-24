@@ -21,13 +21,13 @@ namespace redsquare
 
         sprite.setPosition( m_Pos * World::TileSize );
         sprite.setScale( 1 );
-        sprite.setTexture( testTexture );
+        sprite.setTexture( playerTexture );
         target.draw(sprite, states);
         
         gf::Color4f color(255,0,0,174);
         gf::RectangleShape bar;
 
-        bar.setSize(BarSize);
+        bar.setSize({BarSize.width * 1 , BarSize.height});
         bar.setColor(color);
         bar.setOutlineColor(gf::Color::darker(color));
         bar.setPosition(m_Pos * World::TileSize-BarOffset);
@@ -73,25 +73,25 @@ namespace redsquare
         {
             case 0:
             {
-                testTexture.loadFromFile("data/redsquare/img/goblin.png");
+                playerTexture.loadFromFile("data/redsquare/img/goblin.png");
                 break;
             }
 
             case 1:
             {
-                testTexture.loadFromFile("data/redsquare/img/knight.png");
+                playerTexture.loadFromFile("data/redsquare/img/knight.png");
                 break;
             }
 
             case 2:
             {
-                testTexture.loadFromFile("data/redsquare/img/bat.png");
+                playerTexture.loadFromFile("data/redsquare/img/bat.png");
                 break;
             }
 
             case 3:
             {
-                testTexture.loadFromFile("data/redsquare/img/slime.png");
+                playerTexture.loadFromFile("data/redsquare/img/slime.png");
                 break;
             }
         
