@@ -7,20 +7,43 @@ namespace redsquare
     : ServerEntity(playerID,type)
     , m_Socket(std::move(socket))
     {
-        m_LifePoint = 100;
-        m_ManaPoint = 100;
+        switch (m_TypeOfEntity){
+        case EntityClass::Magus :
+            m_LifePoint = 100;
+            m_ManaPoint = 20;
 
-        m_MaxLifePoint = 100;
-        m_MaxManaPoint = 100;
+            m_MaxLifePoint = 100;
+            m_MaxManaPoint = 20;
 
+            m_AttackPoint = 5;
+            m_DefensePoint = 5;
 
-        m_AttackPoint = 50;
-        m_DefensePoint = 50;
+            m_MaxAttackPoint = 5;
+            m_MaxDefensePoint = 5;
 
-        m_MaxAttackPoint = 50;
-        m_MaxDefensePoint = 50;
+            m_Range = 2;
+            break;
 
-        m_Range = 1;
+        case EntityClass::Warrior :
+            m_LifePoint = 150;
+            m_ManaPoint = 5;
+
+            m_MaxLifePoint = 150;
+            m_MaxManaPoint = 5;
+
+            m_AttackPoint = 5;
+            m_DefensePoint = 10;
+
+            m_MaxAttackPoint = 5;
+            m_MaxDefensePoint = 10;
+
+            m_Range = 1;
+            break;
+        
+        default:
+            break;
+        }
+       
 
         m_XP = 0;
         m_MaxXP = 100;
