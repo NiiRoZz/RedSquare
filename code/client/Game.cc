@@ -280,9 +280,11 @@ namespace redsquare
             m_dirX = allPos[1][0];
             m_dirY = allPos[1][1];
         }
-        
-        m_dirX = dirX;
-        m_dirY = dirY;
+        else
+        {
+            m_dirX = dirX;
+            m_dirY = dirY;
+        }
     }
 
     void Game::attackPos( int posX, int posY )
