@@ -2,9 +2,8 @@
 
 namespace redsquare
 {
-    Monster::Monster(gf::Id monsterID)
-    : m_MonsterID(monsterID),
-    m_TypeOfMonster((uint8_t)(rand() % 4))
+    Monster::Monster(gf::Id entityID)
+    : ServerEntity(entityID,(uint8_t)(rand() % 4))
     {
         m_LifePoint = 100;
         m_MaxLifePoint = 100;
@@ -24,7 +23,7 @@ namespace redsquare
     {
         packet.type = PacketType::EntityCar;
         packet.entityCar.entityType = EntityType::Monster;
-        packet.entityCar.entityID = m_MonsterID;
+        packet.entityCar.entityID = m_EntityID;
 
         packet.entityCar.m_LifePoint = m_LifePoint;
         packet.entityCar.m_MaxLifePoint = m_MaxLifePoint;
@@ -56,7 +55,7 @@ namespace redsquare
 
         while ( it != m_Monsters.end() )
         {
-            if(it->first != m_MonsterID)
+            if( it->first != m_EntityID )
             {
                 if (it->second.m_Pos[0] == m_Pos[0] && it->second.m_Pos[1] == m_Pos[1])
                 {

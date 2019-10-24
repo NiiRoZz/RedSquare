@@ -9,16 +9,19 @@
 
 namespace redsquare
 {
-    Monster::Monster()
+    Monster::Monster( gf::Id entityID )
+    : redsquare::Entity(entityID,(uint8_t)(rand() % 4))
     {
         m_Pos = gf::Vector2i( 0, 0 );
         loadTexture();
     }
 
-    Monster::Monster( gf::Vector2i pos, uint8_t type )
+    Monster::Monster( gf::Id entityID, uint8_t type, gf::Vector2i pos )
+    : redsquare::Entity(entityID,type)
     {
         m_Pos = pos;
         loadTexture(type);
+
         m_Font.loadFromFile("data/redsquare/font/arial.ttf");
     }
 

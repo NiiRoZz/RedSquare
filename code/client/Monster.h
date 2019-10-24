@@ -6,13 +6,14 @@
 #include <gf/Entity.h>
 #include <gf/Texture.h>
 #include <gf/Font.h>
+
 namespace redsquare
 {
     class Monster: public gf::Entity, public redsquare::Entity
     {
     public:
-        Monster();
-        Monster(gf::Vector2i pos, uint8_t type);
+        Monster( gf::Id entityID );
+        Monster( gf::Id entityID, uint8_t type, gf::Vector2i pos );
 
         void loadTexture(uint8_t type = 0);
 

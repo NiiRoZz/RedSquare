@@ -11,9 +11,7 @@ namespace redsquare
     class Monster: public ServerEntity
     {
     public:
-        gf::Id m_MonsterID;
-        const uint8_t m_TypeOfMonster;
-        Monster(gf::Id monsterID);
+        Monster(gf::Id entityID);
 
         virtual void createCarPacket(Packet &packet) override;
         void monsterSpawn(std::map<gf::Id,Monster> &m_Monsters,World &world);

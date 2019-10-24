@@ -218,12 +218,12 @@ namespace redsquare
                 {
                     if ( packet.spawnEntity.typeEntity == EntityType::Player )
                     {
-                        auto it = m_Players.insert( std::make_pair( packet.spawnEntity.entityID, Player( gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY), packet.spawnEntity.typeOfEntity ) ) );
+                        auto it = m_Players.insert( std::make_pair( packet.spawnEntity.entityID, Player( packet.spawnEntity.entityID, packet.spawnEntity.typeOfEntity, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) ) ) );
                         assert( it.second );
                     }
                     else if ( packet.spawnEntity.typeEntity == EntityType::Monster )
                     {
-                        auto it = m_Monsters.insert( std::make_pair( packet.spawnEntity.entityID, Monster( gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY), packet.spawnEntity.typeOfEntity ) ) );
+                        auto it = m_Monsters.insert( std::make_pair( packet.spawnEntity.entityID, Monster( packet.spawnEntity.entityID, packet.spawnEntity.typeOfEntity, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) ) ) );
                         assert( it.second );
                     }
                     break;

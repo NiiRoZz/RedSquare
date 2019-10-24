@@ -30,7 +30,7 @@ namespace redsquare
         packet.type = PacketType::SpawnEntity;
         packet.spawnEntity.entityID = id;
         packet.spawnEntity.typeEntity = EntityType::Player;
-        packet.spawnEntity.typeOfEntity = itNewPlayer->second.m_TypeOfPlayer;
+        packet.spawnEntity.typeOfEntity = itNewPlayer->second.m_TypeOfEntity;
         packet.spawnEntity.posX = itNewPlayer->second.m_Pos[0];
         packet.spawnEntity.posY = itNewPlayer->second.m_Pos[1];
         sendPacketToAllPlayers( packet );
@@ -48,7 +48,7 @@ namespace redsquare
                 packet.type = PacketType::SpawnEntity;
                 packet.spawnEntity.entityID = it->first;
                 packet.spawnEntity.typeEntity = EntityType::Player;
-                packet.spawnEntity.typeOfEntity = it->second.m_TypeOfPlayer;
+                packet.spawnEntity.typeOfEntity = it->second.m_TypeOfEntity;
                 packet.spawnEntity.posX = it->second.m_Pos[0];
                 packet.spawnEntity.posY = it->second.m_Pos[1];
                 itNewPlayer->second.sendPacket( packet );
@@ -68,7 +68,7 @@ namespace redsquare
             packet.type = PacketType::SpawnEntity;
             packet.spawnEntity.entityID = it2->first;
             packet.spawnEntity.typeEntity = EntityType::Monster;
-            packet.spawnEntity.typeOfEntity = it2->second.m_TypeOfMonster;
+            packet.spawnEntity.typeOfEntity = it2->second.m_TypeOfEntity;
             packet.spawnEntity.posX = it2->second.m_Pos[0];
             packet.spawnEntity.posY = it2->second.m_Pos[1];
             itNewPlayer->second.sendPacket( packet );
@@ -145,14 +145,14 @@ namespace redsquare
                 if ( player != nullptr )
                 {
                     gf::Vector2i posTarget({packet.requestAttack.posX, packet.requestAttack.posY});
+
+                    ServerEntity *targetServerEntity;
                 
                     Player *targetPlayer = getPlayer(posTarget);
-                    if ( targetPlayer != nullptr )
+                    targetServerEntity = dynamic_cast<ServerEntity*>(targetPlayer);
+                    if ( targetPlayer != nullptr && targetServerEntity != nullptr )
                     {
-                        player->m_PointInRound -= 1;
-                        player->m_AttackedInRound = true;
-
-                        targetPlayer->m_LifePoint -= 50;
+                        player->attack(targetServerEntity);
 
                         Packet sendPacket;
                         targetPlayer->createCarPacket(sendPacket);
@@ -161,26 +161,24 @@ namespace redsquare
                     }
                     else
                     {
-                        Monster *monster = getMonster(posTarget);
-                        if (monster != nullptr)
+                        Monster *targetMonster = getMonster(posTarget);
+                        targetServerEntity = dynamic_cast<ServerEntity*>(targetMonster);
+                        if ( targetMonster != nullptr && targetServerEntity != nullptr )
                         {
-                            player->m_PointInRound -= 1;
-                            player->m_AttackedInRound = true;
-                            
-                            monster->m_LifePoint -= 50;
+                            player->attack(targetServerEntity);
 
                             Packet sendPacket;
-                            if ( monster->m_LifePoint > 0 )
+                            if ( targetMonster->m_LifePoint > 0 )
                             {
-                                monster->createCarPacket(sendPacket);
+                                targetMonster->createCarPacket(sendPacket);
                             }
                             else
                             {
                                 sendPacket.type = PacketType::EntityDisconnected;
                                 sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
-                                sendPacket.entityDisconnected.entityID = monster->m_MonsterID;
+                                sendPacket.entityDisconnected.entityID = targetMonster->m_EntityID;
 
-                                m_Monsters.erase(monster->m_MonsterID);
+                                m_Monsters.erase(targetMonster->m_EntityID);
                             }
 
                             sendPacketToAllPlayers( sendPacket );

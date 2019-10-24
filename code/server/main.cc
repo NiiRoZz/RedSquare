@@ -172,7 +172,7 @@ int main( int argc, char **argv )
 
 				Packet sendPacket;
 				sendPacket.type = PacketType::ReceiveMove;
-				sendPacket.receiveMove.entityID = it->second.m_MonsterID;
+				sendPacket.receiveMove.entityID = it->second.m_EntityID;
 				sendPacket.receiveMove.typeEntity = EntityType::Monster;
 				sendPacket.receiveMove.posX = it->second.m_Pos[0];
 				sendPacket.receiveMove.posY = it->second.m_Pos[1];

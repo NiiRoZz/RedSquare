@@ -4,9 +4,8 @@
 namespace redsquare
 {
     Player::Player(SocketTcp socket, gf::Id playerID)
-    : m_Socket(std::move(socket))
-    , m_PlayerID(playerID)
-    , m_TypeOfPlayer((uint8_t)(rand() % 4))
+    : ServerEntity(playerID,(uint8_t)(rand() % 4))
+    , m_Socket(std::move(socket))
     {
         m_LifePoint = 100;
         m_ManaPoint = 100;
@@ -112,7 +111,7 @@ namespace redsquare
     {
         packet.type = PacketType::EntityCar;
         packet.entityCar.entityType = EntityType::Player;
-        packet.entityCar.entityID = m_PlayerID;
+        packet.entityCar.entityID = m_EntityID;
 
         packet.entityCar.m_LifePoint = m_LifePoint;
         packet.entityCar.m_ManaPoint = m_ManaPoint;
@@ -167,5 +166,13 @@ namespace redsquare
         default: // cant manage more than 9 player
             break;
         }
+    }
+
+    void Player::attack(ServerEntity *target)
+    {
+        m_PointInRound -= 1;
+        m_AttackedInRound = true;
+
+        target->m_LifePoint -= 50;
     }
 }

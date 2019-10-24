@@ -10,6 +10,22 @@
 
 namespace redsquare
 {
+    Player::Player( gf::Id entityID )
+    : redsquare::Entity(entityID,(uint8_t)(rand() % 4))
+    {
+        m_Pos = gf::Vector2i( 0, 0 );
+        loadTexture();
+    }
+
+    Player::Player( gf::Id entityID, uint8_t type, gf::Vector2i pos )
+    : redsquare::Entity(entityID,type)
+    {
+        m_Pos = pos;
+        loadTexture(type);
+
+        m_Font.loadFromFile("data/redsquare/font/arial.ttf");
+    }
+
     void Player::render(gf::RenderTarget& target, const gf::RenderStates& states)
     {
         static constexpr gf::Vector2f BarSize = { 20.0f, 3.0f } ;
@@ -114,20 +130,6 @@ namespace redsquare
                 break;
             }
         }
-    }
-
-    Player::Player()
-    {
-        m_Pos = gf::Vector2i( 0, 0 );
-        loadTexture();
-    }
-
-    Player::Player( gf::Vector2i pos, uint8_t type )
-    {
-        m_Pos = pos;
-        loadTexture(type);
-
-        m_Font.loadFromFile("data/redsquare/font/arial.ttf");
     }
 
     bool Player::canAttack(gf::Vector2i targetPos, std::map<gf::Id, Player> &players, std::map<gf::Id, Monster> &monsters)

@@ -22,8 +22,8 @@ namespace redsquare
         int m_Max_XP;
         /* Characteristic*/
         
-        Player();
-        Player( gf::Vector2i pos, uint8_t type );
+        Player( gf::Id entityID );
+        Player( gf::Id entityID, uint8_t type, gf::Vector2i pos );
 
         void loadTexture(uint8_t type = 0);
 

@@ -4,6 +4,7 @@
 #include "../common/Sockets.h"
 #include "ServerEntity.h"
 #include "World.h"
+#include "Monster.h"
 
 #include <gf/Queue.h>
 #include <gf/Id.h>
@@ -26,8 +27,6 @@ namespace redsquare
         bool m_AttackedInRound;
 
         virtual void createCarPacket(Packet &packet) override;
-
-        const uint8_t m_TypeOfPlayer;
         
         Player(SocketTcp socket, gf::Id playerID);
 
@@ -42,7 +41,7 @@ namespace redsquare
         void spawn();
 
         bool canAttack(gf::Vector2i m_TargetPos);
-        void attack();
+        void attack(ServerEntity *target);
         
         void levelUp();
 
@@ -50,7 +49,6 @@ namespace redsquare
 
     private:
         SocketTcp m_Socket;
-        gf::Id m_PlayerID;
     };
 }
 
