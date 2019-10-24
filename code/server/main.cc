@@ -66,53 +66,10 @@ int main( int argc, char **argv )
 			//1: send to the player it's his turn
 			it->second.m_PointInRound = 2;
 			it->second.m_AttackedInRound = false;
-			Packet packet;
-			packet.type = PacketType::PlayerTurn;
-			packet.playerTurn.playerTurn = true;
-			it->second.sendPacket( packet );
 
-			//Detect if the connection has been closed
-			if ( it->second.playerDisconnected() )
-			{
-				gf::Id disconnectedID = it->first;
-
-				game.m_Players.erase(it--);
-
-				Packet sendPacket;
-				sendPacket.type = PacketType::EntityDisconnected;
-				sendPacket.entityDisconnected.typeEntity = EntityType::Player;
-                sendPacket.entityDisconnected.entityID = disconnectedID;
-
-                game.sendPacketToAllPlayers( sendPacket );
-
-				continue;
-			}
-
-			//2: wait until his reply
-			it->second.receivePacket( packet );
-
-			//Detect if the connection has been closed
-			if ( it->second.playerDisconnected() )
-			{
-				gf::Id disconnectedID = it->first;
-
-				game.m_Players.erase(it--);
-
-				Packet sendPacket;
-				sendPacket.type = PacketType::EntityDisconnected;
-				sendPacket.entityDisconnected.typeEntity = EntityType::Player;
-                sendPacket.entityDisconnected.entityID = disconnectedID;
-
-                game.sendPacketToAllPlayers( sendPacket );
-
-				continue;
-			}
-
-			//3: check if his action is possible, if it's not go to 1 and if it is just finish the turn
-			game.processPackets( packet );
 			while ( it->second.m_PointInRound > 0 )
 			{
-				//3.1: send to the player it's his turn
+				//1: send to the player it's his turn
 				Packet packet;
 				packet.type = PacketType::PlayerTurn;
 				packet.playerTurn.playerTurn = true;
@@ -135,7 +92,7 @@ int main( int argc, char **argv )
 					continue;
 				}
 
-				//3.2: wait until his reply
+				//2: wait until his reply
 				it->second.receivePacket( packet );
 
 				//Detect if the connection has been closed
