@@ -45,9 +45,9 @@ namespace redsquare
         uint gridX = 0;
         uint gridY = 0;
 
-        for(uint length =0; length < MapSize; length++){
+        for(uint length = 0; length < MapSize; length++){
             gridX++;
-            for(uint width =0; width < MapSize; width++){
+            for(uint width = 0; width < MapSize; width++){
                 gridY++;
                 if(gridY == sizeGrind){
                     m_World( {length,width} ) = Tile::Grid; // set tile to ground
@@ -68,8 +68,8 @@ namespace redsquare
         std::vector<gf::Vector4u> TabCell; //  number of the cell in the grid / coord x / coor y / is filled
 
         uint number = 0;
-        for(uint i = 0; i < MapSize ; i +=sizeGrind){
-            for(uint j = 0; j < MapSize ; j +=sizeGrind){
+        for(uint i = 0; i < MapSize ; i += sizeGrind){
+            for(uint j = 0; j < MapSize ; j += sizeGrind){
                 TabCell.push_back({number,i,j,false});
                 //std::cout << "number :" << number <<" coordonnée : " << i << "," << j << '\n' ;
                 number++;
@@ -272,7 +272,7 @@ namespace redsquare
         }
     }
 
-    void World::getSpawnPoint(){
+    void World::getSpawnPoint(){ // set a spawn point and check if all tile around him is a room or a corrdior to make palyer spawnanble on these tile
         
         int x = rand() % MapSize;
         int y = rand() % MapSize;
@@ -280,20 +280,21 @@ namespace redsquare
         do{
             x = rand() % MapSize;
             y = rand() % MapSize;
-        }while(m_World( { (uint)x,(uint) y } ) != Tile::Room /*&& World::spawnCheck()*/); // only putting stair on a  randon room's tile
-        gf::Vector2i spawn({x,y});
-        m_Spawn = spawn; 
-    }
+            gf::Vector2i spawn({x,y});
+            m_Spawn = spawn;
+        }while(m_World( { (uint)x,(uint) y } ) != Tile::Room); // only putting stair on a  randon room's tile 
 
-    bool World::spawnCheck(){
-        for(uint i = 0; i < 2 ; ++i){
+        bool clear = true;
+        for(uint i = 0; i < 2 ; ++i){ // check if all the tile around are corridor or room
             for(uint j = 0; j < 2; ++j){
-                if( m_World( { (uint)((m_Spawn[0])-1+i),(uint) ((m_Spawn[1])-1+j) } ) != Tile::Room){
-                    return false;
+                if( m_World( { (uint)((m_Spawn[0])-1+i),(uint) ((m_Spawn[1])-1+j) } ) != Tile::Room && m_World( { (uint)((m_Spawn[0])-1+i),(uint) ((m_Spawn[1])-1+j) } ) != Tile::Corridor ){
+                    clear = false;
                 }
             }
         }
-        return true;
+        if(clear == false){ // mean that a tile is not a room or a corridor
+            World::getSpawnPoint(); // we do the method again
+        }
     }
 
     void World::prettyPrint(){ // printing the map on server's console

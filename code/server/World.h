@@ -19,7 +19,6 @@ namespace redsquare
         void getSpawnPoint();
 
         gf::Vector2i m_Spawn;
-        bool spawnCheck();
 
     private:
         std::vector<gf::Vector4u> grid(uint sizeGrid); // return all the cell of the grid in a vector
@@ -32,7 +31,6 @@ namespace redsquare
         bool nextToGround(uint x, uint y); // check if the tile is next to a ground tile
         void putStair();
         void SetWalkable();
-
         void prettyPrintWalkable();
         void prettyPrint(); // print the map with char in the console
 

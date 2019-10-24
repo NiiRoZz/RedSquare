@@ -39,6 +39,8 @@ namespace redsquare
         Player* getPlayer( gf::Id playerID );
         Player* getPlayer( gf::Vector2i pos );
 
+        Monster* getMonster( gf::Id monsterID );
+
         void startThreadCom();
 
         void receiveWorld();

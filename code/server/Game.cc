@@ -31,7 +31,7 @@ namespace redsquare
         Packet packet;
 
         packet.type = PacketType::SpawnEntity;
-        packet.spawnEntity.playerID = id;
+        packet.spawnEntity.entityID = id;
         packet.spawnEntity.typeEntity = EntityType::Player;
         packet.spawnEntity.typeOfEntity = itNewPlayer->second.m_TypeOfPlayer;
         packet.spawnEntity.posX = itNewPlayer->second.m_Pos[0];
@@ -39,9 +39,9 @@ namespace redsquare
         sendPacketToAllPlayers( packet );
 
         itNewPlayer->second.createCarPacket(packet);
-        itNewPlayer->second.sendPacket(packet);
+        sendPacketToAllPlayers( packet );
 
-        //HACKY, find best way, fake a move of all players inside the game to make them apparear in the new client
+        //fake a move of all players inside the game to make them apparear in the new client
         auto it = m_Players.begin();
         // Iterate over the map using Iterator till end.
         while (it != m_Players.end())
@@ -49,13 +49,35 @@ namespace redsquare
             if ( it->first != id )
             {
                 packet.type = PacketType::SpawnEntity;
-                packet.spawnEntity.playerID = it->first;
+                packet.spawnEntity.entityID = it->first;
                 packet.spawnEntity.typeEntity = EntityType::Player;
                 packet.spawnEntity.typeOfEntity = it->second.m_TypeOfPlayer;
                 packet.spawnEntity.posX = it->second.m_Pos[0];
                 packet.spawnEntity.posY = it->second.m_Pos[1];
                 itNewPlayer->second.sendPacket( packet );
+
+                it->second.createCarPacket(packet);
+                itNewPlayer->second.sendPacket( packet );
             }
+
+            ++it;
+        }
+
+        //fake a move of all monsters inside the game to make them apparear in the new client
+        auto it2 = m_Monsters.begin();
+        // Iterate over the map using Iterator till end.
+        while (it2 != m_Monsters.end())
+        {
+            packet.type = PacketType::SpawnEntity;
+            packet.spawnEntity.entityID = it2->first;
+            packet.spawnEntity.typeEntity = EntityType::Monster;
+            packet.spawnEntity.typeOfEntity = it2->second.m_TypeOfMonster;
+            packet.spawnEntity.posX = it2->second.m_Pos[0];
+            packet.spawnEntity.posY = it2->second.m_Pos[1];
+            itNewPlayer->second.sendPacket( packet );
+
+            it2->second.createCarPacket(packet);
+            itNewPlayer->second.sendPacket( packet );
 
             ++it;
         }
@@ -96,6 +118,34 @@ namespace redsquare
                 }
                 break;
             }
+
+            case PacketType::RequestAttack:
+            {
+                gf::Vector2i posTarget({packet.requestAttack.posX, packet.requestAttack.posY});
+                
+                Player *player = getPlayer(posTarget);
+                if ( player != nullptr )
+                {
+                    player->m_LifePoint -= 50;
+
+                    Packet sendPacket;
+                    player->createCarPacket(sendPacket);
+
+                    sendPacketToAllPlayers( sendPacket );
+                }
+                else
+                {
+                    Monster *monster = getMonster(posTarget);
+                    if (monster != nullptr)
+                    {
+                        
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
         }
 
         return true;
@@ -121,6 +171,42 @@ namespace redsquare
         if ( player != m_Players.end() )
         {
             return &player->second;
+        }
+
+        return nullptr;
+    }
+
+    Player* Game::getPlayer( gf::Vector2i pos )
+    {
+        auto it = m_Players.begin();
+ 
+        // Iterate over the map using Iterator till end.
+        while ( it != m_Players.end() )
+        {
+            if (it->second.m_Pos[0] == pos[0] && it->second.m_Pos[1] == pos[1])
+            {
+                return &it->second;
+            }
+
+            ++it;
+        }
+
+        return nullptr;
+    }
+
+    Monster* Game::getMonster( gf::Vector2i pos )
+    {
+        auto it = m_Monsters.begin();
+ 
+        // Iterate over the map using Iterator till end.
+        while ( it != m_Monsters.end() )
+        {
+            if (it->second.m_Pos[0] == pos[0] && it->second.m_Pos[1] == pos[1])
+            {
+                return &it->second;
+            }
+
+            ++it;
         }
 
         return nullptr;
