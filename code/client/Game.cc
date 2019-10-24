@@ -176,17 +176,23 @@ namespace redsquare
                         assert(player != nullptr);
 
                         player->m_LifePoint = packet.entityCar.m_LifePoint;
-                        player->m_ManaPoint = packet.entityCar.m_ManaPoint;
-
                         player->m_MaxLifePoint = packet.entityCar.m_MaxLifePoint;
+                        
+                        player->m_ManaPoint = packet.entityCar.m_ManaPoint;
                         player->m_MaxManaPoint = packet.entityCar.m_MaxManaPoint;
 
                         player->m_AttackPoint = packet.entityCar.m_AttackPoint;
                         player->m_DefensePoint = packet.entityCar.m_DefensePoint;
+
+                        player->m_MaxAttackPoint = packet.entityCar.m_MaxAttackPoint;
+                        player->m_MaxDefensePoint = packet.entityCar.m_MaxDefensePoint;
+
                         player->m_MovePoint = packet.entityCar.m_MovePoint;
                         player->m_Range = packet.entityCar.m_Range;
+
                         player->m_XP = packet.entityCar.m_XP;
                         player->m_Max_XP = packet.entityCar.m_MaxXP;
+
                         player->m_Level = packet.entityCar.m_Level;
                     }
                     else if ( packet.entityCar.entityType == EntityType::Monster )
@@ -199,8 +205,13 @@ namespace redsquare
 
                         monster->m_AttackPoint = packet.entityCar.m_AttackPoint;
                         monster->m_DefensePoint = packet.entityCar.m_DefensePoint;
+
+                        monster->m_MaxAttackPoint = packet.entityCar.m_MaxAttackPoint;
+                        monster->m_MaxDefensePoint = packet.entityCar.m_MaxDefensePoint;
+
                         monster->m_MovePoint = packet.entityCar.m_MovePoint;
                         monster->m_Range = packet.entityCar.m_Range;
+
                         monster->m_Level = packet.entityCar.m_Level;
                     }
                     

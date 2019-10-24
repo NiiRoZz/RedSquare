@@ -120,6 +120,10 @@ namespace redsquare
 
         packet.entityCar.m_AttackPoint = m_AttackPoint;
         packet.entityCar.m_DefensePoint = m_DefensePoint;
+
+        packet.entityCar.m_MaxAttackPoint = m_MaxAttackPoint;
+        packet.entityCar.m_MaxDefensePoint = m_MaxDefensePoint;
+
         packet.entityCar.m_MovePoint = m_MovePoint;
         packet.entityCar.m_Range = m_Range;
 

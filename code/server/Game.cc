@@ -79,7 +79,22 @@ namespace redsquare
             it2->second.createCarPacket(packet);
             itNewPlayer->second.sendPacket( packet );
 
-            ++it;
+            ++it2;
+        }
+    }
+
+
+
+    void Game::addNewMonsters(int nbMonster)
+    {
+        for(int i = 0; i< nbMonster ; ++i){   
+            // Generate a new ID
+            gf::Id id = generateId();
+            std::map<gf::Id, Monster>::iterator itNewMonster;
+
+            // Create a new monster
+            std::tie(itNewMonster, std::ignore) = m_Monsters.emplace(id, Monster(id));
+            itNewMonster->second.monsterSpawn(m_Monsters,m_World);
         }
     }
 

@@ -42,6 +42,8 @@ int main( int argc, char **argv )
 
     Game game;
 
+	game.addNewMonsters(10); // 10 monster TODO
+
 	boost::asio::io_service m_IoService;
     boost::asio::ip::tcp::acceptor m_Acceptor(m_IoService, tcp::endpoint(tcp::v4(), port));
 

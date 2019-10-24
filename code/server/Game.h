@@ -20,6 +20,7 @@ namespace redsquare
         Game();
 
         void addNewPlayer(SocketTcp socket);
+        void addNewMonsters(int nbMonster);
 
         bool processPackets( Packet &packet );
 

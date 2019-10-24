@@ -232,8 +232,8 @@ namespace redsquare
     }
 
     void World::putStair(){ // put a stair somewhere on the map
-        uint x = rand() % MapSize;
-        uint y = rand() % MapSize;
+        uint x;
+        uint y;
 
         do{
             x = rand() % MapSize;

@@ -15,6 +15,7 @@ namespace redsquare
 
         int m_AttackPoint;
         int m_MaxAttackPoint;
+        
         int m_DefensePoint;
         int m_MaxDefensePoint;
         
