@@ -172,11 +172,9 @@ namespace redsquare
 
                         sendPacketToAllPlayers( sendPacket );
                     }
-                    else
-                    {
-                        return false;
-                    }
                 }
+
+                return false;
             }
         }
 
