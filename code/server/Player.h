@@ -20,8 +20,6 @@ namespace redsquare
 
         int m_XP;
         int m_MaxXP;
-
-        int m_Level;
         /* Characteristic*/
 
         void createCarPacket(Packet &packet);

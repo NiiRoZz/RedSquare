@@ -12,22 +12,10 @@ namespace redsquare
     {
     public:
         /* Characteristic */
-        int m_LifePoint;
         int m_ManaPoint;
-
-        int m_MaxLifePoint;
         int m_MaxManaPoint;
-
-
-        int m_AttackPoint;
-        int m_DefensePoint;
-        int m_MovePoint;
-        int m_Range;
-
         int m_XP;
         int m_Max_XP;
-
-        int m_Level;
         /* Characteristic*/
         
         Player();

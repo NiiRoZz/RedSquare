@@ -10,7 +10,6 @@ namespace redsquare
 {
     void Player::render(gf::RenderTarget& target, const gf::RenderStates& states)
     {
-
         static constexpr gf::Vector2f BarSize = { 20.0f, 3.0f } ;
         static constexpr gf::Vector2f BarSize2 = { 20.0f, 1.5f } ;
         static constexpr gf::Vector2f BarOffset = { 2.0f, 6.0f };
