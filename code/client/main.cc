@@ -39,6 +39,7 @@ int main( int argc, char **argv )
     if ( argc != 5 )
     {
         std::cerr << "Usage : ./RedSquare ip port playerName typePlayer" << std::endl;
+        std::cerr << "typePlayer: " << std::endl << "0 for Magus" << std::endl << "1 for Warrior" << std::endl;
         return 1;
     }
 

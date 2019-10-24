@@ -45,9 +45,9 @@ namespace redsquare
         }
        
         m_XP = 0;
-        m_MaxXP = 100;
+        m_MaxXP = 10;
 
-        m_Level = 100;
+        m_Level = 1;
     }
 
     void Player::sendPacket(Packet &packet)
@@ -196,5 +196,11 @@ namespace redsquare
         m_AttackedInRound = true;
 
         target->m_LifePoint -= 50;
+        if(target->m_LifePoint <= 0){
+            m_XP += 10;
+            if(m_XP >= m_MaxXP){
+                levelUp();
+            }
+        }
     }
 }

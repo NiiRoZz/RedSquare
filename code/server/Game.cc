@@ -155,12 +155,18 @@ namespace redsquare
                     targetServerEntity = dynamic_cast<ServerEntity*>(targetPlayer);
                     if ( targetPlayer != nullptr && targetServerEntity != nullptr )
                     {
+                        int level = player->m_Level;
                         player->attack(targetServerEntity);
 
                         Packet sendPacket;
                         targetPlayer->createCarPacket(sendPacket);
 
                         sendPacketToAllPlayers( sendPacket );
+
+                        if(player->m_Level != level){
+                            player->createCarPacket(sendPacket);
+                            sendPacketToAllPlayers( sendPacket );
+                        }
                     }
                     else
                     {
@@ -168,6 +174,7 @@ namespace redsquare
                         targetServerEntity = dynamic_cast<ServerEntity*>(targetMonster);
                         if ( targetMonster != nullptr && targetServerEntity != nullptr )
                         {
+                            int level = player->m_Level;
                             player->attack(targetServerEntity);
 
                             Packet sendPacket;
@@ -177,14 +184,18 @@ namespace redsquare
                             }
                             else
                             {
+                                
                                 sendPacket.type = PacketType::EntityDisconnected;
                                 sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
                                 sendPacket.entityDisconnected.entityID = targetMonster->m_EntityID;
 
                                 m_Monsters.erase(targetMonster->m_EntityID);
                             }
-
                             sendPacketToAllPlayers( sendPacket );
+                            if(player->m_Level != level){
+                                player->createCarPacket(sendPacket);
+                                sendPacketToAllPlayers( sendPacket );
+                            }
                         }
                     }
                 }
