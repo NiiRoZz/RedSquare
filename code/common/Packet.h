@@ -46,6 +46,19 @@ namespace redsquare
         Test,
     };
 
+    enum class Spell: uint8_t
+    {
+        BasicAttack,
+        FireBall,
+        ArmorUp,
+        DoubleStrike,
+        Heal,
+        Assasinate,
+        DamageUp,
+        Protection,
+        Revenge,
+    };
+
     enum class PacketType : uint16_t
     {
         PlayerInfoConnection,
