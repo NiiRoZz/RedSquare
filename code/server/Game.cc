@@ -166,6 +166,8 @@ namespace redsquare
                             sendPacket.type = PacketType::EntityDisconnected;
                             sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
                             sendPacket.entityDisconnected.entityID = monster->m_MonsterID;
+
+                            m_Monsters.erase(monster->m_MonsterID);
                         }
 
                         sendPacketToAllPlayers( sendPacket );
