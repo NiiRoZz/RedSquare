@@ -5,4 +5,9 @@ namespace redsquare
     Monster::Monster()
     {
     }
+
+    void Monster::playTurn()
+    {
+        // do AI here
+    }
 }

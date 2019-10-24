@@ -12,7 +12,8 @@ namespace redsquare
     }
 
     World::World()
-    : m_TileSet({ MapSize, MapSize })
+    : m_TileSet({ MapSize, MapSize } )
+    , m_SquareMap( {MapSize, MapSize} )
     {
         tileTexture.loadFromFile( "data/redsquare/img/NewLayerTest.png" );
         m_TileSet.setTilesetTileSize({ TileSetSize, TileSetSize });
@@ -28,13 +29,21 @@ namespace redsquare
 
         for(int i = 0; i < MapSize; ++i){
             for (int j = 0; j < MapSize; ++j){     
-                if ( m_World( {(uint) i,(uint) j } ) == Tile::Room || m_World( { (uint) i, (uint) j } ) == Tile::Corridor ){
+                if ( m_World( {(uint) i,(uint) j } ) == Tile::Room || m_World( { (uint) i, (uint) j } ) == Tile::Corridor )
+                {
+                    m_SquareMap.setWalkable({i, j});
                     m_TileSet.setTile( {i, j}, 1 );
-                }else if ( m_World( {(uint) i, (uint) j } ) == Tile::Wall ){
+                }
+                else if ( m_World( {(uint) i, (uint) j } ) == Tile::Wall )
+                {
                     m_TileSet.setTile( {i, j}, 2 );
-                }else if( m_World( {(uint) i,(uint) j } ) == Tile::Void){
+                }
+                else if( m_World( {(uint) i,(uint) j } ) == Tile::Void)
+                {
                     m_TileSet.setTile( {i, j}, 3);
-                }else if( m_World( {(uint) i,(uint) j } ) == Tile::Stair){
+                }
+                else if( m_World( {(uint) i,(uint) j } ) == Tile::Stair)
+                {
                     m_TileSet.setTile( {i, j}, 3);
                 }
             }

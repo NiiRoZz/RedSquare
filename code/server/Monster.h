@@ -9,6 +9,8 @@ namespace redsquare
     {
     public:
         Monster();
+
+        void playTurn();
     };
 }
 

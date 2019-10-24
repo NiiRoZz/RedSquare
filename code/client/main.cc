@@ -156,8 +156,21 @@ int main( int argc, char **argv )
                     if( elapsed_seconds >= 500 )
                     {
                         start = std::chrono::system_clock::now();
-                        gf::Vector2i coord = renderer.mapPixelToCoords(event.mouseButton.coords,mainView) / World::TileSize;
-                        game.movePlayer(coord[0],coord[1]);
+
+                        gf::Vector2i pos = renderer.mapPixelToCoords(event.mouseButton.coords,mainView) / World::TileSize;
+
+                        Player* myPlayer = game.getPlayer(game.m_PlayerID);
+                        if ( myPlayer != nullptr && game.m_CanPlay )
+                        {
+                            if ( myPlayer->canAttack(pos, game.m_Players, game.m_Monsters) )
+                            {
+                                game.attackPos( pos[0], pos[1] );
+                            }
+                            else if (myPlayer->canMove(pos, game.m_Players, game.m_Monsters, game.m_World.m_SquareMap))
+                            {
+                                game.movePlayer(pos[0],pos[1]);
+                            }
+                        }
                     }
                     break;
                 }
@@ -167,16 +180,16 @@ int main( int argc, char **argv )
                     gf::Vector2i pos = renderer.mapPixelToCoords(event.mouseCursor.coords,mainView) / World::TileSize;
 
                     Player* myPlayer = game.getPlayer(game.m_PlayerID);
-                    if ( myPlayer != nullptr )
+                    if ( myPlayer != nullptr && game.m_CanPlay )
                     {
-                        if ( myPlayer->canAttack(pos) )
+                        if ( myPlayer->canAttack(pos, game.m_Players, game.m_Monsters) )
                         {
                             window.setMouseCursor(attackCursor);
                         }
-                        /*else ( myPlayer->canMove(pos) )
+                        else if (myPlayer->canMove(pos, game.m_Players, game.m_Monsters, game.m_World.m_SquareMap))
                         {
-
-                        }*/
+                            window.setMouseCursor(moveCursor);
+                        }
                         else
                         {
                             window.setMouseCursor(defaultCursor);

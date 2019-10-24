@@ -2,9 +2,12 @@
 #define REDSQUARE_CLIENT_PLAYER_H
 
 #include "../common/Entity.h"
+#include "Monster.h"
 
 #include <gf/Entity.h>
 #include <gf/Texture.h>
+#include <gf/Id.h>
+#include <gf/Map.h>
 
 namespace redsquare
 {
@@ -27,8 +30,8 @@ namespace redsquare
 
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
-        bool canAttack(gf::Vector2i m_TargetPos);
-        void attack();
+        bool canAttack( gf::Vector2i targetPos, std::map<gf::Id, Player> &players, std::map<gf::Id, Monster> &monsters );
+        bool canMove( gf::Vector2i targetPos, std::map<gf::Id, Player> &players, std::map<gf::Id, Monster> &monsters, gf::SquareMap &map );
 
     private:
         gf::Texture testTexture;
