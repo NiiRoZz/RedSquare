@@ -26,7 +26,7 @@ namespace redsquare
 
         const uint8_t m_TypeOfPlayer;
         
-        Player(SocketTcp socket, gf::Id playerID, gf::Vector2i pos );
+        Player(SocketTcp socket, gf::Id playerID);
 
         void sendPacket(Packet &packet);
         void receivePacket(Packet &packet);
@@ -42,6 +42,8 @@ namespace redsquare
         void attack();
         
         void levelUp();
+
+        void playerSpawn(std::map<gf::Id,Player> &m_Players,World &world);
 
     private:
         SocketTcp m_Socket;

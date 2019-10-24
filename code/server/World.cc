@@ -30,7 +30,7 @@ namespace redsquare
         buildWallCorridor(); // build the wall of corridor
         putStair(); // put stair on the map
         SetWalkable(); // Set walkable the tile that should be
-       
+        getSpawnPoint();
         /**** GENERATE ****/
 
         /**** PRINT ****/
@@ -272,7 +272,7 @@ namespace redsquare
         }
     }
 
-    gf::Vector2i World::getSpawnPoint(){
+    void World::getSpawnPoint(){
         
         int x = rand() % MapSize;
         int y = rand() % MapSize;
@@ -280,9 +280,20 @@ namespace redsquare
         do{
             x = rand() % MapSize;
             y = rand() % MapSize;
-        }while(m_World( { (uint)x,(uint) y } ) != Tile::Room); // only putting stair on a  randon room's tile
+        }while(m_World( { (uint)x,(uint) y } ) != Tile::Room /*&& World::spawnCheck()*/); // only putting stair on a  randon room's tile
         gf::Vector2i spawn({x,y});
-        return spawn; 
+        m_Spawn = spawn; 
+    }
+
+    bool World::spawnCheck(){
+        for(uint i = 0; i < 2 ; ++i){
+            for(uint j = 0; j < 2; ++j){
+                if( m_World( { (uint)((m_Spawn[0])-1+i),(uint) ((m_Spawn[1])-1+j) } ) != Tile::Room){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     void World::prettyPrint(){ // printing the map on server's console
