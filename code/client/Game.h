@@ -78,7 +78,7 @@ namespace redsquare
         int m_AttackY;
 
         //View of the game
-        gf::ExtendView* m_View;
+        gf::ExtendView &m_View;
 
         void doAction();
     };

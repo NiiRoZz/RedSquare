@@ -11,7 +11,7 @@ namespace redsquare
 {
     Game::Game( char* hostname, char *port, gf::ExtendView &view )
     : m_ThreadCom(hostname, port, m_ComQueue)
-    , m_View(&view)
+    , m_View(view)
     , m_CanPlay( false )
     , m_dirX(0)
     , m_dirY(0)
@@ -96,7 +96,7 @@ namespace redsquare
         {
             player->update( time );
 
-            m_View->setCenter( { (float)(player->m_Pos[0] * World::TileSize), (float)(player->m_Pos[1] * World::TileSize )} );
+            m_View.setCenter( { (float)(player->m_Pos[0] * World::TileSize), (float)(player->m_Pos[1] * World::TileSize )} );
 
             //Do all actions stuff here
             doAction();
