@@ -23,9 +23,9 @@ namespace redsquare
         /* Characteristic*/
         
         Player( gf::Id entityID );
-        Player( gf::Id entityID, uint8_t type, gf::Vector2i pos );
+        Player( gf::Id entityID, EntityClass type, gf::Vector2i pos );
 
-        void loadTexture(uint8_t type = 0);
+        void loadTexture(const EntityClass type = EntityClass::Magus);
 
         virtual void update(gf::Time time) override;
 

@@ -11,13 +11,13 @@
 namespace redsquare
 {
     Player::Player( gf::Id entityID )
-    : redsquare::Entity(entityID,(uint8_t)(rand() % 4))
+    : redsquare::Entity(entityID,static_cast<EntityClass>(rand() % static_cast<int>(EntityClass::EntityClassCount)))
     {
         m_Pos = gf::Vector2i( 0, 0 );
         loadTexture();
     }
 
-    Player::Player( gf::Id entityID, uint8_t type, gf::Vector2i pos )
+    Player::Player( gf::Id entityID, EntityClass type, gf::Vector2i pos )
     : redsquare::Entity(entityID,type)
     {
         m_Pos = pos;
@@ -97,22 +97,23 @@ namespace redsquare
         //Do something
     }
 
-    void Player::loadTexture( uint8_t type )
+    void Player::loadTexture( const EntityClass type )
     {
         switch (type)
         {
-            case 0:
+            case EntityClass::Magus:
             {
                 playerTexture.loadFromFile("data/redsquare/img/goblin.png");
                 break;
             }
 
-            case 1:
+            case EntityClass::Warrior:
             {
                 playerTexture.loadFromFile("data/redsquare/img/knight.png");
                 break;
             }
 
+            /*
             case 2:
             {
                 playerTexture.loadFromFile("data/redsquare/img/bat.png");
@@ -124,6 +125,7 @@ namespace redsquare
                 playerTexture.loadFromFile("data/redsquare/img/slime.png");
                 break;
             }
+            */
         
             default:
             {

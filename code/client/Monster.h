@@ -13,9 +13,9 @@ namespace redsquare
     {
     public:
         Monster( gf::Id entityID );
-        Monster( gf::Id entityID, uint8_t type, gf::Vector2i pos );
+        Monster( gf::Id entityID, EntityClass type, gf::Vector2i pos );
 
-        void loadTexture(uint8_t type = 0);
+        void loadTexture(const EntityClass type = EntityClass::Magus);
 
         virtual void update(gf::Time time) override;
 

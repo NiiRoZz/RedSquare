@@ -1,6 +1,8 @@
 #ifndef REDSQUARE_COMMON_ENTITY_H
 #define REDSQUARE_COMMON_ENTITY_H
 
+#include "Packet.h"
+
 #include <gf/Vector.h>
 #include <gf/Id.h>
 
@@ -10,7 +12,7 @@ namespace redsquare
     {
     public:
         const gf::Id m_EntityID;
-        const uint8_t m_TypeOfEntity;
+        const EntityClass m_TypeOfEntity;
 
         gf::Vector2i m_Pos;
 
@@ -28,7 +30,7 @@ namespace redsquare
         int m_Level;
 
         Entity();
-        Entity(gf::Id entityID, const uint8_t typeOfEntity);
+        Entity(gf::Id entityID, const EntityClass typeOfEntity);
     };
 }
 

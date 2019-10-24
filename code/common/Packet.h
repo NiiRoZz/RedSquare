@@ -24,6 +24,13 @@ namespace redsquare
         Monster,
     };
 
+    enum class EntityClass: uint8_t
+    {
+        Magus,
+        Warrior,
+        EntityClassCount,
+    };
+
     enum class Tile: uint8_t
     {
         Void,
@@ -124,7 +131,7 @@ namespace redsquare
     {
         gf::Id entityID;
         EntityType typeEntity;
-        uint8_t typeOfEntity;
+        EntityClass typeOfEntity;
         int posX;
         int posY;
     };

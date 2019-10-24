@@ -10,7 +10,7 @@ namespace redsquare
     {
     public:
         ServerEntity();
-        ServerEntity(gf::Id entityID, const uint8_t typeOfEntity);
+        ServerEntity(gf::Id entityID, const EntityClass typeOfEntity);
 
         virtual void createCarPacket(Packet &packet);
     };

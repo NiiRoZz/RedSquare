@@ -10,13 +10,13 @@
 namespace redsquare
 {
     Monster::Monster( gf::Id entityID )
-    : redsquare::Entity(entityID,(uint8_t)(rand() % 4))
+    : redsquare::Entity(entityID,static_cast<EntityClass>(rand() % static_cast<int>(EntityClass::EntityClassCount)))
     {
         m_Pos = gf::Vector2i( 0, 0 );
         loadTexture();
     }
 
-    Monster::Monster( gf::Id entityID, uint8_t type, gf::Vector2i pos )
+    Monster::Monster( gf::Id entityID, EntityClass type, gf::Vector2i pos )
     : redsquare::Entity(entityID,type)
     {
         m_Pos = pos;
@@ -25,25 +25,26 @@ namespace redsquare
         m_Font.loadFromFile("data/redsquare/font/arial.ttf");
     }
 
-    void Monster::loadTexture( uint8_t type )
+    void Monster::loadTexture( const EntityClass type )
     {
         switch (type)
         {
-            case 0:
+            case EntityClass::Magus:
+            {
+                monsterTexture.loadFromFile("data/redsquare/img/spirit.png");
+                break;
+            }
+
+            case EntityClass::Warrior:
             {
                 monsterTexture.loadFromFile("data/redsquare/img/knifeSkull.png");
                 break;
             }
 
+            /*
             case 1:
             {
                 monsterTexture.loadFromFile("data/redsquare/img/pickAxeSkull.png");
-                break;
-            }
-
-            case 2:
-            {
-                monsterTexture.loadFromFile("data/redsquare/img/spirit.png");
                 break;
             }
 
@@ -52,7 +53,7 @@ namespace redsquare
                 monsterTexture.loadFromFile("data/redsquare/img/vampire.png");
                 break;
             }
-        
+            */
             default:
             {
                 break;
