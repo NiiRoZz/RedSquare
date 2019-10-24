@@ -114,22 +114,89 @@ namespace redsquare
         loadTexture(type);
     }
 
-    bool Player::canAttack(gf::Vector2i m_TargetPos)
+    bool Player::canAttack(gf::Vector2i targetPos, std::map<gf::Id, Player> &players, std::map<gf::Id, Monster> &monsters)
     {
-        if ( m_Pos == m_TargetPos )
+        if ( m_Pos == targetPos )
         {
             return false;
         }
         
         gf::Distance2<int> distFn = gf::euclideanDistance<int, 2>;
 
-        float distance = distFn(m_Pos, m_TargetPos);
+        float distance = distFn(m_Pos, targetPos);
 
         if ( distance > m_Range )
         {
             return false;
         }
 
-        return true;
+        auto it = players.begin();
+ 
+        while ( it != players.end() )
+        {
+            if ( it->second.m_Pos == targetPos )
+            {
+                return true;
+            }
+
+            ++it;
+        }
+
+        auto it2 = monsters.begin();
+ 
+        while ( it2 != monsters.end() )
+        {
+            if ( it2->second.m_Pos == targetPos )
+            {
+                return true;
+            }
+
+            ++it2;
+        }
+
+        return false;
+    }
+
+    bool Player::canMove(gf::Vector2i targetPos, std::map<gf::Id, Player> &players, std::map<gf::Id, Monster> &monsters, gf::SquareMap &map)
+    {
+        if ( m_Pos == targetPos )
+        {
+            return false;
+        }
+        
+        gf::Distance2<int> distFn = gf::euclideanDistance<int, 2>;
+
+        float distance = distFn(m_Pos, targetPos);
+
+        if ( distance > m_MovePoint )
+        {
+            return false;
+        }
+
+        auto it = players.begin();
+ 
+        while ( it != players.end() )
+        {
+            if ( it->second.m_Pos == targetPos )
+            {
+                return false;
+            }
+
+            ++it;
+        }
+
+        auto it2 = monsters.begin();
+ 
+        while ( it2 != monsters.end() )
+        {
+            if ( it2->second.m_Pos == targetPos )
+            {
+                return false;
+            }
+
+            ++it2;
+        }
+
+        return map.isWalkable(targetPos);
     }
 }

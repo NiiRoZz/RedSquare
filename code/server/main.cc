@@ -150,6 +150,11 @@ int main( int argc, char **argv )
 				actionMade = game.processPackets( packet );
 			}
 		}
+
+		for (auto it = game.m_Monsters.begin(); it != game.m_Monsters.end(); ++it)
+		{
+			it->second.playTurn();
+		}
 	}
 
 	return 0;

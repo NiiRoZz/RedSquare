@@ -7,6 +7,7 @@
 #include <gf/TileLayer.h>
 #include <gf/Texture.h>
 #include <gf/Array2D.h>
+#include <gf/Map.h>
 
 namespace redsquare
 {
@@ -16,6 +17,9 @@ namespace redsquare
         static constexpr int MapSize = 100; // size of the map composed of tile
         static constexpr int TileSize = 16; // size of a tile
         static constexpr int TileSetSize = 16; // size of a tileset
+
+        gf::SquareMap m_SquareMap;
+
         void generateWorld( gf::Array2D<Tile> world );
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
@@ -23,6 +27,7 @@ namespace redsquare
 
     private:
         gf::Array2D<Tile> m_World;
+
         gf::Texture tileTexture;
         gf::TileLayer m_TileSet;
 

@@ -2,7 +2,6 @@
 #define REDSQUARE_SERVER_WORLD_H
 
 #include "../common/Packet.h"
-
 #include <gf/Array2D.h>
 #include <gf/Map.h>
 
@@ -17,7 +16,10 @@ namespace redsquare
         gf::SquareMap m_SquareWorld;
         World();
         static bool isSpawnable(int x,int y);
-        gf::Vector2i getSpawnPoint();
+        void getSpawnPoint();
+
+        gf::Vector2i m_Spawn;
+        bool spawnCheck();
 
     private:
         std::vector<gf::Vector4u> grid(uint sizeGrid); // return all the cell of the grid in a vector

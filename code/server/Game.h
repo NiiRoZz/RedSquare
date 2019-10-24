@@ -13,7 +13,7 @@ namespace redsquare
 {
     class Game
     {
-        public:
+    public:
         std::map<gf::Id, Player> m_Players;
         std::map<gf::Id, Monster> m_Monsters;
 
@@ -28,7 +28,7 @@ namespace redsquare
         void sendPacketToAllPlayers( Packet &packet );
         void sendPacketToVisiblePlayers( Packet &packet, gf::Vector2i pos );
 
-        private:
+    private:
         gf::Id generateId() const;
 
         gf::Queue<Packet> m_ComQueue;

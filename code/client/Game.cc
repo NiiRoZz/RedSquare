@@ -26,6 +26,7 @@ namespace redsquare
         m_ThreadCom.receivePacket( newPlayerData );
 
         m_PlayerID = newPlayerData.playerID;
+
         m_World.generateWorld( std::move( newPlayerData.world ) );
     }
 
@@ -172,6 +173,17 @@ namespace redsquare
         
         m_dirX=dirX;
         m_dirY=dirY;
+    }
+
+    void Game::attackPos( int posX, int posY )
+    {
+        if ( !m_CanPlay )
+        {
+            return;
+        }
+        
+        m_AttackX = posX;
+        m_AttackY = posY;
     }
 
     Player* Game::getPlayer( gf::Id playerID )
