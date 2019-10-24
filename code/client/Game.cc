@@ -3,6 +3,8 @@
 #include <iostream>
 #include <utility>
 
+#include <gf/VectorOps.h>
+
 namespace redsquare
 {
     Game::Game( char* hostname, char *port, gf::ExtendView &view )
@@ -163,6 +165,21 @@ namespace redsquare
 
                 case PacketType::PlayerTurn:
                 {
+                    if ( m_TempMove.size() > 0 && !monsterNear() )
+                    {
+                        gf::Vector2i pos = m_TempMove.front();
+                        m_TempMove.pop();
+
+                        Packet packet;
+                        packet.type = PacketType::RequestMove;
+                        packet.requestMove.playerID = m_PlayerID;
+                        packet.requestMove.dirX = pos[0];
+                        packet.requestMove.dirY = pos[1];
+
+                        m_ThreadCom.sendPacket( packet );
+                        break;
+                    }
+
                     m_CanPlay = packet.playerTurn.playerTurn;
                     std::cout << "It's your turn!!!" << std::endl;
                     break;
@@ -202,7 +219,6 @@ namespace redsquare
                         player->m_MaxAttackPoint = packet.entityCar.m_MaxAttackPoint;
                         player->m_MaxDefensePoint = packet.entityCar.m_MaxDefensePoint;
 
-                        player->m_MovePoint = packet.entityCar.m_MovePoint;
                         player->m_Range = packet.entityCar.m_Range;
 
                         player->m_XP = packet.entityCar.m_XP;
@@ -224,7 +240,6 @@ namespace redsquare
                         monster->m_MaxAttackPoint = packet.entityCar.m_MaxAttackPoint;
                         monster->m_MaxDefensePoint = packet.entityCar.m_MaxDefensePoint;
 
-                        monster->m_MovePoint = packet.entityCar.m_MovePoint;
                         monster->m_Range = packet.entityCar.m_Range;
 
                         monster->m_Level = packet.entityCar.m_Level;
@@ -242,9 +257,32 @@ namespace redsquare
         {
             return;
         }
+
+        Player* myPlayer = getPlayer(m_PlayerID);
+
+        if ( myPlayer == nullptr )
+        {
+            return;
+        }
+
+        //used mouse clic
+        if ( dirX != 0 && dirY != 0 )
+        {
+            m_TempMove.empty();
+
+            std::vector<gf::Vector2i> allPos = m_World.m_SquareMap.computeRoute(myPlayer->m_Pos, {dirX, dirY}, 0.0);
+
+            for (size_t i = 2; i < allPos.size(); ++i)
+            {
+                m_TempMove.push(allPos[i]);
+            }
+
+            m_dirX = allPos[1][0];
+            m_dirY = allPos[1][1];
+        }
         
-        m_dirX=dirX;
-        m_dirY=dirY;
+        m_dirX = dirX;
+        m_dirY = dirY;
     }
 
     void Game::attackPos( int posX, int posY )
@@ -298,5 +336,31 @@ namespace redsquare
         }
 
         return nullptr;
+    }
+    
+    bool Game::monsterNear()
+    {
+        Player* myPlayer = getPlayer(m_PlayerID);
+
+        if ( myPlayer == nullptr )
+        {
+            return false;
+        }
+
+        gf::Distance2<int> distFn = gf::manhattanDistance<int, 2>;
+
+        auto it = m_Monsters.begin();
+ 
+        while ( it != m_Monsters.end() )
+        {
+            if ( distFn(myPlayer->m_Pos, it->second.m_Pos) <= 1 )
+            {
+                return true;
+            }
+
+            ++it;
+        }
+
+        return false;
     }
 }

@@ -162,15 +162,11 @@ int main( int argc, char **argv )
 			if(it->second.checkRoutine())
 			{
             	it->second.drawRoutine(game.m_World);
-			}else{
+			}
+			else
+			{
 				std::vector<gf::Vector2i> points = game.m_World.m_SquareWorld.computeRoute(it->second.m_Pos, it->second.m_Routine, 0.0);
-				if( (points.size()-1) <= it->second.m_MovePoint )
-				{
-					it->second.m_Pos = it->second.m_Routine;
-				}else
-				{
-					it->second.m_Pos = points[it->second.m_MovePoint];
-				}
+				it->second.m_Pos = points[1];
 
 				Packet sendPacket;
 				sendPacket.type = PacketType::ReceiveMove;

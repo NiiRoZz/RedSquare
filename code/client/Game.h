@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <map>
+#include <queue>
 
 #include <gf/Entity.h>
 #include <gf/Time.h>
@@ -41,11 +42,13 @@ namespace redsquare
 
         Monster* getMonster( gf::Id monsterID );
 
+        bool monsterNear();
+
         void startThreadCom();
 
         void receiveWorld();
 
-        void movePlayer( int dirX, int dirY);
+        void movePlayer( int dirX, int dirY );
 
         void attackPos( int posX, int posY );
 
@@ -60,6 +63,8 @@ namespace redsquare
         ThreadCom m_ThreadCom;
         //Queue for message
         gf::Queue<Packet> m_ComQueue;
+
+        std::queue<gf::Vector2i> m_TempMove;
 
         //Move of player
         //MoveDirection m_DirMoving;

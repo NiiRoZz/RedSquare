@@ -15,7 +15,6 @@ namespace redsquare
         m_DefensePoint = 50;
         m_MaxDefensePoint = 50;
 
-        m_MovePoint = 6;
         m_Range = 1;
 
         m_Level = 1;
@@ -36,7 +35,6 @@ namespace redsquare
         packet.entityCar.m_MaxAttackPoint = m_MaxAttackPoint;
         packet.entityCar.m_MaxDefensePoint = m_MaxDefensePoint;
 
-        packet.entityCar.m_MovePoint = m_MovePoint;
         packet.entityCar.m_Range = m_Range;
 
         packet.entityCar.m_Level = m_Level;

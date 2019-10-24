@@ -79,7 +79,6 @@ namespace redsquare
         int m_MaxAttackPoint;
         int m_MaxDefensePoint;
 
-        int m_MovePoint;
         int m_Range;
 
         int m_XP;
@@ -214,7 +213,6 @@ namespace redsquare
                 ar | packet.entityCar.m_AttackPoint;
                 ar | packet.entityCar.m_DefensePoint;
 
-                ar | packet.entityCar.m_MovePoint;
                 ar | packet.entityCar.m_Range;
 
                 ar | packet.entityCar.m_XP;

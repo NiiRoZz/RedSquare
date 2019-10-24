@@ -21,7 +21,6 @@ namespace redsquare
         m_MaxAttackPoint = 50;
         m_MaxDefensePoint = 50;
 
-        m_MovePoint = 6;
         m_Range = 1;
 
         m_XP = 0;
@@ -47,17 +46,17 @@ namespace redsquare
 
     bool Player::applyMove(int dirX, int dirY, gf::SquareMap &map )
     {
-        //MouseClic
-        if(dirX !=0 && dirY !=0)
+        //used mouse clic
+        if( dirX !=0 && dirY != 0 )
         {
-            int newPosX =  dirX ;
-            int newPosY =  dirY;
-            
+            int newPosX = dirX;
+            int newPosY = dirY;
             
             if ( newPosY >= 0 && newPosY < World::MapSize-1 && newPosX >= 0 && newPosX < World::MapSize-1 && map.isWalkable( {newPosX, newPosY}))
             {
                 m_Pos[1] = newPosY;
                 m_Pos[0] = newPosX;
+                
                 return true;
             }
             else
@@ -65,16 +64,17 @@ namespace redsquare
                 return false;
             }
         }
-        //
+        // used arrow key
         else
         {
-            
-            int newPosY = m_Pos[1] + dirY;
             int newPosX = m_Pos[0] + dirX;
+            int newPosY = m_Pos[1] + dirY;
+
             if ( newPosY >= 0 && newPosY < World::MapSize-1 && newPosX >= 0 && newPosX < World::MapSize-1 && map.isWalkable( {newPosX, newPosY} ) )
             {
                 m_Pos[1] = newPosY;
                 m_Pos[0] = newPosX;
+
                 return true;
             }
             else
@@ -126,7 +126,6 @@ namespace redsquare
         packet.entityCar.m_MaxAttackPoint = m_MaxAttackPoint;
         packet.entityCar.m_MaxDefensePoint = m_MaxDefensePoint;
 
-        packet.entityCar.m_MovePoint = m_MovePoint;
         packet.entityCar.m_Range = m_Range;
 
         packet.entityCar.m_XP = m_XP;

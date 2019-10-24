@@ -175,7 +175,7 @@ int main( int argc, char **argv )
                             }
                             else if (myPlayer->canMove(pos, game.m_Players, game.m_Monsters, game.m_World.m_SquareMap))
                             {
-                                game.movePlayer(pos[0],pos[1]);
+                                game.movePlayer( pos[0], pos[1] );
                             }
                         }
                     }
@@ -223,11 +223,11 @@ int main( int argc, char **argv )
 
         if (rightAction.isActive())
         {
-            game.movePlayer( 1,0);
+            game.movePlayer( 1, 0 );
         } 
         else if (leftAction.isActive())
         {
-            game.movePlayer( -1,0 );
+            game.movePlayer( -1, 0 );
         } 
         else if (upAction.isActive())
         {
@@ -235,7 +235,7 @@ int main( int argc, char **argv )
         } 
         else if (downAction.isActive())
         {
-            game.movePlayer( 0,1);
+            game.movePlayer( 0, 1 );
         }
         
         // 2. update

@@ -137,7 +137,7 @@ namespace redsquare
             return false;
         }
         
-        gf::Distance2<int> distFn = gf::euclideanDistance<int, 2>;
+        gf::Distance2<int> distFn = gf::manhattanDistance<int, 2>;
 
         float distance = distFn(m_Pos, targetPos);
 
@@ -176,15 +176,6 @@ namespace redsquare
     bool Player::canMove(gf::Vector2i targetPos, std::map<gf::Id, Player> &players, std::map<gf::Id, Monster> &monsters, gf::SquareMap &map)
     {
         if ( m_Pos == targetPos )
-        {
-            return false;
-        }
-        
-        gf::Distance2<int> distFn = gf::euclideanDistance<int, 2>;
-
-        float distance = distFn(m_Pos, targetPos);
-
-        if ( distance > m_MovePoint )
         {
             return false;
         }
