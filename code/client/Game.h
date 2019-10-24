@@ -49,6 +49,8 @@ namespace redsquare
 
         void startThreadCom();
 
+        void sendInfoConnection(EntityClass type, char *name);
+
         void receiveWorld();
 
         void movePlayer( int dirX, int dirY );
