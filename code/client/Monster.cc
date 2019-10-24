@@ -5,6 +5,7 @@
 #include <gf/Sprite.h>
 #include <gf/RenderTarget.h>
 #include <gf/Color.h>
+#include <gf/Text.h>
 
 namespace redsquare
 {
@@ -18,6 +19,7 @@ namespace redsquare
     {
         m_Pos = pos;
         loadTexture(type);
+        m_Font.loadFromFile("data/redsquare/font/arial.ttf");
     }
 
     void Monster::loadTexture( uint8_t type )
@@ -61,6 +63,7 @@ namespace redsquare
         static constexpr gf::Vector2f BarSize = { 20.0f, 3.0f } ;
          static constexpr gf::Vector2f BarOffset = { 2.0f, 6.0f };
         static constexpr gf::Vector2f BarOffset2 = { 2.0f, 6.0f };
+        static constexpr gf::Vector2f BarOffsetXp = { 4.0f, 5.0f };
 
         sprite.setPosition( m_Pos * World::TileSize );
         sprite.setScale( 1 );
@@ -85,6 +88,15 @@ namespace redsquare
         bar2.setPosition(m_Pos * World::TileSize-BarOffset2);
         bar2.setAnchor(gf::Anchor::TopLeft);
         target.draw(bar2, states); 
+
+         gf::Text m_lvl;
+        m_lvl.setCharacterSize(8);
+        m_lvl.setColor(gf::Color::Black);
+        m_lvl.setFont(m_Font);
+        m_lvl.setString("" + std::to_string(m_Level));
+        m_lvl.setPosition(m_Pos * World::TileSize-BarOffsetXp);
+        m_lvl.setAnchor(gf::Anchor::CenterRight);
+        target.draw(m_lvl, states);
     }
 
     void Monster::update(gf::Time time)

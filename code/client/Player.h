@@ -8,6 +8,7 @@
 #include <gf/Texture.h>
 #include <gf/Id.h>
 #include <gf/Map.h>
+#include <gf/Font.h>
 
 namespace redsquare
 {
@@ -35,8 +36,10 @@ namespace redsquare
 
     private:
         gf::Texture playerTexture;
+        gf::Font m_Font;
 
     };
 }
 
 #endif
+ 
