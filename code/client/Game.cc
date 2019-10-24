@@ -137,12 +137,16 @@ namespace redsquare
                     break;
                 }
 
-                case PacketType::PlayerDisconnected:
+                case PacketType::EntityDisconnected:
                 {
-                    Player* player = getPlayer( packet.playerDisconnected.playerID );
-                    assert( player != nullptr );
-                    
-                    m_Players.erase( packet.playerDisconnected.playerID );
+                    if (packet.entityDisconnected.typeEntity == EntityType::Player)
+                    {
+                        m_Players.erase( packet.entityDisconnected.entityID );
+                    }
+                    else if (packet.entityDisconnected.typeEntity == EntityType::Monster)
+                    {
+                        m_Monsters.erase( packet.entityDisconnected.entityID );
+                    }
                     break;
                 }
 

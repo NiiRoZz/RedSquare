@@ -156,7 +156,16 @@ namespace redsquare
                         monster->m_LifePoint -= 50;
 
                         Packet sendPacket;
-                        monster->createCarPacket(sendPacket);
+                        if ( monster->m_LifePoint > 0 )
+                        {
+                            monster->createCarPacket(sendPacket);
+                        }
+                        else
+                        {
+                            sendPacket.type = PacketType::EntityDisconnected;
+                            sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
+                            sendPacket.entityDisconnected.entityID = monster->m_MonsterID;
+                        }
 
                         sendPacketToAllPlayers( sendPacket );
                     }
