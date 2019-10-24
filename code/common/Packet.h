@@ -28,6 +28,10 @@ namespace redsquare
     {
         Magus,
         Warrior,
+        // Paladin,
+        // Archer,
+        // Rogue,
+        // Healer,
         EntityClassCount,
     };
 
