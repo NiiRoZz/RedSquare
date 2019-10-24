@@ -22,9 +22,11 @@
 #include <gf/VectorOps.h>
 #include <gf/VertexArray.h>
 #include <gf/Cursor.h>
+#include <gf/Font.h>
 
 #include "World.h"
 #include "Game.h"
+#include "Chat.h"
 #include "../common/Packet.h"
 #include <gf/TileLayer.h>
 
@@ -49,7 +51,11 @@ int main( int argc, char **argv )
     window.setVerticalSyncEnabled(true);
     window.setFramerateLimit(60);
     gf::RenderWindow renderer(window);
-
+    gf::Font fontChat;
+    fontChat.loadFromFile("data/redsquare/font/arial.ttf");
+    gf::UI uiChat(fontChat);
+    Chat chat;
+    
     // views
     gf::ViewContainer views;
     gf::ExtendView mainView( ViewCenter, ViewSize );
@@ -146,6 +152,7 @@ int main( int argc, char **argv )
         {
             actions.processEvent(event);
             views.processEvent(event);
+            uiChat.processEvent(event);
 
             switch (event.type)
             {
@@ -235,6 +242,7 @@ int main( int argc, char **argv )
         gf::Time time = clock.restart();
         mainEntities.update(time);
         hudEntities.update(time);
+        chat.updateChat(uiChat);
 
         // 3. draw
         renderer.clear();
@@ -242,6 +250,7 @@ int main( int argc, char **argv )
         mainEntities.render(renderer);
         renderer.setView(hudView);
         hudEntities.render(renderer);
+        renderer.draw(uiChat);
         renderer.display();
         actions.reset();
 	}

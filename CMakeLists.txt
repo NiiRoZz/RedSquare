@@ -13,6 +13,7 @@ add_executable(RedSquare
   code/client/ThreadCom.cc
   code/client/World.cc
   code/client/Monster.cc
+  code/client/Chat.cc
   code/common/Sockets.cc
   code/common/Entity.cc
 )
