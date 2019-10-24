@@ -3,7 +3,6 @@
 
 #include <vector>
 #include <map>
-#include <queue>
 
 #include <gf/Entity.h>
 #include <gf/Time.h>
@@ -34,6 +33,8 @@ namespace redsquare
         bool m_CanPlay;
 
         World m_World;
+
+        std::vector<gf::Vector2i> m_TempMove;
         
         Game( char* hostname, char *port, gf::ExtendView &view );
 
@@ -66,13 +67,13 @@ namespace redsquare
         //Queue for message
         gf::Queue<Packet> m_ComQueue;
 
-        std::queue<gf::Vector2i> m_TempMove;
+        gf::Texture nextPosTexture;
 
         //Move of player
-        //MoveDirection m_DirMoving;
         int m_dirX;
         int m_dirY;
 
+        //Attack of player
         int m_AttackX;
         int m_AttackY;
 

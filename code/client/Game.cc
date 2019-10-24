@@ -4,6 +4,8 @@
 #include <utility>
 
 #include <gf/VectorOps.h>
+#include <gf/Sprite.h>
+#include <gf/RenderTarget.h>
 
 namespace redsquare
 {
@@ -16,6 +18,7 @@ namespace redsquare
     , m_AttackX(0)
     , m_AttackY(0)
     {
+        nextPosTexture.loadFromFile( "data/redsquare/img/redsquare.png" );
     }
 
     void Game::startThreadCom()
@@ -57,6 +60,26 @@ namespace redsquare
 
             ++it2;
         }
+
+        /* TODO: enable this, when found why sprite not rendering correctly over tileset
+        auto it3 = m_TempMove.begin();
+ 
+        // Iterate over the map using Iterator till end.
+        while (it3 != m_TempMove.end())
+        {
+            //create sprite here
+            gf::Sprite sprite;
+
+            sprite.setPosition( *it3 );
+            sprite.setScale( 1 );
+            sprite.setTexture( nextPosTexture );
+            target.draw( sprite, states );
+
+            std::cout << "rendered redsquare for posX : " << (*it3)[0] << " posY : " << (*it3)[1] << std::endl;
+
+            ++it3;
+        }
+        */
     }
 
     void Game::update(gf::Time time)
@@ -168,7 +191,7 @@ namespace redsquare
                     if ( m_TempMove.size() > 0 && !monsterNear() && !playerNear() )
                     {
                         gf::Vector2i pos = m_TempMove.front();
-                        m_TempMove.pop();
+                        m_TempMove.erase(m_TempMove.begin());
 
                         if ( getPlayer(pos) == nullptr && getMonster(pos) == nullptr )
                         {
@@ -181,9 +204,9 @@ namespace redsquare
                             m_ThreadCom.sendPacket( packet );
                             break;
                         }
-
-                        m_TempMove.empty();
                     }
+
+                    m_TempMove.clear();
                     
                     m_CanPlay = packet.playerTurn.playerTurn;
                     std::cout << "It's your turn!!!" << std::endl;
@@ -274,14 +297,11 @@ namespace redsquare
         //used mouse clic
         if ( dirX != 0 && dirY != 0 )
         {
-            m_TempMove.empty();
+            m_TempMove.clear();
 
             std::vector<gf::Vector2i> allPos = m_World.m_SquareMap.computeRoute(myPlayer->m_Pos, {dirX, dirY}, 0.0);
 
-            for (size_t i = 2; i < allPos.size(); ++i)
-            {
-                m_TempMove.push(allPos[i]);
-            }
+            m_TempMove.insert(m_TempMove.end(), ++(++allPos.begin()), allPos.end());
 
             m_dirX = allPos[1][0];
             m_dirY = allPos[1][1];
