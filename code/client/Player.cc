@@ -60,6 +60,8 @@ namespace redsquare
         bar2.setPosition(m_Pos * World::TileSize-BarOffsetMana1);
         bar2.setAnchor(gf::Anchor::TopLeft);
         target.draw(bar2, states);
+
+        
     }
 
     void Player::update(gf::Time time)
