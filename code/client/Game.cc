@@ -165,7 +165,7 @@ namespace redsquare
 
                 case PacketType::PlayerTurn:
                 {
-                    if ( m_TempMove.size() > 0 && !monsterNear() )
+                    if ( m_TempMove.size() > 0 && !monsterNear() && !playerNear() )
                     {
                         gf::Vector2i pos = m_TempMove.front();
                         m_TempMove.pop();
@@ -362,6 +362,32 @@ namespace redsquare
         }
 
         return nullptr;
+    }
+
+    bool Game::playerNear()
+    {
+        Player* myPlayer = getPlayer(m_PlayerID);
+
+        if ( myPlayer == nullptr )
+        {
+            return false;
+        }
+
+        gf::Distance2<int> distFn = gf::manhattanDistance<int, 2>;
+
+        auto it = m_Players.begin();
+ 
+        while ( it != m_Players.end() )
+        {
+            if ( (it->first != m_PlayerID) && distFn(myPlayer->m_Pos, it->second.m_Pos) <= 1 )
+            {
+                return true;
+            }
+
+            ++it;
+        }
+
+        return false;
     }
     
     bool Game::monsterNear()

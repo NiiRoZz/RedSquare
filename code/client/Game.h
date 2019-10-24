@@ -43,6 +43,7 @@ namespace redsquare
         Monster* getMonster( gf::Id monsterID );
         Monster* getMonster( gf::Vector2i pos );
 
+        bool playerNear();
         bool monsterNear();
 
         void startThreadCom();
