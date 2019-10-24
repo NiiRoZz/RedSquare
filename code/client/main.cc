@@ -36,9 +36,9 @@ using namespace redsquare;
 
 int main( int argc, char **argv )
 {
-    if ( argc != 3 )
+    if ( argc != 4 )
     {
-        std::cerr << "Usage : ./RedSquare ip port" << std::endl;
+        std::cerr << "Usage : ./RedSquare ip port playerName" << std::endl;
         return 1;
     }
 
