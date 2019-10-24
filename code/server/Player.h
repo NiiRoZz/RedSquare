@@ -22,6 +22,9 @@ namespace redsquare
         int m_MaxXP;
         /* Characteristic*/
 
+        uint8_t m_PointInRound;
+        bool m_AttackedInRound;
+
         virtual void createCarPacket(Packet &packet) override;
 
         const uint8_t m_TypeOfPlayer;

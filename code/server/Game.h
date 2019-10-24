@@ -24,7 +24,7 @@ namespace redsquare
         void addNewPlayer(SocketTcp socket);
         void addNewMonsters(int nbMonster);
 
-        bool processPackets( Packet &packet );
+        void processPackets( Packet &packet );
 
         Player* getPlayer( gf::Id playerID );
         Player* getPlayer( gf::Vector2i pos );

@@ -21,9 +21,6 @@ namespace redsquare
         std::tie(itNewPlayer, std::ignore) = m_Players.emplace(id, Player(std::move(socket), id));
         itNewPlayer->second.playerSpawn(m_Players,m_World);
 
-        // Send to the client his ID
-        auto size = m_World.m_World.getSize();
-
         NewPlayer packetNewPlayer( m_World.m_World, id );
         itNewPlayer->second.sendPacket(packetNewPlayer);
 
@@ -107,7 +104,7 @@ namespace redsquare
         return number;
     }
 
-    bool Game::processPackets( Packet &packet )
+    void Game::processPackets( Packet &packet )
     {
         switch ( packet.type )
         {
@@ -120,6 +117,15 @@ namespace redsquare
 
                     if ( moved )
                     {
+                        if ( player->m_AttackedInRound )
+                        {
+                            player->m_PointInRound -= 1;
+                        }
+                        else
+                        {
+                            player->m_PointInRound -= 2;
+                        }
+                        
                         Packet sendPacket;
                         sendPacket.type = PacketType::ReceiveMove;
                         sendPacket.receiveMove.entityID = packet.requestMove.playerID;
@@ -129,56 +135,60 @@ namespace redsquare
 
                         sendPacketToAllPlayers( sendPacket );
                     }
-
-                    return moved;
                 }
                 break;
             }
 
             case PacketType::RequestAttack:
             {
-                gf::Vector2i posTarget({packet.requestAttack.posX, packet.requestAttack.posY});
-                
-                Player *player = getPlayer(posTarget);
+                Player *player = getPlayer( packet.requestMove.playerID );
                 if ( player != nullptr )
                 {
-                    player->m_LifePoint -= 50;
-
-                    Packet sendPacket;
-                    player->createCarPacket(sendPacket);
-
-                    sendPacketToAllPlayers( sendPacket );
-                }
-                else
-                {
-                    Monster *monster = getMonster(posTarget);
-                    if (monster != nullptr)
+                    gf::Vector2i posTarget({packet.requestAttack.posX, packet.requestAttack.posY});
+                
+                    Player *targetPlayer = getPlayer(posTarget);
+                    if ( targetPlayer != nullptr )
                     {
-                        monster->m_LifePoint -= 50;
+                        player->m_PointInRound -= 1;
+                        player->m_AttackedInRound = true;
+
+                        targetPlayer->m_LifePoint -= 50;
 
                         Packet sendPacket;
-                        if ( monster->m_LifePoint > 0 )
-                        {
-                            monster->createCarPacket(sendPacket);
-                        }
-                        else
-                        {
-                            sendPacket.type = PacketType::EntityDisconnected;
-                            sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
-                            sendPacket.entityDisconnected.entityID = monster->m_MonsterID;
-
-                            m_Monsters.erase(monster->m_MonsterID);
-                        }
+                        targetPlayer->createCarPacket(sendPacket);
 
                         sendPacketToAllPlayers( sendPacket );
                     }
-                }
+                    else
+                    {
+                        Monster *monster = getMonster(posTarget);
+                        if (monster != nullptr)
+                        {
+                            player->m_PointInRound -= 1;
+                            player->m_AttackedInRound = true;
+                            
+                            monster->m_LifePoint -= 50;
 
-                return false;
+                            Packet sendPacket;
+                            if ( monster->m_LifePoint > 0 )
+                            {
+                                monster->createCarPacket(sendPacket);
+                            }
+                            else
+                            {
+                                sendPacket.type = PacketType::EntityDisconnected;
+                                sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
+                                sendPacket.entityDisconnected.entityID = monster->m_MonsterID;
+
+                                m_Monsters.erase(monster->m_MonsterID);
+                            }
+
+                            sendPacketToAllPlayers( sendPacket );
+                        }
+                    }
+                }
             }
         }
-
-        return true;
     }
 
     void Game::sendPacketToAllPlayers( Packet &packet )

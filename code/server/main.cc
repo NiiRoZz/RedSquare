@@ -64,6 +64,8 @@ int main( int argc, char **argv )
 		for (auto it = game.m_Players.begin(); it != game.m_Players.end(); ++it)
 		{
 			//1: send to the player it's his turn
+			it->second.m_PointInRound = 2;
+			it->second.m_AttackedInRound = false;
 			Packet packet;
 			packet.type = PacketType::PlayerTurn;
 			packet.playerTurn.playerTurn = true;
@@ -107,8 +109,8 @@ int main( int argc, char **argv )
 			}
 
 			//3: check if his action is possible, if it's not go to 1 and if it is just finish the turn
-			bool actionMade = game.processPackets( packet );
-			while ( !actionMade )
+			game.processPackets( packet );
+			while ( it->second.m_PointInRound > 0 )
 			{
 				//3.1: send to the player it's his turn
 				Packet packet;
@@ -153,7 +155,7 @@ int main( int argc, char **argv )
 					continue;
 				}
 
-				actionMade = game.processPackets( packet );
+				game.processPackets( packet );
 			}
 		}
 
