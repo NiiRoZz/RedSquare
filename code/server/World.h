@@ -17,6 +17,7 @@ namespace redsquare
         World();
         static bool isSpawnable(int x,int y);
         void getSpawnPoint();
+        void setUnWalkable(gf::Vector2i pos);
 
         gf::Vector2i m_Spawn;
 
@@ -30,7 +31,7 @@ namespace redsquare
         void buildWallCorridor(); // build wall around ground
         bool nextToGround(uint x, uint y); // check if the tile is next to a ground tile
         void putStair();
-        void SetWalkable();
+        void setWalkable();
         void prettyPrintWalkable();
         void prettyPrint(); // print the map with char in the console
 

@@ -48,15 +48,34 @@ namespace redsquare
 
     enum class Spell: uint8_t
     {
-        BasicAttack,
-        FireBall,
-        ArmorUp,
-        DoubleStrike,
-        Heal,
-        Assasinate,
-        DamageUp,
-        Protection,
-        Revenge,
+        BasicAttack, // basic attack ------- ALL
+        FireBall, // randed attack that can burn foes ------- MAGUS
+        ArmorUp, // gain a bonus of armor for x turns ------- WARRIOR
+        DoubleStrike, // IDK for now
+        Heal, // heal a foes ------- PRIEST
+        Assasinate, // can one shot a foes  with high miss rate ------- ROGUE
+        DamageUp, // gain a bonus of attack for x turns ------- WARRIOR/ROGUE
+        Protection, 
+        Revenge, // deal damage to foes
+        Lacerate,
+        Incinerate,
+        Devastate,
+        Massacre,
+        Impact,
+        LightningStrike,
+        Scorch,
+        Chaos,
+        Berserk,
+        Cleanse,
+        Mirror,
+        Torpedo,
+        Stun,
+        Warp,
+        Reincarnate,
+        Shoot,
+        Backstab,
+        Energize,
+        SoulLink,
     };
 
     enum class PacketType : uint16_t

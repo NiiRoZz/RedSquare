@@ -29,7 +29,7 @@ namespace redsquare
         road(TabRoom); // build the road
         buildWallCorridor(); // build the wall of corridor
         putStair(); // put stair on the map
-        SetWalkable(); // Set walkable the tile that should be
+        setWalkable(); // Set walkable the tile that should be
         getSpawnPoint();
         /**** GENERATE ****/
 
@@ -240,7 +240,7 @@ namespace redsquare
             y = rand() % MapSize;
         }while(m_World( { x, y } ) != Tile::Room); // only putting stair on a  randon room's tile
 
-        m_World( { x, y } ) = Tile::Stair; // 1 stair for a floor
+        m_World( { x, y } ) = Tile::Stair; // 1 stair for a floor       
     }
 
     bool World::nextToGround(uint x, uint y){ // check if the current tile is newt to a tile ground
@@ -262,14 +262,18 @@ namespace redsquare
         return false;
     }
 
-    void World::SetWalkable(){ // set walkable all the tile that should be
+    void World::setWalkable(){ // set walkable all the tile that should be
         for(uint i = 0; i < MapSize; ++i){
             for (uint j = 0; j < MapSize; ++j){    
                 if( m_World( { i, j } ) == Tile::Corridor || m_World( { i, j} ) == Tile::Stair || m_World( { i, j } ) == Tile::Room){ // room and corridor and stair are walkable
-                   m_SquareWorld.setWalkable({(int)i,(int)j});
+                   m_SquareWorld.setEmpty({(int)i,(int)j});
                 }
             }
         }
+    }
+
+    void World::setUnWalkable(gf::Vector2i pos){
+        m_SquareWorld.setCell(pos,gf::Flags<gf::CellProperty>()); // Hacky AF, waiting on JB to push is own function :D
     }
 
     void World::getSpawnPoint(){ // set a spawn point and check if all tile around him is a room or a corrdior to make palyer spawnanble on these tile

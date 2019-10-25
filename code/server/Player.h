@@ -35,7 +35,7 @@ namespace redsquare
 
         void sendPacket(NewPlayer &packet);
 
-        bool applyMove( int dirX, int dirY, gf::SquareMap &map );
+        bool applyMove( int dirX, int dirY,World &world );
 
         bool playerDisconnected() const;
         void spawn();

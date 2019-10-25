@@ -117,7 +117,7 @@ namespace redsquare
                 Player *player = getPlayer( packet.requestMove.playerID );
                 if ( player != nullptr )
                 {
-                    bool moved = player->applyMove( packet.requestMove.dirX,packet.requestMove.dirY, m_World.m_SquareWorld );
+                    bool moved = player->applyMove( packet.requestMove.dirX,packet.requestMove.dirY, m_World );
 
                     if ( moved )
                     {
@@ -188,8 +188,10 @@ namespace redsquare
                                 sendPacket.type = PacketType::EntityDisconnected;
                                 sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
                                 sendPacket.entityDisconnected.entityID = targetMonster->m_EntityID;
-
+                                m_World.m_SquareWorld.setWalkable(targetMonster->m_Pos);
+                                m_World.m_SquareWorld.setTransparent(targetMonster->m_Pos);
                                 m_Monsters.erase(targetMonster->m_EntityID);
+
                             }
                             sendPacketToAllPlayers( sendPacket );
                             if(player->m_Level != level){

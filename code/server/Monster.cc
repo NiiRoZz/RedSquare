@@ -75,7 +75,7 @@ namespace redsquare
             y = rand() % World::MapSize;
             gf::Vector2i spawn({x,y});
             m_Routine = spawn;
-        }while(world.m_World( { (uint)x,(uint) y } ) != Tile::Room); // only putting stair on a  randon room's tile 
+        }while(world.m_World( { (uint)x,(uint) y } ) != Tile::Room && !world.m_SquareWorld.isWalkable({x,y})); // only putting stair on a  randon room's tile 
     }
 
     bool Monster::checkRoutine(){
