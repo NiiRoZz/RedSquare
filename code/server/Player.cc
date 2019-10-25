@@ -16,10 +16,10 @@ namespace redsquare
             m_MaxManaPoint = 20;
 
             m_AttackPoint = 30;
-            m_DefensePoint = 5;
+            m_DefensePoint = 0;
 
             m_MaxAttackPoint = 30;
-            m_MaxDefensePoint = 5;
+            m_MaxDefensePoint = 0;
 
             m_Range = 2;
             break;
@@ -32,10 +32,10 @@ namespace redsquare
             m_MaxManaPoint = 5;
 
             m_AttackPoint = 20;
-            m_DefensePoint = 10;
+            m_DefensePoint = 0;
 
             m_MaxAttackPoint = 20;
-            m_MaxDefensePoint = 10;
+            m_MaxDefensePoint = 0;
 
             m_Range = 1;
             break;
