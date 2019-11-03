@@ -22,7 +22,7 @@ namespace redsquare
 
         void generateWorld( gf::Array2D<Tile> world );
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
-
+        int rigthTile(gf::Vector2i tile);
         World();
 
     private:
