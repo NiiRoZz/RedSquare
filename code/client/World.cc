@@ -4,6 +4,25 @@
 #include <gf/RenderTarget.h>
 #include <iostream>
 
+#define TOP 1
+#define BOTTOM 42
+
+#define TOPLEFTCORNER 0 // intern
+#define TOPRIGTHCORNER 5 // intern
+
+#define BOTTOMLEFTCORNER 40 // intern
+#define BOTTOMRIGTHCORNER 45 // intern
+
+
+#define TOPLEFTCORNEREXT 50 // extern
+#define TOPRIGTHCORNEREXT 53 // extern
+
+#define BOTTOMLEFTCORNEREXT 55 // extern
+#define BOTTOMRIGTHCORNEREXT 54 // extern
+
+#define LEFT 20
+#define RIGHT 15
+
 namespace redsquare
 {
     void World::render(gf::RenderTarget& target, const gf::RenderStates& states)
@@ -25,30 +44,46 @@ namespace redsquare
 
     int World::rigthTile(gf::Vector2i tile){ // return the tile number on the tile set for a given vector2i on the map
         if( tile[0] == MapSize-2 || tile[1] == MapSize-2 || tile[0] == 0 || tile[1] == 0){ // border of the map
-            
-            if(tile[0] == 0 && tile[1] == 0 && m_World(tile) == Tile::Wall){ // top left corner
-                return  0;
+            if(tile[0] != 0){
+                if(m_World({tile[0]-1, tile[1]}) == Tile::Wall  && m_World({tile[0], tile[1]+1}) == Tile::Wall){ // top rigth corner in a room
+                    return TOPRIGTHCORNER;
+                }
             }
-            if(tile[0] == MapSize-2 && tile[1] == 0 && m_World(tile) == Tile::Wall){ // top rigth corner
-                return  5;
+            if(tile[1] != MapSize-2){
+                if(m_World({tile[0]+1, tile[1]}) == Tile::Wall  && m_World({tile[0], tile[1]+1}) == Tile::Wall){ // top left corner in a room
+                    return TOPLEFTCORNER;
+                }
             }
+            if(tile[0] == 0 && tile[1] != MapSize-2){
+                if(m_World({tile[0]+1, tile[1]}) == Tile::Wall  && m_World({tile[0], tile[1]-1}) == Tile::Wall){ // bottom left corner in a room
+                    return BOTTOMLEFTCORNER;
+                }
+            }
+            if(tile[0] != 0 && tile[1] == MapSize-2){
+                if(m_World({tile[0]-1, tile[1]}) == Tile::Wall  && m_World({tile[0], tile[1]-1}) == Tile::Wall){ // bottom rigth corner in a room
+                    return BOTTOMRIGTHCORNER;
+                }
+            }
+
+
+
             if(tile[0] == 0 && tile[1] == MapSize-2 && m_World(tile) == Tile::Wall){ // bottom left corner
-                return  40;
+                return  BOTTOMLEFTCORNER;
             }
             if(tile[0] == MapSize-2 && tile[1] == MapSize-2 && m_World(tile) == Tile::Wall){ // bottom rigth corner
-                return  45;
+                return  BOTTOMRIGTHCORNER;
             }
             if(tile[0] == 0 && m_World(tile) == Tile::Wall){ // left side
-                return  20;
+                return  LEFT;
             }
             if(tile[0] == MapSize-2 && m_World(tile) == Tile::Wall){ // right side
-                return  15;
+                return  RIGHT;
             }
             if(tile[1] == 0 && m_World(tile) == Tile::Wall){ // top side
-                return  1;
+                return  TOP;
             }
             if(tile[1] == MapSize-2 && m_World(tile) == Tile::Wall){ // bottom side
-                return  42;
+                return  BOTTOM;
             }
         }else{
             if ( m_World( tile ) == Tile::Room || m_World( tile ) == Tile::Corridor ){ // room tile
@@ -61,23 +96,44 @@ namespace redsquare
                 return 11; // TODO
             }else if ( m_World( tile ) == Tile::Wall ) // wall tile
             {
-                if(m_World({tile[0]+1, tile[1]}) == Tile::Wall  && m_World({tile[0], tile[1]+1}) == Tile::Wall){ // top left corner in a room
-                    return 0;
+                if(m_World({tile[0]+1, tile[1]}) == Tile::Wall  && m_World({tile[0], tile[1]+1}) == Tile::Wall && (m_World({tile[0], tile[1]-1}) == Tile::Room || m_World({tile[0], tile[1]-1}) == Tile::Corridor) && (m_World({tile[0]-1, tile[1]}) == Tile::Room || m_World({tile[0]-1, tile[1]}) == Tile::Corridor)){ // top left corner in a room ext
+                    return TOPLEFTCORNEREXT;
                 }
-                if(m_World({tile[0]+1, tile[1]}) == Tile::Wall  && m_World({tile[0], tile[1]-1}) == Tile::Wall){ // bottom left corner in a room
-                    return 40;
+                if(m_World({tile[0]-1, tile[1]}) == Tile::Wall  && m_World({tile[0], tile[1]+1}) == Tile::Wall && (m_World({tile[0]+1, tile[1]}) == Tile::Room || m_World({tile[0]+1, tile[1]}) == Tile::Corridor) && (m_World({tile[0], tile[1]-1}) == Tile::Room || m_World({tile[0], tile[1]-1}) == Tile::Corridor )){ // top rigth corner in a room ext
+                    return TOPRIGTHCORNEREXT;
+                }
+                if(m_World({tile[0]+1, tile[1]}) == Tile::Wall  && m_World({tile[0], tile[1]-1}) == Tile::Wall && (m_World({tile[0]-1, tile[1]}) == Tile::Room || m_World({tile[0]-1, tile[1]}) == Tile::Corridor) && (m_World({tile[0], tile[1]+1}) == Tile::Room || m_World({tile[0], tile[1]+1}) == Tile::Corridor )){ // bottom left corner in a room ext
+                    return 1;
+                }
+                if(m_World({tile[0]-1, tile[1]}) == Tile::Wall  && m_World({tile[0], tile[1]-1}) == Tile::Wall && (m_World({tile[0]+1, tile[1]}) == Tile::Room || m_World({tile[0]+1, tile[1]}) == Tile::Corridor) && (m_World({tile[0], tile[1]+1}) == Tile::Room || m_World({tile[0], tile[1]+1}) == Tile::Corridor )){ // bottom right corner in a room ext
+                    return 1;
+                }
+
+
+                if(m_World({tile[0]+1, tile[1]}) == Tile::Wall  && m_World({tile[0], tile[1]+1}) == Tile::Wall){ // top left corner in a room
+                    return TOPLEFTCORNER;
                 }
                 if(m_World({tile[0]-1, tile[1]}) == Tile::Wall  && m_World({tile[0], tile[1]+1}) == Tile::Wall){ // top rigth corner in a room
-                    return 5;
+                    return TOPRIGTHCORNER;
+                }
+                if(m_World({tile[0]+1, tile[1]}) == Tile::Wall  && m_World({tile[0], tile[1]-1}) == Tile::Wall){ // bottom left corner in a room
+                    return BOTTOMLEFTCORNER;
                 }
                 if(m_World({tile[0]-1, tile[1]}) == Tile::Wall  && m_World({tile[0], tile[1]-1}) == Tile::Wall){ // bottom rigth corner in a room
-                    return 45;
+                    return BOTTOMRIGTHCORNER;
                 }
-                if(m_World({tile[0]-1, tile[1]}) == Tile::Wall  && m_World({tile[0]+1, tile[1]}) == Tile::Wall){ // line wall bot
-                    return 41;
+                
+                if(m_World({tile[0], tile[1]-1}) == Tile::Wall  && m_World({tile[0], tile[1]+1}) == Tile::Wall && m_World({tile[0]-1, tile[1]}) == Tile::Void  ){ // line wall bot
+                    return LEFT;
                 }
-                if(m_World({tile[0], tile[1]-1}) == Tile::Wall  && m_World({tile[0], tile[1]+1}) == Tile::Wall){ // line wall bot
-                    return 10;
+                if(m_World({tile[0], tile[1]-1}) == Tile::Wall  && m_World({tile[0], tile[1]+1}) == Tile::Wall && m_World({tile[0]+1, tile[1]}) == Tile::Void  ){ // line wall bot
+                    return RIGHT;
+                }
+                if(m_World({tile[0]-1, tile[1]}) == Tile::Wall  && m_World({tile[0]+1, tile[1]}) == Tile::Wall && m_World({tile[0], tile[1]-1}) == Tile::Void){ // line wall bot
+                    return TOP;
+                }
+                if(m_World({tile[0]-1, tile[1]}) == Tile::Wall  && m_World({tile[0]+1, tile[1]}) == Tile::Wall && m_World({tile[0], tile[1]+1}) == Tile::Void){ // line wall bot
+                    return BOTTOM;
                 }
             }
         }
@@ -91,6 +147,7 @@ namespace redsquare
         for(int i = 0; i < MapSize; ++i){
             for (int j = 0; j < MapSize; ++j){  
                 tile = rigthTile({i,j}); 
+                std::cout << i << '/' << j << " " << tile << std::endl;
                 if(tile == 11){ // room or corridor tile
                     m_SquareMap.setWalkable({i, j}); 
                 }
