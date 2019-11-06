@@ -174,7 +174,7 @@ namespace redsquare
             for (int j = 0; j < MapSize; ++j){  
                 tile = rigthTile({i,j}); 
                 //std::cout << i << '/' << j << " " << tile << std::endl;
-                if(tile == FLOOR || STAIR ){ // room or corridor tile
+                if(tile == FLOOR || tile == STAIR ){ // room or corridor tile
                     m_SquareMap.setWalkable({i, j}); 
                 }
                 m_TileSet.setTile( {i, j}, tile );
