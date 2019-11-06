@@ -19,6 +19,10 @@ namespace redsquare
     , m_AttackY(0)
     {
         nextPosTexture.loadFromFile( "data/redsquare/img/redsquare.png" );
+
+        //TEMP
+        //auto it = m_AnimatedEntity.insert(std::make_pair(14141, AnimatedEntity("data/redsquare/img/TileSet3.png", 19, 0, 4, {320,384}, 0.1)));
+        //it.first->second.m_Pos = {1,1};
     }
 
     void Game::startThreadCom()
@@ -71,6 +75,18 @@ namespace redsquare
             ++it2;
         }
 
+        auto it3 = m_AnimatedEntity.begin();
+ 
+        // Iterate over the map using Iterator till end.
+        while (it3 != m_AnimatedEntity.end())
+        {
+            std::cout << "m_AnimatedEntity render 1" << std::endl;
+            it3->second.render( target, states );
+            std::cout << "m_AnimatedEntity render 2" << std::endl;
+
+            ++it3;
+        }
+
         /* TODO: enable this, when found why sprite not rendering correctly over tileset
         auto it3 = m_TempMove.begin();
  
@@ -110,6 +126,18 @@ namespace redsquare
 
             //Do all actions stuff here
             doAction();
+        }
+
+        auto it = m_AnimatedEntity.begin();
+ 
+        // Iterate over the map using Iterator till end.
+        while (it != m_AnimatedEntity.end())
+        {
+            std::cout << "m_AnimatedEntity update 1" << std::endl;
+            it->second.update( time );
+            std::cout << "m_AnimatedEntity update 2" << std::endl;
+
+            ++it;
         }
     }
 

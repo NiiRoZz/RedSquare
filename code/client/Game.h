@@ -15,6 +15,7 @@
 #include "ThreadCom.h"
 #include "../common/Packet.h"
 #include "World.h"
+#include "AnimatedEntity.h"
 
 namespace redsquare
 {
@@ -28,6 +29,9 @@ namespace redsquare
         std::map<gf::Id, Player> m_Players;
         //All monsters
         std::map<gf::Id, Monster> m_Monsters;
+
+        //All animatedEntity
+        std::map<gf::Id, AnimatedEntity> m_AnimatedEntity;
 
         //Value if it's his turn and he can play
         bool m_CanPlay;
