@@ -35,7 +35,7 @@ namespace redsquare
 
         /**** PRINT ****/
         prettyPrint(); // print the map
-        prettyPrintWalkable(); // print all the tile that are walkable
+       // prettyPrintWalkable(); // print all the tile that are walkable
         /**** PRINT ****/
     }
 
@@ -216,7 +216,7 @@ namespace redsquare
                 }       
             }
             cpt++;
-        }while(cpt != TabRoom.size()*3); // dummy ways to be sure that no room is isolated.   implemtation can be better with graphe algorithm
+        }while(cpt != TabRoom.size()*2); // dummy ways to be sure that no room is isolated.   implemtation can be better with graphe algorithm
     }
 
     void World::buildWallCorridor(){ // put wall where there should be a wall
@@ -318,7 +318,7 @@ namespace redsquare
                 }else if( m_World( { j, i } ) == Tile::Corridor){
                     std::cout << " ";
                 }else if( m_World( { j, i } ) == Tile::Stair){
-                    std::cout << " ";
+                    std::cout << "X";
                 }
             }
             std::cout << "\n";
