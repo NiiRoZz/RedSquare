@@ -281,10 +281,10 @@ namespace redsquare
 
                             m_ThreadCom.sendPacket( packet );
 
-                            packet.type = PacketType::PassTurn;
+                            /*packet.type = PacketType::PassTurn;
                             packet.passTurn.playerID = m_PlayerID;
 
-                            m_ThreadCom.sendPacket( packet );
+                            m_ThreadCom.sendPacket( packet );*/
                             break;
                         }
                     }
