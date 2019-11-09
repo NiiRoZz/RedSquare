@@ -200,6 +200,12 @@ int main( int argc, char **argv )
                         else if (myPlayer->canMove(pos, game.m_Players, game.m_Monsters, game.m_Props, game.m_World.m_SquareMap))
                         {
                             window.setMouseCursor(moveCursor);
+
+                            game.m_TempMove.clear();
+
+                            std::vector<gf::Vector2i> allPos = game.m_World.m_SquareMap.computeRoute(myPlayer->m_Pos, pos, 0.0);
+
+                            game.m_TempMove.insert(game.m_TempMove.end(), ++allPos.begin(), allPos.end());
                         }
                         else
                         {

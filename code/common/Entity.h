@@ -30,6 +30,7 @@ namespace redsquare
         int m_Level;
 
         Entity();
+        Entity(gf::Id entityID);
         Entity(gf::Id entityID, const EntityClass typeOfEntity);
     };
 }

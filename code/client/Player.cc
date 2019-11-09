@@ -191,7 +191,7 @@ namespace redsquare
 
     bool Player::canMove(gf::Vector2i targetPos, std::map<gf::Id, Player> &players, std::map<gf::Id, Monster> &monsters, std::map<gf::Id, Prop> &props, gf::SquareMap &map)
     {
-        if ( m_Pos == targetPos )
+        if ( m_Pos == targetPos || targetPos[0] < 0 || targetPos[1] < 0 )
         {
             return false;
         }

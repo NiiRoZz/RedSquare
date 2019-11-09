@@ -7,19 +7,21 @@
 
 namespace redsquare
 {
-    AnimatedEntity::AnimatedEntity(gf::Path pathTextureAnimated, int line, int startFramePos, int nmbFrames, gf::Vector2f textureSize, float frameDuration)
-    : m_TextureSize(textureSize)
+    AnimatedEntity::AnimatedEntity(gf::Id entityID, gf::Vector2i pos, gf::Path pathTextureAnimated, int line, int startFramePos, int nmbFrames, float frameDuration)
+    : redsquare::Entity(entityID)
     , m_FrameDuration(frameDuration)
     {
+        m_Pos = pos;
         m_AnimatedTexture.loadFromFile(pathTextureAnimated);
+        m_TextureSize = m_AnimatedTexture.getSize();
+        
         loadAnimation(line, startFramePos, nmbFrames);
     }
 
     void AnimatedEntity::render(gf::RenderTarget& target, const gf::RenderStates& states)
     {
-        //std::cout << "AnimatedEntity::render 1" << std::endl;
         gf::AnimatedSprite animated;
-        //std::cout << "AnimatedEntity::render m_Animation : " << &m_Animation << " m_Animation.getCurrentTexture().getName() : " << m_Animation.getCurrentTexture().getName() << " m_Animation.getCurrentTexture().getSize()[0] : " << m_Animation.getCurrentTexture().getSize()[0] << std::endl;
+        //std::cout << "AnimatedEntity::render m_Animation : " << &m_Animation << " m_Animation.getCurrentBounds().getTopLeft()[0] : " << m_Animation.getCurrentBounds().getTopLeft()[0] << " m_Animation.getCurrentTexture().getSize()[0] : " << m_Animation.getCurrentTexture().getSize()[0] << std::endl;
         animated.setAnimation(m_Animation);
         animated.setScale(1.0f);
         animated.setPosition(m_Pos * World::TileSize);
@@ -29,7 +31,8 @@ namespace redsquare
 
     void AnimatedEntity::update(gf::Time time)
     {
-        m_Animation.update(time);
+        bool changed = m_Animation.update(time);
+        //std::cout << "changed : " << changed << std::endl;
     }
 
     void AnimatedEntity::loadAnimation(int line, int startFramePos, int nmbFrames)
@@ -39,8 +42,8 @@ namespace redsquare
 
         for (int i = startFramePos; i < (startFramePos + nmbFrames); ++i)
         {
-            gf::RectF frame(gf::Vector2i(i, line) *  FrameSize / m_TextureSize, FrameSize / m_TextureSize);
+            gf::RectF frame(gf::Vector2i(i, line) * FrameSize / m_TextureSize, FrameSize / m_TextureSize);
             m_Animation.addFrame(m_AnimatedTexture, frame, FrameDuration);
-        } 
-  }
+        }
+    }
 }

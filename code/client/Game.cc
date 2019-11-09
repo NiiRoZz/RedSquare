@@ -21,8 +21,7 @@ namespace redsquare
         nextPosTexture.loadFromFile( "data/redsquare/img/redsquare.png" );
 
         //TEMP
-        //auto it = m_AnimatedEntity.insert(std::make_pair(14141, AnimatedEntity("data/redsquare/img/TileSet3.png", 19, 0, 4, {320,384}, 0.1)));
-        //it.first->second.m_Pos = {1,1};
+        m_AnimatedEntities.emplace(gf::Id(10), AnimatedEntity(10, {1,1}, "data/redsquare/img/TileSet3.png", 0, 0, 4, 0.1f));
     }
 
     void Game::startThreadCom()
@@ -54,68 +53,66 @@ namespace redsquare
     void Game::render(gf::RenderTarget& target, const gf::RenderStates& states)
     {
         m_World.render( target, states );
-        
-        auto it = m_Players.begin();
+
+        auto it1 = m_TempMove.begin();
  
         // Iterate over the map using Iterator till end.
-        while (it != m_Players.end())
+        while (it1 != m_TempMove.end())
         {
-            it->second.render( target, states );
+            //create sprite here
+            gf::Sprite sprite;
 
-            ++it;
+            sprite.setPosition( (*it1) * World::TileSize );
+            sprite.setScale( 1 );
+            sprite.setTexture( nextPosTexture );
+            target.draw( sprite, states );
+
+            ++it1;
         }
-
-        auto it2 = m_Monsters.begin();
+        
+        auto it2 = m_Players.begin();
  
         // Iterate over the map using Iterator till end.
-        while (it2 != m_Monsters.end())
+        while (it2 != m_Players.end())
         {
             it2->second.render( target, states );
 
             ++it2;
         }
 
-        auto it3 = m_AnimatedEntity.begin();
+        auto it3 = m_Monsters.begin();
  
         // Iterate over the map using Iterator till end.
-        while (it3 != m_AnimatedEntity.end())
+        while (it3 != m_Monsters.end())
         {
-            std::cout << "m_AnimatedEntity render 1" << std::endl;
             it3->second.render( target, states );
-            std::cout << "m_AnimatedEntity render 2" << std::endl;
 
             ++it3;
         }
 
-        auto it4 = m_Props.begin();
+        auto it4 = m_AnimatedEntities.begin();
  
         // Iterate over the map using Iterator till end.
-        while (it4 != m_Props.end())
+        while (it4 != m_AnimatedEntities.end())
         {
+            //std::cout << "m_AnimatedEntities render 1" << std::endl;
+            //std::cout << "AnimatedEntity::render m_Animation : " << &it4->second.m_Animation << " m_Animation.getCurrentBounds().getTopLeft()[0] : " << it4->second.m_Animation.getCurrentBounds().getTopLeft()[0] << " m_Animation.getCurrentTexture().getSize()[0] : " << it4->second.m_Animation.getCurrentTexture().getSize()[0] << std::endl;
             it4->second.render( target, states );
+            //std::cout << "AnimatedEntity::render m_Animation : " << &it4->second.m_Animation << " m_Animation.getCurrentBounds().getTopLeft()[0] : " << it4->second.m_Animation.getCurrentBounds().getTopLeft()[0] << " m_Animation.getCurrentTexture().getSize()[0] : " << it4->second.m_Animation.getCurrentTexture().getSize()[0] << std::endl;
+            //std::cout << "m_AnimatedEntities render 2" << std::endl;
 
             ++it4;
         }
 
-        /* TODO: enable this, when found why sprite not rendering correctly over tileset
-        auto it3 = m_TempMove.begin();
+        auto it5 = m_Props.begin();
  
         // Iterate over the map using Iterator till end.
-        while (it3 != m_TempMove.end())
+        while (it5 != m_Props.end())
         {
-            //create sprite here
-            gf::Sprite sprite;
+            it5->second.render( target, states );
 
-            sprite.setPosition( *it3 );
-            sprite.setScale( 1 );
-            sprite.setTexture( nextPosTexture );
-            target.draw( sprite, states );
-
-            std::cout << "rendered redsquare for posX : " << (*it3)[0] << " posY : " << (*it3)[1] << std::endl;
-
-            ++it3;
+            ++it5;
         }
-        */
     }
 
     void Game::update(gf::Time time)
@@ -138,14 +135,12 @@ namespace redsquare
             doAction();
         }
 
-        auto it = m_AnimatedEntity.begin();
+        auto it = m_AnimatedEntities.begin();
  
         // Iterate over the map using Iterator till end.
-        while (it != m_AnimatedEntity.end())
+        while (it != m_AnimatedEntities.end())
         {
-            std::cout << "m_AnimatedEntity update 1" << std::endl;
             it->second.update( time );
-            std::cout << "m_AnimatedEntity update 2" << std::endl;
 
             ++it;
         }

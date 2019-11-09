@@ -32,7 +32,7 @@ namespace redsquare
         std::map<gf::Id, Monster> m_Monsters;
 
         //All animatedEntity
-        std::map<gf::Id, AnimatedEntity> m_AnimatedEntity;
+        std::map<gf::Id, AnimatedEntity> m_AnimatedEntities;
         //All props
         std::map<gf::Id, Prop> m_Props;
 
