@@ -17,6 +17,7 @@ namespace redsquare
     , m_dirY(0)
     , m_AttackX(0)
     , m_AttackY(0)
+    , m_PassTurn(false)
     {
         nextPosTexture.loadFromFile( "data/redsquare/img/redsquare.png" );
 
@@ -165,6 +166,12 @@ namespace redsquare
             packet.requestMove.dirX = m_dirX;
             packet.requestMove.dirY = m_dirY;
 
+            //If it's move with key
+            if (m_dirX == 0 || m_dirY == 0)
+            {
+                m_TempMove.clear();
+            }
+
             m_dirX = 0;
             m_dirY = 0;
 
@@ -183,6 +190,21 @@ namespace redsquare
 
             m_AttackX = 0;
             m_AttackY = 0;
+            m_TempMove.clear();
+
+            m_ThreadCom.sendPacket( packet );
+        }
+        else if ( m_PassTurn )
+        {
+            //don't forget to call m_CanPlay false when sent action
+            m_CanPlay = false;
+
+            Packet packet;
+            packet.type = PacketType::PassTurn;
+            packet.passTurn.playerID = m_PlayerID;
+
+            m_PassTurn = false;
+            m_TempMove.clear();
 
             m_ThreadCom.sendPacket( packet );
         }
@@ -256,6 +278,11 @@ namespace redsquare
                             packet.requestMove.playerID = m_PlayerID;
                             packet.requestMove.dirX = pos[0];
                             packet.requestMove.dirY = pos[1];
+
+                            m_ThreadCom.sendPacket( packet );
+
+                            packet.type = PacketType::PassTurn;
+                            packet.passTurn.playerID = m_PlayerID;
 
                             m_ThreadCom.sendPacket( packet );
                             break;
@@ -391,6 +418,16 @@ namespace redsquare
         
         m_AttackX = posX;
         m_AttackY = posY;
+    }
+
+    void Game::passTurn()
+    {
+        if ( !m_CanPlay )
+        {
+            return;
+        }
+
+        m_PassTurn = true;
     }
 
     Player* Game::getPlayer( gf::Id playerID )

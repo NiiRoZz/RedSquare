@@ -157,16 +157,10 @@ namespace redsquare
                 {
                     bool moved = player->applyMove( packet.requestMove.dirX,packet.requestMove.dirY, m_World );
 
-                    if ( moved )
+                    if ( moved && !player->m_MovedInRound )
                     {
-                        if ( player->m_AttackedInRound )
-                        {
-                            player->m_PointInRound -= 1;
-                        }
-                        else
-                        {
-                            player->m_PointInRound -= 2;
-                        }
+                        player->m_PointInRound -= 1;
+                        player->m_MovedInRound = true;
                         
                         Packet sendPacket;
                         sendPacket.type = PacketType::ReceiveMove;
@@ -259,6 +253,17 @@ namespace redsquare
                         }
                     }
                 }
+                break;
+            }
+
+            case PacketType::PassTurn:
+            {
+                Player *player = getPlayer( packet.passTurn.playerID );
+                if ( player != nullptr )
+                {
+                    player->m_PointInRound -= player->m_PointInRound;
+                }
+                break;
             }
         }
     }
