@@ -200,6 +200,7 @@ int main( int argc, char **argv )
                         if ( myPlayer->canAttack(pos, game.m_Players, game.m_Monsters, game.m_Props) )
                         {
                             window.setMouseCursor(attackCursor);
+                            game.m_TempMove.clear();
                         }
                         else if (myPlayer->canMove(pos, game.m_Players, game.m_Monsters, game.m_Props, game.m_World.m_SquareMap))
                         {
@@ -214,6 +215,7 @@ int main( int argc, char **argv )
                         else
                         {
                             window.setMouseCursor(defaultCursor);
+                            game.m_TempMove.clear();
                         }
                     }
                     else
