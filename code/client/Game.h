@@ -64,6 +64,8 @@ namespace redsquare
 
         void attackPos( int posX, int posY );
 
+        void passTurn();
+
         void processPackets();
 
         virtual void update(gf::Time time) override;
@@ -85,6 +87,9 @@ namespace redsquare
         //Attack of player
         int m_AttackX;
         int m_AttackY;
+
+        //Pass turn
+        bool m_PassTurn;
 
         //View of the game
         gf::ExtendView &m_View;

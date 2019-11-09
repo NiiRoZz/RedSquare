@@ -24,7 +24,7 @@ namespace redsquare
         /* Characteristic*/
 
         uint8_t m_PointInRound;
-        bool m_AttackedInRound;
+        bool m_MovedInRound;
 
         virtual void createCarPacket(Packet &packet) override;
         

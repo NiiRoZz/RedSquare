@@ -99,6 +99,10 @@ int main( int argc, char **argv )
     downAction.addScancodeKeyControl(gf::Scancode::Down);
     //downAction.setContinuous();
     actions.addAction(downAction);
+
+    gf::Action passTurn("PassTurn");
+    passTurn.addKeycodeKeyControl(gf::Keycode::Space);
+    actions.addAction(passTurn);
     
     gf::Action clicAction("Clic");
     clicAction.addMouseButtonControl(gf::MouseButton::Left);
@@ -246,6 +250,11 @@ int main( int argc, char **argv )
         else if (downAction.isActive())
         {
             game.movePlayer( 0, 1 );
+        }
+
+        if (passTurn.isActive())
+        {
+            game.passTurn();
         }
         
         // 2. update

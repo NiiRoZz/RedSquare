@@ -89,6 +89,7 @@ namespace redsquare
         RequestMove,
         ReceiveMove,
         RequestAttack,
+        PassTurn,
         EntityDisconnected,
         EntityCar,
         PlayerTurn,
@@ -184,6 +185,11 @@ namespace redsquare
         int posY;
     };
 
+    struct PassTurn
+    {
+        gf::Id playerID;
+    };
+
     struct Packet
     {
         PacketType type;
@@ -194,6 +200,7 @@ namespace redsquare
             RequestMove requestMove;
             ReceiveMove receiveMove;
             RequestAttack requestAttack;
+            PassTurn passTurn;
             EntityDisconnected entityDisconnected;
             PlayerTurn playerTurn;
             SpawnEntity spawnEntity;
@@ -231,19 +238,25 @@ namespace redsquare
                 ar | packet.receiveMove.posY;
                 break;
             }
-                
-            case PacketType::EntityDisconnected:
-            {
-                ar | packet.entityDisconnected.entityID;
-                ar | packet.entityDisconnected.typeEntity;
-                break;
-            }
 
             case PacketType::RequestAttack:
             {
                 ar | packet.requestAttack.playerID;
                 ar | packet.requestAttack.posX;
                 ar | packet.requestAttack.posY;
+                break;
+            }
+
+            case PacketType::PassTurn:
+            {
+                ar | packet.passTurn.playerID;
+                break;
+            }
+
+            case PacketType::EntityDisconnected:
+            {
+                ar | packet.entityDisconnected.entityID;
+                ar | packet.entityDisconnected.typeEntity;
                 break;
             }
 

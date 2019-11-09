@@ -65,7 +65,7 @@ int main( int argc, char **argv )
 		{
 			//1: send to the player it's his turn
 			it->second.m_PointInRound = 2;
-			it->second.m_AttackedInRound = false;
+			it->second.m_MovedInRound = false;
 
 			while ( it->second.m_PointInRound > 0 )
 			{

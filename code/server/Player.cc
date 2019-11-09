@@ -202,7 +202,6 @@ namespace redsquare
     void Player::attack(ServerEntity *target)
     {
         m_PointInRound -= 1;
-        m_AttackedInRound = true;
 
         target->m_LifePoint -= (m_AttackPoint - target->m_DefensePoint);
         if(target->m_LifePoint <= 0){
