@@ -271,7 +271,8 @@ namespace redsquare
         }
     }
 
-    void World::setUnWalkable(gf::Vector2i pos){
+    void World::setUnWalkable(gf::Vector2i pos)
+    {
         m_SquareWorld.setCell(pos,gf::Flags<gf::CellProperty>()); // Hacky AF, waiting on JB to push is own function :D
     }
 

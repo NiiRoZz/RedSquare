@@ -207,21 +207,31 @@ namespace redsquare
         }
         return VOID; // purple tile
     }
+
     void World::generateWorld( gf::Array2D<Tile> world )
     {
         m_World = std::move(world);
         int tile;
 
-        for(int i = 0; i < MapSize; ++i){
-            for (int j = 0; j < MapSize; ++j){  
-                tile = rigthTile({i,j}); 
-                //std::cout << i << '/' << j << " " << tile << std::endl;
-                if(tile == FLOOR1 || tile == FLOOR2 || tile == FLOOR3 || tile == FLOOR4 || tile == FLOOR5|| tile == FLOOR6|| tile == FLOOR7|| tile == FLOOR8|| tile == FLOOR9|| tile == FLOOR10|| tile == FLOOR11|| tile == FLOOR12 || tile == STAIR ){ // room or corridor tile
+        for(int i = 0; i < MapSize; ++i)
+        {
+            for (int j = 0; j < MapSize; ++j)
+            {  
+                tile = rigthTile({i,j});
+
+                if(tile == FLOOR1 || tile == FLOOR2 || tile == FLOOR3 || tile == FLOOR4 || tile == FLOOR5|| tile == FLOOR6|| tile == FLOOR7|| tile == FLOOR8|| tile == FLOOR9|| tile == FLOOR10|| tile == FLOOR11|| tile == FLOOR12 || tile == STAIR ) // room or corridor tile
+                {
                     m_SquareMap.setWalkable({i, j}); 
                 }
+
                 m_TileSet.setTile( {i, j}, tile );
             }
             std::cout << "\n";
         }
+    }
+
+    void World::setUnWalkable(gf::Vector2i pos)
+    {
+        m_SquareMap.setCell(pos,gf::Flags<gf::CellProperty>()); // Hacky AF, waiting on JB to push is own function :D
     }
 }

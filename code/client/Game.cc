@@ -248,21 +248,37 @@ namespace redsquare
             {   
                 case PacketType::ReceiveMove:
                 {
-                    if (packet.receiveMove.typeEntity == EntityType::Player)
+                    switch (packet.receiveMove.typeEntity)
                     {
-                        Player* player = getPlayer( packet.receiveMove.entityID );
-                        assert( player != nullptr );
-                        
-                        player->m_Pos[0] = packet.receiveMove.posX;
-                        player->m_Pos[1] = packet.receiveMove.posY;
-                    }
-                    else if (packet.receiveMove.typeEntity == EntityType::Monster)
-                    {
-                        Monster* monster = getMonster( packet.receiveMove.entityID );
-                        assert( monster != nullptr );
-                        
-                        monster->m_Pos[0] = packet.receiveMove.posX;
-                        monster->m_Pos[1] = packet.receiveMove.posY;
+                        case EntityType::Player:
+                        {
+                            Player* player = getPlayer( packet.receiveMove.entityID );
+                            assert( player != nullptr );
+
+                            m_World.m_SquareMap.setWalkable(player->m_Pos);
+					        m_World.m_SquareMap.setTransparent(player->m_Pos);
+                            
+                            player->m_Pos[0] = packet.receiveMove.posX;
+                            player->m_Pos[1] = packet.receiveMove.posY;
+
+                            m_World.setUnWalkable(player->m_Pos);
+                            break;
+                        }
+
+                        case EntityType::Monster:
+                        {
+                            Monster* monster = getMonster( packet.receiveMove.entityID );
+                            assert( monster != nullptr );
+
+                            m_World.m_SquareMap.setWalkable(monster->m_Pos);
+					        m_World.m_SquareMap.setTransparent(monster->m_Pos);
+
+                            monster->m_Pos[0] = packet.receiveMove.posX;
+                            monster->m_Pos[1] = packet.receiveMove.posY;
+
+                            m_World.setUnWalkable(monster->m_Pos);
+                            break;
+                        }
                     }
                     break;
                 }
@@ -273,18 +289,36 @@ namespace redsquare
                     {
                         case EntityType::Player:
                         {
+                            Player* player = getPlayer( packet.entityDisconnected.entityID );
+                            assert( player != nullptr );
+
+                            m_World.m_SquareMap.setWalkable(player->m_Pos);
+					        m_World.m_SquareMap.setTransparent(player->m_Pos);
+
                             m_Players.erase( packet.entityDisconnected.entityID );
                             break;
                         }
 
                         case EntityType::Monster:
                         {
+                            Monster* monster = getMonster( packet.entityDisconnected.entityID );
+                            assert( monster != nullptr );
+
+                            m_World.m_SquareMap.setWalkable(monster->m_Pos);
+					        m_World.m_SquareMap.setTransparent(monster->m_Pos);
+
                             m_Monsters.erase( packet.entityDisconnected.entityID );
                             break;
                         }
 
                         case EntityType::Prop:
                         {
+                            Prop* prop = getProp( packet.entityDisconnected.entityID );
+                            assert( prop != nullptr );
+
+                            m_World.m_SquareMap.setWalkable(prop->m_Pos);
+					        m_World.m_SquareMap.setTransparent(prop->m_Pos);
+
                             m_Props.erase( packet.entityDisconnected.entityID );
                             break;
                         }
@@ -347,6 +381,8 @@ namespace redsquare
                         {
                             auto it = m_Players.insert( std::make_pair( packet.spawnEntity.entityID, Player( packet.spawnEntity.entityID, packet.spawnEntity.typeOfEntity, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) ) ) );
                             assert( it.second );
+
+                            m_World.setUnWalkable(gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY));
                             break;
                         }
 
@@ -354,6 +390,8 @@ namespace redsquare
                         {
                             auto it = m_Monsters.insert( std::make_pair( packet.spawnEntity.entityID, Monster( packet.spawnEntity.entityID, packet.spawnEntity.typeOfEntity, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) ) ) );
                             assert( it.second );
+
+                            m_World.setUnWalkable(gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY));
                             break;
                         }
 
@@ -361,6 +399,8 @@ namespace redsquare
                         {
                             auto it = m_Props.insert( std::make_pair( packet.spawnEntity.entityID, Prop( packet.spawnEntity.entityID, packet.spawnEntity.typeOfEntity, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) ) ) );
                             assert( it.second );
+
+                            m_World.setUnWalkable(gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY));
                             break;
                         }
                     }
@@ -505,6 +545,18 @@ namespace redsquare
             }
 
             ++it;
+        }
+
+        return nullptr;
+    }
+
+    Prop* Game::getProp( gf::Id propID )
+    {
+        auto prop = m_Props.find( propID );
+
+        if ( prop != m_Props.end() )
+        {
+            return &prop->second;
         }
 
         return nullptr;
