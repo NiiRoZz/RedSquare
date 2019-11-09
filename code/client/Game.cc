@@ -336,7 +336,7 @@ namespace redsquare
                         break;
                     }
 
-                    if ( m_TempMoveTarget != gf::Vector2i(0,0) && myPlayer->m_Pos != m_TempMoveTarget && !monsterInRange() )
+                    if ( m_TempMoveTarget != gf::Vector2i(0,0) && myPlayer->m_Pos != m_TempMoveTarget && !monsterInRange() && getPlayer(m_TempMoveTarget) == nullptr && getMonster(m_TempMoveTarget) == nullptr )
                     {
                         m_TempMove.clear();
 
