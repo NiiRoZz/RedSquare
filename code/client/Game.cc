@@ -190,6 +190,7 @@ namespace redsquare
 
             m_AttackX = 0;
             m_AttackY = 0;
+            m_TempMove.clear();
 
             m_ThreadCom.sendPacket( packet );
         }
