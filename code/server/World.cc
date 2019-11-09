@@ -1,4 +1,5 @@
 #include "World.h"
+#include "Game.h"
 
 #include <stdlib.h>
 #include <cstdlib>
@@ -22,8 +23,8 @@ namespace redsquare
 
         /**** GENERATE ****/
         std::vector<gf::Vector4u> TabGrid = grid(SizeGrind); // build grind
-        std::vector<gf::Vector4u> TabRoom = generateFloorV2(numberRoom,SizeGrind,TabGrid); // generate the room
-        TabRoom = buildWall(TabRoom); // build wall around room
+        TabRoom = generateFloorV2(numberRoom,SizeGrind,TabGrid); // generate the room
+        buildWall(TabRoom); // build wall around room
         destroyGrid(); // destroy the grid
 
         road(TabRoom); // build the road
@@ -91,8 +92,6 @@ namespace redsquare
 
         uint posX;
         uint posY;
-
-        std::vector<gf::Vector4u> TabRoom;
 
 
         for(uint room = 0; room < nbRoom ; room++){

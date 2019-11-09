@@ -36,8 +36,8 @@ namespace redsquare
 
         //Class count for random
         EntityClassCount,
-
         Chair,
+        Pot,
     };
 
     enum class Tile: uint8_t

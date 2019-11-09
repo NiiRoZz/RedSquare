@@ -42,6 +42,7 @@ int main( int argc, char **argv )
 
     Game game;
 
+	game.placeProps(5); // palce props on the map
 	game.addNewMonsters(5); // 10 monster TODO
 
 	boost::asio::io_service m_IoService;

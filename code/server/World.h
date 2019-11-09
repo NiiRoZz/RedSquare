@@ -4,6 +4,8 @@
 #include "../common/Packet.h"
 #include <gf/Array2D.h>
 #include <gf/Map.h>
+#include <list>
+#include "Prop.h"
 
 namespace redsquare
 {
@@ -13,6 +15,7 @@ namespace redsquare
         static constexpr uint MapSize = 100; // size of the map in tile
         static constexpr uint TileSize = 16;
         gf::Array2D<Tile> m_World; // first coordinate is for column and the second is for row
+        std::vector<gf::Vector4u> TabRoom; // posX , posY , length, width
         gf::SquareMap m_SquareWorld;
         World();
         static bool isSpawnable(int x,int y);

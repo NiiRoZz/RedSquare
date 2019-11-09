@@ -10,17 +10,6 @@ namespace redsquare
     Game::Game()
     {
         std::cout << "Game::Game" << std::endl;
-
-        //TODO: Remove this when generation of props is done, just an example how to create a prop
-        /*{
-            // Generate a new ID
-            gf::Id id = generateId();
-            std::map<gf::Id, Prop>::iterator itNewProp;
-
-            // Create a new prop
-            std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntityClass::Chair, {1,1}));
-            m_World.setUnWalkable({1,1});
-        }*/
     }
 
     void Game::addNewPlayer(SocketTcp socket)
@@ -122,6 +111,29 @@ namespace redsquare
             // Create a new monster
             std::tie(itNewMonster, std::ignore) = m_Monsters.emplace(id, Monster(id));
             itNewMonster->second.monsterSpawn(m_Monsters,m_World);
+        }
+    }
+
+    void Game::placeProps(int nbProps){
+        int propsInRoom;
+        uint posX, posY;
+
+        for(gf::Vector4u currentRoom : m_World.TabRoom){
+            propsInRoom = rand() % nbProps;
+
+            for(int i = 0; i < propsInRoom ; i++){
+                do{
+                    posX = rand() % currentRoom[2]; // length
+                    posY = rand() % currentRoom[3]; // width
+                }while(  m_World.m_World( { currentRoom[0]+posX, currentRoom[1]+posY }) != Tile::Room && m_World.m_World({ currentRoom[0]+posX, currentRoom[1]+posY }) != Tile::Corridor);
+
+                gf::Id id = generateId();
+                std::map<gf::Id, Prop>::iterator itNewProp;
+
+                // Create a new prop
+                std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntityClass::Chair, {(int)currentRoom[0]+posX,(int)currentRoom[1]+posY}));
+                m_World.setUnWalkable({(int)currentRoom[0]+posX,(int)currentRoom[1]+posY});   
+            }
         }
     }
 

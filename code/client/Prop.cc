@@ -23,7 +23,10 @@ namespace redsquare
                 propTexture.loadFromFile("data/redsquare/img/spirit.png");
                 break;
             }
-
+            case EntityClass::Pot:{
+                propTexture.loadFromFile("data/redsquare/img/spirit.png");
+                break;
+            }
             default:
             {
                 break;

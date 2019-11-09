@@ -38,6 +38,7 @@ namespace redsquare
         void sendPacketToAllPlayers( Packet &packet );
         void sendPacketToVisiblePlayers( Packet &packet, gf::Vector2i pos );
         bool canAttack(Monster &monster, gf::Vector2i targetPos);
+        void placeProps(int nbProps);
 
     private:
         gf::Id generateId() const;
