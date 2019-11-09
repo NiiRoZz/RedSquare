@@ -13,11 +13,11 @@ namespace redsquare
     : m_ThreadCom(hostname, port, m_ComQueue)
     , m_View(view)
     , m_CanPlay( false )
-    , m_dirX(0)
-    , m_dirY(0)
+    , m_MovePlayer({0,0},false)
     , m_AttackX(0)
     , m_AttackY(0)
     , m_PassTurn(false)
+    , m_TempMoveTarget(false)
     {
         nextPosTexture.loadFromFile( "data/redsquare/img/redsquare.png" );
 
@@ -154,8 +154,15 @@ namespace redsquare
             return;
         }
 
+        Player* myPlayer = getPlayer(m_PlayerID);
+
+        if ( myPlayer == nullptr )
+        {
+            return;
+        }
+
         //Player want to move
-        if ( m_dirX != 0 || m_dirY != 0 )
+        if ( m_MovePlayer.first[0] != 0 || m_MovePlayer.first[1] != 0 )
         {
             //don't forget to call m_CanPlay false when sent action
             m_CanPlay = false;
@@ -163,17 +170,39 @@ namespace redsquare
             Packet packet;
             packet.type = PacketType::RequestMove;
             packet.requestMove.playerID = m_PlayerID;
-            packet.requestMove.dirX = m_dirX;
-            packet.requestMove.dirY = m_dirY;
 
             //If it's move with key
-            if (m_dirX == 0 || m_dirY == 0)
+            m_TempMove.clear();
+
+            //used mouse clic
+            if ( m_MovePlayer.second )
             {
                 m_TempMove.clear();
+
+                std::vector<gf::Vector2i> allPos = m_World.m_SquareMap.computeRoute(myPlayer->m_Pos, m_MovePlayer.first, 0.0);
+
+                m_TempMove.insert(m_TempMove.end(), ++(++allPos.begin()), allPos.end());
+
+                packet.requestMove.dirX = (allPos[1] - myPlayer->m_Pos)[0];
+                packet.requestMove.dirY = (allPos[1] - myPlayer->m_Pos)[1];
+
+                if (allPos.size() > 2)
+                {
+                    m_TempMoveTarget = m_MovePlayer.first;
+                }
+                else
+                {
+                    m_TempMoveTarget = {0, 0};
+                }
+            }
+            else
+            {
+                packet.requestMove.dirX = m_MovePlayer.first[0];
+                packet.requestMove.dirY = m_MovePlayer.first[1];
             }
 
-            m_dirX = 0;
-            m_dirY = 0;
+            m_MovePlayer.first = {0,0};
+            m_MovePlayer.second = false;
 
             m_ThreadCom.sendPacket( packet );
         }
@@ -266,18 +295,30 @@ namespace redsquare
 
                 case PacketType::PlayerTurn:
                 {
-                    if ( m_TempMove.size() > 0 && !monsterNear() && !playerNear() )
+                    Player* myPlayer = getPlayer(m_PlayerID);
+
+                    if ( myPlayer == nullptr )
                     {
-                        gf::Vector2i pos = m_TempMove.front();
-                        m_TempMove.erase(m_TempMove.begin());
+                        break;
+                    }
+
+                    if ( m_TempMoveTarget != gf::Vector2i(0,0) && myPlayer->m_Pos != m_TempMoveTarget && !monsterInRange() )
+                    {
+                        m_TempMove.clear();
+
+                        std::vector<gf::Vector2i> allPos = m_World.m_SquareMap.computeRoute(myPlayer->m_Pos, m_TempMoveTarget, 0.0);
+
+                        m_TempMove.insert(m_TempMove.end(), ++(++allPos.begin()), allPos.end());
+                        
+                        gf::Vector2i pos = allPos[1];
 
                         if ( getPlayer(pos) == nullptr && getMonster(pos) == nullptr )
                         {
                             Packet packet;
                             packet.type = PacketType::RequestMove;
                             packet.requestMove.playerID = m_PlayerID;
-                            packet.requestMove.dirX = pos[0];
-                            packet.requestMove.dirY = pos[1];
+                            packet.requestMove.dirX = (pos - myPlayer->m_Pos)[0];
+                            packet.requestMove.dirY = (pos - myPlayer->m_Pos)[1];
 
                             m_ThreadCom.sendPacket( packet );
 
@@ -289,6 +330,7 @@ namespace redsquare
                         }
                     }
 
+                    m_TempMoveTarget = {0, 0};
                     m_TempMove.clear();
                     
                     m_CanPlay = packet.playerTurn.playerTurn;
@@ -376,37 +418,15 @@ namespace redsquare
         }
     }
 
-    void Game::movePlayer( int dirX, int dirY )
+    void Game::movePlayer( int dirX, int dirY, bool mouseClic )
     {
         if ( !m_CanPlay )
         {
             return;
         }
 
-        Player* myPlayer = getPlayer(m_PlayerID);
-
-        if ( myPlayer == nullptr )
-        {
-            return;
-        }
-
-        //used mouse clic
-        if ( dirX != 0 && dirY != 0 )
-        {
-            m_TempMove.clear();
-
-            std::vector<gf::Vector2i> allPos = m_World.m_SquareMap.computeRoute(myPlayer->m_Pos, {dirX, dirY}, 0.0);
-
-            m_TempMove.insert(m_TempMove.end(), ++(++allPos.begin()), allPos.end());
-
-            m_dirX = allPos[1][0];
-            m_dirY = allPos[1][1];
-        }
-        else
-        {
-            m_dirX = dirX;
-            m_dirY = dirY;
-        }
+        m_MovePlayer.first = {dirX, dirY};
+        m_MovePlayer.second = mouseClic;
     }
 
     void Game::attackPos( int posX, int posY )
@@ -489,34 +509,8 @@ namespace redsquare
 
         return nullptr;
     }
-
-    bool Game::playerNear()
-    {
-        Player* myPlayer = getPlayer(m_PlayerID);
-
-        if ( myPlayer == nullptr )
-        {
-            return false;
-        }
-
-        gf::Distance2<int> distFn = gf::manhattanDistance<int, 2>;
-
-        auto it = m_Players.begin();
- 
-        while ( it != m_Players.end() )
-        {
-            if ( (it->first != m_PlayerID) && distFn(myPlayer->m_Pos, it->second.m_Pos) <= 1 )
-            {
-                return true;
-            }
-
-            ++it;
-        }
-
-        return false;
-    }
     
-    bool Game::monsterNear()
+    bool Game::monsterInRange()
     {
         Player* myPlayer = getPlayer(m_PlayerID);
 
@@ -531,7 +525,7 @@ namespace redsquare
  
         while ( it != m_Monsters.end() )
         {
-            if ( distFn(myPlayer->m_Pos, it->second.m_Pos) <= 1 )
+            if ( distFn(myPlayer->m_Pos, it->second.m_Pos) <= myPlayer->m_Range )
             {
                 return true;
             }

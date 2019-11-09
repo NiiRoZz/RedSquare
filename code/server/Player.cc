@@ -67,50 +67,23 @@ namespace redsquare
 
     bool Player::applyMove(int dirX, int dirY, World &world)
     {
-        //used mouse clic
-        if( dirX !=0 && dirY != 0 )
+        int newPosX = m_Pos[0] + dirX;
+        int newPosY = m_Pos[1] + dirY;
+
+        if ( newPosY >= 0 && newPosY < World::MapSize-1 && newPosX >= 0 && newPosX < World::MapSize-1 && world.m_SquareWorld.isWalkable( {newPosX, newPosY} ) )
         {
-            int newPosX = dirX;
-            int newPosY = dirY;
-            
-            if ( newPosY >= 0 && newPosY < World::MapSize-1 && newPosX >= 0 && newPosX < World::MapSize-1 && world.m_SquareWorld.isWalkable( {newPosX, newPosY}))
-            {
-                world.m_SquareWorld.setWalkable(m_Pos);
-                world.m_SquareWorld.setTransparent(m_Pos);
-                m_Pos[1] = newPosY;
-                m_Pos[0] = newPosX;
+            world.m_SquareWorld.setWalkable(m_Pos);
+            world.m_SquareWorld.setTransparent(m_Pos);
+            m_Pos[1] = newPosY;
+            m_Pos[0] = newPosX;
 
+            world.setUnWalkable(m_Pos);
 
-                world.setUnWalkable(m_Pos);
-                
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return true;
         }
-        // used arrow key
         else
         {
-            int newPosX = m_Pos[0] + dirX;
-            int newPosY = m_Pos[1] + dirY;
-
-            if ( newPosY >= 0 && newPosY < World::MapSize-1 && newPosX >= 0 && newPosX < World::MapSize-1 && world.m_SquareWorld.isWalkable( {newPosX, newPosY} ) )
-            {
-                world.m_SquareWorld.setWalkable(m_Pos);
-                world.m_SquareWorld.setTransparent(m_Pos);
-                m_Pos[1] = newPosY;
-                m_Pos[0] = newPosX;
-
-                world.setUnWalkable(m_Pos);
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         return false;

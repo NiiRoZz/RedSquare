@@ -51,8 +51,7 @@ namespace redsquare
         Monster* getMonster( gf::Id monsterID );
         Monster* getMonster( gf::Vector2i pos );
 
-        bool playerNear();
-        bool monsterNear();
+        bool monsterInRange();
 
         void startThreadCom();
 
@@ -60,7 +59,7 @@ namespace redsquare
 
         void receiveWorld();
 
-        void movePlayer( int dirX, int dirY );
+        void movePlayer( int dirX, int dirY, bool mouseClic = false );
 
         void attackPos( int posX, int posY );
 
@@ -81,8 +80,8 @@ namespace redsquare
         gf::Texture nextPosTexture;
 
         //Move of player
-        int m_dirX;
-        int m_dirY;
+        std::pair<gf::Vector2i, bool> m_MovePlayer;
+        gf::Vector2i m_TempMoveTarget;
 
         //Attack of player
         int m_AttackX;

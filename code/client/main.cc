@@ -183,7 +183,7 @@ int main( int argc, char **argv )
                             }
                             else if (myPlayer->canMove(pos, game.m_Players, game.m_Monsters, game.m_Props, game.m_World.m_SquareMap))
                             {
-                                game.movePlayer( pos[0], pos[1] );
+                                game.movePlayer( pos[0], pos[1], true );
                             }
                         }
                     }
