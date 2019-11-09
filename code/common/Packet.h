@@ -36,7 +36,7 @@ namespace redsquare
 
         //Class count for random
         EntityClassCount,
-        Chair,
+        Box,
         Pot,
     };
 

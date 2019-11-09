@@ -13,7 +13,7 @@ namespace redsquare
     public:
         Prop( gf::Id entityID, EntityClass type, gf::Vector2i pos );
 
-        void loadTexture(const EntityClass type = EntityClass::Chair);
+        void loadTexture(const EntityClass type = EntityClass::Box);
 
         virtual void update(gf::Time time) override;
 

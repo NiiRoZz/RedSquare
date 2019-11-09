@@ -18,7 +18,7 @@ namespace redsquare
     {
         switch (type)
         {
-            case EntityClass::Chair:
+            case EntityClass::Box:
             {
                 propTexture.loadFromFile("data/redsquare/img/spirit.png");
                 break;

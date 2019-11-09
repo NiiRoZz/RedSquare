@@ -23,7 +23,11 @@
 #define LEFT 200
 #define RIGHT 200
 
-#define FLOOR 0
+#define FLOOR1 172
+#define FLOOR2 173
+#define FLOOR3 192
+#define FLOOR4 193
+
 #define PILLARTOP 220
 #define PILLARBOTTOM 200
 #define VOID  83
@@ -95,13 +99,21 @@ namespace redsquare
                 return  BOTTOM;
             }
         }else{if ( m_World( tile ) == Tile::Room || m_World( tile ) == Tile::Corridor ){ // room tile
-                /*int randomTile = 0;
-                do{
-                    randomTile =   rand() % 35;
-                }while( randomTile != 11 && randomTile != 12 & randomTile != 13 && randomTile != 14 && randomTile != 21 && randomTile != 22 && randomTile != 23 && randomTile != 24 && randomTile != 31 && randomTile != 32 && randomTile != 33 && randomTile != 34);
-                std::cout << randomTile << std::endl;
-                return randomTile;*/
-                return FLOOR; // TODO
+                int randomTile = 0;
+                randomTile =   rand() % 4;
+
+                if(randomTile == 0){
+                    return FLOOR1;
+                }else if(randomTile == 1){
+                    return FLOOR2;
+                }else if(randomTile == 2){
+                    return FLOOR3;
+                }else if(randomTile == 3){
+                    return FLOOR4;
+                }
+                return FLOOR1;
+
+
             }else if( m_World( tile ) == Tile::Stair){
                 return STAIR;
             }else if ( m_World( tile ) == Tile::Wall ) // wall tile
@@ -174,7 +186,7 @@ namespace redsquare
             for (int j = 0; j < MapSize; ++j){  
                 tile = rigthTile({i,j}); 
                 //std::cout << i << '/' << j << " " << tile << std::endl;
-                if(tile == FLOOR || tile == STAIR ){ // room or corridor tile
+                if(tile == FLOOR1 || tile == FLOOR2 || tile == FLOOR3 ||tile == FLOOR4 || tile == STAIR ){ // room or corridor tile
                     m_SquareMap.setWalkable({i, j}); 
                 }
                 m_TileSet.setTile( {i, j}, tile );

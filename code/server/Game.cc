@@ -125,14 +125,14 @@ namespace redsquare
                 do{
                     posX = rand() % currentRoom[2]; // length
                     posY = rand() % currentRoom[3]; // width
-                }while(  m_World.m_World( { currentRoom[0]+posX, currentRoom[1]+posY }) != Tile::Room && m_World.m_World({ currentRoom[0]+posX, currentRoom[1]+posY }) != Tile::Corridor);
+                }while(  m_World.m_World( { (currentRoom[0]+posX), (currentRoom[1]+posY) }) != Tile::Room && m_World.m_World({ (currentRoom[0]+posX), (currentRoom[1]+posY) }) != Tile::Corridor);
 
                 gf::Id id = generateId();
                 std::map<gf::Id, Prop>::iterator itNewProp;
 
                 // Create a new prop
-                std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntityClass::Chair, {(int)currentRoom[0]+posX,(int)currentRoom[1]+posY}));
-                m_World.setUnWalkable({(int)currentRoom[0]+posX,(int)currentRoom[1]+posY});   
+                std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntityClass::Box, {(int)(currentRoom[0]+posX),(int)(currentRoom[1]+posY)}));
+                m_World.setUnWalkable({(int)(currentRoom[0]+posX),(int)(currentRoom[1]+posY)});   
             }
         }
     }
