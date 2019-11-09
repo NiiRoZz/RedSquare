@@ -87,6 +87,16 @@ namespace redsquare
             ++it3;
         }
 
+        auto it4 = m_Props.begin();
+ 
+        // Iterate over the map using Iterator till end.
+        while (it4 != m_Props.end())
+        {
+            it4->second.render( target, states );
+
+            ++it4;
+        }
+
         /* TODO: enable this, when found why sprite not rendering correctly over tileset
         auto it3 = m_TempMove.begin();
  
@@ -213,14 +223,27 @@ namespace redsquare
 
                 case PacketType::EntityDisconnected:
                 {
-                    if (packet.entityDisconnected.typeEntity == EntityType::Player)
+                    switch (packet.entityDisconnected.typeEntity)
                     {
-                        m_Players.erase( packet.entityDisconnected.entityID );
+                        case EntityType::Player:
+                        {
+                            m_Players.erase( packet.entityDisconnected.entityID );
+                            break;
+                        }
+
+                        case EntityType::Monster:
+                        {
+                            m_Monsters.erase( packet.entityDisconnected.entityID );
+                            break;
+                        }
+
+                        case EntityType::Prop:
+                        {
+                            m_Props.erase( packet.entityDisconnected.entityID );
+                            break;
+                        }
                     }
-                    else if (packet.entityDisconnected.typeEntity == EntityType::Monster)
-                    {
-                        m_Monsters.erase( packet.entityDisconnected.entityID );
-                    }
+
                     break;
                 }
 
@@ -254,15 +277,28 @@ namespace redsquare
 
                 case PacketType::SpawnEntity:
                 {
-                    if ( packet.spawnEntity.typeEntity == EntityType::Player )
+                    switch (packet.spawnEntity.typeEntity)
                     {
-                        auto it = m_Players.insert( std::make_pair( packet.spawnEntity.entityID, Player( packet.spawnEntity.entityID, packet.spawnEntity.typeOfEntity, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) ) ) );
-                        assert( it.second );
-                    }
-                    else if ( packet.spawnEntity.typeEntity == EntityType::Monster )
-                    {
-                        auto it = m_Monsters.insert( std::make_pair( packet.spawnEntity.entityID, Monster( packet.spawnEntity.entityID, packet.spawnEntity.typeOfEntity, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) ) ) );
-                        assert( it.second );
+                        case EntityType::Player:
+                        {
+                            auto it = m_Players.insert( std::make_pair( packet.spawnEntity.entityID, Player( packet.spawnEntity.entityID, packet.spawnEntity.typeOfEntity, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) ) ) );
+                            assert( it.second );
+                            break;
+                        }
+
+                        case EntityType::Monster:
+                        {
+                            auto it = m_Monsters.insert( std::make_pair( packet.spawnEntity.entityID, Monster( packet.spawnEntity.entityID, packet.spawnEntity.typeOfEntity, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) ) ) );
+                            assert( it.second );
+                            break;
+                        }
+
+                        case EntityType::Prop:
+                        {
+                            auto it = m_Props.insert( std::make_pair( packet.spawnEntity.entityID, Prop( packet.spawnEntity.entityID, packet.spawnEntity.typeOfEntity, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) ) ) );
+                            assert( it.second );
+                            break;
+                        }
                     }
                     break;
                 }

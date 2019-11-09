@@ -173,11 +173,11 @@ int main( int argc, char **argv )
                         Player* myPlayer = game.getPlayer(game.m_PlayerID);
                         if ( myPlayer != nullptr && game.m_CanPlay )
                         {
-                            if ( myPlayer->canAttack(pos, game.m_Players, game.m_Monsters) )
+                            if ( myPlayer->canAttack(pos, game.m_Players, game.m_Monsters, game.m_Props) )
                             {
                                 game.attackPos( pos[0], pos[1] );
                             }
-                            else if (myPlayer->canMove(pos, game.m_Players, game.m_Monsters, game.m_World.m_SquareMap))
+                            else if (myPlayer->canMove(pos, game.m_Players, game.m_Monsters, game.m_Props, game.m_World.m_SquareMap))
                             {
                                 game.movePlayer( pos[0], pos[1] );
                             }
@@ -193,11 +193,11 @@ int main( int argc, char **argv )
                     Player* myPlayer = game.getPlayer(game.m_PlayerID);
                     if ( myPlayer != nullptr && game.m_CanPlay )
                     {
-                        if ( myPlayer->canAttack(pos, game.m_Players, game.m_Monsters) )
+                        if ( myPlayer->canAttack(pos, game.m_Players, game.m_Monsters, game.m_Props) )
                         {
                             window.setMouseCursor(attackCursor);
                         }
-                        else if (myPlayer->canMove(pos, game.m_Players, game.m_Monsters, game.m_World.m_SquareMap))
+                        else if (myPlayer->canMove(pos, game.m_Players, game.m_Monsters, game.m_Props, game.m_World.m_SquareMap))
                         {
                             window.setMouseCursor(moveCursor);
                         }

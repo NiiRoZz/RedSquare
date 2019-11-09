@@ -3,6 +3,7 @@
 
 #include "../common/Entity.h"
 #include "Monster.h"
+#include "Prop.h"
 
 #include <gf/Entity.h>
 #include <gf/Texture.h>
@@ -31,8 +32,8 @@ namespace redsquare
 
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
-        bool canAttack( gf::Vector2i targetPos, std::map<gf::Id, Player> &players, std::map<gf::Id, Monster> &monsters );
-        bool canMove( gf::Vector2i targetPos, std::map<gf::Id, Player> &players, std::map<gf::Id, Monster> &monsters, gf::SquareMap &map );
+        bool canAttack( gf::Vector2i targetPos, std::map<gf::Id, Player> &players, std::map<gf::Id, Monster> &monsters, std::map<gf::Id, Prop> &props );
+        bool canMove( gf::Vector2i targetPos, std::map<gf::Id, Player> &players, std::map<gf::Id, Monster> &monsters, std::map<gf::Id, Prop> &props, gf::SquareMap &map );
 
     private:
         gf::Texture playerTexture;

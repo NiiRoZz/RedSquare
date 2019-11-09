@@ -38,7 +38,7 @@ namespace redsquare
         packet.entityCar.m_Level = m_Level;
     }
 
-    void Monster::monsterSpawn(std::map<gf::Id,Monster> &m_Monsters,World &world){ // set to a monster a spawn
+    void Monster::monsterSpawn(std::map<gf::Id,Monster> &m_Monsters, World &world){ // set to a monster a spawn
         int x;
         int y;
 

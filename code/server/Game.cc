@@ -10,6 +10,17 @@ namespace redsquare
     Game::Game()
     {
         std::cout << "Game::Game" << std::endl;
+
+        //TODO: Remove this when generation of props is done, just an example how to create a prop
+        /*{
+            // Generate a new ID
+            gf::Id id = generateId();
+            std::map<gf::Id, Prop>::iterator itNewProp;
+
+            // Create a new prop
+            std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntityClass::Chair, {1,1}));
+            m_World.setUnWalkable({1,1});
+        }*/
     }
 
     void Game::addNewPlayer(SocketTcp socket)
@@ -82,13 +93,28 @@ namespace redsquare
 
             ++it2;
         }
+
+        //fake a move of all props inside the game to make them apparear in the new client
+        auto it3 = m_Props.begin();
+        // Iterate over the map using Iterator till end.
+        while (it3 != m_Props.end())
+        {
+            packet.type = PacketType::SpawnEntity;
+            packet.spawnEntity.entityID = it3->first;
+            packet.spawnEntity.typeEntity = EntityType::Prop;
+            packet.spawnEntity.typeOfEntity = it3->second.m_TypeOfEntity;
+            packet.spawnEntity.posX = it3->second.m_Pos[0];
+            packet.spawnEntity.posY = it3->second.m_Pos[1];
+            itNewPlayer->second.sendPacket( packet );
+
+            ++it3;
+        }
     }
-
-
 
     void Game::addNewMonsters(int nbMonster)
     {
-        for(int i = 0; i< nbMonster ; ++i){   
+        for(int i = 0; i < nbMonster ; ++i)
+        {   
             // Generate a new ID
             gf::Id id = generateId();
             std::map<gf::Id, Monster>::iterator itNewMonster;
@@ -194,8 +220,28 @@ namespace redsquare
 
                             }
                             sendPacketToAllPlayers( sendPacket );
-                            if(player->m_Level != level){
+
+                            if(player->m_Level != level)
+                            {
                                 player->createCarPacket(sendPacket);
+                                sendPacketToAllPlayers( sendPacket );
+                            }
+                        }
+                        else
+                        {
+                            Prop *targetProp = getProp(posTarget);
+
+                            if ( targetProp != nullptr )
+                            {
+                                Packet sendPacket;
+                                sendPacket.type = PacketType::EntityDisconnected;
+                                sendPacket.entityDisconnected.typeEntity = EntityType::Prop;
+                                sendPacket.entityDisconnected.entityID = targetProp->m_EntityID;
+                                m_World.m_SquareWorld.setWalkable(targetProp->m_Pos);
+                                m_World.m_SquareWorld.setTransparent(targetProp->m_Pos);
+
+                                m_Props.erase(targetProp->m_EntityID);
+
                                 sendPacketToAllPlayers( sendPacket );
                             }
                         }
@@ -254,6 +300,24 @@ namespace redsquare
  
         // Iterate over the map using Iterator till end.
         while ( it != m_Monsters.end() )
+        {
+            if (it->second.m_Pos[0] == pos[0] && it->second.m_Pos[1] == pos[1])
+            {
+                return &it->second;
+            }
+
+            ++it;
+        }
+
+        return nullptr;
+    }
+
+    Prop* Game::getProp( gf::Vector2i pos )
+    {
+        auto it = m_Props.begin();
+ 
+        // Iterate over the map using Iterator till end.
+        while ( it != m_Props.end() )
         {
             if (it->second.m_Pos[0] == pos[0] && it->second.m_Pos[1] == pos[1])
             {

@@ -134,7 +134,7 @@ namespace redsquare
         }
     }
 
-    bool Player::canAttack(gf::Vector2i targetPos, std::map<gf::Id, Player> &players, std::map<gf::Id, Monster> &monsters)
+    bool Player::canAttack(gf::Vector2i targetPos, std::map<gf::Id, Player> &players, std::map<gf::Id, Monster> &monsters, std::map<gf::Id, Prop> &props)
     {
         if ( m_Pos == targetPos )
         {
@@ -174,10 +174,22 @@ namespace redsquare
             ++it2;
         }
 
+        auto it3 = props.begin();
+ 
+        while ( it3 != props.end() )
+        {
+            if ( it3->second.m_Pos == targetPos )
+            {
+                return true;
+            }
+
+            ++it3;
+        }
+
         return false;
     }
 
-    bool Player::canMove(gf::Vector2i targetPos, std::map<gf::Id, Player> &players, std::map<gf::Id, Monster> &monsters, gf::SquareMap &map)
+    bool Player::canMove(gf::Vector2i targetPos, std::map<gf::Id, Player> &players, std::map<gf::Id, Monster> &monsters, std::map<gf::Id, Prop> &props, gf::SquareMap &map)
     {
         if ( m_Pos == targetPos )
         {
@@ -206,6 +218,18 @@ namespace redsquare
             }
 
             ++it2;
+        }
+
+        auto it3 = props.begin();
+ 
+        while ( it3 != props.end() )
+        {
+            if ( it3->second.m_Pos == targetPos )
+            {
+                return false;
+            }
+
+            ++it3;
         }
 
         return map.isWalkable(targetPos);

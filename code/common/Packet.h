@@ -22,6 +22,7 @@ namespace redsquare
     {
         Player,
         Monster,
+        Prop,
     };
 
     enum class EntityClass: uint8_t
@@ -32,7 +33,11 @@ namespace redsquare
         // Archer,
         // Rogue,
         // Healer,
+
+        //Class count for random
         EntityClassCount,
+
+        Chair,
     };
 
     enum class Tile: uint8_t

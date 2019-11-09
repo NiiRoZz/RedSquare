@@ -12,6 +12,7 @@
 
 #include "Monster.h"
 #include "Player.h"
+#include "Prop.h"
 #include "ThreadCom.h"
 #include "../common/Packet.h"
 #include "World.h"
@@ -32,6 +33,8 @@ namespace redsquare
 
         //All animatedEntity
         std::map<gf::Id, AnimatedEntity> m_AnimatedEntity;
+        //All props
+        std::map<gf::Id, Prop> m_Props;
 
         //Value if it's his turn and he can play
         bool m_CanPlay;
