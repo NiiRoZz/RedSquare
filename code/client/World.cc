@@ -23,10 +23,24 @@
 #define LEFT 200
 #define RIGHT 200
 
+// gray floor
 #define FLOOR1 172
 #define FLOOR2 173
 #define FLOOR3 192
 #define FLOOR4 193
+
+// pink floor
+#define FLOOR5 174
+#define FLOOR6 175
+#define FLOOR7 194
+#define FLOOR8 195
+
+// brown floor
+#define FLOOR9 176
+#define FLOOR10 177
+#define FLOOR11 196
+#define FLOOR12 197
+
 
 #define PILLARTOP 220
 #define PILLARBOTTOM 200
@@ -100,7 +114,7 @@ namespace redsquare
             }
         }else{if ( m_World( tile ) == Tile::Room || m_World( tile ) == Tile::Corridor ){ // room tile
                 int randomTile = 0;
-                randomTile =   rand() % 4;
+                randomTile =   rand() % 11;
 
                 if(randomTile == 0){
                     return FLOOR1;
@@ -110,6 +124,22 @@ namespace redsquare
                     return FLOOR3;
                 }else if(randomTile == 3){
                     return FLOOR4;
+                }/*else if(randomTile == 4){
+                    return FLOOR5;
+                }else if(randomTile == 5){
+                    return FLOOR6;
+                }else if(randomTile == 6){
+                    return FLOOR7;
+                }else if(randomTile == 7){
+                    return FLOOR8;
+                }*/else if(randomTile == 8){
+                    return FLOOR9;
+                }else if(randomTile == 9){
+                    return FLOOR10;
+                }else if(randomTile == 10){
+                    return FLOOR11;
+                }else if(randomTile == 11){
+                    return FLOOR12;
                 }
                 return FLOOR1;
 
@@ -186,7 +216,7 @@ namespace redsquare
             for (int j = 0; j < MapSize; ++j){  
                 tile = rigthTile({i,j}); 
                 //std::cout << i << '/' << j << " " << tile << std::endl;
-                if(tile == FLOOR1 || tile == FLOOR2 || tile == FLOOR3 ||tile == FLOOR4 || tile == STAIR ){ // room or corridor tile
+                if(tile == FLOOR1 || tile == FLOOR2 || tile == FLOOR3 || tile == FLOOR4 || tile == FLOOR5|| tile == FLOOR6|| tile == FLOOR7|| tile == FLOOR8|| tile == FLOOR9|| tile == FLOOR10|| tile == FLOOR11|| tile == FLOOR12 || tile == STAIR ){ // room or corridor tile
                     m_SquareMap.setWalkable({i, j}); 
                 }
                 m_TileSet.setTile( {i, j}, tile );
