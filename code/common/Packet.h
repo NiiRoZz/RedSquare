@@ -94,6 +94,7 @@ namespace redsquare
         EntityCar,
         PlayerTurn,
         SpawnEntity,
+        PlayerDead,
     };
 
     struct NewPlayer

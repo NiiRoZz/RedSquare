@@ -227,7 +227,7 @@ int main( int argc, char **argv )
             }
         }
 
-        if (closeWindowAction.isActive())
+        if (closeWindowAction.isActive() || game.m_PlayerDead)
         {
             window.close();
         }

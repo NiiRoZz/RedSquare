@@ -39,6 +39,9 @@ namespace redsquare
         //Value if it's his turn and he can play
         bool m_CanPlay;
 
+        //Value to say we can play the game
+        bool m_PlayerDead;
+
         World m_World;
 
         std::vector<gf::Vector2i> m_TempMove;
