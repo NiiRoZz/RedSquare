@@ -464,6 +464,8 @@ namespace redsquare
 
                 case PacketType::NewMap:
                 {
+                    m_TempMove.clear();
+                    m_TempMoveTarget = {0, 0};
                     receiveWorld();
                     startThreadCom();
                     break;

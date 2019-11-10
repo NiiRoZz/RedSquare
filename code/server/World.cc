@@ -28,9 +28,7 @@ namespace redsquare
         m_SquareWorld.reset(gf::Flags<gf::CellProperty>());
         std::fill(m_World.begin(),m_World.end(),Tile::Void);
         TabRoom.clear();
-
-        prettyPrint();
-
+        
         /**** GENERATE ****/
         std::vector<gf::Vector4u> TabGrid = grid(SizeGrind); // build grind
         generateFloorV2(numberRoom,SizeGrind,TabGrid); // generate the room

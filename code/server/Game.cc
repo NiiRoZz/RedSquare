@@ -170,34 +170,31 @@ namespace redsquare
                         {
                             for (auto it = m_Monsters.begin(); it != m_Monsters.end(); ++it)
                             {
-                                gf::Id disconnectedID = it->first;
-
-					            m_Monsters.erase(it--);
-
                                 sendPacket.type = PacketType::EntityDisconnected;
                                 sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
-                                sendPacket.entityDisconnected.entityID = disconnectedID;
+                                sendPacket.entityDisconnected.entityID = it->first;
 
                                 sendPacketToAllPlayers( sendPacket );
                             }
 
                             for (auto it2 = m_Props.begin(); it2 != m_Props.end(); ++it2)
                             {
-                                gf::Id disconnectedID = it2->first;
-
-					            m_Props.erase(it2--);
-
                                 sendPacket.type = PacketType::EntityDisconnected;
                                 sendPacket.entityDisconnected.typeEntity = EntityType::Prop;
-                                sendPacket.entityDisconnected.entityID = disconnectedID;
+                                sendPacket.entityDisconnected.entityID = it2->first;
 
                                 sendPacketToAllPlayers( sendPacket );
                             }
+
+                            m_Monsters.clear();
+                            m_Props.clear();
 
                             sendPacket.type = PacketType::NewMap;
                             sendPacketToAllPlayers( sendPacket );
 
                             m_World.generateWorld();
+                            //TODO: make more monsters
+                            addNewMonsters(5);
 
                             for (auto it3 = m_Players.begin(); it3 != m_Players.end(); ++it3)
                             {
@@ -206,11 +203,49 @@ namespace redsquare
                                 NewPlayer packetNewPlayer( m_World.m_World, it3->first );
                                 it3->second.sendPacket(packetNewPlayer);
 
+                                //fake a move of all monsters inside the game to make them apparear in the new client
+                                auto itMonster = m_Monsters.begin();
+                                // Iterate over the map using Iterator till end.
+                                while (itMonster != m_Monsters.end())
+                                {
+                                    packet.type = PacketType::SpawnEntity;
+                                    packet.spawnEntity.entityID = itMonster->first;
+                                    packet.spawnEntity.typeEntity = EntityType::Monster;
+                                    packet.spawnEntity.typeOfEntity = itMonster->second.m_TypeOfEntity;
+                                    packet.spawnEntity.posX = itMonster->second.m_Pos[0];
+                                    packet.spawnEntity.posY = itMonster->second.m_Pos[1];
+                                    it3->second.sendPacket( packet );
+
+                                    itMonster->second.createCarPacket(packet);
+                                    it3->second.sendPacket( packet );
+
+                                    ++itMonster;
+                                }
+
+                                //fake a move of all props inside the game to make them apparear in the new client
+                                auto itProp = m_Props.begin();
+                                // Iterate over the map using Iterator till end.
+                                while (itProp != m_Props.end())
+                                {
+                                    packet.type = PacketType::SpawnEntity;
+                                    packet.spawnEntity.entityID = itProp->first;
+                                    packet.spawnEntity.typeEntity = EntityType::Prop;
+                                    packet.spawnEntity.typeOfEntity = itProp->second.m_TypeOfEntity;
+                                    packet.spawnEntity.posX = itProp->second.m_Pos[0];
+                                    packet.spawnEntity.posY = itProp->second.m_Pos[1];
+                                    it3->second.sendPacket( packet );
+
+                                    ++itProp;
+                                }
+                            }
+
+                            for (auto it4 = m_Players.begin(); it4 != m_Players.end(); ++it4)
+                            {
                                 sendPacket.type = PacketType::ReceiveMove;
-                                sendPacket.receiveMove.entityID = it3->first;
+                                sendPacket.receiveMove.entityID = it4->first;
                                 sendPacket.receiveMove.typeEntity = EntityType::Player;
-                                sendPacket.receiveMove.posX = it3->second.m_Pos[0];
-                                sendPacket.receiveMove.posY = it3->second.m_Pos[1];
+                                sendPacket.receiveMove.posX = it4->second.m_Pos[0];
+                                sendPacket.receiveMove.posY = it4->second.m_Pos[1];
 
                                 sendPacketToAllPlayers( sendPacket );
                             }

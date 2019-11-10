@@ -81,7 +81,7 @@ int main( int argc, char **argv )
 				{
 					gf::Id disconnectedID = it->first;
 
-					game.m_Players.erase(it--);
+					game.m_Players.erase(it++);
 
 					Packet sendPacket;
 					sendPacket.type = PacketType::EntityDisconnected;
@@ -101,7 +101,7 @@ int main( int argc, char **argv )
 				{
 					gf::Id disconnectedID = it->first;
 
-					game.m_Players.erase(it--);
+					game.m_Players.erase(it++);
 
 					Packet sendPacket;
 					sendPacket.type = PacketType::EntityDisconnected;
@@ -155,7 +155,7 @@ int main( int argc, char **argv )
 
 						gf::Id disconnectedID = it2->first;
 
-						game.m_Players.erase(it2--);
+						game.m_Players.erase(it2++);
 
 						sendPacket.type = PacketType::EntityDisconnected;
 						sendPacket.entityDisconnected.typeEntity = EntityType::Player;
