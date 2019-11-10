@@ -226,7 +226,6 @@ namespace redsquare
 
                 m_TileSet.setTile( {i, j}, tile );
             }
-            std::cout << "\n";
         }
     }
 

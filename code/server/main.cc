@@ -90,7 +90,7 @@ int main( int argc, char **argv )
 
 					game.sendPacketToAllPlayers( sendPacket );
 
-					continue;
+					break;
 				}
 
 				//2: wait until his reply
@@ -110,12 +110,13 @@ int main( int argc, char **argv )
 
 					game.sendPacketToAllPlayers( sendPacket );
 
-					continue;
+					break;
 				}
 
 				game.processPackets( packet );
 			}
 		}
+
 		//std::cout << "---------------------------------TURN ----------------------------------------------" << std::endl;
 		for (auto it = game.m_Monsters.begin(); it != game.m_Monsters.end(); ++it)
 		{
