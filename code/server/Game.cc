@@ -9,7 +9,7 @@ namespace redsquare
 {
     Game::Game()
     {
-        std::cout << "Game::Game" << std::endl;
+        m_World.generateWorld();
     }
 
     void Game::addNewPlayer(SocketTcp socket)
@@ -162,15 +162,69 @@ namespace redsquare
                         //TODO: TEMP
                         player->m_PointInRound -= player->m_PointInRound;
                         player->m_MovedInRound = true;
-                        
-                        Packet sendPacket;
-                        sendPacket.type = PacketType::ReceiveMove;
-                        sendPacket.receiveMove.entityID = packet.requestMove.playerID;
-                        sendPacket.receiveMove.typeEntity = EntityType::Player;
-                        sendPacket.receiveMove.posX = player->m_Pos[0];
-                        sendPacket.receiveMove.posY = player->m_Pos[1];
 
-                        sendPacketToAllPlayers( sendPacket );
+                        Packet sendPacket;
+                        
+                        //If player is on the stair, regenerate the map
+                        if (player->m_Pos == m_World.m_StairPosition)
+                        {
+                            for (auto it = m_Monsters.begin(); it != m_Monsters.end(); ++it)
+                            {
+                                gf::Id disconnectedID = it->first;
+
+					            m_Monsters.erase(it--);
+
+                                sendPacket.type = PacketType::EntityDisconnected;
+                                sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
+                                sendPacket.entityDisconnected.entityID = disconnectedID;
+
+                                sendPacketToAllPlayers( sendPacket );
+                            }
+
+                            for (auto it2 = m_Props.begin(); it2 != m_Props.end(); ++it2)
+                            {
+                                gf::Id disconnectedID = it2->first;
+
+					            m_Props.erase(it2--);
+
+                                sendPacket.type = PacketType::EntityDisconnected;
+                                sendPacket.entityDisconnected.typeEntity = EntityType::Prop;
+                                sendPacket.entityDisconnected.entityID = disconnectedID;
+
+                                sendPacketToAllPlayers( sendPacket );
+                            }
+
+                            sendPacket.type = PacketType::NewMap;
+                            sendPacketToAllPlayers( sendPacket );
+
+                            m_World.generateWorld();
+
+                            for (auto it3 = m_Players.begin(); it3 != m_Players.end(); ++it3)
+                            {
+                                it3->second.playerSpawn(m_Players, m_World);
+
+                                NewPlayer packetNewPlayer( m_World.m_World, it3->first );
+                                it3->second.sendPacket(packetNewPlayer);
+
+                                sendPacket.type = PacketType::ReceiveMove;
+                                sendPacket.receiveMove.entityID = it3->first;
+                                sendPacket.receiveMove.typeEntity = EntityType::Player;
+                                sendPacket.receiveMove.posX = it3->second.m_Pos[0];
+                                sendPacket.receiveMove.posY = it3->second.m_Pos[1];
+
+                                sendPacketToAllPlayers( sendPacket );
+                            }
+                        }
+                        else
+                        {
+                            sendPacket.type = PacketType::ReceiveMove;
+                            sendPacket.receiveMove.entityID = packet.requestMove.playerID;
+                            sendPacket.receiveMove.typeEntity = EntityType::Player;
+                            sendPacket.receiveMove.posX = player->m_Pos[0];
+                            sendPacket.receiveMove.posY = player->m_Pos[1];
+
+                            sendPacketToAllPlayers( sendPacket );
+                        }
                     }
                 }
                 break;

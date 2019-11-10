@@ -461,6 +461,13 @@ namespace redsquare
                     m_PlayerDead = true;
                     break;
                 }
+
+                case PacketType::NewMap:
+                {
+                    receiveWorld();
+                    startThreadCom();
+                    break;
+                }
             }
         }
     }

@@ -95,6 +95,7 @@ namespace redsquare
         PlayerTurn,
         SpawnEntity,
         PlayerDead,
+        NewMap,
     };
 
     struct NewPlayer

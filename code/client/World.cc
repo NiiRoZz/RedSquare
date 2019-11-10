@@ -211,6 +211,7 @@ namespace redsquare
     void World::generateWorld( gf::Array2D<Tile> world )
     {
         m_World = std::move(world);
+        m_SquareMap.reset(gf::Flags<gf::CellProperty>());
         int tile;
 
         for(int i = 0; i < MapSize; ++i)
