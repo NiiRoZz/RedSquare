@@ -1,6 +1,9 @@
 #include "Player.h"
 #include <iostream>
 
+#define RATIO 1.1
+#define LEVELSPELL 1
+
 namespace redsquare
 {
     Player::Player(SocketTcp socket, gf::Id playerID, const EntityClass type)
@@ -183,5 +186,139 @@ namespace redsquare
                 levelUp();
             }
         }
+    }
+
+    void Player::BasicAttack(ServerEntity *target){
+        target->m_LifePoint -= (m_AttackPoint - target->m_DefensePoint);
+    }
+
+    void Player::Fireball(ServerEntity *target){
+        target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint);
+        // TODO burn state
+    }
+
+    void Player::ArmorUp(){
+        m_DefensePoint += 2; // TODO update ration by lvl of source
+    }
+
+
+    void Player::DoubleStrike(ServerEntity *target){
+        target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint); // TODO update ration by lvl of source or lvl of spell
+        target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint); // TODO update ration by lvl of source or lvl of spell
+    } 
+
+    void Player::Heal(){
+        m_LifePoint += 5; // TODO update ration by lvl of spell
+    }
+    void Player::Assasinate(ServerEntity *target){
+        int range = 100 / LEVELSPELL;
+        if( rand() % range == 1){
+            target->m_LifePoint = 0;
+        }else{
+            target->m_LifePoint -= 1;
+        }
+    }
+
+    void Player::DamageUp(){
+        m_AttackPoint += 5;
+    }
+
+
+    void Player::Protection(ServerEntity *target){
+        target->m_DefensePoint += 5; 
+    }
+
+    void Player::Revenge(ServerEntity *target){
+        target->m_LifePoint -= (m_MaxLifePoint - m_LifePoint) / 5 ;
+    }
+
+    void Player::Lacerate(ServerEntity *target){
+        target->m_LifePoint -= (target->m_MaxLifePoint - target->m_LifePoint) / 5 ;
+    }
+
+    void Player::Incinerate(ServerEntity *target){
+        target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint);
+        // TODO burn state
+    }
+
+    void Player::Devastate(ServerEntity *target, int zone){
+        // TODO get all foes in an area and attack them
+    }
+
+
+    void Player::Massacre(ServerEntity *target){
+        target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint);
+        // TODO bleed status
+    }
+
+
+    void Player::Impact(ServerEntity *target,gf::SquareMap m_SquareWorld){
+    // dash attack
+        gf::Vector2i start = m_Pos;
+        gf::Vector2i end = target->m_Pos;
+
+        target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint);
+        std::vector<gf::Vector2i> dash = m_SquareWorld.computeRoute(start, end, 0.0); // first set of tile for the corridor
+
+        if(dash.size() > 1){ // techniccaly we will check if the field of vision is clear from the source to target so there wont be anyone on the path 
+            m_Pos = dash[1]; // TODO check if correct
+        }
+    }
+
+    void Player::LightningStrike(ServerEntity *target, int zone){
+        // TODO get all foes in an area and attack them
+    }
+
+
+    void Player::Scorch(ServerEntity *target){
+        target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint);
+        // TODO draw if bleed
+    }
+
+    void Player::Berserk(){
+        m_AttackPoint += 5;
+        m_DefensePoint -= 5;
+    }
+
+    void Player::Cleanse(){
+        // TODO cleanse
+    }
+
+    void Player::Mirror(){
+        // TODO Mirror
+    }
+
+    void Player::Stun(ServerEntity *target){
+        // TODO stun for x turn
+    }
+
+
+    void Player::Warp(gf::Vector2i dash){
+        m_Pos = dash;
+    }
+
+    void Reincarnate(ServerEntity *target){
+        // TODO kick
+    }
+
+    void Player::Shoot(ServerEntity *target){
+        target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint);
+    }
+
+    void Player::Backstab(ServerEntity *target){
+        target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint);
+    }
+
+
+    void Player::Energize(){
+        // same as Damage uup but with bigger bonuse for a limited time
+    }
+
+    void Player::Torpedo(ServerEntity *target){
+        target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint);
+    }
+
+    void Player::SoulLink(ServerEntity *target){
+        // TODO
     }
 }

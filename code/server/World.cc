@@ -224,7 +224,7 @@ namespace redsquare
                 }       
             }
             cpt++;
-        }while(cpt != TabRoom.size()*2); // dummy ways to be sure that no room is isolated.   implemtation can be better with graphe algorithm
+        }while(cpt != TabRoom.size()*3); // dummy ways to be sure that no room is isolated.   implemtation can be better with graphe algorithm
     }
 
     void World::buildWallCorridor(){ // put wall where there should be a wall

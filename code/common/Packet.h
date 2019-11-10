@@ -27,17 +27,23 @@ namespace redsquare
 
     enum class EntityClass: uint8_t
     {
+        /* CLASSES */
         Magus,
         Warrior,
         // Paladin,
         // Archer,
         // Rogue,
         // Healer,
+        /* CLASSES */
+
 
         //Class count for random
         EntityClassCount,
+
+        /* PROP */
         Box,
         Pot,
+        /* PROP */
     };
 
     enum class Tile: uint8_t
@@ -51,7 +57,7 @@ namespace redsquare
         Test,
     };
 
-    enum class Spell: uint8_t
+    enum class SpellType: uint8_t
     {
         BasicAttack, // basic attack ------- ALL
         FireBall, // randed attack that can burn foes ------- MAGUS
@@ -60,27 +66,27 @@ namespace redsquare
         Heal, // heal a foes ------- PRIEST
         Assasinate, // can one shot a foes  with high miss rate ------- ROGUE
         DamageUp, // gain a bonus of attack for x turns ------- WARRIOR/ROGUE
-        Protection, 
-        Revenge, // deal damage to foes
-        Lacerate,
-        Incinerate,
-        Devastate,
-        Massacre,
-        Impact,
-        LightningStrike,
-        Scorch,
-        Chaos,
-        Berserk,
-        Cleanse,
-        Mirror,
-        Torpedo,
-        Stun,
-        Warp,
-        Reincarnate,
-        Shoot,
-        Backstab,
-        Energize,
-        SoulLink,
+        Protection, // protect an ally
+        Revenge, // deal damage to foes based on missing health of source
+        Lacerate, // deal damage to foes based on missing health of targer
+        Incinerate, // deal damage to foes and can burn ennemy
+        Devastate, // AOE dmg
+        Massacre, // bleed dmg
+        Impact, // dash attack ?
+        LightningStrike, // AOE dmg
+        Scorch, // dmg + bleed
+        Chaos, // AOE dmg
+        Berserk, // gain attack, loose defence
+        Cleanse, // purge all status effect
+        Mirror, // deal a percentage of damage receice to attacker
+        Torpedo, // 
+        Stun, // stun ennemy for x turns
+        Warp, // dash 
+        Reincarnate, // 
+        Shoot, // long attack range
+        Backstab, // deal damage to foes : x2 if behind foes
+        Energize, // next attack deal more damage
+        SoulLink, // take damage that ally can receive
     };
 
     enum class PacketType : uint16_t

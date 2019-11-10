@@ -49,6 +49,34 @@ namespace redsquare
 
     private:
         SocketTcp m_Socket;
+        void BasicAttack(ServerEntity *target);
+        void Fireball(ServerEntity *target);
+        void ArmorUp();
+        void DoubleStrike(ServerEntity *target);
+        void Heal();
+        void Assasinate(ServerEntity *target);
+        void DamageUp();
+        void Protection(ServerEntity *target);
+        void Revenge(ServerEntity *target);
+        void Lacerate(ServerEntity *target);
+        void Incinerate(ServerEntity *target);
+        void Devastate(ServerEntity *target, int zone);
+        void Massacre(ServerEntity *target);
+        void Impact(ServerEntity *target,gf::SquareMap m_SquareWorld);
+        void LightningStrike(ServerEntity *target, int zone);
+        void Scorch(ServerEntity *target);
+        void Berserk();
+        void Cleanse();
+        void Mirror();
+        void Stun(ServerEntity *target);
+        void Warp(gf::Vector2i dash);
+        void Reincarnate(ServerEntity *target);
+        void Shoot(ServerEntity *target);
+        void Backstab(ServerEntity *target);
+        void Energize();
+        void Torpedo(ServerEntity *target);
+        void SoulLink(ServerEntity *target);
+
     };
 }
 
