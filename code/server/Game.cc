@@ -185,72 +185,52 @@ namespace redsquare
 
                     ServerEntity *targetServerEntity;
                 
-                    Player *targetPlayer = getPlayer(posTarget);
-                    targetServerEntity = dynamic_cast<ServerEntity*>(targetPlayer);
-                    if ( targetPlayer != nullptr && targetServerEntity != nullptr )
+                    Monster *targetMonster = getMonster(posTarget);
+                    targetServerEntity = dynamic_cast<ServerEntity*>(targetMonster);
+                    if ( targetMonster != nullptr && targetServerEntity != nullptr )
                     {
                         int level = player->m_Level;
                         player->attack(targetServerEntity);
 
                         Packet sendPacket;
-                        targetPlayer->createCarPacket(sendPacket);
+                        if ( targetMonster->m_LifePoint > 0 )
+                        {
+                            targetMonster->createCarPacket(sendPacket);
+                        }
+                        else
+                        {   
+                            sendPacket.type = PacketType::EntityDisconnected;
+                            sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
+                            sendPacket.entityDisconnected.entityID = targetMonster->m_EntityID;
+                            m_World.m_SquareWorld.setWalkable(targetMonster->m_Pos);
+                            m_World.m_SquareWorld.setTransparent(targetMonster->m_Pos);
+                            m_Monsters.erase(targetMonster->m_EntityID);
 
+                        }
                         sendPacketToAllPlayers( sendPacket );
 
-                        if(player->m_Level != level){
+                        if(player->m_Level != level)
+                        {
                             player->createCarPacket(sendPacket);
                             sendPacketToAllPlayers( sendPacket );
                         }
                     }
                     else
                     {
-                        Monster *targetMonster = getMonster(posTarget);
-                        targetServerEntity = dynamic_cast<ServerEntity*>(targetMonster);
-                        if ( targetMonster != nullptr && targetServerEntity != nullptr )
-                        {
-                            int level = player->m_Level;
-                            player->attack(targetServerEntity);
+                        Prop *targetProp = getProp(posTarget);
 
+                        if ( targetProp != nullptr )
+                        {
                             Packet sendPacket;
-                            if ( targetMonster->m_LifePoint > 0 )
-                            {
-                                targetMonster->createCarPacket(sendPacket);
-                            }
-                            else
-                            {   
-                                sendPacket.type = PacketType::EntityDisconnected;
-                                sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
-                                sendPacket.entityDisconnected.entityID = targetMonster->m_EntityID;
-                                m_World.m_SquareWorld.setWalkable(targetMonster->m_Pos);
-                                m_World.m_SquareWorld.setTransparent(targetMonster->m_Pos);
-                                m_Monsters.erase(targetMonster->m_EntityID);
+                            sendPacket.type = PacketType::EntityDisconnected;
+                            sendPacket.entityDisconnected.typeEntity = EntityType::Prop;
+                            sendPacket.entityDisconnected.entityID = targetProp->m_EntityID;
+                            m_World.m_SquareWorld.setWalkable(targetProp->m_Pos);
+                            m_World.m_SquareWorld.setTransparent(targetProp->m_Pos);
 
-                            }
+                            m_Props.erase(targetProp->m_EntityID);
+
                             sendPacketToAllPlayers( sendPacket );
-
-                            if(player->m_Level != level)
-                            {
-                                player->createCarPacket(sendPacket);
-                                sendPacketToAllPlayers( sendPacket );
-                            }
-                        }
-                        else
-                        {
-                            Prop *targetProp = getProp(posTarget);
-
-                            if ( targetProp != nullptr )
-                            {
-                                Packet sendPacket;
-                                sendPacket.type = PacketType::EntityDisconnected;
-                                sendPacket.entityDisconnected.typeEntity = EntityType::Prop;
-                                sendPacket.entityDisconnected.entityID = targetProp->m_EntityID;
-                                m_World.m_SquareWorld.setWalkable(targetProp->m_Pos);
-                                m_World.m_SquareWorld.setTransparent(targetProp->m_Pos);
-
-                                m_Props.erase(targetProp->m_EntityID);
-
-                                sendPacketToAllPlayers( sendPacket );
-                            }
                         }
                     }
                 }
