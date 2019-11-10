@@ -12,6 +12,7 @@ namespace redsquare
     {
         switch (m_TypeOfEntity){
         case EntityClass::Magus : // ------------------- Magus -------------------
+            m_Class = EntityClass::Magus;
             m_LifePoint = 100;
             m_ManaPoint = 20;
 
@@ -25,9 +26,13 @@ namespace redsquare
             m_MaxDefensePoint = 0;
 
             m_Range = 2;
+
+            m_SpellTab.push_back(SpellType::BasicAttack);
+            m_SpellTab.push_back(SpellType::FireBall);
             break;
 
         case EntityClass::Warrior : // ------------------- Warrior -------------------
+            m_Class = EntityClass::Warrior;
             m_LifePoint = 150;
             m_ManaPoint = 5;
 
@@ -41,6 +46,9 @@ namespace redsquare
             m_MaxDefensePoint = 0;
 
             m_Range = 1;
+
+            m_SpellTab.push_back(SpellType::BasicAttack);
+            m_SpellTab.push_back(SpellType::Berserk);
             break;
         
         default:
@@ -112,6 +120,13 @@ namespace redsquare
         m_MaxXP += 100;
 
         m_Level++;
+        if(m_Level == 5){ // adding spell when level is 5
+            if(m_Class == EntityClass::Warrior){ // TODO for all class and with more level or maybe give choice to player
+                m_SpellTab.push_back(SpellType::Revenge);
+            }else if(m_Class == EntityClass::Magus){
+                m_SpellTab.push_back(SpellType::LightningStrike);
+            }
+        }
     }
 
     void Player::createCarPacket(Packet &packet) // create the packet of the caracteristic who will be send to player

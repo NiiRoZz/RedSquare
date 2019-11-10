@@ -5,6 +5,7 @@
 #include "ServerEntity.h"
 #include "World.h"
 #include "Monster.h"
+#include "../common/Packet.h"
 
 #include <gf/Queue.h>
 #include <gf/Id.h>
@@ -22,6 +23,8 @@ namespace redsquare
         int m_XP;
         int m_MaxXP;
         /* Characteristic*/
+        EntityClass m_Class;
+        std::vector<SpellType> m_SpellTab;
 
         uint8_t m_PointInRound;
         bool m_MovedInRound;
