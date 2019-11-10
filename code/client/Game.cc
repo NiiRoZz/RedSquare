@@ -18,6 +18,7 @@ namespace redsquare
     , m_AttackY(0)
     , m_PassTurn(false)
     , m_TempMoveTarget(false)
+    , m_PlayerDead(false)
     {
         nextPosTexture.loadFromFile( "data/redsquare/img/redsquare.png" );
 
@@ -452,6 +453,12 @@ namespace redsquare
                         monster->m_Level = packet.entityCar.m_Level;
                     }
                     
+                    break;
+                }
+
+                case PacketType::PlayerDead:
+                {
+                    m_PlayerDead = true;
                     break;
                 }
             }
