@@ -8,6 +8,7 @@
 namespace redsquare
 {
     Game::Game()
+    : m_PlayerSpawned(0)
     {
         m_World.generateWorld();
     }
@@ -25,7 +26,7 @@ namespace redsquare
 
         // Create a new player
         std::tie(itNewPlayer, std::ignore) = m_Players.emplace(id, Player(std::move(socket), id, packet.playerInfoConnection.entityClass));
-        itNewPlayer->second.playerSpawn(m_Players,m_World);
+        itNewPlayer->second.playerSpawn(m_World,++m_PlayerSpawned);
 
         NewPlayer packetNewPlayer( m_World.m_World, id );
         itNewPlayer->second.sendPacket(packetNewPlayer);
@@ -195,10 +196,11 @@ namespace redsquare
                             m_World.generateWorld();
                             //TODO: make more monsters
                             addNewMonsters(5);
+                            m_PlayerSpawned = 0;
 
                             for (auto it3 = m_Players.begin(); it3 != m_Players.end(); ++it3)
                             {
-                                it3->second.playerSpawn(m_Players, m_World);
+                                it3->second.playerSpawn(m_World,++m_PlayerSpawned);
 
                                 NewPlayer packetNewPlayer( m_World.m_World, it3->first );
                                 it3->second.sendPacket(packetNewPlayer);

@@ -117,10 +117,10 @@ namespace redsquare
         m_DefensePoint += 2;
 
         m_XP = 0;
-        m_MaxXP += 100;
+        m_MaxXP += 20;
 
         m_Level++;
-        if(m_Level == 5){ // adding spell when level is 5
+        if(m_Level == 2){ // adding spell when level is 2
             if(m_Class == EntityClass::Warrior){ // TODO for all class and with more level or maybe give choice to player
                 m_SpellTab.push_back(SpellType::Revenge);
             }else if(m_Class == EntityClass::Magus){
@@ -156,7 +156,7 @@ namespace redsquare
     }
 
     void Player::playerSpawn(std::map<gf::Id,Player> &m_Players,World &world){ // set spawn for a player 
-        switch (m_Players.size())
+        switch (m_Players.size()) // TODO GLOBAL VARIABLE
         {
         case 1:
             m_Pos = {(world.m_Spawn[0]-1),(world.m_Spawn[1]-1)};// the first player to connect to the game spawn on this case

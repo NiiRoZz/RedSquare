@@ -1,6 +1,7 @@
 #include "ThreadCom.h"
 
 #include <iostream>
+#include <thread>
 
 namespace redsquare 
 {

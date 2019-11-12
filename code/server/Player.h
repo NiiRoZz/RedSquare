@@ -48,7 +48,7 @@ namespace redsquare
         
         void levelUp();
 
-        void playerSpawn(std::map<gf::Id,Player> &m_Players,World &world);
+        void playerSpawn(World &world, int playerSpawned);
 
     private:
         SocketTcp m_Socket;
