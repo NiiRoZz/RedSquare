@@ -6,6 +6,9 @@ project(RedSquare
 find_package(gf REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system filesystem)
 
+set(REDSQUARE_DATA_DIR "${CMAKE_INSTALL_PREFIX}/share/games/redsquare")
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/code/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h @ONLY)
+
 add_executable(RedSquare
   code/client/main.cc
   code/client/Player.cc
@@ -18,6 +21,7 @@ add_executable(RedSquare
   code/client/Prop.cc
   code/common/Sockets.cc
   code/common/Entity.cc
+  code/common/Singletons.cc
 )
 
 target_link_libraries(RedSquare
@@ -62,4 +66,9 @@ target_include_directories(RedSquare-Server
 install(
   TARGETS RedSquare-Server
   RUNTIME DESTINATION games
+)
+
+install(
+  DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/data/redsquare"
+  DESTINATION "${CMAKE_INSTALL_PREFIX}/share/games"
 )

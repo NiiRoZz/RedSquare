@@ -27,7 +27,9 @@
 #include "World.h"
 #include "Game.h"
 #include "Chat.h"
+#include "../common/Singletons.h"
 #include "../common/Packet.h"
+#include "../../config.h"
 #include <gf/TileLayer.h>
 
 
@@ -56,6 +58,10 @@ int main( int argc, char **argv )
     fontChat.loadFromFile("data/redsquare/font/arial.ttf");
     gf::UI uiChat(fontChat);
     Chat chat;
+    gf::SingletonStorage<gf::ResourceManager> storageForResourceManager(redsquare::gResourceManager);
+
+    // setup resource directories
+    redsquare::gResourceManager().addSearchDir(REDSQUARE_DATA_DIR);
     
     // views
     gf::ViewContainer views;
