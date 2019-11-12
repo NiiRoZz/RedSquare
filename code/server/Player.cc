@@ -155,8 +155,8 @@ namespace redsquare
         packet.entityCar.m_Level = m_Level;
     }
 
-    void Player::playerSpawn(std::map<gf::Id,Player> &m_Players,World &world){ // set spawn for a player 
-        switch (m_Players.size()) // TODO GLOBAL VARIABLE
+    void Player::playerSpawn(World &world, int playerSpawned){ // set spawn for a player 
+        switch (playerSpawned)
         {
         case 1:
             m_Pos = {(world.m_Spawn[0]-1),(world.m_Spawn[1]-1)};// the first player to connect to the game spawn on this case
