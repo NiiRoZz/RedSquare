@@ -24,9 +24,9 @@ namespace redsquare
         /* Characteristic*/
         
         Player( gf::Id entityID );
-        Player( gf::Id entityID, EntityClass type, gf::Vector2i pos );
+        Player( gf::Id entityID, EntitySubType type, gf::Vector2i pos );
 
-        void loadTexture(const EntityClass type = EntityClass::Magus);
+        void loadTexture(const EntitySubType type = EntitySubType::Magus);
 
         virtual void update(gf::Time time) override;
 
@@ -37,7 +37,7 @@ namespace redsquare
 
     private:
         gf::Texture playerTexture;
-        gf::Font m_Font;
+        gf::Font &m_Font;
 
     };
 }

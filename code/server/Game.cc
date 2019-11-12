@@ -25,7 +25,7 @@ namespace redsquare
         socket.receive(packet);
 
         // Create a new player
-        std::tie(itNewPlayer, std::ignore) = m_Players.emplace(id, Player(std::move(socket), id, packet.playerInfoConnection.entityClass));
+        std::tie(itNewPlayer, std::ignore) = m_Players.emplace(id, Player(std::move(socket), id, packet.playerInfoConnection.entitySubType));
         itNewPlayer->second.playerSpawn(m_World,++m_PlayerSpawned);
 
         NewPlayer packetNewPlayer( m_World.m_World, id );
@@ -127,7 +127,7 @@ namespace redsquare
                 std::map<gf::Id, Prop>::iterator itNewProp;
 
                 // Create a new monster
-                std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntityClass::Box));
+                std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Box));
                 itNewProp->second.spawnProps(m_World,currentRoom);
             }
         }

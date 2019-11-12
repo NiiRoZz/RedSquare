@@ -9,7 +9,7 @@ namespace redsquare
     class Prop: public Entity
     {
     public: 
-        Prop(gf::Id entityID, EntityClass type);
+        Prop(gf::Id entityID, EntitySubType type);
         void spawnProps( World &world,gf::Vector4i currentRoom);
     };
 

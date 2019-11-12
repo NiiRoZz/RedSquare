@@ -3,7 +3,7 @@
 namespace redsquare
 {
     Monster::Monster(gf::Id entityID)
-    : ServerEntity(entityID,static_cast<EntityClass>(rand() % static_cast<int>(EntityClass::EntityClassCount)))
+    : ServerEntity(entityID,static_cast<EntitySubType>(rand() % static_cast<int>(EntitySubType::EntityClassCount)))
     {
         m_LifePoint = 100;
         m_MaxLifePoint = 100;

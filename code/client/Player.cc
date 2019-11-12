@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "World.h"
+#include "../common/Singletons.h"
 
 #include <gf/Shapes.h>
 #include <gf/Sprite.h>
@@ -11,19 +12,19 @@
 namespace redsquare
 {
     Player::Player( gf::Id entityID )
-    : redsquare::Entity(entityID,static_cast<EntityClass>(rand() % static_cast<int>(EntityClass::EntityClassCount)))
+    : redsquare::Entity(entityID,static_cast<EntitySubType>(rand() % static_cast<int>(EntitySubType::EntityClassCount)))
+    , m_Font(gResourceManager().getFont("font/arial.ttf"))
     {
         m_Pos = gf::Vector2i( 0, 0 );
         loadTexture();
     }
 
-    Player::Player( gf::Id entityID, EntityClass type, gf::Vector2i pos )
+    Player::Player( gf::Id entityID, EntitySubType type, gf::Vector2i pos )
     : redsquare::Entity(entityID,type)
+    , m_Font(gResourceManager().getFont("font/arial.ttf"))
     {
         m_Pos = pos;
         loadTexture(type);
-
-        m_Font.loadFromFile("data/redsquare/font/arial.ttf");
     }
 
     void Player::render(gf::RenderTarget& target, const gf::RenderStates& states)
@@ -97,17 +98,17 @@ namespace redsquare
         //Do something
     }
 
-    void Player::loadTexture( const EntityClass type )
+    void Player::loadTexture( const EntitySubType type )
     {
         switch (type)
         {
-            case EntityClass::Magus:
+            case EntitySubType::Magus:
             {
                 playerTexture.loadFromFile("data/redsquare/img/goblin.png");
                 break;
             }
 
-            case EntityClass::Warrior:
+            case EntitySubType::Warrior:
             {
                 playerTexture.loadFromFile("data/redsquare/img/knight.png");
                 break;

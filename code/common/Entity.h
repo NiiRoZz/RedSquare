@@ -12,7 +12,7 @@ namespace redsquare
     {
     public:
         const gf::Id m_EntityID;
-        const EntityClass m_TypeOfEntity;
+        const EntitySubType m_TypeOfEntity;
 
         gf::Vector2i m_Pos;
 
@@ -31,7 +31,7 @@ namespace redsquare
 
         Entity();
         Entity(gf::Id entityID);
-        Entity(gf::Id entityID, const EntityClass typeOfEntity);
+        Entity(gf::Id entityID, const EntitySubType typeOfEntity);
     };
 }
 

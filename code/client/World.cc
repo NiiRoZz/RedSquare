@@ -1,4 +1,5 @@
 #include "World.h"
+#include "../common/Singletons.h"
 
 #include <gf/Sprite.h>
 #include <gf/RenderTarget.h>
@@ -57,13 +58,13 @@ namespace redsquare
     World::World()
     : m_TileSet({ MapSize, MapSize } )
     , m_SquareMap( {MapSize, MapSize} )
+    , m_TileTexture(gResourceManager().getTexture("img/TileSet3.png"))
     {
-        tileTexture.loadFromFile( "data/redsquare/img/TileSet3.png" );
         m_TileSet.setTilesetTileSize({ TileSetSize, TileSetSize });
         m_TileSet.setTileSize({ TileSetSize, TileSetSize });
         m_TileSet.setMargin({ 0, 0 });
         m_TileSet.setSpacing({ 0, 0 });
-        m_TileSet.setTexture( tileTexture );
+        m_TileSet.setTexture( m_TileTexture );
     }
 
     int World::rigthTile(gf::Vector2i titi){ // return the tile number on the tile set for a given vector2i on the map

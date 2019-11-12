@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "../common/Singletons.h"
 
 #include <iostream>
 #include <utility>
@@ -19,11 +20,10 @@ namespace redsquare
     , m_PassTurn(false)
     , m_TempMoveTarget(false)
     , m_PlayerDead(false)
+    , m_NextPosTexture(gResourceManager().getTexture("img/redsquare.png"))
     {
-        nextPosTexture.loadFromFile( "data/redsquare/img/redsquare.png" );
-
-        //TEMP
-        m_AnimatedEntities.emplace(gf::Id(10), AnimatedEntity(10, {1,1}, "data/redsquare/img/TileSet3.png", 0, 0, 4, 0.1f));
+        //TODO: Remove this
+        m_Props.emplace(gf::Id(56466), Prop(10, EntitySubType::Torch, {1,1}));
     }
 
     void Game::startThreadCom()
@@ -31,11 +31,11 @@ namespace redsquare
         m_ThreadCom.start();
     }
 
-    void Game::sendInfoConnection(EntityClass type, char *name)
+    void Game::sendInfoConnection(EntitySubType type, char *name)
     {
         Packet sendPacket;
         sendPacket.type = PacketType::PlayerInfoConnection;
-        sendPacket.playerInfoConnection.entityClass = type;
+        sendPacket.playerInfoConnection.entitySubType = type;
         strncpy(sendPacket.playerInfoConnection.name, name, 20);
 
         m_ThreadCom.sendPacket(sendPacket);
@@ -66,7 +66,7 @@ namespace redsquare
 
             sprite.setPosition( (*it1) * World::TileSize );
             sprite.setScale( 1 );
-            sprite.setTexture( nextPosTexture );
+            sprite.setTexture( m_NextPosTexture );
             target.draw( sprite, states );
 
             ++it1;
@@ -92,28 +92,14 @@ namespace redsquare
             ++it3;
         }
 
-        auto it4 = m_AnimatedEntities.begin();
+        auto it4 = m_Props.begin();
  
         // Iterate over the map using Iterator till end.
-        while (it4 != m_AnimatedEntities.end())
+        while (it4 != m_Props.end())
         {
-            //std::cout << "m_AnimatedEntities render 1" << std::endl;
-            //std::cout << "AnimatedEntity::render m_Animation : " << &it4->second.m_Animation << " m_Animation.getCurrentBounds().getTopLeft()[0] : " << it4->second.m_Animation.getCurrentBounds().getTopLeft()[0] << " m_Animation.getCurrentTexture().getSize()[0] : " << it4->second.m_Animation.getCurrentTexture().getSize()[0] << std::endl;
             it4->second.render( target, states );
-            //std::cout << "AnimatedEntity::render m_Animation : " << &it4->second.m_Animation << " m_Animation.getCurrentBounds().getTopLeft()[0] : " << it4->second.m_Animation.getCurrentBounds().getTopLeft()[0] << " m_Animation.getCurrentTexture().getSize()[0] : " << it4->second.m_Animation.getCurrentTexture().getSize()[0] << std::endl;
-            //std::cout << "m_AnimatedEntities render 2" << std::endl;
 
             ++it4;
-        }
-
-        auto it5 = m_Props.begin();
- 
-        // Iterate over the map using Iterator till end.
-        while (it5 != m_Props.end())
-        {
-            it5->second.render( target, states );
-
-            ++it5;
         }
     }
 
@@ -137,10 +123,10 @@ namespace redsquare
             doAction();
         }
 
-        auto it = m_AnimatedEntities.begin();
+        auto it = m_Props.begin();
  
         // Iterate over the map using Iterator till end.
-        while (it != m_AnimatedEntities.end())
+        while (it != m_Props.end())
         {
             it->second.update( time );
 
