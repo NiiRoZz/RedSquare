@@ -41,11 +41,9 @@ namespace redsquare
 
 
     bool Monster::nextToSpawn(gf::Vector2i monsterSpawn, World &world){ // check if montserSpawn is next to the spawn of player
-
         if( monsterSpawn == world.m_Spawn || gf::Vector2i({monsterSpawn[0],monsterSpawn[1]+1}) == world.m_Spawn || gf::Vector2i({monsterSpawn[0],monsterSpawn[1]-1}) == world.m_Spawn || gf::Vector2i({monsterSpawn[0]+1,monsterSpawn[1]}) == world.m_Spawn || gf::Vector2i({monsterSpawn[0]+1,monsterSpawn[1]+1}) == world.m_Spawn || gf::Vector2i({monsterSpawn[0]+1,monsterSpawn[1]-1}) == world.m_Spawn || gf::Vector2i({monsterSpawn[0]-1,monsterSpawn[1]}) == world.m_Spawn || gf::Vector2i({monsterSpawn[0]-1,monsterSpawn[1]+1}) == world.m_Spawn || gf::Vector2i({monsterSpawn[0]-1,monsterSpawn[1]-1}) == world.m_Spawn ){
             return true;
         }
-
         return false;
     }
 
