@@ -16,6 +16,8 @@ namespace redsquare
         m_TextureSize = m_AnimatedTexture.getSize();
         
         loadAnimation(line, startFramePos, nmbFrames);
+
+        //std::cout << "AnimatedEntity::render m_Animation : " << &m_Animation << " m_Animation.getCurrentBounds().getTopLeft()[0] : " << m_Animation.getCurrentBounds().getTopLeft()[0] << " m_Animation.getCurrentTexture().getSize()[0] : " << m_Animation.getCurrentTexture().getSize()[0] << std::endl;
     }
 
     void AnimatedEntity::render(gf::RenderTarget& target, const gf::RenderStates& states)

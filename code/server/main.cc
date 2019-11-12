@@ -81,7 +81,7 @@ int main( int argc, char **argv )
 				{
 					gf::Id disconnectedID = it->first;
 
-					game.m_Players.erase(it--);
+					game.m_Players.erase(it++);
 
 					Packet sendPacket;
 					sendPacket.type = PacketType::EntityDisconnected;
@@ -90,7 +90,7 @@ int main( int argc, char **argv )
 
 					game.sendPacketToAllPlayers( sendPacket );
 
-					continue;
+					break;
 				}
 
 				//2: wait until his reply
@@ -101,7 +101,7 @@ int main( int argc, char **argv )
 				{
 					gf::Id disconnectedID = it->first;
 
-					game.m_Players.erase(it--);
+					game.m_Players.erase(it++);
 
 					Packet sendPacket;
 					sendPacket.type = PacketType::EntityDisconnected;
@@ -110,12 +110,13 @@ int main( int argc, char **argv )
 
 					game.sendPacketToAllPlayers( sendPacket );
 
-					continue;
+					break;
 				}
 
 				game.processPackets( packet );
 			}
 		}
+
 		//std::cout << "---------------------------------TURN ----------------------------------------------" << std::endl;
 		for (auto it = game.m_Monsters.begin(); it != game.m_Monsters.end(); ++it)
 		{
@@ -128,39 +129,74 @@ int main( int argc, char **argv )
 			auto it2 = game.m_Players.begin();
 			while ( it2 != game.m_Players.end() )
 			{
-				if(game.m_World.m_SquareWorld.isInFieldOfVision(it2->second.m_Pos)){
+				if( game.m_World.m_SquareWorld.isInFieldOfVision(it2->second.m_Pos) )
+				{
 					hasFocus = true;
 					break;
 				}
 				++it2;
 			}
-			if(hasFocus){
-				if(game.canAttack(it->second,it2->second.m_Pos)){
+
+			if( hasFocus )
+			{
+				if( game.canAttack(it->second, it2->second.m_Pos) )
+				{
                     ServerEntity *targetServerEntity = dynamic_cast<ServerEntity*>(&it2->second);
 					it->second.attack(targetServerEntity);
+
 					hasAttacked = true;
-					Packet sendPacket;
-					it2->second.createCarPacket(sendPacket);
-					game.sendPacketToAllPlayers( sendPacket );
-				}else{
+
+					//Check if target is dead
+					if ( it2->second.m_LifePoint <= 0 )
+					{
+						Packet sendPacket;
+						sendPacket.type = PacketType::PlayerDead;
+						it2->second.sendPacket(sendPacket);
+
+						gf::Id disconnectedID = it2->first;
+
+						game.m_Players.erase(it2++);
+
+						sendPacket.type = PacketType::EntityDisconnected;
+						sendPacket.entityDisconnected.typeEntity = EntityType::Player;
+						sendPacket.entityDisconnected.entityID = it2->first;
+
+						game.sendPacketToAllPlayers( sendPacket );
+
+						hasAttacked = false;
+						isTarget = false;
+					}
+					else
+					{
+						Packet sendPacket;
+						it2->second.createCarPacket( sendPacket );
+
+						game.sendPacketToAllPlayers( sendPacket );
+					}
+				}
+				else
+				{
 					it->second.m_Routine = it2->second.m_Pos;
 					isTarget = true;
 				}
 			}
-			if(!hasAttacked){
-				if(it->second.checkRoutine())
+
+			if( !hasAttacked )
+			{
+				if( it->second.checkRoutine() )
 				{
 					it->second.drawRoutine(game.m_World);
-					
 				}
 				else
 				{
-					if(isTarget){
+					if( isTarget )
+					{
 						game.m_World.m_SquareWorld.setWalkable(it->second.m_Routine);
 						game.m_World.m_SquareWorld.setTransparent(it->second.m_Routine);
 					}
 
-					if(!game.m_World.m_SquareWorld.isWalkable(it->second.m_Routine)){
+					if( !game.m_World.m_SquareWorld.isWalkable(it->second.m_Routine) )
+					{
 						it->second.drawRoutine(game.m_World);
 					}
 						
@@ -172,9 +208,11 @@ int main( int argc, char **argv )
 					std::vector<gf::Vector2i> points = game.m_World.m_SquareWorld.computeRoute(it->second.m_Pos, it->second.m_Routine, 0.0);
 
 					it->second.m_Pos = points[1];
-					if(isTarget){
+					if( isTarget )
+					{
 						game.m_World.setUnWalkable(it->second.m_Routine);
 					}
+
 					game.m_World.setUnWalkable(it->second.m_Pos);
 
 					Packet sendPacket;
@@ -185,9 +223,6 @@ int main( int argc, char **argv )
 					sendPacket.receiveMove.posY = it->second.m_Pos[1];
 
 					game.sendPacketToAllPlayers( sendPacket );
-
-
-					
 				}
 			}
 		}

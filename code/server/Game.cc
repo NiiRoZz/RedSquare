@@ -8,8 +8,9 @@
 namespace redsquare
 {
     Game::Game()
+    : m_PlayerSpawned(0)
     {
-        std::cout << "Game::Game" << std::endl;
+        m_World.generateWorld();
     }
 
     void Game::addNewPlayer(SocketTcp socket)
@@ -25,7 +26,7 @@ namespace redsquare
 
         // Create a new player
         std::tie(itNewPlayer, std::ignore) = m_Players.emplace(id, Player(std::move(socket), id, packet.playerInfoConnection.entityClass));
-        itNewPlayer->second.playerSpawn(m_Players,m_World);
+        itNewPlayer->second.playerSpawn(m_World,++m_PlayerSpawned);
 
         NewPlayer packetNewPlayer( m_World.m_World, id );
         itNewPlayer->second.sendPacket(packetNewPlayer);
@@ -162,15 +163,105 @@ namespace redsquare
                         //TODO: TEMP
                         player->m_PointInRound -= player->m_PointInRound;
                         player->m_MovedInRound = true;
-                        
-                        Packet sendPacket;
-                        sendPacket.type = PacketType::ReceiveMove;
-                        sendPacket.receiveMove.entityID = packet.requestMove.playerID;
-                        sendPacket.receiveMove.typeEntity = EntityType::Player;
-                        sendPacket.receiveMove.posX = player->m_Pos[0];
-                        sendPacket.receiveMove.posY = player->m_Pos[1];
 
-                        sendPacketToAllPlayers( sendPacket );
+                        Packet sendPacket;
+                        
+                        //If player is on the stair, regenerate the map
+                        if (player->m_Pos == m_World.m_StairPosition)
+                        {
+                            for (auto it = m_Monsters.begin(); it != m_Monsters.end(); ++it)
+                            {
+                                sendPacket.type = PacketType::EntityDisconnected;
+                                sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
+                                sendPacket.entityDisconnected.entityID = it->first;
+
+                                sendPacketToAllPlayers( sendPacket );
+                            }
+
+                            for (auto it2 = m_Props.begin(); it2 != m_Props.end(); ++it2)
+                            {
+                                sendPacket.type = PacketType::EntityDisconnected;
+                                sendPacket.entityDisconnected.typeEntity = EntityType::Prop;
+                                sendPacket.entityDisconnected.entityID = it2->first;
+
+                                sendPacketToAllPlayers( sendPacket );
+                            }
+
+                            m_Monsters.clear();
+                            m_Props.clear();
+
+                            sendPacket.type = PacketType::NewMap;
+                            sendPacketToAllPlayers( sendPacket );
+
+                            m_World.generateWorld();
+                            //TODO: make more monsters
+                            addNewMonsters(5);
+                            m_PlayerSpawned = 0;
+
+                            for (auto it3 = m_Players.begin(); it3 != m_Players.end(); ++it3)
+                            {
+                                it3->second.playerSpawn(m_World,++m_PlayerSpawned);
+
+                                NewPlayer packetNewPlayer( m_World.m_World, it3->first );
+                                it3->second.sendPacket(packetNewPlayer);
+
+                                //fake a move of all monsters inside the game to make them apparear in the new client
+                                auto itMonster = m_Monsters.begin();
+                                // Iterate over the map using Iterator till end.
+                                while (itMonster != m_Monsters.end())
+                                {
+                                    packet.type = PacketType::SpawnEntity;
+                                    packet.spawnEntity.entityID = itMonster->first;
+                                    packet.spawnEntity.typeEntity = EntityType::Monster;
+                                    packet.spawnEntity.typeOfEntity = itMonster->second.m_TypeOfEntity;
+                                    packet.spawnEntity.posX = itMonster->second.m_Pos[0];
+                                    packet.spawnEntity.posY = itMonster->second.m_Pos[1];
+                                    it3->second.sendPacket( packet );
+
+                                    itMonster->second.createCarPacket(packet);
+                                    it3->second.sendPacket( packet );
+
+                                    ++itMonster;
+                                }
+
+                                //fake a move of all props inside the game to make them apparear in the new client
+                                auto itProp = m_Props.begin();
+                                // Iterate over the map using Iterator till end.
+                                while (itProp != m_Props.end())
+                                {
+                                    packet.type = PacketType::SpawnEntity;
+                                    packet.spawnEntity.entityID = itProp->first;
+                                    packet.spawnEntity.typeEntity = EntityType::Prop;
+                                    packet.spawnEntity.typeOfEntity = itProp->second.m_TypeOfEntity;
+                                    packet.spawnEntity.posX = itProp->second.m_Pos[0];
+                                    packet.spawnEntity.posY = itProp->second.m_Pos[1];
+                                    it3->second.sendPacket( packet );
+
+                                    ++itProp;
+                                }
+                            }
+
+                            for (auto it4 = m_Players.begin(); it4 != m_Players.end(); ++it4)
+                            {
+                                sendPacket.type = PacketType::ReceiveMove;
+                                sendPacket.receiveMove.entityID = it4->first;
+                                sendPacket.receiveMove.typeEntity = EntityType::Player;
+                                sendPacket.receiveMove.posX = it4->second.m_Pos[0];
+                                sendPacket.receiveMove.posY = it4->second.m_Pos[1];
+
+                                sendPacketToAllPlayers( sendPacket );
+                            }
+                        }
+                        else
+                        {
+                            sendPacket.type = PacketType::ReceiveMove;
+                            sendPacket.receiveMove.entityID = packet.requestMove.playerID;
+                            sendPacket.receiveMove.typeEntity = EntityType::Player;
+                            sendPacket.receiveMove.posX = player->m_Pos[0];
+                            sendPacket.receiveMove.posY = player->m_Pos[1];
+
+                            sendPacketToAllPlayers( sendPacket );
+                        }
                     }
                 }
                 break;
@@ -185,72 +276,52 @@ namespace redsquare
 
                     ServerEntity *targetServerEntity;
                 
-                    Player *targetPlayer = getPlayer(posTarget);
-                    targetServerEntity = dynamic_cast<ServerEntity*>(targetPlayer);
-                    if ( targetPlayer != nullptr && targetServerEntity != nullptr )
+                    Monster *targetMonster = getMonster(posTarget);
+                    targetServerEntity = dynamic_cast<ServerEntity*>(targetMonster);
+                    if ( targetMonster != nullptr && targetServerEntity != nullptr )
                     {
                         int level = player->m_Level;
                         player->attack(targetServerEntity);
 
                         Packet sendPacket;
-                        targetPlayer->createCarPacket(sendPacket);
+                        if ( targetMonster->m_LifePoint > 0 )
+                        {
+                            targetMonster->createCarPacket(sendPacket);
+                        }
+                        else
+                        {   
+                            sendPacket.type = PacketType::EntityDisconnected;
+                            sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
+                            sendPacket.entityDisconnected.entityID = targetMonster->m_EntityID;
+                            m_World.m_SquareWorld.setWalkable(targetMonster->m_Pos);
+                            m_World.m_SquareWorld.setTransparent(targetMonster->m_Pos);
+                            m_Monsters.erase(targetMonster->m_EntityID);
 
+                        }
                         sendPacketToAllPlayers( sendPacket );
 
-                        if(player->m_Level != level){
+                        if(player->m_Level != level)
+                        {
                             player->createCarPacket(sendPacket);
                             sendPacketToAllPlayers( sendPacket );
                         }
                     }
                     else
                     {
-                        Monster *targetMonster = getMonster(posTarget);
-                        targetServerEntity = dynamic_cast<ServerEntity*>(targetMonster);
-                        if ( targetMonster != nullptr && targetServerEntity != nullptr )
-                        {
-                            int level = player->m_Level;
-                            player->attack(targetServerEntity);
+                        Prop *targetProp = getProp(posTarget);
 
+                        if ( targetProp != nullptr )
+                        {
                             Packet sendPacket;
-                            if ( targetMonster->m_LifePoint > 0 )
-                            {
-                                targetMonster->createCarPacket(sendPacket);
-                            }
-                            else
-                            {   
-                                sendPacket.type = PacketType::EntityDisconnected;
-                                sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
-                                sendPacket.entityDisconnected.entityID = targetMonster->m_EntityID;
-                                m_World.m_SquareWorld.setWalkable(targetMonster->m_Pos);
-                                m_World.m_SquareWorld.setTransparent(targetMonster->m_Pos);
-                                m_Monsters.erase(targetMonster->m_EntityID);
+                            sendPacket.type = PacketType::EntityDisconnected;
+                            sendPacket.entityDisconnected.typeEntity = EntityType::Prop;
+                            sendPacket.entityDisconnected.entityID = targetProp->m_EntityID;
+                            m_World.m_SquareWorld.setWalkable(targetProp->m_Pos);
+                            m_World.m_SquareWorld.setTransparent(targetProp->m_Pos);
 
-                            }
+                            m_Props.erase(targetProp->m_EntityID);
+
                             sendPacketToAllPlayers( sendPacket );
-
-                            if(player->m_Level != level)
-                            {
-                                player->createCarPacket(sendPacket);
-                                sendPacketToAllPlayers( sendPacket );
-                            }
-                        }
-                        else
-                        {
-                            Prop *targetProp = getProp(posTarget);
-
-                            if ( targetProp != nullptr )
-                            {
-                                Packet sendPacket;
-                                sendPacket.type = PacketType::EntityDisconnected;
-                                sendPacket.entityDisconnected.typeEntity = EntityType::Prop;
-                                sendPacket.entityDisconnected.entityID = targetProp->m_EntityID;
-                                m_World.m_SquareWorld.setWalkable(targetProp->m_Pos);
-                                m_World.m_SquareWorld.setTransparent(targetProp->m_Pos);
-
-                                m_Props.erase(targetProp->m_EntityID);
-
-                                sendPacketToAllPlayers( sendPacket );
-                            }
                         }
                     }
                 }

@@ -18,12 +18,20 @@ namespace redsquare
     : m_SquareWorld({MapSize, MapSize})
     , m_World({MapSize, MapSize})
     {
+    }
+
+    void World::generateWorld()
+    {
         uint SizeGrind = 20; // sizegrind must divide MapSize to be usefull
         uint numberRoom = 10; // number of room, must be < TabRoom.size()
 
+        m_SquareWorld.reset(gf::Flags<gf::CellProperty>());
+        std::fill(m_World.begin(),m_World.end(),Tile::Void);
+        TabRoom.clear();
+        
         /**** GENERATE ****/
         std::vector<gf::Vector4u> TabGrid = grid(SizeGrind); // build grind
-        TabRoom = generateFloorV2(numberRoom,SizeGrind,TabGrid); // generate the room
+        generateFloorV2(numberRoom,SizeGrind,TabGrid); // generate the room
         buildWall(TabRoom); // build wall around room
         destroyGrid(); // destroy the grid
 
@@ -80,7 +88,7 @@ namespace redsquare
         return TabCell;
     }
 
-    std::vector<gf::Vector4u> World::generateFloorV2(uint nbRoom,uint sizeGrind,std::vector<gf::Vector4u> MapGrind){
+    void World::generateFloorV2(uint nbRoom,uint sizeGrind,std::vector<gf::Vector4u> MapGrind){
 
         //std::cout << "generateFloorV2 STARTED\n";
         
@@ -123,7 +131,6 @@ namespace redsquare
             //std::cout << "X :"  << room[0] << " Y : " << room[1] << " Taille : " << room[2] << "x" << room[3] << "\n" ;
         }
         //std::cout << "generateFloorV2 ENDED\n";
-        return TabRoom;
     }
 
 
@@ -215,7 +222,7 @@ namespace redsquare
                 }       
             }
             cpt++;
-        }while(cpt != TabRoom.size()*2); // dummy ways to be sure that no room is isolated.   implemtation can be better with graphe algorithm
+        }while(cpt != TabRoom.size()*3); // dummy ways to be sure that no room is isolated.   implemtation can be better with graphe algorithm
     }
 
     void World::buildWallCorridor(){ // put wall where there should be a wall
@@ -239,7 +246,8 @@ namespace redsquare
             y = rand() % MapSize;
         }while(m_World( { x, y } ) != Tile::Room); // only putting stair on a  randon room's tile
 
-        m_World( { x, y } ) = Tile::Stair; // 1 stair for a floor       
+        m_World( { x, y } ) = Tile::Stair; // 1 stair for a floor   
+        m_StairPosition = {(int)x,(int)y};    
     }
 
     bool World::nextToGround(uint x, uint y){ // check if the current tile is newt to a tile ground

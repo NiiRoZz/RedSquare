@@ -177,7 +177,7 @@ int main( int argc, char **argv )
                         Player* myPlayer = game.getPlayer(game.m_PlayerID);
                         if ( myPlayer != nullptr && game.m_CanPlay )
                         {
-                            if ( myPlayer->canAttack(pos, game.m_Players, game.m_Monsters, game.m_Props) )
+                            if ( myPlayer->canAttack(pos, game.m_Monsters, game.m_Props) )
                             {
                                 game.attackPos( pos[0], pos[1] );
                             }
@@ -197,7 +197,7 @@ int main( int argc, char **argv )
                     Player* myPlayer = game.getPlayer(game.m_PlayerID);
                     if ( myPlayer != nullptr && game.m_CanPlay )
                     {
-                        if ( myPlayer->canAttack(pos, game.m_Players, game.m_Monsters, game.m_Props) )
+                        if ( myPlayer->canAttack(pos, game.m_Monsters, game.m_Props) )
                         {
                             window.setMouseCursor(attackCursor);
                             game.m_TempMove.clear();
@@ -227,7 +227,7 @@ int main( int argc, char **argv )
             }
         }
 
-        if (closeWindowAction.isActive())
+        if (closeWindowAction.isActive() || game.m_PlayerDead)
         {
             window.close();
         }

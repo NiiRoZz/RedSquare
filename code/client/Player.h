@@ -32,7 +32,7 @@ namespace redsquare
 
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
-        bool canAttack( gf::Vector2i targetPos, std::map<gf::Id, Player> &players, std::map<gf::Id, Monster> &monsters, std::map<gf::Id, Prop> &props );
+        bool canAttack( gf::Vector2i targetPos, std::map<gf::Id, Monster> &monsters, std::map<gf::Id, Prop> &props );
         bool canMove( gf::Vector2i targetPos, std::map<gf::Id, Player> &players, std::map<gf::Id, Monster> &monsters, std::map<gf::Id, Prop> &props, gf::SquareMap &map );
 
     private:

@@ -57,7 +57,8 @@ namespace redsquare
 
     void ThreadCom::receivePackets()
     {
-        for(;;) {
+        for(;;)
+        {
             Packet packet;
 
             if (!receivePacket(packet))
@@ -66,6 +67,11 @@ namespace redsquare
             }
 
             m_queue->push(packet);
+
+            if (packet.type == PacketType::NewMap)
+            {
+                break;
+            }
         }
     }
 }

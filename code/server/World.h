@@ -21,12 +21,14 @@ namespace redsquare
         static bool isSpawnable(int x,int y);
         void getSpawnPoint();
         void setUnWalkable(gf::Vector2i pos);
+        void generateWorld();
 
         gf::Vector2i m_Spawn;
+        gf::Vector2i m_StairPosition;
 
     private:
         std::vector<gf::Vector4u> grid(uint sizeGrid); // return all the cell of the grid in a vector
-        std::vector<gf::Vector4u> generateFloorV2(uint nbRoom, uint sizeGrind, std::vector<gf::Vector4u> MapGrind); // return all the room in a vector
+        void generateFloorV2(uint nbRoom, uint sizeGrind, std::vector<gf::Vector4u> MapGrind); // return all the room in a vector
         std::vector<gf::Vector4u> buildWall(std::vector<gf::Vector4u> TabRoom); // return all the room with wall in a vector
         void destroyGrid(); // destroy the grid
         gf::Vector2u MiddleRoom(std::vector<gf::Vector4u> TabRoom,uint random); // select the middle of a random room
