@@ -44,6 +44,8 @@ namespace redsquare
         gf::Id generateId() const;
 
         gf::Queue<Packet> m_ComQueue;
+
+        int m_PlayerSpawned;
     };
 }
 
