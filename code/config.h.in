@@ -1,0 +1,6 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+
+#define REDSQUARE_DATA_DIR "@REDSQUARE_DATA_DIR@"
+
+#endif // CONFIG_H

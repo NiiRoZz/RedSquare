@@ -4,10 +4,12 @@
 #include <gf/AssetManager.h>
 #include <gf/Random.h>
 #include <gf/Singleton.h>
+#include <gf/ResourceManager.h>
 
 namespace redsquare
 {
   //extern gf::Singleton<gf::AssetManager> gAssetManager;
+  extern gf::Singleton<gf::ResourceManager> gResourceManager;
   extern gf::Singleton<gf::Random> gRandom;
 }
 

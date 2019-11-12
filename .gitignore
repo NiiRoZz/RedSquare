@@ -7,5 +7,4 @@ cmake_install.cmake
 RedSquare
 RedSquare-Server
 install_manifest.txt
-code/client/World.cc
-code/server/World.cc
+config.h
