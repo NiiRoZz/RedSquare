@@ -16,6 +16,7 @@ add_executable(RedSquare
   code/client/Chat.cc
   code/client/AnimatedEntity.cc
   code/client/Prop.cc
+  code/client/Hud.cc
   code/common/Sockets.cc
   code/common/Entity.cc
 )

@@ -27,6 +27,7 @@
 #include "World.h"
 #include "Game.h"
 #include "Chat.h"
+#include "Hud.h"
 #include "../common/Packet.h"
 #include <gf/TileLayer.h>
 
@@ -54,8 +55,6 @@ int main( int argc, char **argv )
     gf::RenderWindow renderer(window);
     gf::Font fontChat;
     fontChat.loadFromFile("data/redsquare/font/arial.ttf");
-    gf::UI uiChat(fontChat);
-    Chat chat;
     
     // views
     gf::ViewContainer views;
@@ -124,7 +123,8 @@ int main( int argc, char **argv )
 
     gf::EntityContainer hudEntities;
     // add entities to hudEntities
-
+    Hud hud(fontChat);
+    hudEntities.addEntity(hud);
 
     gf::Cursor defaultCursor;
     gf::Image attackImage;
@@ -160,7 +160,7 @@ int main( int argc, char **argv )
         {
             actions.processEvent(event);
             views.processEvent(event);
-            uiChat.processEvent(event);
+            hud.processEvent(event);
 
             switch (event.type)
             {
@@ -263,7 +263,6 @@ int main( int argc, char **argv )
         gf::Time time = clock.restart();
         mainEntities.update(time);
         hudEntities.update(time);
-        chat.updateChat(uiChat);
 
         // 3. draw
         renderer.clear();
@@ -271,7 +270,6 @@ int main( int argc, char **argv )
         mainEntities.render(renderer);
         renderer.setView(hudView);
         hudEntities.render(renderer);
-        renderer.draw(uiChat);
         renderer.display();
         actions.reset();
 	}
