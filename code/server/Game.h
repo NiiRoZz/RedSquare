@@ -36,7 +36,6 @@ namespace redsquare
         Prop* getProp( gf::Vector2i pos );
 
         void sendPacketToAllPlayers( Packet &packet );
-        void sendMessageToAllPlayers( Message &message );
         void sendPacketToVisiblePlayers( Packet &packet, gf::Vector2i pos );
         bool canAttack(Monster &monster, gf::Vector2i targetPos);
         void placeProps(int nbProps);

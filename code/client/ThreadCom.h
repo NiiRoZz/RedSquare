@@ -20,18 +20,14 @@ namespace redsquare
 
     void start();
     bool sendPacket(Packet &packet);
-    bool sendPacket(NewPlayer &packet);
-    bool sendMessage(Message &message);
     bool receivePacket(Packet &packet);
     bool receivePacket(NewPlayer &packet);
-    bool receiveMessage(Message &message);
     void receivePackets();
 
     bool socketWorking() const;
 
   private:
     SocketTcp m_socket;
-    SocketTcp m_sockChat;
     gf::Queue<Packet>* m_queue;
   };
 }
