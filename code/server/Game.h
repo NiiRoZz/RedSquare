@@ -36,6 +36,7 @@ namespace redsquare
         Prop* getProp( gf::Vector2i pos );
 
         void sendPacketToAllPlayers( Packet &packet );
+        void sendMessageToAllPlayers( Message &message );
         void sendPacketToVisiblePlayers( Packet &packet, gf::Vector2i pos );
         bool canAttack(Monster &monster, gf::Vector2i targetPos);
         void placeProps(int nbProps);
@@ -44,6 +45,7 @@ namespace redsquare
         gf::Id generateId() const;
 
         gf::Queue<Packet> m_ComQueue;
+        gf::Queue<Message> m_chatQueue;
 
         int m_PlayerSpawned;
     };

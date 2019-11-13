@@ -23,6 +23,7 @@ namespace redsquare
 
         //Receive info of client, freeze until we receive them
         socket.receive(packet);
+    
 
         // Create a new player
         std::tie(itNewPlayer, std::ignore) = m_Players.emplace(id, Player(std::move(socket), id, packet.playerInfoConnection.entityClass));
@@ -337,6 +338,11 @@ namespace redsquare
                 }
                 break;
             }
+
+            case PacketType::Message:{
+                
+            }
+
         }
     }
 

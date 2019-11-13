@@ -35,8 +35,12 @@ namespace redsquare
 
         void sendPacket(Packet &packet);
         void receivePacket(Packet &packet);
+        
 
         void sendPacket(NewPlayer &packet);
+
+        void sendMessage(Message &message);
+        void receiveMessage(Message &message);
 
         bool applyMove( int dirX, int dirY,World &world );
 

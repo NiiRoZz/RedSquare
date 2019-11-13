@@ -110,7 +110,7 @@ int main( int argc, char **argv )
     // entities
     gf::EntityContainer mainEntities;
     // add entities to mainEntities
-    Game game( argv[1], argv[2], mainView );
+    Game game( argv[1], argv[2], mainView, argv[3] );
 
     //Send info about us, before get world
     game.sendInfoConnection(static_cast<EntityClass>(atoi(argv[4])), argv[3]);

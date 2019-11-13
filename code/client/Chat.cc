@@ -46,9 +46,9 @@ namespace redsquare
                 
                 if (chatUI.buttonLabel("Submit") || flags.test(gf::UIEditEvent::Commited))
                 {
-                    
-                    box.append(text);
-                    text.clear();
+                    std::cout <<"envoyé";
+                    //box.append(text);
+                    //text.clear();
                 }
                 chatUI.layoutRowEnd();
                 chatUI.groupEnd();

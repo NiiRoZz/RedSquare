@@ -50,6 +50,7 @@ namespace redsquare
         return !(m_socket.getState() == SocketState::Disconnected);
     }
 
+
     bool ThreadCom::socketWorking() const
     {
         return !(m_socket.getState() == SocketState::Disconnected);

@@ -9,8 +9,10 @@
 
 namespace redsquare
 {
-    Game::Game( char* hostname, char *port, gf::ExtendView &view )
+
+    Game::Game( char* hostname, char *port, gf::ExtendView &view ,const char *name)
     : m_ThreadCom(hostname, port, m_ComQueue)
+    , m_ChatCom(hostname, port+1, m_ChatQueue)
     , m_View(view)
     , m_CanPlay( false )
     , m_MovePlayer({0,0},false)
@@ -19,9 +21,9 @@ namespace redsquare
     , m_PassTurn(false)
     , m_TempMoveTarget(false)
     , m_PlayerDead(false)
+    , m_Name(name)
     {
         nextPosTexture.loadFromFile( "data/redsquare/img/redsquare.png" );
-
         //TEMP
         m_AnimatedEntities.emplace(gf::Id(10), AnimatedEntity(10, {1,1}, "data/redsquare/img/TileSet3.png", 0, 0, 4, 0.1f));
     }
@@ -29,6 +31,7 @@ namespace redsquare
     void Game::startThreadCom()
     {
         m_ThreadCom.start();
+        m_ChatCom.start();
     }
 
     void Game::sendInfoConnection(EntityClass type, char *name)
@@ -39,6 +42,14 @@ namespace redsquare
         strncpy(sendPacket.playerInfoConnection.name, name, 20);
 
         m_ThreadCom.sendPacket(sendPacket);
+    }
+
+    void Game::sendMessage(std::string message){
+        Packet sendPacket;
+        sendPacket.type = PacketType::Message;
+        strncpy( sendPacket.reveiveMessage.message, message.c_str(),1024);
+        strncpy( sendPacket.reveiveMessage.from, m_Name,30);
+        m_ChatCom.sendPacket(sendPacket);
     }
 
     void Game::receiveWorld()

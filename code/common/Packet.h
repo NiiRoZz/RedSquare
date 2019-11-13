@@ -6,6 +6,7 @@
 #include <gf/Id.h>
 #include <gf/Vector.h>
 #include <gf/Array2D.h>
+#include <string>
 
 namespace redsquare
 {
@@ -102,6 +103,7 @@ namespace redsquare
         SpawnEntity,
         PlayerDead,
         NewMap,
+        Message,
     };
 
     struct NewPlayer
@@ -120,11 +122,21 @@ namespace redsquare
         }
     };
 
+    struct Message
+    {
+        char from[30];
+        char message[1024];
+
+    };
+
+
     struct PlayerInfoConnection
     {
         EntityClass entityClass;
         char name[20];
     };
+
+    
 
     struct EntityCar
     {
@@ -213,6 +225,7 @@ namespace redsquare
             PlayerTurn playerTurn;
             SpawnEntity spawnEntity;
             EntityCar entityCar;
+            Message reveiveMessage;
         };
     };
 
@@ -306,6 +319,15 @@ namespace redsquare
 
                 break;
             }
+
+            case PacketType::Message:
+            {
+
+                ar | packet.reveiveMessage.from;
+                ar | packet.reveiveMessage.message;
+                break;
+
+            }
         }
 
         return ar;
@@ -319,6 +341,7 @@ namespace redsquare
 
         return ar;
     }
+
 }
 
 #endif
