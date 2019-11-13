@@ -23,7 +23,7 @@ namespace redsquare
         int m_XP;
         int m_MaxXP;
         /* Characteristic*/
-        EntityClass m_Class;
+        EntitySubType m_Class;
         std::vector<SpellType> m_SpellTab;
 
         uint8_t m_PointInRound;
@@ -31,7 +31,7 @@ namespace redsquare
 
         virtual void createCarPacket(Packet &packet) override;
         
-        Player(SocketTcp socket, gf::Id playerID, const EntityClass type);
+        Player(SocketTcp socket, gf::Id playerID, const EntitySubType type);
 
         void sendPacket(Packet &packet);
         void receivePacket(Packet &packet);

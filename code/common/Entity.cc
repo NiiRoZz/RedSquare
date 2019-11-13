@@ -3,7 +3,7 @@
 namespace redsquare
 {
     Entity::Entity()
-    : m_TypeOfEntity(EntityClass::Magus)
+    : m_TypeOfEntity(EntitySubType::Magus)
     , m_EntityID(0)
     {
         
@@ -11,12 +11,12 @@ namespace redsquare
 
     Entity::Entity(gf::Id entityID)
     : m_EntityID(entityID)
-    , m_TypeOfEntity(EntityClass::Magus)
+    , m_TypeOfEntity(EntitySubType::Magus)
     {
         
     }
 
-    Entity::Entity(gf::Id entityID, const EntityClass typeOfEntity)
+    Entity::Entity(gf::Id entityID, const EntitySubType typeOfEntity)
     : m_EntityID(entityID)
     , m_TypeOfEntity(typeOfEntity)
     {

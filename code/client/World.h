@@ -30,7 +30,7 @@ namespace redsquare
     private:
         gf::Array2D<Tile> m_World;
 
-        gf::Texture tileTexture;
+        gf::Texture &m_TileTexture;
         gf::TileLayer m_TileSet;
 
         /*gf::Texture tileTexture2;

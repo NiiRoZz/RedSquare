@@ -25,7 +25,7 @@ namespace redsquare
         Prop,
     };
 
-    enum class EntityClass: uint8_t
+    enum class EntitySubType: uint8_t
     {
         /* CLASSES */
         Magus,
@@ -43,6 +43,7 @@ namespace redsquare
         /* PROP */
         Box,
         Pot,
+        Torch,
         /* PROP */
     };
 
@@ -122,7 +123,7 @@ namespace redsquare
 
     struct PlayerInfoConnection
     {
-        EntityClass entityClass;
+        EntitySubType entitySubType;
         char name[20];
     };
 
@@ -188,7 +189,7 @@ namespace redsquare
     {
         gf::Id entityID;
         EntityType typeEntity;
-        EntityClass typeOfEntity;
+        EntitySubType typeOfEntity;
         int posX;
         int posY;
     };
@@ -225,7 +226,7 @@ namespace redsquare
         {
             case PacketType::PlayerInfoConnection:
             {
-                ar | packet.playerInfoConnection.entityClass;
+                ar | packet.playerInfoConnection.entitySubType;
                 ar | packet.playerInfoConnection.name;
                 break;
             }

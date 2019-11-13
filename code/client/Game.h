@@ -16,7 +16,6 @@
 #include "ThreadCom.h"
 #include "../common/Packet.h"
 #include "World.h"
-#include "AnimatedEntity.h"
 
 namespace redsquare
 {
@@ -31,8 +30,6 @@ namespace redsquare
         //All monsters
         std::map<gf::Id, Monster> m_Monsters;
 
-        //All animatedEntity
-        std::map<gf::Id, AnimatedEntity> m_AnimatedEntities;
         //All props
         std::map<gf::Id, Prop> m_Props;
 
@@ -60,7 +57,7 @@ namespace redsquare
 
         void startThreadCom();
 
-        void sendInfoConnection(EntityClass type, char *name);
+        void sendInfoConnection(EntitySubType type, char *name);
 
         void receiveWorld();
 
@@ -82,7 +79,7 @@ namespace redsquare
         //Queue for message
         gf::Queue<Packet> m_ComQueue;
 
-        gf::Texture nextPosTexture;
+        gf::Texture &m_NextPosTexture;
 
         //Move of player
         std::pair<gf::Vector2i, bool> m_MovePlayer;

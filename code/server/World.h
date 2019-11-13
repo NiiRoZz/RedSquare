@@ -5,7 +5,6 @@
 #include <gf/Array2D.h>
 #include <gf/Map.h>
 #include <list>
-#include "Prop.h"
 
 namespace redsquare
 {
