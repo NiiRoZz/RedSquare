@@ -13,7 +13,6 @@ namespace redsquare
 
     Game::Game( char* hostname, char *port, gf::ExtendView &view ,const char *name)
     : m_ThreadCom(hostname, port, m_ComQueue)
-    , m_ChatCom(hostname, port+1, m_ChatQueue)
     , m_View(view)
     , m_CanPlay( false )
     , m_MovePlayer({0,0},false)
@@ -28,11 +27,11 @@ namespace redsquare
         //TODO: Remove this
         m_Props.emplace(gf::Id(56466), Prop(10, EntitySubType::Torch, {1,1}));
     }
-
+     //, m_ChatCom(hostname, port+1, m_ChatQueue)
     void Game::startThreadCom()
     {
         m_ThreadCom.start();
-        m_ChatCom.start();
+        //m_ChatCom.start();
     }
 
     void Game::sendInfoConnection(EntitySubType type, char *name)
@@ -45,13 +44,13 @@ namespace redsquare
         m_ThreadCom.sendPacket(sendPacket);
     }
 
-    void Game::sendMessage(std::string message){
+    /*void Game::sendMessage(std::string message){
         Packet sendPacket;
         sendPacket.type = PacketType::Message;
         strncpy( sendPacket.reveiveMessage.message, message.c_str(),1024);
         strncpy( sendPacket.reveiveMessage.from, m_Name,30);
         m_ChatCom.sendPacket(sendPacket);
-    }
+    }*/
 
     void Game::receiveWorld()
     {

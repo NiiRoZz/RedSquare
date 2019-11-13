@@ -334,9 +334,9 @@ namespace redsquare
                 break;
             }
 
-            case PacketType::Message:{
+           /* case PacketType::Message:{
                 
-            }
+            }*/
 
         }
     }

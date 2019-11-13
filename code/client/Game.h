@@ -84,7 +84,7 @@ namespace redsquare
         //Thread for communication
         ThreadCom m_ThreadCom;
 
-        ThreadCom m_ChatCom;
+       // ThreadCom m_ChatCom;
         //Queue for message
         gf::Queue<Packet> m_ComQueue;
 

@@ -48,11 +48,12 @@ int main( int argc, char **argv )
 	boost::asio::io_service m_IoService;
     boost::asio::ip::tcp::acceptor m_Acceptor(m_IoService, tcp::endpoint(tcp::v4(), port));
 
+
 	while( game.m_Players.size() != nmbPlayers )
 	{
 		tcp::socket socket(m_IoService);
-
 		m_Acceptor.accept(socket);
+		
 
 		SocketTcp wrapper(std::move(socket));
 

@@ -104,9 +104,9 @@ namespace redsquare
         SpawnEntity,
         PlayerDead,
         NewMap,
-        Message,
     };
 
+        //Message,
     struct NewPlayer
     {
         gf::Id playerID;
@@ -321,14 +321,14 @@ namespace redsquare
                 break;
             }
 
-            case PacketType::Message:
+          /*  case PacketType::Message:
             {
 
                 ar | packet.reveiveMessage.from;
                 ar | packet.reveiveMessage.message;
                 break;
 
-            }
+            }*/
         }
 
         return ar;
