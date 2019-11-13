@@ -6,13 +6,13 @@
 
 namespace redsquare
 {
-    Player::Player(SocketTcp socket, gf::Id playerID, const EntityClass type)
+    Player::Player(SocketTcp socket, gf::Id playerID, const EntitySubType type)
     : ServerEntity(playerID,type)
     , m_Socket(std::move(socket))
     {
         switch (m_TypeOfEntity){
-        case EntityClass::Magus : // ------------------- Magus -------------------
-            m_Class = EntityClass::Magus;
+        case EntitySubType::Magus : // ------------------- Magus -------------------
+            m_Class = EntitySubType::Magus;
             m_LifePoint = 100;
             m_ManaPoint = 20;
 
@@ -31,8 +31,8 @@ namespace redsquare
             m_SpellTab.push_back(SpellType::FireBall);
             break;
 
-        case EntityClass::Warrior : // ------------------- Warrior -------------------
-            m_Class = EntityClass::Warrior;
+        case EntitySubType::Warrior : // ------------------- Warrior -------------------
+            m_Class = EntitySubType::Warrior;
             m_LifePoint = 150;
             m_ManaPoint = 5;
 
@@ -117,13 +117,13 @@ namespace redsquare
         m_DefensePoint += 2;
 
         m_XP = 0;
-        m_MaxXP += 100;
+        m_MaxXP += 20;
 
         m_Level++;
-        if(m_Level == 5){ // adding spell when level is 5
-            if(m_Class == EntityClass::Warrior){ // TODO for all class and with more level or maybe give choice to player
+        if(m_Level == 2){ // adding spell when level is 2
+            if(m_Class == EntitySubType::Warrior){ // TODO for all class and with more level or maybe give choice to player
                 m_SpellTab.push_back(SpellType::Revenge);
-            }else if(m_Class == EntityClass::Magus){
+            }else if(m_Class == EntitySubType::Magus){
                 m_SpellTab.push_back(SpellType::LightningStrike);
             }
         }
@@ -155,8 +155,7 @@ namespace redsquare
         packet.entityCar.m_Level = m_Level;
     }
 
-    void Player::playerSpawn(World &world, int playerSpawned) // set spawn for a player 
-    {
+    void Player::playerSpawn(World &world, int playerSpawned){ // set spawn for a player 
         switch (playerSpawned)
         {
         case 1:

@@ -3,7 +3,7 @@
 namespace redsquare
 {
     Monster::Monster(gf::Id entityID)
-    : ServerEntity(entityID,static_cast<EntityClass>(rand() % static_cast<int>(EntityClass::EntityClassCount)))
+    : ServerEntity(entityID,static_cast<EntitySubType>(rand() % static_cast<int>(EntitySubType::EntityClassCount)))
     {
         m_LifePoint = 100;
         m_MaxLifePoint = 100;
@@ -38,6 +38,15 @@ namespace redsquare
         packet.entityCar.m_Level = m_Level;
     }
 
+
+
+    bool Monster::nextToSpawn(gf::Vector2i monsterSpawn, World &world){ // check if montserSpawn is next to the spawn of player
+        if( monsterSpawn == world.m_Spawn || gf::Vector2i({monsterSpawn[0],monsterSpawn[1]+1}) == world.m_Spawn || gf::Vector2i({monsterSpawn[0],monsterSpawn[1]-1}) == world.m_Spawn || gf::Vector2i({monsterSpawn[0]+1,monsterSpawn[1]}) == world.m_Spawn || gf::Vector2i({monsterSpawn[0]+1,monsterSpawn[1]+1}) == world.m_Spawn || gf::Vector2i({monsterSpawn[0]+1,monsterSpawn[1]-1}) == world.m_Spawn || gf::Vector2i({monsterSpawn[0]-1,monsterSpawn[1]}) == world.m_Spawn || gf::Vector2i({monsterSpawn[0]-1,monsterSpawn[1]+1}) == world.m_Spawn || gf::Vector2i({monsterSpawn[0]-1,monsterSpawn[1]-1}) == world.m_Spawn ){
+            return true;
+        }
+        return false;
+    }
+
     void Monster::monsterSpawn(std::map<gf::Id,Monster> &m_Monsters, World &world){ // set to a monster a spawn
         int x;
         int y;
@@ -48,7 +57,7 @@ namespace redsquare
             gf::Vector2i spawn({x,y});
             m_Pos = spawn;
 
-        }while(world.m_World( { (uint)x,(uint) y } ) != Tile::Room); // only putting stair on a  randon room's tile 
+        }while(world.m_World( { (uint)x,(uint) y } ) != Tile::Room || nextToSpawn(m_Pos,world) ); 
 
         auto it = m_Monsters.begin();
 

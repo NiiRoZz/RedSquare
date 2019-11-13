@@ -7,7 +7,7 @@ namespace redsquare
 
     }
 
-    ServerEntity::ServerEntity(gf::Id entityID, const EntityClass typeOfEntity)
+    ServerEntity::ServerEntity(gf::Id entityID, const EntitySubType typeOfEntity)
     : Entity(entityID, typeOfEntity)
     {
 

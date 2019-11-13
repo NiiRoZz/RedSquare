@@ -27,7 +27,10 @@
 #include "World.h"
 #include "Game.h"
 #include "Chat.h"
+#include "Hud.h"
+#include "../common/Singletons.h"
 #include "../common/Packet.h"
+#include "../../config.h"
 #include <gf/TileLayer.h>
 
 
@@ -52,8 +55,13 @@ int main( int argc, char **argv )
     window.setVerticalSyncEnabled(true);
     window.setFramerateLimit(60);
     gf::RenderWindow renderer(window);
-    gf::Font fontChat;
-    fontChat.loadFromFile("data/redsquare/font/arial.ttf");
+    gf::SingletonStorage<gf::ResourceManager> storageForResourceManager(redsquare::gResourceManager);
+
+    // setup resource directories
+    redsquare::gResourceManager().addSearchDir(REDSQUARE_DATA_DIR);
+
+    // initialization redsquare
+    gf::Font &fontChat(gResourceManager().getFont("font/arial.ttf"));
     gf::UI uiChat(fontChat);
     Chat chat;
     
@@ -113,7 +121,7 @@ int main( int argc, char **argv )
     Game game( argv[1], argv[2], mainView, argv[3] );
 
     //Send info about us, before get world
-    game.sendInfoConnection(static_cast<EntityClass>(atoi(argv[4])), argv[3]);
+    game.sendInfoConnection(static_cast<EntitySubType>(atoi(argv[4])), argv[3]);
 
     //Client pause here until receive world
     game.receiveWorld();
@@ -124,25 +132,18 @@ int main( int argc, char **argv )
 
     gf::EntityContainer hudEntities;
     // add entities to hudEntities
-
+    Hud hud(fontChat);
+    hudEntities.addEntity(hud);
 
     gf::Cursor defaultCursor;
-    gf::Image attackImage;
-    gf::Cursor attackCursor;
-    gf::Image moveImage;
-    gf::Cursor moveCursor;
-
-    if (attackImage.loadFromFile("data/redsquare/img/attackCursor.png"))
-    {
-        attackCursor.loadFromImage(attackImage, { 8u, 8u });
-    }
-
-    if (moveImage.loadFromFile("data/redsquare/img/moveCursor.png"))
-    {
-        moveCursor.loadFromImage(moveImage, { 8u, 8u });
-    }
-
     defaultCursor.loadFromSystem( gf::Cursor::Type::Arrow );
+
+    gf::Image attackImage(std::move(gResourceManager().getTexture("img/attackCursor.png").copyToImage()));
+    gf::Cursor attackCursor;
+    attackCursor.loadFromImage(attackImage, { 8u, 8u });
+
+    gf::Image moveImage(std::move(gResourceManager().getTexture("img/moveCursor.png").copyToImage()));
+    gf::Cursor moveCursor;
 
     window.setMouseCursor(defaultCursor);
 
@@ -160,7 +161,7 @@ int main( int argc, char **argv )
         {
             actions.processEvent(event);
             views.processEvent(event);
-            uiChat.processEvent(event);
+            hud.processEvent(event);
 
             switch (event.type)
             {
@@ -263,7 +264,6 @@ int main( int argc, char **argv )
         gf::Time time = clock.restart();
         mainEntities.update(time);
         hudEntities.update(time);
-        chat.updateChat(uiChat);
 
         // 3. draw
         renderer.clear();
@@ -271,7 +271,6 @@ int main( int argc, char **argv )
         mainEntities.render(renderer);
         renderer.setView(hudView);
         hudEntities.render(renderer);
-        renderer.draw(uiChat);
         renderer.display();
         actions.reset();
 	}

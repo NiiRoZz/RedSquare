@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "../common/Singletons.h"
 
 #include <iostream>
 #include <utility>
@@ -21,11 +22,11 @@ namespace redsquare
     , m_PassTurn(false)
     , m_TempMoveTarget(false)
     , m_PlayerDead(false)
+    , m_NextPosTexture(gResourceManager().getTexture("img/redsquare.png"))
     , m_Name(name)
     {
-        nextPosTexture.loadFromFile( "data/redsquare/img/redsquare.png" );
-        //TEMP
-        m_AnimatedEntities.emplace(gf::Id(10), AnimatedEntity(10, {1,1}, "data/redsquare/img/TileSet3.png", 0, 0, 4, 0.1f));
+        //TODO: Remove this
+        m_Props.emplace(gf::Id(56466), Prop(10, EntitySubType::Torch, {1,1}));
     }
 
     void Game::startThreadCom()
@@ -34,11 +35,11 @@ namespace redsquare
         m_ChatCom.start();
     }
 
-    void Game::sendInfoConnection(EntityClass type, char *name)
+    void Game::sendInfoConnection(EntitySubType type, char *name)
     {
         Packet sendPacket;
         sendPacket.type = PacketType::PlayerInfoConnection;
-        sendPacket.playerInfoConnection.entityClass = type;
+        sendPacket.playerInfoConnection.entitySubType = type;
         strncpy(sendPacket.playerInfoConnection.name, name, 20);
 
         m_ThreadCom.sendPacket(sendPacket);
@@ -68,7 +69,7 @@ namespace redsquare
         m_World.render( target, states );
 
         auto it1 = m_TempMove.begin();
- 
+
         // Iterate over the map using Iterator till end.
         while (it1 != m_TempMove.end())
         {
@@ -77,14 +78,14 @@ namespace redsquare
 
             sprite.setPosition( (*it1) * World::TileSize );
             sprite.setScale( 1 );
-            sprite.setTexture( nextPosTexture );
+            sprite.setTexture( m_NextPosTexture );
             target.draw( sprite, states );
 
             ++it1;
         }
-        
+
         auto it2 = m_Players.begin();
- 
+
         // Iterate over the map using Iterator till end.
         while (it2 != m_Players.end())
         {
@@ -94,7 +95,7 @@ namespace redsquare
         }
 
         auto it3 = m_Monsters.begin();
- 
+
         // Iterate over the map using Iterator till end.
         while (it3 != m_Monsters.end())
         {
@@ -103,28 +104,14 @@ namespace redsquare
             ++it3;
         }
 
-        auto it4 = m_AnimatedEntities.begin();
- 
+        auto it4 = m_Props.begin();
+
         // Iterate over the map using Iterator till end.
-        while (it4 != m_AnimatedEntities.end())
+        while (it4 != m_Props.end())
         {
-            //std::cout << "m_AnimatedEntities render 1" << std::endl;
-            //std::cout << "AnimatedEntity::render m_Animation : " << &it4->second.m_Animation << " m_Animation.getCurrentBounds().getTopLeft()[0] : " << it4->second.m_Animation.getCurrentBounds().getTopLeft()[0] << " m_Animation.getCurrentTexture().getSize()[0] : " << it4->second.m_Animation.getCurrentTexture().getSize()[0] << std::endl;
             it4->second.render( target, states );
-            //std::cout << "AnimatedEntity::render m_Animation : " << &it4->second.m_Animation << " m_Animation.getCurrentBounds().getTopLeft()[0] : " << it4->second.m_Animation.getCurrentBounds().getTopLeft()[0] << " m_Animation.getCurrentTexture().getSize()[0] : " << it4->second.m_Animation.getCurrentTexture().getSize()[0] << std::endl;
-            //std::cout << "m_AnimatedEntities render 2" << std::endl;
 
             ++it4;
-        }
-
-        auto it5 = m_Props.begin();
- 
-        // Iterate over the map using Iterator till end.
-        while (it5 != m_Props.end())
-        {
-            it5->second.render( target, states );
-
-            ++it5;
         }
     }
 
@@ -148,10 +135,10 @@ namespace redsquare
             doAction();
         }
 
-        auto it = m_AnimatedEntities.begin();
- 
+        auto it = m_Props.begin();
+
         // Iterate over the map using Iterator till end.
-        while (it != m_AnimatedEntities.end())
+        while (it != m_Props.end())
         {
             it->second.update( time );
 
@@ -222,7 +209,7 @@ namespace redsquare
         {
             //don't forget to call m_CanPlay false when sent action
             m_CanPlay = false;
-            
+
             Packet packet;
             packet.type = PacketType::RequestAttack;
             packet.requestAttack.playerID = m_PlayerID;
@@ -257,7 +244,7 @@ namespace redsquare
         while ( m_ComQueue.poll(packet) )
         {
             switch (packet.type)
-            {   
+            {
                 case PacketType::ReceiveMove:
                 {
                     switch (packet.receiveMove.typeEntity)
@@ -269,7 +256,7 @@ namespace redsquare
 
                             m_World.m_SquareMap.setWalkable(player->m_Pos);
 					        m_World.m_SquareMap.setTransparent(player->m_Pos);
-                            
+
                             player->m_Pos[0] = packet.receiveMove.posX;
                             player->m_Pos[1] = packet.receiveMove.posY;
 
@@ -355,7 +342,7 @@ namespace redsquare
                         std::vector<gf::Vector2i> allPos = m_World.m_SquareMap.computeRoute(myPlayer->m_Pos, m_TempMoveTarget, 0.0);
 
                         m_TempMove.insert(m_TempMove.end(), ++(++allPos.begin()), allPos.end());
-                        
+
                         gf::Vector2i pos = allPos[1];
 
                         if ( getPlayer(pos) == nullptr && getMonster(pos) == nullptr )
@@ -378,7 +365,7 @@ namespace redsquare
 
                     m_TempMoveTarget = {0, 0};
                     m_TempMove.clear();
-                    
+
                     m_CanPlay = packet.playerTurn.playerTurn;
                     std::cout << "It's your turn!!!" << std::endl;
 
@@ -428,7 +415,7 @@ namespace redsquare
 
                         player->m_LifePoint = packet.entityCar.m_LifePoint;
                         player->m_MaxLifePoint = packet.entityCar.m_MaxLifePoint;
-                        
+
                         player->m_ManaPoint = packet.entityCar.m_ManaPoint;
                         player->m_MaxManaPoint = packet.entityCar.m_MaxManaPoint;
 
@@ -463,7 +450,7 @@ namespace redsquare
 
                         monster->m_Level = packet.entityCar.m_Level;
                     }
-                    
+
                     break;
                 }
 
@@ -502,7 +489,7 @@ namespace redsquare
         {
             return;
         }
-        
+
         m_AttackX = posX;
         m_AttackY = posY;
     }
@@ -532,7 +519,7 @@ namespace redsquare
     Player* Game::getPlayer( gf::Vector2i pos )
     {
         auto it = m_Players.begin();
- 
+
         // Iterate over the map using Iterator till end.
         while ( it != m_Players.end() )
         {
@@ -562,7 +549,7 @@ namespace redsquare
     Monster* Game::getMonster( gf::Vector2i pos )
     {
         auto it = m_Monsters.begin();
- 
+
         // Iterate over the map using Iterator till end.
         while ( it != m_Monsters.end() )
         {
@@ -588,7 +575,7 @@ namespace redsquare
 
         return nullptr;
     }
-    
+
     bool Game::monsterInRange()
     {
         Player* myPlayer = getPlayer(m_PlayerID);
@@ -601,7 +588,7 @@ namespace redsquare
         gf::Distance2<int> distFn = gf::manhattanDistance<int, 2>;
 
         auto it = m_Monsters.begin();
- 
+
         while ( it != m_Monsters.end() )
         {
             if ( distFn(myPlayer->m_Pos, it->second.m_Pos) <= myPlayer->m_Range )

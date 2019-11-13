@@ -16,7 +16,6 @@
 #include "ThreadCom.h"
 #include "../common/Packet.h"
 #include "World.h"
-#include "AnimatedEntity.h"
 
 namespace redsquare
 {
@@ -31,8 +30,6 @@ namespace redsquare
         //All monsters
         std::map<gf::Id, Monster> m_Monsters;
 
-        //All animatedEntity
-        std::map<gf::Id, AnimatedEntity> m_AnimatedEntities;
         //All props
         std::map<gf::Id, Prop> m_Props;
 
@@ -45,7 +42,7 @@ namespace redsquare
         World m_World;
 
         std::vector<gf::Vector2i> m_TempMove;
-        
+
         Game( char* hostname, char *port, gf::ExtendView &view , const char * name);
 
         Player* getPlayer( gf::Id playerID );
@@ -60,7 +57,7 @@ namespace redsquare
 
         void startThreadCom();
 
-        void sendInfoConnection(EntityClass type, char *name);
+        void sendInfoConnection(EntitySubType type, char *name);
 
         void receiveWorld();
 
@@ -80,7 +77,7 @@ namespace redsquare
 
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
-        
+
 
     private:
         const char *m_Name;
@@ -94,7 +91,7 @@ namespace redsquare
         gf::Queue<Packet> m_ChatQueue;
 
 
-        gf::Texture nextPosTexture;
+        gf::Texture &m_NextPosTexture;
 
         //Move of player
         std::pair<gf::Vector2i, bool> m_MovePlayer;

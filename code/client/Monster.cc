@@ -1,5 +1,6 @@
 #include "Monster.h"
 #include "World.h"
+#include "../common/Singletons.h"
 
 #include <gf/Shapes.h>
 #include <gf/Sprite.h>
@@ -10,32 +11,32 @@
 namespace redsquare
 {
     Monster::Monster( gf::Id entityID )
-    : redsquare::Entity(entityID,static_cast<EntityClass>(rand() % static_cast<int>(EntityClass::EntityClassCount)))
+    : redsquare::Entity(entityID,static_cast<EntitySubType>(rand() % static_cast<int>(EntitySubType::EntityClassCount)))
+    , m_Font(gResourceManager().getFont("font/arial.ttf"))
     {
         m_Pos = gf::Vector2i( 0, 0 );
         loadTexture();
     }
 
-    Monster::Monster( gf::Id entityID, EntityClass type, gf::Vector2i pos )
+    Monster::Monster( gf::Id entityID, EntitySubType type, gf::Vector2i pos )
     : redsquare::Entity(entityID,type)
+    , m_Font(gResourceManager().getFont("font/arial.ttf"))
     {
         m_Pos = pos;
         loadTexture(type);
-
-        m_Font.loadFromFile("data/redsquare/font/arial.ttf");
     }
 
-    void Monster::loadTexture( const EntityClass type )
+    void Monster::loadTexture( const EntitySubType type )
     {
         switch (type)
         {
-            case EntityClass::Magus:
+            case EntitySubType::Magus:
             {
                 monsterTexture.loadFromFile("data/redsquare/img/spirit.png");
                 break;
             }
 
-            case EntityClass::Warrior:
+            case EntitySubType::Warrior:
             {
                 monsterTexture.loadFromFile("data/redsquare/img/knifeSkull.png");
                 break;
