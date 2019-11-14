@@ -50,4 +50,15 @@ namespace redsquare
         target->m_LifePoint -= (m_AttackPoint - target->m_DefensePoint);
     }
 
+    void Monster::levelUp(uint m_Floor){ // method to level up a player
+
+        m_MaxLifePoint += 2*m_Floor;
+        m_LifePoint += 2*m_Floor;
+
+        m_AttackPoint += 2*m_Floor;
+        m_DefensePoint += 2*m_Floor;
+        
+        m_Level = (m_Floor+1);
+    }
+
 }

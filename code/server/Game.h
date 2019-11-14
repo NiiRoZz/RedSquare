@@ -41,6 +41,7 @@ namespace redsquare
         void placeProps(int nbProps);
         void getSpawnPoint();
         void putStair();
+        uint m_Floor;
 
     private:
         gf::Id generateId() const;

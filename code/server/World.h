@@ -28,7 +28,7 @@ namespace redsquare
         void getSpawnPoint(std::map<gf::Id,Prop> &m_Props,std::map<gf::Id,Monster> &m_Monster); // point of player spawn 
         void putStair(std::map<gf::Id,Prop> &m_Props); // put stair on map
         void drawRoutine(Monster &monster); // draw path of player
-        void monsterSpawn(Monster &monster, std::map<gf::Id,Monster> &m_Monsters); // spawn of a monster
+        void monsterSpawn(Monster &monster, std::map<gf::Id,Monster> &m_Monsters, uint m_Floor); // spawn of a monster
         void spawnProps(Prop &prop,std::map<gf::Id,Prop> &m_Props,gf::Vector4u currentRoom); // spawn of props
 
     private:

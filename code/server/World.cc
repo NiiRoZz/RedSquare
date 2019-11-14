@@ -336,7 +336,9 @@ namespace redsquare
         setUnWalkable( {((int)currentRoom[0]+((int)posX)),((int)currentRoom[1]+((int)posY))});
     }
 
-    void World::monsterSpawn(Monster &monster, std::map<gf::Id,Monster> &m_Monsters){ // set to a monster a spawn
+    void World::monsterSpawn(Monster &monster, std::map<gf::Id,Monster> &m_Monsters, uint m_Floor){ // set to a monster a spawn
+
+        monster.levelUp(m_Floor);
         int x;
         int y;
 
@@ -345,7 +347,6 @@ namespace redsquare
             y = rand() % MapSize;
             gf::Vector2i spawn({x,y});
             monster.m_Pos = spawn;
-
         }while(m_World( { (uint)x,(uint) y } ) != Tile::Room && m_World( { (uint)x,(uint) y } ) != Tile::Corridor); 
 
         auto it = m_Monsters.begin();
@@ -356,7 +357,7 @@ namespace redsquare
             {
                 if (it->second.m_Pos[0] == monster.m_Pos[0] && it->second.m_Pos[1] == monster.m_Pos[1])
                 {
-                    monsterSpawn(monster,m_Monsters);
+                    monsterSpawn(monster,m_Monsters,m_Floor);
                     return;
                 }
             }

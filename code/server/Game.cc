@@ -9,12 +9,13 @@ namespace redsquare
 {
     Game::Game()
     : m_PlayerSpawned(0)
+    , m_Floor(0)
     {
         m_World.generateWorld(); // generate map
         placeProps(5); // place props
         addNewMonsters(5); // place monsters
         m_World.putStair(m_Props); // put stair on map
-        m_World.prettyPrint();  // print th empa in server console
+        m_World.prettyPrint();  // print the map in server console
         m_World.getSpawnPoint(m_Props,m_Monsters); // place the spawn of player
     }
 
@@ -117,7 +118,7 @@ namespace redsquare
 
             // Create a new monster
             std::tie(itNewMonster, std::ignore) = m_Monsters.emplace(id, Monster(id));
-            m_World.monsterSpawn(itNewMonster->second,m_Monsters);
+            m_World.monsterSpawn(itNewMonster->second,m_Monsters,m_Floor);
         }
     }
 
@@ -194,6 +195,7 @@ namespace redsquare
                             sendPacket.type = PacketType::NewMap;
                             sendPacketToAllPlayers( sendPacket );
 
+                            m_Floor++;
                             m_World.generateWorld();
                             placeProps(5);
                             addNewMonsters(5);
@@ -201,6 +203,7 @@ namespace redsquare
                             m_World.prettyPrint();  
                             m_World.getSpawnPoint(m_Props,m_Monsters);
                             m_PlayerSpawned = 0;
+                            
 
                             for (auto it3 = m_Players.begin(); it3 != m_Players.end(); ++it3)
                             {

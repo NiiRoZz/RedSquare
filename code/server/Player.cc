@@ -196,7 +196,7 @@ namespace redsquare
 
         target->m_LifePoint -= (m_AttackPoint - target->m_DefensePoint);
         if(target->m_LifePoint <= 0){
-            m_XP += 10;
+            m_XP += target->m_Level*10;
             if(m_XP >= m_MaxXP){
                 levelUp();
             }
