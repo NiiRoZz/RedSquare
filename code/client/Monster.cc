@@ -32,13 +32,13 @@ namespace redsquare
         {
             case EntitySubType::Magus:
             {
-                monsterTexture.loadFromFile("data/redsquare/img/spirit.png");
+                monsterTexture = &gResourceManager().getTexture("img/spirit.png");
                 break;
             }
 
             case EntitySubType::Warrior:
             {
-                monsterTexture.loadFromFile("data/redsquare/img/knifeSkull.png");
+                monsterTexture = &gResourceManager().getTexture("img/knifeSkull.png");
                 break;
             }
 
@@ -57,6 +57,7 @@ namespace redsquare
             */
             default:
             {
+                monsterTexture = &gResourceManager().getTexture("data/redsquare/img/spirit.png");
                 break;
             }
         }
@@ -72,7 +73,7 @@ namespace redsquare
 
         sprite.setPosition( m_Pos * World::TileSize );
         sprite.setScale( 1 );
-        sprite.setTexture( monsterTexture );
+        sprite.setTexture( *monsterTexture );
         target.draw(sprite, states);
 
         gf::Color4f color(255,0,0,174);

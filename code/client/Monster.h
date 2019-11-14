@@ -22,7 +22,7 @@ namespace redsquare
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
     private:
-        gf::Texture monsterTexture;
+        gf::Texture *monsterTexture;
         gf::Font &m_Font;
     };
 }

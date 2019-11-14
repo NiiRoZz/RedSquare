@@ -41,7 +41,7 @@ namespace redsquare
 
         sprite.setPosition( m_Pos * World::TileSize );
         sprite.setScale( 1 );
-        sprite.setTexture( playerTexture );
+        sprite.setTexture( *playerTexture );
         target.draw(sprite, states);
         
         gf::Color4f color(255,0,0,174);
@@ -104,13 +104,13 @@ namespace redsquare
         {
             case EntitySubType::Magus:
             {
-                playerTexture.loadFromFile("data/redsquare/img/goblin.png");
+                playerTexture = &gResourceManager().getTexture("img/goblin.png");
                 break;
             }
 
             case EntitySubType::Warrior:
             {
-                playerTexture.loadFromFile("data/redsquare/img/knight.png");
+                playerTexture = &gResourceManager().getTexture("img/knight.png");
                 break;
             }
 

@@ -21,7 +21,7 @@ namespace redsquare
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
     private:
-        gf::Texture propTexture;
+        gf::Texture *propTexture;
         gf::Animation m_Animation;
         bool m_Animated;
 

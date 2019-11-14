@@ -24,13 +24,13 @@ namespace redsquare
         {
             case EntitySubType::Box:
             {
-                propTexture.loadFromFile("data/redsquare/img/spirit.png");
+                propTexture = &gResourceManager().getTexture("img/spirit.png");
                 break;
             }
 
             case EntitySubType::Pot:
             {
-                propTexture.loadFromFile("data/redsquare/img/spirit.png");
+                propTexture = &gResourceManager().getTexture("img/spirit.png");
                 break;
             }
 
@@ -65,7 +65,7 @@ namespace redsquare
 
             sprite.setPosition( m_Pos * World::TileSize );
             sprite.setScale( 1 );
-            sprite.setTexture( propTexture );
+            sprite.setTexture( *propTexture );
             target.draw(sprite, states);
         }
     }
