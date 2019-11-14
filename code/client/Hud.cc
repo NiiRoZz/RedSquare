@@ -65,11 +65,9 @@ namespace redsquare
         m_ChatShader.setUniform("u_backgroundColor", gf::Color::Opaque(0.75f));
     }
 
-    static constexpr float HudPadding = 20.0f;
-    static constexpr float HudSpellSize = 50.0f;
+    static constexpr float HudSpellSize = 65.0f;
     static constexpr float HudSpellTextureSize = 16.0f;
-    static constexpr float HudSpellSpace = 10.0f;
-
+    
     void Hud::render(gf::RenderTarget& target, const gf::RenderStates& states)
     {
         std::cout << "m_Chat.m_HoveringChat : " << m_Chat.m_HoveringChat << std::endl;
@@ -98,21 +96,17 @@ namespace redsquare
         text.setPosition(coordinates.getRelativePoint({ 0.03f, 0.05f }));
         target.draw(text, states);
 
-        gf::Vector2f position(HudPadding, HudPadding);
-        position = coordinates.getAbsolutePoint({ HudPadding, HudSpellSize + HudSpellSpace + HudSpellSize + HudPadding }, gf::Anchor::BottomLeft);
-        std::size_t index=2;
+        float index=0;
         for (auto it= m_spellsTextures.begin(); it!=m_spellsTextures.end();++it){
             
             gf::Sprite sprite;
             sprite.setTexture(**it);
-            sprite.setPosition(position + HudSpellSize +  gf::Vector2f(index, 0) * HudSpellTextureSize  );
-            sprite.setScale(HudSpellSize / HudSpellTextureSize);
+            sprite.setAnchor(gf::Anchor::TopLeft);
+            sprite.setPosition(coordinates.getRelativePoint({ 0.43f, 0.90f })+gf::Vector2f(index, 0)+ HudSpellSize*gf::Vector2f(index,0)*coordinates.getRelativeSize({ 0.001f, 0.001f }).height);
+            sprite.setScale((HudSpellSize / HudSpellTextureSize)*coordinates.getRelativeSize({ 0.001f, 0.001f }).height);
             target.draw(sprite, states);
-            index+=3.5;
+            index+=1.2;
         }
-
-
-         
     }
 
     void Hud::update(gf::Time time)
