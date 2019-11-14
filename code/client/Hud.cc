@@ -69,7 +69,7 @@ namespace redsquare
     
     void Hud::render(gf::RenderTarget& target, const gf::RenderStates& states)
     {
-        std::cout << "m_Chat.m_HoveringChat : " << m_Chat.m_HoveringChat << std::endl;
+        //std::cout << "m_Chat.m_HoveringChat : " << m_Chat.m_HoveringChat << std::endl;
         if (m_Chat.m_HoveringChat)
         {
             m_ChatShader.setUniform("u_backgroundColor", gf::Color::Opaque(1.0f));
