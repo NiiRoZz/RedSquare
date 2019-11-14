@@ -9,6 +9,7 @@
 namespace redsquare
 {
     Chat::Chat()
+    : m_HoveringChat(false)
     {
 
     }
@@ -18,13 +19,15 @@ namespace redsquare
         static gf::UICharBuffer box(512);
         static gf::UICharBuffer text(64);
 
+        m_HoveringChat = false;
+
         static gf::Color4f comboColor1 = gf::Color::fromRgba32(255, 255, 255, 100);
         chatUI.setCharacterSize(12);
         if( chatUI.begin("Chat", gf::RectF(0, 350, 220, 220),  gf::UIWindow::Movable |gf::UIWindow::Title|gf::UIWindow::NoScrollbar)){
-            
             static gf::UICollapse groupCollapsed = gf::UICollapse::Minimized;
             
             chatUI.layoutRowStatic(150, 210, 1);
+            m_HoveringChat |= chatUI.isWidgetHovered();
             if (chatUI.groupBegin(""))
             {
                 chatUI.layoutRowStatic(30, 185, 1);
@@ -36,6 +39,7 @@ namespace redsquare
                 chatUI.groupEnd();
             }
             chatUI.layoutRowStatic(50, 200, 1);
+            m_HoveringChat |= chatUI.isWidgetHovered();
 
             if (chatUI.groupBegin(""))
             {

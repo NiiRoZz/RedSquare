@@ -20,11 +20,14 @@ namespace redsquare
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
         void processEvent(const gf::Event &event);
+
+        bool hoveringChat();
         
     private:
-        Chat chat;
-        gf::UI uiChat;
+        Chat m_Chat;
+        gf::UI m_UiChat;
         gf::Font m_Font;
+        gf::Shader m_ChatShader;
     };
 
 }

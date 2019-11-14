@@ -170,24 +170,27 @@ int main( int argc, char **argv )
             {
                 case gf::EventType::MouseButtonPressed:
                 {
-                    end = std::chrono::system_clock::now();
-                    int elapsed_seconds = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count();
-                    if( elapsed_seconds >= 500 )
+                    if (!hud.hoveringChat())
                     {
-                        start = std::chrono::system_clock::now();
-
-                        gf::Vector2i pos = renderer.mapPixelToCoords(event.mouseButton.coords,mainView) / World::TileSize;
-
-                        Player* myPlayer = game.getPlayer(game.m_PlayerID);
-                        if ( myPlayer != nullptr && game.m_CanPlay )
+                        end = std::chrono::system_clock::now();
+                        int elapsed_seconds = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count();
+                        if( elapsed_seconds >= 500 )
                         {
-                            if ( myPlayer->canAttack(pos, game.m_Monsters, game.m_Props) )
+                            start = std::chrono::system_clock::now();
+
+                            gf::Vector2i pos = renderer.mapPixelToCoords(event.mouseButton.coords,mainView) / World::TileSize;
+
+                            Player* myPlayer = game.getPlayer(game.m_PlayerID);
+                            if ( myPlayer != nullptr && game.m_CanPlay )
                             {
-                                game.attackPos( pos[0], pos[1] );
-                            }
-                            else if (myPlayer->canMove(pos, game.m_Players, game.m_Monsters, game.m_Props, game.m_World.m_SquareMap))
-                            {
-                                game.movePlayer( pos[0], pos[1], true );
+                                if ( myPlayer->canAttack(pos, game.m_Monsters, game.m_Props) )
+                                {
+                                    game.attackPos( pos[0], pos[1] );
+                                }
+                                else if (myPlayer->canMove(pos, game.m_Players, game.m_Monsters, game.m_Props, game.m_World.m_SquareMap))
+                                {
+                                    game.movePlayer( pos[0], pos[1], true );
+                                }
                             }
                         }
                     }
@@ -196,36 +199,46 @@ int main( int argc, char **argv )
 
                 case gf::EventType::MouseMoved:
                 {
-                    gf::Vector2i pos = renderer.mapPixelToCoords(event.mouseCursor.coords,mainView) / World::TileSize;
-
-                    Player* myPlayer = game.getPlayer(game.m_PlayerID);
-                    if ( myPlayer != nullptr && game.m_CanPlay )
+                    if (!hud.hoveringChat())
                     {
-                        if ( myPlayer->canAttack(pos, game.m_Monsters, game.m_Props) )
+                        gf::Vector2i pos = renderer.mapPixelToCoords(event.mouseCursor.coords,mainView) / World::TileSize;
+
+                        Player* myPlayer = game.getPlayer(game.m_PlayerID);
+                        if ( myPlayer != nullptr && game.m_CanPlay )
                         {
-                            window.setMouseCursor(attackCursor);
-                            game.m_TempMove.clear();
-                        }
-                        else if (myPlayer->canMove(pos, game.m_Players, game.m_Monsters, game.m_Props, game.m_World.m_SquareMap))
-                        {
-                            window.setMouseCursor(moveCursor);
+                            if ( myPlayer->canAttack(pos, game.m_Monsters, game.m_Props) )
+                            {
+                                window.setMouseCursor(attackCursor);
+                                game.m_TempMove.clear();
+                            }
+                            else if (myPlayer->canMove(pos, game.m_Players, game.m_Monsters, game.m_Props, game.m_World.m_SquareMap))
+                            {
+                                window.setMouseCursor(moveCursor);
 
-                            game.m_TempMove.clear();
+                                game.m_TempMove.clear();
 
-                            std::vector<gf::Vector2i> allPos = game.m_World.m_SquareMap.computeRoute(myPlayer->m_Pos, pos, 0.0);
+                                std::vector<gf::Vector2i> allPos = game.m_World.m_SquareMap.computeRoute(myPlayer->m_Pos, pos, 0.0);
 
-                            game.m_TempMove.insert(game.m_TempMove.end(), ++allPos.begin(), allPos.end());
+                                game.m_TempMove.insert(game.m_TempMove.end(), ++allPos.begin(), allPos.end());
+                            }
+                            else
+                            {
+                                window.setMouseCursor(defaultCursor);
+                                game.m_TempMove.clear();
+                            }
                         }
                         else
                         {
-                            window.setMouseCursor(defaultCursor);
                             game.m_TempMove.clear();
+                            window.setMouseCursor(defaultCursor);
                         }
                     }
                     else
                     {
+                        game.m_TempMove.clear();
                         window.setMouseCursor(defaultCursor);
                     }
+                    
                     break;
                 }
             }
@@ -236,29 +249,29 @@ int main( int argc, char **argv )
             window.close();
         }
 
-        if (fullscreenAction.isActive())
+        if (fullscreenAction.isActive() && !hud.hoveringChat())
         {
             window.toggleFullscreen();
         }
 
-        if (rightAction.isActive())
+        if (rightAction.isActive() && !hud.hoveringChat())
         {
             game.movePlayer( 1, 0 );
         } 
-        else if (leftAction.isActive())
+        else if (leftAction.isActive() && !hud.hoveringChat())
         {
             game.movePlayer( -1, 0 );
         } 
-        else if (upAction.isActive())
+        else if (upAction.isActive() && !hud.hoveringChat())
         {
             game.movePlayer( 0, -1 );
         } 
-        else if (downAction.isActive())
+        else if (downAction.isActive() && !hud.hoveringChat())
         {
             game.movePlayer( 0, 1 );
         }
 
-        if (passTurn.isActive())
+        if (passTurn.isActive() && !hud.hoveringChat())
         {
             game.passTurn();
         }
