@@ -14,6 +14,8 @@ namespace redsquare
         Chat();
 
         void updateChat(gf::UI &chatUI);
+
+        bool m_HoveringChat;
     };
 }
 
