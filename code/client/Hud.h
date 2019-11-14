@@ -13,7 +13,7 @@ namespace redsquare
     class Hud: public gf::Entity
     {
     public:
-        Hud(gf::Font &fontChat);
+        Hud(gf::Font &font);
 
         virtual void update(gf::Time time) override;
 
@@ -24,7 +24,8 @@ namespace redsquare
     private:
         Chat chat;
         gf::UI uiChat;
-        gf::Font m_Font;
+        gf::Font &m_Font;
+        std::vector<gf::Texture*>m_spellsTextures;
     };
 
 }
