@@ -38,55 +38,6 @@ namespace redsquare
         packet.entityCar.m_Level = m_Level;
     }
 
-
-
-    bool Monster::nextToSpawn(gf::Vector2i monsterSpawn, World &world){ // check if montserSpawn is next to the spawn of player
-        if( monsterSpawn == world.m_Spawn || gf::Vector2i({monsterSpawn[0],monsterSpawn[1]+1}) == world.m_Spawn || gf::Vector2i({monsterSpawn[0],monsterSpawn[1]-1}) == world.m_Spawn || gf::Vector2i({monsterSpawn[0]+1,monsterSpawn[1]}) == world.m_Spawn || gf::Vector2i({monsterSpawn[0]+1,monsterSpawn[1]+1}) == world.m_Spawn || gf::Vector2i({monsterSpawn[0]+1,monsterSpawn[1]-1}) == world.m_Spawn || gf::Vector2i({monsterSpawn[0]-1,monsterSpawn[1]}) == world.m_Spawn || gf::Vector2i({monsterSpawn[0]-1,monsterSpawn[1]+1}) == world.m_Spawn || gf::Vector2i({monsterSpawn[0]-1,monsterSpawn[1]-1}) == world.m_Spawn ){
-            return true;
-        }
-        return false;
-    }
-
-    void Monster::monsterSpawn(std::map<gf::Id,Monster> &m_Monsters, World &world){ // set to a monster a spawn
-        int x;
-        int y;
-
-        do{
-            x = rand() % World::MapSize;
-            y = rand() % World::MapSize;
-            gf::Vector2i spawn({x,y});
-            m_Pos = spawn;
-
-        }while(world.m_World( { (uint)x,(uint) y } ) != Tile::Room || nextToSpawn(m_Pos,world) ); 
-
-        auto it = m_Monsters.begin();
-
-        while ( it != m_Monsters.end() )
-        {
-            if( it->first != m_EntityID )
-            {
-                if (it->second.m_Pos[0] == m_Pos[0] && it->second.m_Pos[1] == m_Pos[1])
-                {
-                    monsterSpawn(m_Monsters,world);
-                }
-            }
-            ++it;
-        }
-        drawRoutine(world);
-    }
-
-    void Monster::drawRoutine(World &world){
-        int x;
-        int y;
-
-        do{
-            x = rand() % World::MapSize;
-            y = rand() % World::MapSize;
-            gf::Vector2i spawn({x,y});
-            m_Routine = spawn;
-        }while(world.m_World( { (uint)x,(uint) y } ) != Tile::Room && !world.m_SquareWorld.isWalkable({x,y})); // only putting stair on a  randon room's tile 
-    }
-
     bool Monster::checkRoutine(){
         if(m_Pos[0] == m_Routine[0] && m_Pos[1] == m_Routine[1]){
             return true;

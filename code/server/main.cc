@@ -29,9 +29,9 @@ int main( int argc, char **argv )
 	}
 
 	int nmbPlayers = atoi( argv[2] );
-	if ( nmbPlayers <= 0 )
+	if ( nmbPlayers <= 0 || nmbPlayers > 9  ) // number of player between 0 and 9 
 	{
-		std::cerr << "Number of players should be > 0" << std::endl;
+		std::cerr << "Number of players should be > 0 and < 9" << std::endl;
 		return 3;
 	}
 
@@ -41,10 +41,8 @@ int main( int argc, char **argv )
   	gf::SingletonStorage<gf::Random> storageForRandom(gRandom);
 
     Game game;
-
-	game.placeProps(5); // palce props on the map
-	game.addNewMonsters(5); // 10 monster TODO
-
+	
+	
 	boost::asio::io_service m_IoService;
     boost::asio::ip::tcp::acceptor m_Acceptor(m_IoService, tcp::endpoint(tcp::v4(), port));
 
@@ -186,7 +184,7 @@ int main( int argc, char **argv )
 			{
 				if( it->second.checkRoutine() )
 				{
-					it->second.drawRoutine(game.m_World);
+					game.m_World.drawRoutine(it->second);
 				}
 				else
 				{
@@ -198,7 +196,7 @@ int main( int argc, char **argv )
 
 					if( !game.m_World.m_SquareWorld.isWalkable(it->second.m_Routine) )
 					{
-						it->second.drawRoutine(game.m_World);
+						game.m_World.drawRoutine(it->second);
 					}
 						
         			game.m_World.m_SquareWorld.setWalkable(it->second.m_Pos);

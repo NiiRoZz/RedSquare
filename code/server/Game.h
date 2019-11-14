@@ -29,16 +29,18 @@ namespace redsquare
         void processPackets( Packet &packet );
 
         Player* getPlayer( gf::Id playerID );
-        Player* getPlayer( gf::Vector2i pos );
+        Player* getPlayer( gf::Vector2i pos ); // getter of player pos
 
-        Monster* getMonster( gf::Vector2i pos );
+        Monster* getMonster( gf::Vector2i pos ); // getter of monster pos
 
-        Prop* getProp( gf::Vector2i pos );
+        Prop* getProp( gf::Vector2i pos ); // getter of props pos
 
         void sendPacketToAllPlayers( Packet &packet );
         void sendPacketToVisiblePlayers( Packet &packet, gf::Vector2i pos );
         bool canAttack(Monster &monster, gf::Vector2i targetPos);
         void placeProps(int nbProps);
+        void getSpawnPoint();
+        void putStair();
 
     private:
         gf::Id generateId() const;
