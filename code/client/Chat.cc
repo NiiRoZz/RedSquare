@@ -21,10 +21,10 @@ namespace redsquare
 
         m_HoveringChat = false;
 
-        static gf::Color4f comboColor1 = gf::Color::fromRgba32(255, 255, 255, 100);
         chatUI.setCharacterSize(12);
-        if( chatUI.begin("Chat", gf::RectF::fromPositionSize( {0, 350}, {220, 220} ),  gf::UIWindow::Movable |gf::UIWindow::Title|gf::UIWindow::NoScrollbar)){
-            static gf::UICollapse groupCollapsed = gf::UICollapse::Minimized;
+
+        if( chatUI.begin("Chat", gf::RectF::fromPositionSize( {0, 350}, {220, 220} ),  gf::UIWindow::Movable |gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
+        {
             m_HoveringChat = chatUI.isWindowHovered();
             
             chatUI.layoutRowStatic(150, 210, 1);
@@ -44,12 +44,13 @@ namespace redsquare
             {
                 chatUI.layoutRowBegin(gf::UILayout::Static, 25, 2);
                 chatUI.layoutRowPush(113);
+                
                 gf::UIEditEventFlags flags = chatUI.edit(gf::UIEditType::Field | gf::UIEdit::SigEnter, text, gf::UIEditFilter::Ascii);
                 chatUI.layoutRowPush(60);
                 
-                if (chatUI.buttonLabel("Submit") || flags.test(gf::UIEditEvent::Commited))
+                if ( chatUI.buttonLabel("Submit") || flags.test(gf::UIEditEvent::Commited) )
                 {
-                    std::cout <<"envoyé";
+                    std::cout << "envoyé" << std::endl;
                     //box.append(text);
                     //text.clear();
                 }
