@@ -25,9 +25,9 @@ namespace redsquare
         chatUI.setCharacterSize(12);
         if( chatUI.begin("Chat", gf::RectF::fromPositionSize( {0, 350}, {220, 220} ),  gf::UIWindow::Movable |gf::UIWindow::Title|gf::UIWindow::NoScrollbar)){
             static gf::UICollapse groupCollapsed = gf::UICollapse::Minimized;
+            m_HoveringChat = chatUI.isWindowHovered();
             
             chatUI.layoutRowStatic(150, 210, 1);
-            m_HoveringChat |= chatUI.isWidgetHovered();
             if (chatUI.groupBegin(""))
             {
                 chatUI.layoutRowStatic(30, 185, 1);
@@ -39,7 +39,6 @@ namespace redsquare
                 chatUI.groupEnd();
             }
             chatUI.layoutRowStatic(50, 200, 1);
-            m_HoveringChat |= chatUI.isWidgetHovered();
 
             if (chatUI.groupBegin(""))
             {
