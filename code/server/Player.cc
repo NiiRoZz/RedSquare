@@ -2,7 +2,6 @@
 #include <iostream>
 
 #define RATIO 1.1
-#define LEVELSPELL 1
 
 namespace redsquare
 {
@@ -123,25 +122,92 @@ namespace redsquare
 
         m_Level++;
 
-        if(m_Level == 2)
+    
+        switch (m_Class)
         {
-            switch (m_Class)
-            {
-                case EntitySubType::Warrior:
-                {
-                    m_SpellTab.push_back(SpellType::Revenge);
-                    break;
-                }
+            case EntitySubType::Warrior:
+            {   
+                for(int i = 0 ; i < 3; ++ i){
+                    int randomWarriorSpell = rand() % 6;
+                    switch (randomWarriorSpell){
+                        case 0 :{ 
+                            // add spell to display 
+                            break;
+                        }
+                        case 1 :{ 
+                            // add spell to display 
+                            break;
+                        }
+                        case 2 :{ 
+                            // add spell to display
+                            break;
+                        }
+                        case 3 :{ 
+                            // add spell to display
+                            break;
+                        }
+                        case 4 :{ 
+                            // add spell to display
+                            break;
+                        }
+                        case 5 :{ 
+                            // add spell to display
+                            break;
+                        }
+                        case 6 :{ 
+                            // add spell to display
+                            break;
+                        }
 
-                case EntitySubType::Magus:
-                {
-                    m_SpellTab.push_back(SpellType::LightningStrike);
-                    break;
+                    }
                 }
+            
+
+                sendUpdateOfSpells();
+                break;
             }
 
-            sendUpdateOfSpells();
+            case EntitySubType::Magus:
+            {
+                for(int i = 0 ; i < 3; ++ i){
+                    int randomWarriorSpell = rand() % 6;
+                    switch (randomWarriorSpell){
+                        case 0 :{ 
+                            // add spell to display 
+                            break;
+                        }
+                        case 1 :{ 
+                            // add spell to display 
+                            break;
+                        }
+                        case 2 :{ 
+                            // add spell to display 
+                            break;
+                        }
+                        case 3 :{ 
+                            // add spell to display 
+                            break;
+                        }
+                        case 4 :{ 
+                            // add spell to display 
+                            break;
+                        }
+                        case 5 :{ 
+                            // add spell to display 
+                            break;
+                        }
+                        case 6 :{ 
+                            // add spell to display     
+                            break;
+                        }
+
+                    }
+                }
+                sendUpdateOfSpells();
+                break;
+            }
         }
+        
     }
 
     void Player::createCarPacket(Packet &packet) // create the packet of the caracteristic who will be send to player
@@ -257,25 +323,51 @@ namespace redsquare
     }
 
     void Player::Fireball(ServerEntity *target){
-        target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint);
-        // TODO burn state
+        int critical = rand() % 100;
+        if(critical > 90){
+            target->m_LifePoint -= (m_AttackPoint*(RATIO*1.5) - target->m_DefensePoint);
+            //target is burned
+        }else{
+            target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint);
+            int isBurned = rand() % 100;
+            if(isBurned > 70 ){
+                // target is burned
+            }
+        }
+
     }
 
-    void Player::ArmorUp(){
-        m_DefensePoint += 2; // TODO update ration by lvl of source
+    void Player::ArmorUp(){ // WARRIOR
+        int critical = rand() % 100;
+        if(critical > 90){
+            m_DefensePoint += 4; // TODO update ration by lvl of source
+        }else{
+            m_DefensePoint += 2; // TODO update ration by lvl of source
+        }
     }
 
 
-    void Player::DoubleStrike(ServerEntity *target){
-        target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint); // TODO update ration by lvl of source or lvl of spell
-        target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint); // TODO update ration by lvl of source or lvl of spell
+    void Player::DoubleStrike(ServerEntity *target){ // WARRIOR
+        int critical = rand() % 100;
+        if(critical > 90){
+            target->m_LifePoint -= (m_AttackPoint*(RATIO*1.5) - target->m_DefensePoint); // TODO update ration by lvl of source or lvl of spell
+            target->m_LifePoint -= (m_AttackPoint*(RATIO*1.5) - target->m_DefensePoint); // TODO update ration by lvl of source or lvl of spell
+        }else{
+            target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint); // TODO update ration by lvl of source or lvl of spell
+            target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint); // TODO update ration by lvl of source or lvl of spell
+        }
     } 
 
-    void Player::Heal(){
-        m_LifePoint += 5; // TODO update ration by lvl of spell
+    void Player::Heal(){ // check that spell can't heal over max life point
+        int critical = rand() % 100;
+        if(critical > 90){
+            m_LifePoint += 10; // TODO update ration by lvl of spell
+        }else{
+            m_LifePoint += 5; // TODO update ration by lvl of spell
+        }
     }
     void Player::Assasinate(ServerEntity *target){
-        int range = 100 / LEVELSPELL;
+        int range = 100 / (5);
         if( rand() % range == 1){
             target->m_LifePoint = 0;
         }else{
@@ -283,26 +375,56 @@ namespace redsquare
         }
     }
 
-    void Player::DamageUp(){
-        m_AttackPoint += 5;
+    void Player::DamageUp(){ 
+        int critical = rand() % 100;
+        if(critical > 90){
+            m_AttackPoint += 5;
+        }else{
+            m_AttackPoint += 10;
+        }
     }
 
 
     void Player::Protection(ServerEntity *target){
-        target->m_DefensePoint += 5; 
+        int critical = rand() % 100;
+        if(critical > 90){
+            target->m_DefensePoint += 5; 
+        }else{
+            target->m_DefensePoint += 10; 
+        }
     }
 
-    void Player::Revenge(ServerEntity *target){
-        target->m_LifePoint -= (m_MaxLifePoint - m_LifePoint) / 5 ;
+    void Player::Revenge(ServerEntity *target){ // WARRIOR
+        int critical = rand() % 100;
+        if(critical > 90){
+            target->m_LifePoint -= (int) (m_MaxLifePoint - m_LifePoint) / 5 ;
+        }else{ 
+            target->m_LifePoint -= (int) ((m_MaxLifePoint - m_LifePoint) / 2.5) ;
+        }
     }
 
     void Player::Lacerate(ServerEntity *target){
-        target->m_LifePoint -= (target->m_MaxLifePoint - target->m_LifePoint) / 5 ;
+        int critical = rand() % 100;
+        if(critical > 90){
+            target->m_LifePoint -= (int) (m_MaxLifePoint) / 10 ;
+        }else{ 
+            target->m_LifePoint -= (int) ((m_MaxLifePoint) / 5) ;
+        }
     }
 
     void Player::Incinerate(ServerEntity *target){
-        target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint);
-        // TODO burn state
+
+        int critical = rand() % 100;
+        if(critical > 90){
+            target->m_LifePoint -= (m_AttackPoint*(RATIO*1.5) - target->m_DefensePoint);
+            //target is burned
+        }else{
+            target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint);
+            int isBurned = rand() % 100;
+            if(isBurned > 70 ){
+                // target is burned
+            }
+        }
     }
 
     void Player::Devastate(ServerEntity *target, int zone){
@@ -310,21 +432,30 @@ namespace redsquare
     }
 
 
-    void Player::Massacre(ServerEntity *target){
-        target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint);
-        // TODO bleed status
+    void Player::Massacre(ServerEntity *target){ // WARRIOR
+        int critical = rand() % 100;
+        if(critical > 90){
+            target->m_LifePoint -= (m_AttackPoint*(RATIO*1.5) - target->m_DefensePoint);
+            //target is burned
+        }else{
+            target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint);
+            int isBleeding = rand() % 100;
+            if(isBleeding > 70 ){
+                // target is bleeding
+            }
+        }
     }
 
 
-    void Player::Impact(ServerEntity *target,gf::SquareMap m_SquareWorld){
-    // dash attack
+    void Player::Impact(ServerEntity *target,gf::SquareMap m_SquareWorld){ // WARRIOR
+        // dash attack
         gf::Vector2i start = m_Pos;
         gf::Vector2i end = target->m_Pos;
 
         target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint);
         std::vector<gf::Vector2i> dash = m_SquareWorld.computeRoute(start, end, 0.0); // first set of tile for the corridor
 
-        if(dash.size() > 1){ // techniccaly we will check if the field of vision is clear from the source to target so there wont be anyone on the path 
+        if(dash.size() > 1){ // techniccaly we have already check if the field of vision is clear from the source to target so there won't be anyone on the path 
             m_Pos = dash[1]; // TODO check if correct
         }
     }
@@ -334,14 +465,28 @@ namespace redsquare
     }
 
 
-    void Player::Scorch(ServerEntity *target){
-        target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint);
-        // TODO draw if bleed
+    void Player::Scorch(ServerEntity *target){ // WARRIOR
+        int critical = rand() % 100;
+        if(critical > 90){
+            target->m_LifePoint -= (m_AttackPoint*(RATIO*1.5) - target->m_DefensePoint);
+            //target is burned
+        }else{
+            target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint);
+            int isBleeding = rand() % 100;
+            if(isBleeding > 70 ){
+                // target is bleeding
+            }
+        }
     }
 
-    void Player::Berserk(){
-        m_AttackPoint += 5;
-        m_DefensePoint -= 5;
+    void Player::Berserk(){ // WARRIOR
+        int critical = rand() % 100;
+        if(critical > 90){
+            m_AttackPoint += 5;
+        }else{
+            m_AttackPoint += 5;
+            m_DefensePoint -= 5;
+        }
     }
 
     void Player::Cleanse(){
@@ -366,20 +511,37 @@ namespace redsquare
     }
 
     void Player::Shoot(ServerEntity *target){
-        target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint);
+        int critical = rand() % 100;
+        if(critical > 90){   
+            target->m_LifePoint -= (m_AttackPoint*(RATIO*1.5) - target->m_DefensePoint);
+            target->m_DefensePoint -= 5;
+        }else{  
+            target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint);
+        }
     }
 
     void Player::Backstab(ServerEntity *target){
-        target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint);
+        int critical = rand() % 100;
+        if(critical > 90){   
+            target->m_LifePoint -= (m_AttackPoint*(RATIO*1.5) - target->m_DefensePoint);
+            m_AttackPoint += 2;
+        }else{  
+            target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint);
+        }
     }
 
 
     void Player::Energize(){
-        // same as Damage uup but with bigger bonuse for a limited time
+        // same as Damage up but with bigger bonus for a limited time
     }
 
     void Player::Torpedo(ServerEntity *target){
-        target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint);
+        int critical = rand() % 100;
+        if(critical > 90){   
+            target->m_LifePoint -= (m_AttackPoint*(RATIO*1.5) - target->m_DefensePoint);
+        }else{  
+            target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint);
+        }
     }
 
     void Player::SoulLink(ServerEntity *target){
