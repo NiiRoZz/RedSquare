@@ -175,7 +175,7 @@ namespace redsquare
 
         for(int i = 0; i < MapSize; ++i){
             for (int j = 0; j < MapSize; ++j){  
-                tampon.setWalkable({i,j}); // every tile are walkable  on the tampon
+                tampon.setWalkable({i,j}, true); // every tile are walkable  on the tampon
             }
         }
 
@@ -259,11 +259,6 @@ namespace redsquare
         }
     }
 
-    void World::setUnWalkable(gf::Vector2i pos)
-    {
-        m_SquareWorld.setCell(pos,gf::Flags<gf::CellProperty>()); // Hacky AF, waiting on JB to push is own function :D
-    }
-
     void World::getSpawnPoint(std::map<gf::Id,Prop> &m_Props,std::map<gf::Id,Monster> &m_Monster){ // set a spawn point and check if all tile around him is a room or a corrdior to make player spawnable on these tile
         
         int x;
@@ -333,7 +328,7 @@ namespace redsquare
             posY = rand() % currentRoom[3]; // width
         }while(  m_World( { (currentRoom[0]+posX), (currentRoom[1]+posY) }) != Tile::Room && m_World({ (currentRoom[0]+posX), (currentRoom[1]+posY) }) != Tile::Corridor);   
         prop.m_Pos = {((int)currentRoom[0]+((int)posX)),((int)currentRoom[1]+((int)posY))};
-        setUnWalkable( {((int)currentRoom[0]+((int)posX)),((int)currentRoom[1]+((int)posY))});
+        m_SquareWorld.setWalkable({((int)currentRoom[0]+((int)posX)),((int)currentRoom[1]+((int)posY))}, false);
     }
 
     void World::monsterSpawn(Monster &monster, std::map<gf::Id,Monster> &m_Monsters, uint m_Floor){ // set to a monster a spawn

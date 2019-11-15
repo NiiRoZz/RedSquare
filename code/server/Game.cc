@@ -300,8 +300,8 @@ namespace redsquare
                             sendPacket.type = PacketType::EntityDisconnected;
                             sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
                             sendPacket.entityDisconnected.entityID = targetMonster->m_EntityID;
-                            m_World.m_SquareWorld.setWalkable(targetMonster->m_Pos);
-                            m_World.m_SquareWorld.setTransparent(targetMonster->m_Pos);
+                            m_World.m_SquareWorld.setWalkable(targetMonster->m_Pos, true);
+                            m_World.m_SquareWorld.setTransparent(targetMonster->m_Pos, true);
                             m_Monsters.erase(targetMonster->m_EntityID);
 
                         }

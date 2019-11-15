@@ -4,6 +4,7 @@ project(RedSquare
 )
 
 find_package(gf REQUIRED)
+find_package(Threads REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system filesystem)
 
 set(REDSQUARE_DATA_DIR "${CMAKE_INSTALL_PREFIX}/share/games/redsquare")
@@ -26,6 +27,7 @@ add_executable(RedSquare
 
 target_link_libraries(RedSquare
   gf::gf0
+  Threads::Threads
 )
 
 target_include_directories(RedSquare
@@ -55,6 +57,7 @@ add_executable(RedSquare-Server
 target_link_libraries(RedSquare-Server
   gf::gf0
   ${Boost_LIBRARIES}
+  Threads::Threads
 )
 
 target_include_directories(RedSquare-Server

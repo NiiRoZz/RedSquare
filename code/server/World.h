@@ -19,7 +19,6 @@ namespace redsquare
         std::vector<gf::Vector4u> TabRoom; // posX , posY , length, width
         gf::SquareMap m_SquareWorld;
         World();
-        void setUnWalkable(gf::Vector2i pos); // set tile unwalkable
         void generateWorld(); // generate world
         void prettyPrint(); // print the map with char in the console
 

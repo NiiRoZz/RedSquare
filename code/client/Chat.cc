@@ -23,7 +23,7 @@ namespace redsquare
 
         static gf::Color4f comboColor1 = gf::Color::fromRgba32(255, 255, 255, 100);
         chatUI.setCharacterSize(12);
-        if( chatUI.begin("Chat", gf::RectF(0, 350, 220, 220),  gf::UIWindow::Movable |gf::UIWindow::Title|gf::UIWindow::NoScrollbar)){
+        if( chatUI.begin("Chat", gf::RectF::fromPositionSize( {0, 350}, {220, 220} ),  gf::UIWindow::Movable |gf::UIWindow::Title|gf::UIWindow::NoScrollbar)){
             static gf::UICollapse groupCollapsed = gf::UICollapse::Minimized;
             
             chatUI.layoutRowStatic(150, 210, 1);

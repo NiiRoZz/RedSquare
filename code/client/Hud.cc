@@ -54,13 +54,13 @@ namespace redsquare
     Hud::Hud(gf::Font &font)
     : m_UiChat(font)
     , m_Font(font)
+    , m_ChatShader(VertexShader, FragmentShader)
     {
         m_spellsTextures.push_back(&gResourceManager().getTexture("img/redsquare.png"));
         m_spellsTextures.push_back(&gResourceManager().getTexture("img/redsquare.png"));
         m_spellsTextures.push_back(&gResourceManager().getTexture("img/redsquare.png"));
         m_spellsTextures.push_back(&gResourceManager().getTexture("img/redsquare.png"));
         
-        m_ChatShader.loadFromMemory(VertexShader, FragmentShader);
         m_ChatShader.setUniform("u_backgroundColor", gf::Color::Opaque(0.75f));
     }
 
