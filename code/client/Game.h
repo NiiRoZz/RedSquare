@@ -41,10 +41,13 @@ namespace redsquare
 
         World m_World;
 
+        uint m_Floor;
+
         std::vector<gf::Vector2i> m_TempMove;
 
         Game( char* hostname, char *port, gf::ExtendView &view , const char * name);
 
+        Player* getMyPlayer();
         Player* getPlayer( gf::Id playerID );
         Player* getPlayer( gf::Vector2i pos );
 
@@ -76,8 +79,6 @@ namespace redsquare
         virtual void update(gf::Time time) override;
 
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
-
-
 
     private:
         const char *m_Name;

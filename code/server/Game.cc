@@ -35,7 +35,7 @@ namespace redsquare
         std::tie(itNewPlayer, std::ignore) = m_Players.emplace(id, Player(std::move(socket), id, packet.playerInfoConnection.entitySubType));
         itNewPlayer->second.playerSpawn(m_World,++m_PlayerSpawned);
 
-        NewPlayer packetNewPlayer( m_World.m_World, id );
+        NewPlayer packetNewPlayer( m_World.m_World, id, m_Floor );
         itNewPlayer->second.sendPacket(packetNewPlayer);
 
         //HACKY, too, sending fake move to all other players INCLUDE HIMSELF!!! Should be reworked
@@ -106,6 +106,8 @@ namespace redsquare
 
             ++it3;
         }
+
+        itNewPlayer->second.sendUpdateOfSpells();
     }
 
     void Game::addNewMonsters(int nbMonster)
@@ -209,7 +211,7 @@ namespace redsquare
                             {
                                 it3->second.playerSpawn(m_World,++m_PlayerSpawned);
 
-                                NewPlayer packetNewPlayer( m_World.m_World, it3->first );
+                                NewPlayer packetNewPlayer( m_World.m_World, it3->first, m_Floor );
                                 it3->second.sendPacket(packetNewPlayer);
 
                                 //fake a move of all monsters inside the game to make them apparear in the new client
@@ -288,7 +290,7 @@ namespace redsquare
                     if ( targetMonster != nullptr && targetServerEntity != nullptr )
                     {
                         int level = player->m_Level;
-                        player->attack(targetServerEntity);
+                        player->attack(packet.requestAttack.spellType, targetServerEntity);
 
                         Packet sendPacket;
                         if ( targetMonster->m_LifePoint > 0 )

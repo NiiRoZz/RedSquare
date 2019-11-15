@@ -55,6 +55,8 @@ int main( int argc, char **argv )
     window.setVerticalSyncEnabled(true);
     window.setFramerateLimit(60);
     gf::RenderWindow renderer(window);
+
+    gf::SingletonStorage<gf::MessageManager> storageForMessageManager(redsquare::gMessageManager);
     gf::SingletonStorage<gf::ResourceManager> storageForResourceManager(redsquare::gResourceManager);
 
     // setup resource directories
@@ -132,7 +134,7 @@ int main( int argc, char **argv )
 
     gf::EntityContainer hudEntities;
     // add entities to hudEntities
-    Hud hud(fontChat);
+    Hud hud(game, fontChat);
     hudEntities.addEntity(hud);
 
     gf::Cursor defaultCursor(gf::Cursor::Type::Arrow);

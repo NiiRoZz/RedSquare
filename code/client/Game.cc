@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "../common/Singletons.h"
+#include "../common/Message.h"
 
 #include <iostream>
 #include <utility>
@@ -23,6 +24,7 @@ namespace redsquare
     , m_PlayerDead(false)
     , m_NextPosTexture(gResourceManager().getTexture("img/redsquare.png"))
     , m_Name(name)
+    , m_Floor(0)
     {
         //TODO: Remove this
         m_Props.emplace(gf::Id(56466), Prop(10, EntitySubType::Torch, {1,1}));
@@ -59,6 +61,8 @@ namespace redsquare
         m_ThreadCom.receivePacket( newPlayerData );
 
         m_PlayerID = newPlayerData.playerID;
+
+        m_Floor = newPlayerData.floor;
 
         m_World.generateWorld( std::move( newPlayerData.world ) );
     }
@@ -122,7 +126,7 @@ namespace redsquare
         m_World.update( time );
 
         //We update only the player we are controlling
-        Player* player = getPlayer( m_PlayerID );
+        Player* player = getMyPlayer();
 
         if ( player != nullptr )
         {
@@ -152,7 +156,7 @@ namespace redsquare
             return;
         }
 
-        Player* myPlayer = getPlayer(m_PlayerID);
+        Player* myPlayer = getMyPlayer();
 
         if ( myPlayer == nullptr )
         {
@@ -212,6 +216,7 @@ namespace redsquare
             Packet packet;
             packet.type = PacketType::RequestAttack;
             packet.requestAttack.playerID = m_PlayerID;
+            packet.requestAttack.spellType = SpellType::BasicAttack; //TODO: do a check here, to know wich attack selected
             packet.requestAttack.posX = m_AttackX;
             packet.requestAttack.posY = m_AttackY;
 
@@ -327,7 +332,7 @@ namespace redsquare
 
                 case PacketType::PlayerTurn:
                 {
-                    Player* myPlayer = getPlayer(m_PlayerID);
+                    Player* myPlayer = getMyPlayer();
 
                     if ( myPlayer == nullptr )
                     {
@@ -467,6 +472,24 @@ namespace redsquare
                     startThreadCom();
                     break;
                 }
+
+                case PacketType::UpdateSpells:
+                {
+                    Player *myPlayer = getMyPlayer();
+
+                    if ( myPlayer == nullptr )
+                    {
+                        break;
+                    }
+
+                    std::copy(packet.updateSpells.spells, packet.updateSpells.spells + MAX_SPELL_PER_PLAYER, myPlayer->m_SpellTab.begin() );
+
+                    SpellUpdateMessage message;
+                    std::copy(packet.updateSpells.spells, packet.updateSpells.spells + MAX_SPELL_PER_PLAYER, message.spells.begin());
+
+                    gMessageManager().sendMessage(&message);
+                    break;
+                }
             }
         }
     }
@@ -501,6 +524,18 @@ namespace redsquare
         }
 
         m_PassTurn = true;
+    }
+
+    Player* Game::getMyPlayer()
+    {
+        auto player = m_Players.find( m_PlayerID );
+
+        if ( player != m_Players.end() )
+        {
+            return &player->second;
+        }
+
+        return nullptr;
     }
 
     Player* Game::getPlayer( gf::Id playerID )
@@ -577,7 +612,7 @@ namespace redsquare
 
     bool Game::monsterInRange()
     {
-        Player* myPlayer = getPlayer(m_PlayerID);
+        Player* myPlayer = getMyPlayer();
 
         if ( myPlayer == nullptr )
         {

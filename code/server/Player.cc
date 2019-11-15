@@ -122,12 +122,25 @@ namespace redsquare
         m_MaxXP += 20;
 
         m_Level++;
-        if(m_Level == 2){ // adding spell when level is 2
-            if(m_Class == EntitySubType::Warrior){ // TODO for all class and with more level or maybe give choice to player
-                m_SpellTab.push_back(SpellType::Revenge);
-            }else if(m_Class == EntitySubType::Magus){
-                m_SpellTab.push_back(SpellType::LightningStrike);
+
+        if(m_Level == 2)
+        {
+            switch (m_Class)
+            {
+                case EntitySubType::Warrior:
+                {
+                    m_SpellTab.push_back(SpellType::Revenge);
+                    break;
+                }
+
+                case EntitySubType::Magus:
+                {
+                    m_SpellTab.push_back(SpellType::LightningStrike);
+                    break;
+                }
             }
+
+            sendUpdateOfSpells();
         }
     }
 
@@ -155,6 +168,24 @@ namespace redsquare
         packet.entityCar.m_MaxXP= m_MaxXP;
 
         packet.entityCar.m_Level = m_Level;
+    }
+
+    void Player::sendUpdateOfSpells()
+    {
+        Packet packet;
+        packet.type = PacketType::UpdateSpells;
+        std::fill(packet.updateSpells.spells, packet.updateSpells.spells + MAX_SPELL_PER_PLAYER, static_cast<SpellType>(0));
+
+        if (m_SpellTab.size() > MAX_SPELL_PER_PLAYER)
+        {
+            std::copy_n(m_SpellTab.begin(), MAX_SPELL_PER_PLAYER, packet.updateSpells.spells);
+        }
+        else
+        {
+            std::copy(m_SpellTab.begin(), m_SpellTab.end(), packet.updateSpells.spells);
+        }
+
+        sendPacket(packet);
     }
 
     void Player::playerSpawn(World &world, int playerSpawned){ // set spawn for a player 
@@ -192,14 +223,30 @@ namespace redsquare
         }
     }
 
-    void Player::attack(ServerEntity *target)
+    void Player::attack(SpellType spellType, ServerEntity *target)
     {
         m_PointInRound -= 1;
 
-        target->m_LifePoint -= (m_AttackPoint - target->m_DefensePoint);
-        if(target->m_LifePoint <= 0){
+        switch (spellType)
+        {
+            case SpellType::BasicAttack:
+            {
+                BasicAttack(target);
+                break;
+            }
+
+            case SpellType::FireBall:
+            {
+                Fireball(target);
+                break;
+            }
+        }
+
+        if( target->m_LifePoint <= 0 )
+        {
             m_XP += target->m_Level*10;
-            if(m_XP >= m_MaxXP){
+            if(m_XP >= m_MaxXP)
+            {
                 levelUp();
             }
         }

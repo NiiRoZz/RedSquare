@@ -8,17 +8,10 @@
 #include <gf/Array2D.h>
 #include <string>
 
+#define MAX_SPELL_PER_PLAYER 8
+
 namespace redsquare
 {
-   /* enum class MoveDirection : uint16_t
-    {
-        Right,
-        Left,
-        Up,
-        Down,
-        Nothing,
-    };*/
-
     enum class EntityType: uint8_t
     {
         Player,
@@ -61,6 +54,7 @@ namespace redsquare
 
     enum class SpellType: uint8_t
     {
+        Unknow,
         BasicAttack, // basic attack ------- ALL
         FireBall, // randed attack that can burn foes ------- MAGUS
         ArmorUp, // gain a bonus of armor for x turns ------- WARRIOR
@@ -104,17 +98,19 @@ namespace redsquare
         SpawnEntity,
         PlayerDead,
         NewMap,
+        UpdateSpells,
     };
 
-        //Message,
     struct NewPlayer
     {
         gf::Id playerID;
+        uint floor;
         gf::Array2D<Tile> world;
 
-        NewPlayer( gf::Array2D<Tile> &tile, gf::Id id )
+        NewPlayer( gf::Array2D<Tile> &tile, gf::Id id, uint currFloor )
         : world( tile )
         , playerID( id )
+        , floor( currFloor )
         {
         }
 
@@ -127,17 +123,13 @@ namespace redsquare
     {
         char from[30];
         char message[1024];
-
     };
-
 
     struct PlayerInfoConnection
     {
         EntitySubType entitySubType;
         char name[20];
     };
-
-    
 
     struct EntityCar
     {
@@ -182,6 +174,7 @@ namespace redsquare
     struct RequestAttack
     {
         gf::Id playerID;
+        SpellType spellType;
         int posX;
         int posY;
     };
@@ -211,6 +204,11 @@ namespace redsquare
         gf::Id playerID;
     };
 
+    struct UpdateSpells
+    {
+        SpellType spells[MAX_SPELL_PER_PLAYER];
+    };
+
     struct Packet
     {
         PacketType type;
@@ -227,6 +225,7 @@ namespace redsquare
             SpawnEntity spawnEntity;
             EntityCar entityCar;
             Message reveiveMessage;
+            UpdateSpells updateSpells;
         };
     };
 
@@ -264,6 +263,7 @@ namespace redsquare
             case PacketType::RequestAttack:
             {
                 ar | packet.requestAttack.playerID;
+                ar | packet.requestAttack.spellType;
                 ar | packet.requestAttack.posX;
                 ar | packet.requestAttack.posY;
                 break;
@@ -321,14 +321,18 @@ namespace redsquare
                 break;
             }
 
-          /*  case PacketType::Message:
+            /*case PacketType::Message:
             {
-
                 ar | packet.reveiveMessage.from;
                 ar | packet.reveiveMessage.message;
                 break;
-
             }*/
+
+            case PacketType::UpdateSpells:
+            {
+                ar | packet.updateSpells.spells;
+                break;
+            }
         }
 
         return ar;
@@ -338,8 +342,8 @@ namespace redsquare
     Archive& operator|(Archive& ar, NewPlayer& packet)
     {
         ar | packet.playerID;
+        ar | packet.floor;
         ar | packet.world;
-
         return ar;
     }
 

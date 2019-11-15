@@ -19,9 +19,11 @@ namespace redsquare
         std::map<gf::Id, Monster> m_Monsters;
         std::map<gf::Id, Prop> m_Props;
 
-        Game();
-
         World m_World;
+
+        uint m_Floor;
+
+        Game();
 
         void addNewPlayer(SocketTcp socket);
         void addNewMonsters(int nbMonster);
@@ -41,7 +43,6 @@ namespace redsquare
         void placeProps(int nbProps);
         void getSpawnPoint();
         void putStair();
-        uint m_Floor;
 
     private:
         gf::Id generateId() const;

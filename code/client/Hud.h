@@ -1,7 +1,9 @@
 #ifndef REDSQUARE_CLIENT_HUD_H
 #define REDSQUARE_CLIENT_HUD_H
 
-#include "Chat.h" 
+#include "Chat.h"
+#include "Game.h"
+#include "../common/Message.h"
 #include <gf/Font.h>
 #include <iostream>
 #include <gf/UI.h>
@@ -13,7 +15,7 @@ namespace redsquare
     class Hud: public gf::Entity
     {
     public:
-        Hud(gf::Font &font);
+        Hud(Game &game, gf::Font &font);
 
         virtual void update(gf::Time time) override;
 
@@ -24,11 +26,16 @@ namespace redsquare
         bool hoveringChat();
         
     private:
+        Game &m_Game;
         Chat m_Chat;
         gf::UI m_UiChat;
         gf::Font &m_Font;
-        std::vector<gf::Texture*>m_spellsTextures;
+        std::vector<gf::Texture*> m_spellsTextures;
         gf::Shader m_ChatShader;
+
+        gf::Texture* getTextureFromSpellType(SpellType type);
+
+        gf::MessageStatus onSpellUpdate(gf::Id id, gf::Message *msg);
     };
 
 }
