@@ -2,6 +2,7 @@
 #define REDSQUARE_CLIENT_WORLD_H
 
 #include "../common/Packet.h"
+#include "../common/Entity.h"
 
 #include <gf/Entity.h>
 #include <gf/TileLayer.h>
@@ -23,6 +24,8 @@ namespace redsquare
         void generateWorld( gf::Array2D<Tile> world );
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
         int rigthTile(gf::Vector2i tile);
+
+        void setWalkableFromEntity(redsquare::Entity *entity, bool walkable);
 
         World();
 

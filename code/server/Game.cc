@@ -302,10 +302,11 @@ namespace redsquare
                             sendPacket.type = PacketType::EntityDisconnected;
                             sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
                             sendPacket.entityDisconnected.entityID = targetMonster->m_EntityID;
-                            m_World.m_SquareWorld.setWalkable(targetMonster->m_Pos, true);
-                            m_World.m_SquareWorld.setTransparent(targetMonster->m_Pos, true);
-                            m_Monsters.erase(targetMonster->m_EntityID);
 
+                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(targetMonster), true);
+                            m_World.m_SquareWorld.setTransparent(targetMonster->m_Pos, true);
+
+                            m_Monsters.erase(targetMonster->m_EntityID);
                         }
                         sendPacketToAllPlayers( sendPacket );
 
@@ -325,7 +326,8 @@ namespace redsquare
                             sendPacket.type = PacketType::EntityDisconnected;
                             sendPacket.entityDisconnected.typeEntity = EntityType::Prop;
                             sendPacket.entityDisconnected.entityID = targetProp->m_EntityID;
-                            m_World.m_SquareWorld.setWalkable(targetProp->m_Pos);
+
+                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(targetProp), true);
                             m_World.m_SquareWorld.setTransparent(targetProp->m_Pos);
 
                             m_Props.erase(targetProp->m_EntityID);

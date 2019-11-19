@@ -190,7 +190,7 @@ int main( int argc, char **argv )
 				{
 					if( isTarget )
 					{
-						game.m_World.m_SquareWorld.setWalkable(it->second.m_Routine, true);
+						game.m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&(it->second)), true);
 						game.m_World.m_SquareWorld.setTransparent(it->second.m_Routine, true);
 					}
 
@@ -198,8 +198,8 @@ int main( int argc, char **argv )
 					{
 						game.m_World.drawRoutine(it->second);
 					}
-						
-        			game.m_World.m_SquareWorld.setWalkable(it->second.m_Pos, true);
+					
+					game.m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&(it->second)), true);
 					game.m_World.m_SquareWorld.setTransparent(it->second.m_Pos, true);
 
 					//std::cout << "Target : " << isTarget << "      Pos actu w : " << game.m_World.m_SquareWorld.isWalkable(it->second.m_Pos) << "      Pos routine w : " << game.m_World.m_SquareWorld.isWalkable(it->second.m_Routine) << "     Pos ROUTINE : " << it->second.m_Routine[0] << "/" << it->second.m_Routine[1] << "     Pos Actuelle : "<<it->second.m_Pos[0] << "/" << it->second.m_Pos[1] <<std::endl;
@@ -212,7 +212,7 @@ int main( int argc, char **argv )
 						game.m_World.m_SquareWorld.setWalkable(it->second.m_Routine, false);
 					}
 
-					game.m_World.m_SquareWorld.setWalkable(it->second.m_Pos, false);
+					game.m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&(it->second)), false);
 
 					Packet sendPacket;
 					sendPacket.type = PacketType::ReceiveMove;
