@@ -87,6 +87,10 @@ int main( int argc, char **argv )
     fullscreenAction.addKeycodeKeyControl(gf::Keycode::F);
     actions.addAction(fullscreenAction);
 
+    gf::Action inventoryAction("Inventory");
+    inventoryAction.addKeycodeKeyControl(gf::Keycode::I);
+    actions.addAction(inventoryAction);
+
     gf::Action leftAction("Left");
     leftAction.addScancodeKeyControl(gf::Scancode::A);
     leftAction.addScancodeKeyControl(gf::Scancode::Left);
@@ -253,7 +257,6 @@ int main( int argc, char **argv )
         {
             window.toggleFullscreen();
         }
-
         if (rightAction.isActive() && !hud.hoveringChat())
         {
             game.movePlayer( 1, 0 );
@@ -274,6 +277,11 @@ int main( int argc, char **argv )
         if (passTurn.isActive() && !hud.hoveringChat())
         {
             game.passTurn();
+        }
+        if (inventoryAction.isActive() && !hud.hoveringChat())
+        {
+            InventoryUpdateMessage message;
+            gMessageManager().sendMessage(&message);
         }
         
         // 2. update

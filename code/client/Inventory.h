@@ -5,6 +5,10 @@
 #include <gf/Window.h>
 #include <gf/Font.h>
 #include <gf/RenderWindow.h>
+#include "../common/Message.h"
+#include <gf/Window.h>
+#include <gf/Entity.h>
+#include <iostream>
 
 namespace redsquare
 {
@@ -19,9 +23,14 @@ namespace redsquare
 
         void processEvent(const gf::Event &event);
 
+        bool m_ShowInventory;
+
     private:
 
         gf::UI m_UI;
+
+        gf::MessageStatus onInventoryUpdate(gf::Id id, gf::Message *msg);
+
     };
 }
 

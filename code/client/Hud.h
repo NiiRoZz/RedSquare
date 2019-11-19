@@ -37,6 +37,8 @@ namespace redsquare
         gf::Texture* getTextureFromSpellType(SpellType type);
 
         gf::MessageStatus onSpellUpdate(gf::Id id, gf::Message *msg);
+
+
     };
 
 }
