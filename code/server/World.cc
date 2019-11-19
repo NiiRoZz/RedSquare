@@ -411,4 +411,15 @@ namespace redsquare
             std::cout << "\n";
         }
     }
+
+    void World::setWalkableFromEntity(redsquare::Entity *entity, bool walkable)
+    {
+        for(uint i = 0; i < entity->m_Size[0]; ++i)
+        {
+            for(uint j = 0; j < entity->m_Size[1]; ++j)
+            {
+                m_SquareWorld.setWalkable({entity->m_Pos[0] + (int)i, entity->m_Pos[1] + (int)j}, walkable);
+            }
+        }
+    }
 }

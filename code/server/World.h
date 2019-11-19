@@ -2,6 +2,8 @@
 #define REDSQUARE_SERVER_WORLD_H
 
 #include "../common/Packet.h"
+#include "../common/Entity.h"
+
 #include <gf/Array2D.h>
 #include <gf/Map.h>
 #include <list>
@@ -29,6 +31,8 @@ namespace redsquare
         void drawRoutine(Monster &monster); // draw path of player
         void monsterSpawn(Monster &monster, std::map<gf::Id,Monster> &m_Monsters, uint m_Floor); // spawn of a monster
         void spawnProps(Prop &prop,std::map<gf::Id,Prop> &m_Props,gf::Vector4u currentRoom); // spawn of props
+
+        void setWalkableFromEntity(redsquare::Entity *entity, bool walkable);
 
     private:
         std::vector<gf::Vector4u> grid(uint sizeGrid); // return all the cell of the grid in a vector

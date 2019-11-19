@@ -258,13 +258,13 @@ namespace redsquare
                             Player* player = getPlayer( packet.receiveMove.entityID );
                             assert( player != nullptr );
 
-                            m_World.m_SquareMap.setWalkable(player->m_Pos, true);
+                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(player), true);
 					        m_World.m_SquareMap.setTransparent(player->m_Pos, true);
 
                             player->m_Pos[0] = packet.receiveMove.posX;
                             player->m_Pos[1] = packet.receiveMove.posY;
 
-                            m_World.m_SquareMap.setWalkable(player->m_Pos, false);
+                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(player), false);
                             break;
                         }
 
@@ -273,13 +273,13 @@ namespace redsquare
                             Monster* monster = getMonster( packet.receiveMove.entityID );
                             assert( monster != nullptr );
 
-                            m_World.m_SquareMap.setWalkable(monster->m_Pos, true);
+                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(monster), true);
 					        m_World.m_SquareMap.setTransparent(monster->m_Pos, true);
 
                             monster->m_Pos[0] = packet.receiveMove.posX;
                             monster->m_Pos[1] = packet.receiveMove.posY;
 
-                            m_World.m_SquareMap.setWalkable(monster->m_Pos, false);
+                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(monster), false);
                             break;
                         }
                     }
@@ -295,7 +295,7 @@ namespace redsquare
                             Player* player = getPlayer( packet.entityDisconnected.entityID );
                             assert( player != nullptr );
 
-                            m_World.m_SquareMap.setWalkable(player->m_Pos, true);
+                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(player), true);
 					        m_World.m_SquareMap.setTransparent(player->m_Pos, true);
 
                             m_Players.erase( packet.entityDisconnected.entityID );
@@ -307,7 +307,7 @@ namespace redsquare
                             Monster* monster = getMonster( packet.entityDisconnected.entityID );
                             assert( monster != nullptr );
 
-                            m_World.m_SquareMap.setWalkable(monster->m_Pos, true);
+                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(monster), true);
 					        m_World.m_SquareMap.setTransparent(monster->m_Pos, true);
 
                             m_Monsters.erase( packet.entityDisconnected.entityID );
@@ -319,7 +319,7 @@ namespace redsquare
                             Prop* prop = getProp( packet.entityDisconnected.entityID );
                             assert( prop != nullptr );
 
-                            m_World.m_SquareMap.setWalkable(prop->m_Pos, true);
+                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(prop), true);
 					        m_World.m_SquareMap.setTransparent(prop->m_Pos, true);
 
                             m_Props.erase( packet.entityDisconnected.entityID );
@@ -385,7 +385,7 @@ namespace redsquare
                             auto it = m_Players.insert( std::make_pair( packet.spawnEntity.entityID, Player( packet.spawnEntity.entityID, packet.spawnEntity.typeOfEntity, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) ) ) );
                             assert( it.second );
 
-                            m_World.m_SquareMap.setWalkable(gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY), false);
+                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&(it.first->second)), false);
                             break;
                         }
 
@@ -394,7 +394,7 @@ namespace redsquare
                             auto it = m_Monsters.insert( std::make_pair( packet.spawnEntity.entityID, Monster( packet.spawnEntity.entityID, packet.spawnEntity.typeOfEntity, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) ) ) );
                             assert( it.second );
 
-                            m_World.m_SquareMap.setWalkable(gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY), false);
+                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&(it.first->second)), false);
                             break;
                         }
 
@@ -403,7 +403,7 @@ namespace redsquare
                             auto it = m_Props.insert( std::make_pair( packet.spawnEntity.entityID, Prop( packet.spawnEntity.entityID, packet.spawnEntity.typeOfEntity, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) ) ) );
                             assert( it.second );
 
-                            m_World.m_SquareMap.setWalkable(gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY), false);
+                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&(it.first->second)), false);
                             break;
                         }
                     }
