@@ -3,6 +3,7 @@
 
 #include "Chat.h"
 #include "Game.h"
+#include "Inventory.h"
 #include "../common/Message.h"
 #include <gf/Font.h>
 #include <iostream>
@@ -28,10 +29,10 @@ namespace redsquare
     private:
         Game &m_Game;
         Chat m_Chat;
-        gf::UI m_UiChat;
+        Inventory m_Inventory;
         gf::Font &m_Font;
         std::vector<gf::Texture*> m_spellsTextures;
-        gf::Shader m_ChatShader;
+        
 
         gf::Texture* getTextureFromSpellType(SpellType type);
 

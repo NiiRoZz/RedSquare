@@ -27,6 +27,7 @@
 #include "World.h"
 #include "Game.h"
 #include "Chat.h"
+#include "Inventory.h"
 #include "Hud.h"
 #include "../common/Singletons.h"
 #include "../common/Packet.h"
@@ -64,8 +65,8 @@ int main( int argc, char **argv )
 
     // initialization redsquare
     gf::Font &fontChat(gResourceManager().getFont("font/arial.ttf"));
-    gf::UI uiChat(fontChat);
-    Chat chat;
+    
+    
     
     // views
     gf::ViewContainer views;

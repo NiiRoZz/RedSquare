@@ -1,5 +1,5 @@
-#ifndef REDSQUARE_CLIENT_CHAT_H
-#define REDSQUARE_CLIENT_CHAT_H
+#ifndef REDSQUARE_CLIENT_INVENTORY_H
+#define REDSQUARE_CLIENT_INVENTORY_H
 
 #include <gf/UI.h>
 #include <gf/Window.h>
@@ -8,10 +8,10 @@
 
 namespace redsquare
 {
-    class Chat
+    class Inventory
     {
     public:
-        Chat(gf::Font &font);
+        Inventory(gf::Font &font);
 
         void update(gf::Time time);
 
@@ -19,12 +19,9 @@ namespace redsquare
 
         void processEvent(const gf::Event &event);
 
-        bool m_HoveringChat;
-
     private:
-        gf::Shader m_ChatShader;
-        gf::UI m_UI;
 
+        gf::UI m_UI;
     };
 }
 

@@ -12,55 +12,16 @@
 #include <gf/Text.h>
 #include <vector> 
 
-static const char *VertexShader = R"(
-#version 100
-
-attribute vec2 a_position;
-attribute vec4 a_color;
-attribute vec2 a_texCoords;
-
-varying vec4 v_color;
-varying vec2 v_texCoords;
-
-uniform mat3 u_transform;
-
-void main(void) {
-  v_texCoords = a_texCoords;
-  v_color = a_color;
-  vec3 worldPosition = vec3(a_position, 1);
-  vec3 normalizedPosition = worldPosition * u_transform;
-  gl_Position = vec4(normalizedPosition.xy, 0, 1);
-}
-)";
-
-static const char *FragmentShader = R"(
-#version 100
-
-precision mediump float;
-
-varying vec4 v_color;
-varying vec2 v_texCoords;
-
-uniform sampler2D u_texture;
-uniform vec4 u_backgroundColor;
-
-void main(void) {
-  vec4 color = texture2D(u_texture, v_texCoords);
-  gl_FragColor = color * v_color * u_backgroundColor;
-}
-)";
-
 namespace redsquare
 {
     Hud::Hud(Game &game, gf::Font &font)
     : m_Game(game)
-    , m_UiChat(font)
+    , m_Chat(font)
+    , m_Inventory(font)
     , m_Font(font)
-    , m_ChatShader(VertexShader, FragmentShader)
     {
         gMessageManager().registerHandler<SpellUpdateMessage>(&Hud::onSpellUpdate, this);
-        
-        m_ChatShader.setUniform("u_backgroundColor", gf::Color::Opaque(0.75f));
+
     }
 
     static constexpr float HudSpellSize = 55.0f;
@@ -68,19 +29,8 @@ namespace redsquare
     
     void Hud::render(gf::RenderTarget& target, const gf::RenderStates& states)
     {
-        //std::cout << "m_Chat.m_HoveringChat : " << m_Chat.m_HoveringChat << std::endl;
-        if (m_Chat.m_HoveringChat)
-        {
-            m_ChatShader.setUniform("u_backgroundColor", gf::Color::Opaque(1.0f));
-        }
-        else
-        {
-            m_ChatShader.setUniform("u_backgroundColor", gf::Color::Opaque(0.75f));
-        }
-        
-        gf::RenderStates localChatStates = states;
-        localChatStates.shader = &m_ChatShader;
-        target.draw(m_UiChat, localChatStates);
+        m_Chat.render(target, states);
+        m_Inventory.render(target, states);
 
         gf::Coordinates coordinates(target);
 
@@ -123,12 +73,14 @@ namespace redsquare
 
     void Hud::update(gf::Time time)
     {
-        m_Chat.updateChat(m_UiChat);
+        m_Chat.update(time);
+        m_Inventory.update(time);
     }
 
     void Hud::processEvent(const gf::Event &event)
     {
-        m_UiChat.processEvent(event);
+        m_Chat.processEvent(event);
+        m_Inventory.processEvent(event);
     }
 
     bool Hud::hoveringChat()
