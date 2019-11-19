@@ -22,7 +22,7 @@ namespace redsquare
     , m_PassTurn(false)
     , m_TempMoveTarget(false)
     , m_PlayerDead(false)
-    , m_NextPosTexture(gResourceManager().getTexture("img/redsquare.png"))
+    , m_NextPosTexture(gResourceManager().getTexture("img/case_selected.png"))
     , m_Name(name)
     , m_Floor(0)
     {
