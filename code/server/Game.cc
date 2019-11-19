@@ -9,8 +9,14 @@ namespace redsquare
 {
     Game::Game()
     : m_PlayerSpawned(0)
+    , m_Floor(0)
     {
-        m_World.generateWorld();
+        m_World.generateWorld(); // generate map
+        placeProps(5); // place props
+        addNewMonsters(5); // place monsters
+        m_World.putStair(m_Props); // put stair on map
+        m_World.prettyPrint();  // print the map in server console
+        m_World.getSpawnPoint(m_Props,m_Monsters); // place the spawn of player
     }
 
     void Game::addNewPlayer(SocketTcp socket)
@@ -29,7 +35,7 @@ namespace redsquare
         std::tie(itNewPlayer, std::ignore) = m_Players.emplace(id, Player(std::move(socket), id, packet.playerInfoConnection.entitySubType));
         itNewPlayer->second.playerSpawn(m_World,++m_PlayerSpawned);
 
-        NewPlayer packetNewPlayer( m_World.m_World, id );
+        NewPlayer packetNewPlayer( m_World.m_World, id, m_Floor );
         itNewPlayer->second.sendPacket(packetNewPlayer);
 
         //HACKY, too, sending fake move to all other players INCLUDE HIMSELF!!! Should be reworked
@@ -100,6 +106,8 @@ namespace redsquare
 
             ++it3;
         }
+
+        itNewPlayer->second.sendUpdateOfSpells();
     }
 
     void Game::addNewMonsters(int nbMonster)
@@ -112,7 +120,7 @@ namespace redsquare
 
             // Create a new monster
             std::tie(itNewMonster, std::ignore) = m_Monsters.emplace(id, Monster(id));
-            itNewMonster->second.monsterSpawn(m_Monsters,m_World);
+            m_World.monsterSpawn(itNewMonster->second,m_Monsters,m_Floor);
         }
     }
 
@@ -129,7 +137,7 @@ namespace redsquare
 
                 // Create a new monster
                 std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Box));
-                itNewProp->second.spawnProps(m_World,currentRoom);
+                m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
             }
         }
     }
@@ -189,16 +197,21 @@ namespace redsquare
                             sendPacket.type = PacketType::NewMap;
                             sendPacketToAllPlayers( sendPacket );
 
+                            m_Floor++;
                             m_World.generateWorld();
-                            //TODO: make more monsters
+                            placeProps(5);
                             addNewMonsters(5);
+                            m_World.putStair(m_Props);
+                            m_World.prettyPrint();  
+                            m_World.getSpawnPoint(m_Props,m_Monsters);
                             m_PlayerSpawned = 0;
+                            
 
                             for (auto it3 = m_Players.begin(); it3 != m_Players.end(); ++it3)
                             {
                                 it3->second.playerSpawn(m_World,++m_PlayerSpawned);
 
-                                NewPlayer packetNewPlayer( m_World.m_World, it3->first );
+                                NewPlayer packetNewPlayer( m_World.m_World, it3->first, m_Floor );
                                 it3->second.sendPacket(packetNewPlayer);
 
                                 //fake a move of all monsters inside the game to make them apparear in the new client
@@ -277,7 +290,7 @@ namespace redsquare
                     if ( targetMonster != nullptr && targetServerEntity != nullptr )
                     {
                         int level = player->m_Level;
-                        player->attack(targetServerEntity);
+                        player->attack(packet.requestAttack.spellType, targetServerEntity);
 
                         Packet sendPacket;
                         if ( targetMonster->m_LifePoint > 0 )
@@ -289,8 +302,8 @@ namespace redsquare
                             sendPacket.type = PacketType::EntityDisconnected;
                             sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
                             sendPacket.entityDisconnected.entityID = targetMonster->m_EntityID;
-                            m_World.m_SquareWorld.setWalkable(targetMonster->m_Pos);
-                            m_World.m_SquareWorld.setTransparent(targetMonster->m_Pos);
+                            m_World.m_SquareWorld.setWalkable(targetMonster->m_Pos, true);
+                            m_World.m_SquareWorld.setTransparent(targetMonster->m_Pos, true);
                             m_Monsters.erase(targetMonster->m_EntityID);
 
                         }

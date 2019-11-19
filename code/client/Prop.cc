@@ -87,7 +87,7 @@ namespace redsquare
 
         for (int i = startFramePos; i < (startFramePos + nmbFrames); ++i)
         {
-            gf::RectF frame(gf::Vector2i(i, line) * FrameSize / textureSize, FrameSize / textureSize);
+            gf::RectF frame = gf::RectF::fromPositionSize( gf::Vector2i(i, line) * FrameSize / textureSize, FrameSize / textureSize);
             m_Animation.addFrame(textureAnimated, frame, TimeFrameDuration);
         }
     }

@@ -11,11 +11,20 @@ namespace redsquare
     class Chat
     {
     public:
-        Chat();
+        Chat(gf::Font &font);
 
-        void updateChat(gf::UI &chatUI);
+        void update(gf::Time time);
+
+        void render(gf::RenderTarget& target, const gf::RenderStates& states);
+
+        void processEvent(const gf::Event &event);
 
         bool m_HoveringChat;
+
+    private:
+        gf::Shader m_ChatShader;
+        gf::UI m_UI;
+
     };
 }
 

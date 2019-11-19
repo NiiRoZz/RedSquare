@@ -27,6 +27,7 @@
 #include "World.h"
 #include "Game.h"
 #include "Chat.h"
+#include "Inventory.h"
 #include "Hud.h"
 #include "../common/Singletons.h"
 #include "../common/Packet.h"
@@ -55,6 +56,8 @@ int main( int argc, char **argv )
     window.setVerticalSyncEnabled(true);
     window.setFramerateLimit(60);
     gf::RenderWindow renderer(window);
+
+    gf::SingletonStorage<gf::MessageManager> storageForMessageManager(redsquare::gMessageManager);
     gf::SingletonStorage<gf::ResourceManager> storageForResourceManager(redsquare::gResourceManager);
 
     // setup resource directories
@@ -62,8 +65,8 @@ int main( int argc, char **argv )
 
     // initialization redsquare
     gf::Font &fontChat(gResourceManager().getFont("font/arial.ttf"));
-    gf::UI uiChat(fontChat);
-    Chat chat;
+    
+    
     
     // views
     gf::ViewContainer views;
@@ -132,21 +135,18 @@ int main( int argc, char **argv )
 
     gf::EntityContainer hudEntities;
     // add entities to hudEntities
-    Hud hud(fontChat);
+    Hud hud(game, fontChat);
     hudEntities.addEntity(hud);
 
-    gf::Cursor defaultCursor;
-    defaultCursor.loadFromSystem( gf::Cursor::Type::Arrow );
+    gf::Cursor defaultCursor(gf::Cursor::Type::Arrow);
 
     gf::Image attackImage(std::move(gResourceManager().getTexture("img/attackCursor.png").copyToImage()));
     attackImage.flipHorizontally();
-    gf::Cursor attackCursor;
-    attackCursor.loadFromImage(attackImage, { 8u, 8u });
+    gf::Cursor attackCursor(attackImage, { 8u, 8u });
 
     gf::Image moveImage(std::move(gResourceManager().getTexture("img/moveCursor.png").copyToImage()));
     moveImage.flipHorizontally();
-    gf::Cursor moveCursor;
-    moveCursor.loadFromImage(moveImage, { 8u, 8u });
+    gf::Cursor moveCursor(moveImage, { 8u, 8u });
 
     window.setMouseCursor(defaultCursor);
 

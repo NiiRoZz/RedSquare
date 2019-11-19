@@ -44,11 +44,13 @@ namespace redsquare
         void spawn();
 
         bool canAttack(gf::Vector2i m_TargetPos);
-        void attack(ServerEntity *target);
+        void attack(SpellType spellType, ServerEntity *target);
         
         void levelUp();
 
         void playerSpawn(World &world, int playerSpawned);
+
+        void sendUpdateOfSpells();
 
     private:
         SocketTcp m_Socket;

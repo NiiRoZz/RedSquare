@@ -1,0 +1,8 @@
+
+
+If a player is moving with a long "journey" and an ennemy block his path while not beeing in his range and the monster don't move toward him but just move to next tile because they are dumb as fuck and go back to his original place, the player will draw a new path but will face the monster moving and do an infinite loop until a new monster come and break the loop
+
+
+Fix possible ? 
+
+	better IA for mob

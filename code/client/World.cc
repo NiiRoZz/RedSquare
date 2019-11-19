@@ -223,16 +223,11 @@ namespace redsquare
 
                 if(tile == FLOOR1 || tile == FLOOR2 || tile == FLOOR3 || tile == FLOOR4 || tile == FLOOR5|| tile == FLOOR6|| tile == FLOOR7|| tile == FLOOR8|| tile == FLOOR9|| tile == FLOOR10|| tile == FLOOR11|| tile == FLOOR12 || tile == STAIR ) // room or corridor tile
                 {
-                    m_SquareMap.setWalkable({i, j}); 
+                    m_SquareMap.setWalkable({i, j}, true); 
                 }
 
                 m_TileSet.setTile( {i, j}, tile );
             }
         }
-    }
-
-    void World::setUnWalkable(gf::Vector2i pos)
-    {
-        m_SquareMap.setCell(pos,gf::Flags<gf::CellProperty>()); // Hacky AF, waiting on JB to push is own function :D
     }
 }

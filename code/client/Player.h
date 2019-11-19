@@ -22,6 +22,8 @@ namespace redsquare
         int m_XP;
         int m_Max_XP;
         /* Characteristic*/
+
+        std::array<SpellType, MAX_SPELL_PER_PLAYER> m_SpellTab;
         
         Player( gf::Id entityID );
         Player( gf::Id entityID, EntitySubType type, gf::Vector2i pos );

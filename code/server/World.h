@@ -5,6 +5,8 @@
 #include <gf/Array2D.h>
 #include <gf/Map.h>
 #include <list>
+#include "Monster.h"
+#include "Prop.h"
 
 namespace redsquare
 {
@@ -17,13 +19,16 @@ namespace redsquare
         std::vector<gf::Vector4u> TabRoom; // posX , posY , length, width
         gf::SquareMap m_SquareWorld;
         World();
-        static bool isSpawnable(int x,int y);
-        void getSpawnPoint();
-        void setUnWalkable(gf::Vector2i pos);
-        void generateWorld();
+        void generateWorld(); // generate world
+        void prettyPrint(); // print the map with char in the console
 
-        gf::Vector2i m_Spawn;
-        gf::Vector2i m_StairPosition;
+        gf::Vector2i m_Spawn; // position of player's spawn
+        gf::Vector2i m_StairPosition; // position of the stair in the floor
+        void getSpawnPoint(std::map<gf::Id,Prop> &m_Props,std::map<gf::Id,Monster> &m_Monster); // point of player spawn 
+        void putStair(std::map<gf::Id,Prop> &m_Props); // put stair on map
+        void drawRoutine(Monster &monster); // draw path of player
+        void monsterSpawn(Monster &monster, std::map<gf::Id,Monster> &m_Monsters, uint m_Floor); // spawn of a monster
+        void spawnProps(Prop &prop,std::map<gf::Id,Prop> &m_Props,gf::Vector4u currentRoom); // spawn of props
 
     private:
         std::vector<gf::Vector4u> grid(uint sizeGrid); // return all the cell of the grid in a vector
@@ -34,10 +39,9 @@ namespace redsquare
         void road(std::vector<gf::Vector4u> TabRoom); // link two room together
         void buildWallCorridor(); // build wall around ground
         bool nextToGround(uint x, uint y); // check if the tile is next to a ground tile
-        void putStair();
-        void setWalkable();
-        void prettyPrintWalkable();
-        void prettyPrint(); // print the map with char in the console
+        void setWalkable(); // set a tile walkable
+        void prettyPrintWalkable(); // print if the map on which tile is walkable
+        
 
     };
 }
