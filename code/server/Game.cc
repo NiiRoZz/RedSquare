@@ -136,7 +136,52 @@ namespace redsquare
                 std::map<gf::Id, Prop>::iterator itNewProp;
 
                 // Create a new monster
-                std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Box));
+                int randProp = rand() % 13;
+                switch (randProp)
+                {
+                case 0 : // ExtinctTorch 
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::ExtinctTorch));
+                    break;
+                case 1 : // BrokenPots 
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::BrokenPots));
+                    break;
+                case 2 : // Pot 
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Pot));
+                    break;
+                case 3 : // LitllePots 
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::LitllePots));
+                    break;
+                case 4 : // Torch 
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Torch));
+                    break; 
+                case 5 : // Chest 
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Chest));
+                    break; 
+                case 6 : // OpenedChest 
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::OpenedChest));
+                    break; 
+                case 7 : // Stool 
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Stool));
+                    break;
+                case 8 : // PileWood 
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::PileWood));
+                    break;  
+                case 9 : // GreyBrokenPillar 
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::GreyBrokenPillar));
+                    break;  
+                case 10 : // BrownBrokenPillar 
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::BrownBrokenPillar));
+                    break; 
+                case 11 : // BrownBrokenPillar 
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Rock));
+                    break; 
+                case 12 : // BrownBrokenPillar 
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::BrownRock));
+                    break; 
+
+                default:
+                    break;
+                }
                 m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
             }
         }

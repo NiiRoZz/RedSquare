@@ -22,15 +22,15 @@ namespace redsquare
     {
         switch (type)
         {
-            case EntitySubType::Box:
+            case EntitySubType::BrokenPots:
             {
-                propTexture = &gResourceManager().getTexture("img/spirit.png");
+                propTexture = &gResourceManager().getTexture("img/Props/BrokenVase.png");
                 break;
             }
 
             case EntitySubType::Pot:
             {
-                propTexture = &gResourceManager().getTexture("img/spirit.png");
+                propTexture = &gResourceManager().getTexture("img/Props/Vase.png");
                 break;
             }
 
@@ -41,6 +41,56 @@ namespace redsquare
                 break;
             }
 
+            case EntitySubType::ExtinctTorch:
+            {
+                propTexture = &gResourceManager().getTexture("img/Props/ExtinctTorch.png");
+                break;
+            }
+
+            case EntitySubType::Stool:
+            {
+                propTexture = &gResourceManager().getTexture("img/Props/Stool.png");
+                break;
+            }
+
+            case EntitySubType::PileWood:
+            {
+                propTexture = &gResourceManager().getTexture("img/Props/WoodPile.png");
+                break;
+            }
+
+            case EntitySubType::OpenedChest:
+            {
+                propTexture = &gResourceManager().getTexture("img/Props/OpenChest.png");
+                break;
+            }
+
+            case EntitySubType::Chest:
+            {
+                propTexture = &gResourceManager().getTexture("img/Props/Chest.png");
+                break;
+            }
+
+            case EntitySubType::Rock:
+            {
+                propTexture = &gResourceManager().getTexture("img/Props/Rock.png");
+                break;
+            }
+            case EntitySubType::BrownRock:
+            {
+                propTexture = &gResourceManager().getTexture("img/Props/BrownRock.png");
+                break;
+            }
+            case EntitySubType::GreyBrokenPillar:
+            {
+                propTexture = &gResourceManager().getTexture("img/Props/BrokenPillar.png");
+                break;
+            }
+            case EntitySubType::BrownBrokenPillar:
+            {
+                propTexture = &gResourceManager().getTexture("img/Props/BrokenPillar2.png");
+                break;
+            }
             default:
             {
                 break;

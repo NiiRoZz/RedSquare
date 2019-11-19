@@ -14,7 +14,7 @@ namespace redsquare
     public:
         Prop( gf::Id entityID, EntitySubType type, gf::Vector2i pos );
 
-        void loadTexture(const EntitySubType type = EntitySubType::Box);
+        void loadTexture(const EntitySubType type);
 
         virtual void update(gf::Time time) override;
 

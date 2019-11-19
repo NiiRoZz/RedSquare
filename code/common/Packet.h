@@ -35,9 +35,20 @@ namespace redsquare
         EntityClassCount,
 
         /* PROP */
-        Box,
+        BrokenPots,
         Pot,
+        LitllePots,
         Torch,
+        Chest,
+        OpenedChest,
+        Stool,
+        PileWood,
+        GreyBrokenPillar,
+        BrownBrokenPillar,
+        ExtinctTorch,
+        Rock,
+        BrownRock,
+
         /* PROP */
     };
 
