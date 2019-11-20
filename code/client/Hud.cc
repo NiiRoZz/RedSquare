@@ -88,6 +88,11 @@ namespace redsquare
         return m_Chat.m_HoveringChat;
     }
 
+    bool Hud::typingInChat()
+    {
+        return m_Chat.m_TypingInChat;
+    }
+
     gf::Texture* Hud::getTextureFromSpellType(SpellType type)
     {
         return &gResourceManager().getTexture("img/redsquare.png");

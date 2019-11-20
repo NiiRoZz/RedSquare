@@ -48,6 +48,7 @@ namespace redsquare
 {
     Chat::Chat(gf::Font &font)
     : m_HoveringChat(false)
+    , m_TypingInChat(false)
     , m_UI(font)
     , m_ChatShader(VertexShader, FragmentShader)
     {
@@ -60,6 +61,7 @@ namespace redsquare
         static gf::UICharBuffer text(64);
 
         m_HoveringChat = false;
+        m_TypingInChat = false;
 
         m_UI.setCharacterSize(12);
 
@@ -86,6 +88,8 @@ namespace redsquare
                 m_UI.layoutRowPush(113);
                 
                 gf::UIEditEventFlags flags = m_UI.edit(gf::UIEditType::Field | gf::UIEdit::SigEnter, text, gf::UIEditFilter::Ascii);
+                m_TypingInChat = (flags & gf::UIEditEvent::Active);
+
                 m_UI.layoutRowPush(60);
                 
                 if ( m_UI.buttonLabel("Submit") || flags.test(gf::UIEditEvent::Commited) )
@@ -103,7 +107,7 @@ namespace redsquare
 
     void Chat::render(gf::RenderTarget& target, const gf::RenderStates& states)
     {
-        if (m_HoveringChat)
+        if (m_HoveringChat || m_TypingInChat)
         {
             m_ChatShader.setUniform("u_backgroundColor", gf::Color::Opaque(1.0f));
         }

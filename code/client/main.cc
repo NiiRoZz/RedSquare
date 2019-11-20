@@ -174,7 +174,7 @@ int main( int argc, char **argv )
             {
                 case gf::EventType::MouseButtonPressed:
                 {
-                    if (!hud.hoveringChat())
+                    if (!hud.hoveringChat() && !hud.typingInChat())
                     {
                         end = std::chrono::system_clock::now();
                         int elapsed_seconds = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count();
@@ -203,7 +203,7 @@ int main( int argc, char **argv )
 
                 case gf::EventType::MouseMoved:
                 {
-                    if (!hud.hoveringChat())
+                    if (!hud.hoveringChat() && !hud.typingInChat())
                     {
                         gf::Vector2i pos = renderer.mapPixelToCoords(event.mouseCursor.coords,mainView) / World::TileSize;
 
@@ -253,32 +253,32 @@ int main( int argc, char **argv )
             window.close();
         }
 
-        if (fullscreenAction.isActive() && !hud.hoveringChat())
+        if (fullscreenAction.isActive() && !hud.hoveringChat() && !hud.typingInChat())
         {
             window.toggleFullscreen();
         }
-        if (rightAction.isActive() && !hud.hoveringChat())
+        if (rightAction.isActive() && !hud.hoveringChat() && !hud.typingInChat())
         {
             game.movePlayer( 1, 0 );
         } 
-        else if (leftAction.isActive() && !hud.hoveringChat())
+        else if (leftAction.isActive() && !hud.hoveringChat() && !hud.typingInChat())
         {
             game.movePlayer( -1, 0 );
         } 
-        else if (upAction.isActive() && !hud.hoveringChat())
+        else if (upAction.isActive() && !hud.hoveringChat() && !hud.typingInChat())
         {
             game.movePlayer( 0, -1 );
         } 
-        else if (downAction.isActive() && !hud.hoveringChat())
+        else if (downAction.isActive() && !hud.hoveringChat() && !hud.typingInChat())
         {
             game.movePlayer( 0, 1 );
         }
 
-        if (passTurn.isActive() && !hud.hoveringChat())
+        if (passTurn.isActive() && !hud.hoveringChat() && !hud.typingInChat())
         {
             game.passTurn();
         }
-        if (inventoryAction.isActive() && !hud.hoveringChat())
+        if (inventoryAction.isActive() && !hud.hoveringChat() && !hud.typingInChat())
         {
             InventoryUpdateMessage message;
             gMessageManager().sendMessage(&message);

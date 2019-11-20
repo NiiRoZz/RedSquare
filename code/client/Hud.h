@@ -25,6 +25,7 @@ namespace redsquare
         void processEvent(const gf::Event &event);
 
         bool hoveringChat();
+        bool typingInChat();
         
     private:
         Game &m_Game;

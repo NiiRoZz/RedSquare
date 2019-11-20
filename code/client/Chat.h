@@ -20,6 +20,7 @@ namespace redsquare
         void processEvent(const gf::Event &event);
 
         bool m_HoveringChat;
+        bool m_TypingInChat;
 
     private:
         gf::Shader m_ChatShader;
