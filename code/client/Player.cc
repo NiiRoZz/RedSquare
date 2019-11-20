@@ -137,7 +137,7 @@ namespace redsquare
 
     bool Player::canAttack(gf::Vector2i targetPos, std::map<gf::Id, Monster> &monsters, std::map<gf::Id, Prop> &props)
     {
-        if ( m_Pos == targetPos )
+        if ( isInsideMe(targetPos) )
         {
             return false;
         }
