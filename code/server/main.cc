@@ -190,7 +190,7 @@ int main( int argc, char **argv )
 				{
 					if( isTarget )
 					{
-						game.m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&(it->second)), true);
+						game.m_World.m_SquareWorld.setWalkable(it->second.m_Routine, true);
 						game.m_World.m_SquareWorld.setTransparent(it->second.m_Routine, true);
 					}
 

@@ -26,8 +26,6 @@ namespace redsquare
     , m_Name(name)
     , m_Floor(0)
     {
-        //TODO: Remove this
-        m_Props.emplace(gf::Id(56466), Prop(10, EntitySubType::Torch, {1,1}));
     }
      //, m_ChatCom(hostname, port+1, m_ChatQueue)
     void Game::startThreadCom()
@@ -87,14 +85,14 @@ namespace redsquare
             ++it1;
         }
 
-        auto it2 = m_Players.begin();
+        auto it4 = m_Props.begin();
 
         // Iterate over the map using Iterator till end.
-        while (it2 != m_Players.end())
+        while (it4 != m_Props.end())
         {
-            it2->second.render( target, states );
+            it4->second.render( target, states );
 
-            ++it2;
+            ++it4;
         }
 
         auto it3 = m_Monsters.begin();
@@ -107,14 +105,14 @@ namespace redsquare
             ++it3;
         }
 
-        auto it4 = m_Props.begin();
+        auto it2 = m_Players.begin();
 
         // Iterate over the map using Iterator till end.
-        while (it4 != m_Props.end())
+        while (it2 != m_Players.end())
         {
-            it4->second.render( target, states );
+            it2->second.render( target, states );
 
-            ++it4;
+            ++it2;
         }
     }
 
