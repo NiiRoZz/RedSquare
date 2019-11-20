@@ -482,7 +482,7 @@ namespace redsquare
 
     bool Game::canAttack(Monster &monster, gf::Vector2i targetPos)
     {
-        if ( monster.m_Pos == targetPos )
+        if ( monster.isInsideMe( targetPos ) )
         {
             return false;
         }
@@ -500,7 +500,7 @@ namespace redsquare
  
         while ( it != m_Players.end() )
         {
-            if ( it->second.m_Pos == targetPos )
+            if ( it->second.isInsideMe( targetPos ) )
             {
                 return true;
             }

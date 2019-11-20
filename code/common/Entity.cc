@@ -25,4 +25,9 @@ namespace redsquare
     {
         
     }
+
+    bool Entity::isInsideMe(gf::Vector2i pos)
+    {
+        return (pos[0] >= m_Pos[0] && pos[0] <= (m_Pos[0] + (m_Size[0] - 1)) && pos[1] >= (m_Pos[0] + (m_Size[1] - 1)) && pos[1] <= (m_Pos[1] + (m_Size[0] - 1)));
+    }
 }

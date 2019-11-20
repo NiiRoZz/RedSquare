@@ -189,7 +189,7 @@ namespace redsquare
  
         while ( it != players.end() )
         {
-            if ( it->second.m_Pos == targetPos )
+            if ( it->second.isInsideMe( targetPos ) )
             {
                 return false;
             }
@@ -201,7 +201,7 @@ namespace redsquare
  
         while ( it2 != monsters.end() )
         {
-            if ( it2->second.m_Pos == targetPos )
+            if ( it2->second.isInsideMe( targetPos ) )
             {
                 return false;
             }
@@ -213,7 +213,7 @@ namespace redsquare
  
         while ( it3 != props.end() )
         {
-            if ( it3->second.m_Pos == targetPos )
+            if ( it3->second.isInsideMe( targetPos ) )
             {
                 return false;
             }
@@ -221,6 +221,6 @@ namespace redsquare
             ++it3;
         }
 
-        return map.isWalkable(targetPos);
+        return map.isWalkable( targetPos );
     }
 }

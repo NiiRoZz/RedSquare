@@ -43,7 +43,6 @@ namespace redsquare
         bool playerDisconnected() const;
         void spawn();
 
-        bool canAttack(gf::Vector2i m_TargetPos);
         void attack(SpellType spellType, ServerEntity *target);
         
         void levelUp();
