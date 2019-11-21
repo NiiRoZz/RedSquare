@@ -369,7 +369,6 @@ namespace redsquare
                     m_TempMove.clear();
 
                     m_CanPlay = packet.playerTurn.playerTurn;
-                    std::cout << "It's your turn!!!" << std::endl;
 
                     break;
                 }

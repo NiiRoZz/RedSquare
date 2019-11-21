@@ -34,6 +34,7 @@ namespace redsquare
 
         gf::Coordinates coordinates(target);
 
+        //Draw floor
         gf::Text text;
         text.setFont(m_Font);
         text.setOutlineColor(gf::Color::White);
@@ -43,6 +44,20 @@ namespace redsquare
         text.setAnchor(gf::Anchor::TopLeft);
         text.setPosition(coordinates.getRelativePoint({ 0.03f, 0.05f }));
         target.draw(text, states);
+
+        //Draw it's your turn
+        if (m_Game.m_CanPlay)
+        {
+            gf::Text text;
+            text.setFont(m_Font);
+            text.setOutlineColor(gf::Color::White);
+            text.setOutlineThickness(coordinates.getRelativeSize({ 1.0f, 0.002f }).height);
+            text.setCharacterSize(coordinates.getRelativeCharacterSize(0.05f));
+            text.setString("C'est ton tour !");
+            text.setAnchor(gf::Anchor::TopLeft);
+            text.setPosition(coordinates.getRelativePoint({ 0.80f, 0.05f }));
+            target.draw(text, states);
+        }
 
         float x = 0;
         float y = 0;

@@ -273,7 +273,7 @@ namespace redsquare
 
        /* auto it = m_Props.begin();
         while ( it != m_Props.end() ){
-            if (it->second.m_Pos[0] == m_Spawn[0] && it->second.m_Pos[1] == m_Spawn[1]){
+            if (it->second.isInsideMe(m_Spawn)){
                 getSpawnPoint(m_Props,m_Monster);
                 return;
             }
@@ -282,7 +282,7 @@ namespace redsquare
 
         auto it2 = m_Monster.begin();
         while ( it2 != m_Monster.end() ){
-            if (it2->second.m_Pos[0] == m_Spawn[0] && it2->second.m_Pos[1] == m_Spawn[1]){
+            if (it2->second.isInsideMe(m_Spawn)){
                 getSpawnPoint(m_Props,m_Monster);
                 return;
             }
@@ -327,10 +327,24 @@ namespace redsquare
 
     void World::spawnProps(Prop &prop,std::map<gf::Id,Prop> &m_Props,gf::Vector4u currentRoom){
         uint posX, posY;
-        do{
+        do
+        {
             posX = rand() % currentRoom[2]; // length
             posY = rand() % currentRoom[3]; // width
-        }while(  m_World( { (currentRoom[0]+posX), (currentRoom[1]+posY) }) != Tile::Room && m_World({ (currentRoom[0]+posX), (currentRoom[1]+posY) }) != Tile::Corridor);   
+        } while ( m_World( { (currentRoom[0]+posX), (currentRoom[1]+posY) }) != Tile::Room && m_World({ (currentRoom[0]+posX), (currentRoom[1]+posY) }) != Tile::Corridor);
+
+        auto it = m_Props.begin();
+
+        while ( it != m_Props.end() )
+        {
+            if (it->first != prop.m_EntityID && it->second.isInsideMe({(int)posX, (int)posY}))
+            {
+                spawnProps(prop,m_Props,currentRoom);
+                return;
+            }
+            it++;
+        }
+
         prop.m_Pos = {((int)currentRoom[0]+((int)posX)),((int)currentRoom[1]+((int)posY))};
         m_SquareWorld.setWalkable({((int)currentRoom[0]+((int)posX)),((int)currentRoom[1]+((int)posY))}, false);
     }
