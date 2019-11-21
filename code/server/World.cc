@@ -333,7 +333,7 @@ namespace redsquare
 
         while ( it != m_Props.end() )
         {
-            if (it->first != prop.m_EntityID && it->second.isInsideMe({posX, posY}))
+            if (it->first != prop.m_EntityID && it->second.isInsideMe({(int)posX, (int)posY}))
             {
                 spawnProps(prop,m_Props,currentRoom);
                 return;
