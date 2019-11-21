@@ -271,7 +271,7 @@ namespace redsquare
             m_Spawn = spawn;
         }while(m_World( { (uint)x,(uint) y } ) != Tile::Room); // only putting stair on an empty randon room's tile 
 
-        auto it = m_Props.begin();
+       /* auto it = m_Props.begin();
         while ( it != m_Props.end() ){
             if (it->second.m_Pos[0] == m_Spawn[0] && it->second.m_Pos[1] == m_Spawn[1]){
                 getSpawnPoint(m_Props,m_Monster);
@@ -287,10 +287,14 @@ namespace redsquare
                 return;
             }
             ++it2;
-        }
+        }*/
 
         for(uint i = 0; i < 3 ; ++i){ // check if all the tile around are either a corridor's tile or a room's tile
             for(uint j = 0; j < 3; ++j){
+                if(!m_SquareWorld.isWalkable({(uint)((m_Spawn[0])-1+i),(uint) ((m_Spawn[1])-1+j)})){
+                    getSpawnPoint(m_Props,m_Monster); // called the method again
+                    return;
+                }
                 if( m_World( { (uint)((m_Spawn[0])-1+i),(uint) ((m_Spawn[1])-1+j) } ) != Tile::Room && m_World( { (uint)((m_Spawn[0])-1+i),(uint) ((m_Spawn[1])-1+j) } ) != Tile::Corridor ){
                     getSpawnPoint(m_Props,m_Monster); // called the method again
                     return;
