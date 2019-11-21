@@ -181,18 +181,21 @@ namespace redsquare
 
                 std::vector<gf::Vector2i> allPos = m_World.m_SquareMap.computeRoute(myPlayer->m_Pos, m_MovePlayer.first, 0.0);
 
-                m_TempMove.insert(m_TempMove.end(), ++(++allPos.begin()), allPos.end());
-
-                packet.requestMove.dirX = (allPos[1] - myPlayer->m_Pos)[0];
-                packet.requestMove.dirY = (allPos[1] - myPlayer->m_Pos)[1];
-
-                if (allPos.size() > 2)
+                if (!allPos.empty())
                 {
-                    m_TempMoveTarget = m_MovePlayer.first;
-                }
-                else
-                {
-                    m_TempMoveTarget = {0, 0};
+                    m_TempMove.insert(m_TempMove.end(), ++(++allPos.begin()), allPos.end());
+
+                    packet.requestMove.dirX = (allPos[1] - myPlayer->m_Pos)[0];
+                    packet.requestMove.dirY = (allPos[1] - myPlayer->m_Pos)[1];
+
+                    if (allPos.size() > 2)
+                    {
+                        m_TempMoveTarget = m_MovePlayer.first;
+                    }
+                    else
+                    {
+                        m_TempMoveTarget = {0, 0};
+                    }
                 }
             }
             else
@@ -343,25 +346,28 @@ namespace redsquare
 
                         std::vector<gf::Vector2i> allPos = m_World.m_SquareMap.computeRoute(myPlayer->m_Pos, m_TempMoveTarget, 0.0);
 
-                        m_TempMove.insert(m_TempMove.end(), ++(++allPos.begin()), allPos.end());
-
-                        gf::Vector2i pos = allPos[1];
-
-                        if ( getPlayer(pos) == nullptr && getMonster(pos) == nullptr )
+                        if (!allPos.empty())
                         {
-                            Packet packet;
-                            packet.type = PacketType::RequestMove;
-                            packet.requestMove.playerID = m_PlayerID;
-                            packet.requestMove.dirX = (pos - myPlayer->m_Pos)[0];
-                            packet.requestMove.dirY = (pos - myPlayer->m_Pos)[1];
+                            m_TempMove.insert(m_TempMove.end(), ++(++allPos.begin()), allPos.end());
 
-                            m_ThreadCom.sendPacket( packet );
+                            gf::Vector2i pos = allPos[1];
 
-                            /*packet.type = PacketType::PassTurn;
-                            packet.passTurn.playerID = m_PlayerID;
+                            if ( getPlayer(pos) == nullptr && getMonster(pos) == nullptr )
+                            {
+                                Packet packet;
+                                packet.type = PacketType::RequestMove;
+                                packet.requestMove.playerID = m_PlayerID;
+                                packet.requestMove.dirX = (pos - myPlayer->m_Pos)[0];
+                                packet.requestMove.dirY = (pos - myPlayer->m_Pos)[1];
 
-                            m_ThreadCom.sendPacket( packet );*/
-                            break;
+                                m_ThreadCom.sendPacket( packet );
+
+                                /*packet.type = PacketType::PassTurn;
+                                packet.passTurn.playerID = m_PlayerID;
+
+                                m_ThreadCom.sendPacket( packet );*/
+                                break;
+                            }
                         }
                     }
 

@@ -223,7 +223,10 @@ int main( int argc, char **argv )
 
                                 std::vector<gf::Vector2i> allPos = game.m_World.m_SquareMap.computeRoute(myPlayer->m_Pos, pos, 0.0);
 
-                                game.m_TempMove.insert(game.m_TempMove.end(), ++allPos.begin(), allPos.end());
+                                if (!allPos.empty())
+                                {
+                                    game.m_TempMove.insert(game.m_TempMove.end(), ++allPos.begin(), allPos.end());
+                                }
                             }
                             else
                             {
