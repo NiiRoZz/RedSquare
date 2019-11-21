@@ -31,7 +31,7 @@
 #include "Hud.h"
 #include "../common/Singletons.h"
 #include "../common/Packet.h"
-#include "../../config.h"
+#include "config.h"
 #include <gf/TileLayer.h>
 
 
