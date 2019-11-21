@@ -273,7 +273,7 @@ namespace redsquare
 
         auto it = m_Props.begin();
         while ( it != m_Props.end() ){
-            if (it->second.m_Pos[0] == m_Spawn[0] && it->second.m_Pos[1] == m_Spawn[1]){
+            if (it->second.isInsideMe(m_Spawn)){
                 getSpawnPoint(m_Props,m_Monster);
                 return;
             }
@@ -282,7 +282,7 @@ namespace redsquare
 
         auto it2 = m_Monster.begin();
         while ( it2 != m_Monster.end() ){
-            if (it2->second.m_Pos[0] == m_Spawn[0] && it2->second.m_Pos[1] == m_Spawn[1]){
+            if (it2->second.isInsideMe(m_Spawn)){
                 getSpawnPoint(m_Props,m_Monster);
                 return;
             }
