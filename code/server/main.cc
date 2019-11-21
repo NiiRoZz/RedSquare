@@ -123,7 +123,7 @@ int main( int argc, char **argv )
 			bool isTarget = false;
 			bool hasAttacked = false;
 			game.m_World.m_SquareWorld.clearFieldOfVision();
-			game.m_World.m_SquareWorld.computeLocalFieldOfVision(it->second.m_Pos,7);
+			game.m_World.m_SquareWorld.computeLocalFieldOfVision(it->second.m_Pos,10);
 
 			auto it2 = game.m_Players.begin();
 			while ( it2 != game.m_Players.end() )
