@@ -291,7 +291,7 @@ namespace redsquare
 
     void Player::attack(SpellType spellType, ServerEntity *target)
     {
-        m_PointInRound -= 1;
+        m_PointInRound -= m_PointInRound;
 
         switch (spellType)
         {
