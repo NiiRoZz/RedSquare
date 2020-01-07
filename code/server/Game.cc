@@ -17,6 +17,8 @@ namespace redsquare
         m_World.putStair(m_Props); // put stair on map
         m_World.prettyPrint();  // print the map in server console
         m_World.getSpawnPoint(m_Props,m_Monsters); // place the spawn of player
+
+        m_World.prettyPrint();
     }
 
     void Game::addNewPlayer(SocketTcp socket)
@@ -123,67 +125,441 @@ namespace redsquare
             m_World.monsterSpawn(itNewMonster->second,m_Monsters,m_Floor);
         }
     }
-
+    
     void Game::placeProps(int nbProps){
+        
+        int roomType;
+        for(gf::Vector4u currentRoom : m_World.TabRoom){ // for every room
 
-        int propsInRoom;
-        for(gf::Vector4u currentRoom : m_World.TabRoom){
-            propsInRoom = rand() % nbProps;
-            for(int i = 0; i < nbProps ; ++i)
-            {   
-                // Generate a new ID
-                gf::Id id = generateId();
-                std::map<gf::Id, Prop>::iterator itNewProp;
+            roomType = rand() % 10;
 
-                // Create a new monster
-                int randProp = rand() % 13;
-                switch (randProp)
+            gf::Id id;
+            std::map<gf::Id, Prop>::iterator itNewProp;
+
+            switch (roomType)
                 {
-                case 0 : // ExtinctTorch 
-                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::ExtinctTorch));
-                    break;
-                case 1 : // BrokenPots 
-                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::BrokenPots));
-                    break;
-                case 2 : // Pot 
-                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Pot));
-                    break;
-                case 3 : // LitllePots 
-                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::LitllePots));
-                    break;
-                case 4 : // Torch 
-                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Torch));
-                    break; 
-                case 5 : // Chest 
-                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Chest));
-                    break; 
-                case 6 : // OpenedChest 
-                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::OpenedChest));
-                    break; 
-                case 7 : // Stool 
+                case 0 : // SHELF ROOM 
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::BookShelf));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::BlankShelf));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::BrokenShelf));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
                     std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Stool));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Stool));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::PotShelf));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::BlankShelf));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Torch));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Torch));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::ExtinctTorch));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
                     break;
-                case 8 : // PileWood 
-                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::PileWood));
-                    break;  
-                case 9 : // GreyBrokenPillar 
-                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::GreyBrokenPillar));
-                    break;  
-                case 10 : // BrownBrokenPillar 
+                case 1 : // PILLAR ROOM 
+                    id = generateId();
                     std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::BrownBrokenPillar));
-                    break; 
-                case 11 : // BrownBrokenPillar 
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::GreyBrokenPillar));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::GreyPillar1));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::GreyPillar2));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::GreyPillar1));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::GreyPillar2));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::BrownBrokenPillar));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::GreyBrokenPillar));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::GreyBrokenPillar));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::GreyBrokenPillar));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::BrownBrokenPillar));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::BrownPillar2));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+                    break;
+                case 2 : // ROCK ROOM 
+
+                    id = generateId();
                     std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Rock));
-                    break; 
-                case 12 : // BrownBrokenPillar 
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Rock));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Rock));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Rock));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Rock));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::BrownDualRock));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::BrownQuadRock));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
                     std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::BrownRock));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::GreyQuadRock));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::GreyDualRock));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::BrownDualRock));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    break;
+                case 3 : // BOXS /POTS 
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::PotShelf));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::BrokenPots));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::LitllePots));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::PotShelf));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Pot));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::PotShelf));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::BrokenPots));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::LitllePots));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::PotShelf));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Pot));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Pot));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::BrokenPots));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::LitllePots));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+                    break;
+                case 4 : // ARMORY 
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::WeaponShelf1));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::WeaponShelf2));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::WeaponShelf1));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::WeaponShelf2));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::WeaponShelf1));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::WeaponShelf2));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::EmptyStand));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::EmptyStand));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Torch));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Torch));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::ExtinctTorch));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::BlankShelf));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    break;
+                case 5 : // THRONE 
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Throne));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Throne));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::GreyPillar1));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::GreyPillar1));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::GreyPillar1));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::GreyPillar1));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::GreyPillar1));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::GreyPillar1));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
                     break; 
+                case 6 : // TRIVIA 
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::OpenedChest));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Box1));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::EmptyStand));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::EmptyStand));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Chest));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::PotShelf));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::BrokenPots));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::LitllePots));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Torch));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::DualBox));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::PileWood));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Pot));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::BrokenPots));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Pot));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::BrokenPots));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    break; 
+                case 7 : // TABLE ROOM 
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Table));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Stool));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Stool));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Stool));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::DualBox));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Box1));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Box2));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Box2));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+                    break;
+                case 8 : // WAREHOUSE 
+                    
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::DualBox));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Box1));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Box2));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::DualBox));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Box1));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Box2));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::DualBox));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Box1));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+
+                    id = generateId();
+                    std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Box2));
+                    m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
+                    break;  
+                 case 9: // EMPTY
+                    break;
 
                 default:
                     break;
-                }
-                m_World.spawnProps(itNewProp->second,m_Props,currentRoom);
             }
+
         }
     }
 

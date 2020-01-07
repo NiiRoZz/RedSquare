@@ -34,7 +34,7 @@ namespace redsquare
         //Class count for random
         EntityClassCount,
 
-        /* PROP */
+        /* SMALL PROP */
         BrokenPots,
         Pot,
         LitllePots,
@@ -48,8 +48,33 @@ namespace redsquare
         ExtinctTorch,
         Rock,
         BrownRock,
+        /* SMALL PROP */
 
-        /* PROP */
+
+        /* BIG PROPS */
+        BlankShelf,
+        BookShelf,
+        BrokenShelf,
+        BrownDualRock,
+        BrownPillar1,
+        BrownPillar2,
+        BrownQuadRock,
+        Box1,
+        Box2,
+        DualBox,
+        EmptyStand,
+        GreyDualRock,
+        GreyPillar1,
+        GreyPillar2,
+        GreyQuadRock,
+        LeftChain,
+        RightChain,
+        PotShelf,
+        Table,
+        Throne,
+        WeaponShelf1,
+        WeaponShelf2,
+        /* BIG PROPS */
     };
 
     enum class Tile: uint8_t

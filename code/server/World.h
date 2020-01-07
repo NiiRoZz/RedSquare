@@ -33,6 +33,7 @@ namespace redsquare
         void spawnProps(Prop &prop,std::map<gf::Id,Prop> &m_Props,gf::Vector4u currentRoom); // spawn of props
 
         void setWalkableFromEntity(redsquare::Entity *entity, bool walkable);
+        void prettyPrintWalkable(); // print if the map on which tile is walkable
 
     private:
         std::vector<gf::Vector4u> grid(uint sizeGrid); // return all the cell of the grid in a vector
@@ -44,7 +45,6 @@ namespace redsquare
         void buildWallCorridor(); // build wall around ground
         bool nextToGround(uint x, uint y); // check if the tile is next to a ground tile
         void setWalkable(); // set a tile walkable
-        void prettyPrintWalkable(); // print if the map on which tile is walkable
         
 
     };

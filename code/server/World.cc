@@ -291,7 +291,7 @@ namespace redsquare
 
         for(uint i = 0; i < 3 ; ++i){ // check if all the tile around are either a corridor's tile or a room's tile
             for(uint j = 0; j < 3; ++j){
-                if(!m_SquareWorld.isWalkable({(uint)((m_Spawn[0])-1+i),(uint) ((m_Spawn[1])-1+j)})){
+                if(!m_SquareWorld.isWalkable({(int)((m_Spawn[0])-1+i),(int) ((m_Spawn[1])-1+j)})){
                     getSpawnPoint(m_Props,m_Monster); // called the method again
                     return;
                 }
@@ -310,7 +310,7 @@ namespace redsquare
         do{
             x = rand() % MapSize;
             y = rand() % MapSize;
-        }while(m_World( {(uint)x,(uint) y }) != Tile::Room); // only putting stair on a  randon room's tile
+        }while(!m_SquareWorld.isWalkable({x,y}) || m_World({(uint)x,(uint) y}) != Tile::Room); // only putting stair on a  randon room's tile
 
         auto it = m_Props.begin();
         while ( it != m_Props.end() ){
@@ -327,12 +327,28 @@ namespace redsquare
 
     void World::spawnProps(Prop &prop,std::map<gf::Id,Prop> &m_Props,gf::Vector4u currentRoom){
         uint posX, posY;
-        do
-        {
-            posX = rand() % currentRoom[2]; // length
-            posY = rand() % currentRoom[3]; // width
-        } while ( m_World( { (currentRoom[0]+posX), (currentRoom[1]+posY) }) != Tile::Room && m_World({ (currentRoom[0]+posX), (currentRoom[1]+posY) }) != Tile::Corridor);
-
+        int numberOfTry = 0; // will stop the while loop if we can't place the props in 10 try
+        if (prop.m_Size == gf::Vector2u {1,1}){ // 1x1 props
+            do{
+                if(numberOfTry == 10){
+                    m_Props.erase(prop.m_EntityID);
+                    return;
+                }
+                numberOfTry++;
+                posX = rand() % currentRoom[2]; // length of the room
+                posY = rand() % currentRoom[3]; // width of the room
+            } while ( m_World( { (currentRoom[0]+posX), (currentRoom[1]+posY) }) != Tile::Room && m_World({ (currentRoom[0]+posX), (currentRoom[1]+posY) }) != Tile::Corridor);
+        }else{ // props bigger than 1x1
+            do{
+                if(numberOfTry == 10){
+                    m_Props.erase(prop.m_EntityID);
+                    return;
+                }
+                numberOfTry++;
+                posX = rand() % currentRoom[2]; // length of the room
+                posY = rand() % currentRoom[3]; // width of the room
+            } while (!m_SquareWorld.isWalkable({(int)(currentRoom[0]+posX),(int)(currentRoom[1]+posY)}) || !m_SquareWorld.isWalkable({(int)(currentRoom[0]+posX+prop.m_Size[0]), (int)(currentRoom[1]+posY)}) || !m_SquareWorld.isWalkable({(int)(currentRoom[0]+posX), (int)(currentRoom[1]+posY+prop.m_Size[1])}) || !m_SquareWorld.isWalkable({(int)(currentRoom[0]+posX+prop.m_Size[0]), (int)(currentRoom[1]+posY+prop.m_Size[1])}) );
+        }
         auto it = m_Props.begin();
 
         while ( it != m_Props.end() )
@@ -344,9 +360,20 @@ namespace redsquare
             }
             it++;
         }
+        if (prop.m_Size == gf::Vector2u {1,1}){
 
-        prop.m_Pos = {((int)currentRoom[0]+((int)posX)),((int)currentRoom[1]+((int)posY))};
-        m_SquareWorld.setWalkable({((int)currentRoom[0]+((int)posX)),((int)currentRoom[1]+((int)posY))}, false);
+            prop.m_Pos = {((int)currentRoom[0]+((int)posX)),((int)currentRoom[1]+((int)posY))};
+            m_SquareWorld.setWalkable({((int)currentRoom[0]+((int)posX)),((int)currentRoom[1]+((int)posY))}, false);
+        }else{
+            m_SquareWorld.setWalkable({((int)currentRoom[0]+((int)posX)),((int)currentRoom[1]+((int)posY))}, false);
+            prop.m_Pos = {((int)currentRoom[0]+((int)posX)),((int)currentRoom[1]+((int)posY))};
+            for(int i = 0; i < prop.m_Size[0]; ++i){
+                for(int j = 0; j < prop.m_Size[1]; ++j){
+                    m_SquareWorld.setWalkable({((int)currentRoom[0]+((int)posX))+i,((int)currentRoom[1]+((int)posY))+j}, false);
+                }
+            }
+        }
+        
     }
 
     void World::monsterSpawn(Monster &monster, std::map<gf::Id,Monster> &m_Monsters, uint m_Floor){ // set to a monster a spawn
@@ -360,7 +387,7 @@ namespace redsquare
             y = rand() % MapSize;
             gf::Vector2i spawn({x,y});
             monster.m_Pos = spawn;
-        }while(m_World( { (uint)x,(uint) y } ) != Tile::Room && m_World( { (uint)x,(uint) y } ) != Tile::Corridor); 
+        }while( !m_SquareWorld.isWalkable({x,y}) ); 
 
         auto it = m_Monsters.begin();
 
