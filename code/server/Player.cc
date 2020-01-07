@@ -109,7 +109,7 @@ namespace redsquare
      void Player::levelUp(){ // method to level up a player
 
         m_MaxLifePoint += 2;
-        m_LifePoint += 2;
+        m_LifePoint = m_MaxLifePoint;
 
         m_MaxManaPoint += 2;
         m_ManaPoint += 2;

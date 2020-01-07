@@ -28,7 +28,6 @@ namespace redsquare
 
     static constexpr float HudSpellSize = 55.0f;
     static constexpr float HudSpellTextureSize = 16.0f;
-    static constexpr float HudMinimapSize = 3.0f;
     
     void Hud::render(gf::RenderTarget& target, const gf::RenderStates& states)
     {
@@ -41,12 +40,13 @@ namespace redsquare
         if (m_ShowMap)
         {
             gf::Vector2f baseCoordinatesMiniMap = coordinates.getRelativePoint({ 0.03f, 0.1f });
-            gf::RectangleShape miniMapShape({HudMinimapSize,HudMinimapSize});
+            gf::Vector2f miniMapShapeSize = coordinates.getRelativeSize({ 0.001953125f, 0.003472222f });
+            gf::RectangleShape miniMapShape(miniMapShapeSize);
             gf::Vector2i posPlayer = m_Game.getMyPlayer()->m_Pos;
 
-            for(int i = 0; i < World::MapSize; ++i)
+            for(uint i = 0; i < World::MapSize; ++i)
             {
-                for (int j = 0; j < World::MapSize; ++j)
+                for (uint j = 0; j < World::MapSize; ++j)
                 {  
                     bool draw = true;
                     Tile tileType = m_Game.m_World.m_World({i,j});
@@ -56,7 +56,7 @@ namespace redsquare
                         case Tile::Stair:
                         case Tile::Corridor:
                         {
-                            miniMapShape.setColor(gf::Color::Green);
+                            miniMapShape.setColor(gf::Color4f(0.0078, 0.1765, 0.451, 0.75));
                             break;
                         }
 
@@ -71,9 +71,9 @@ namespace redsquare
                     {
                         if (i == posPlayer[0] && j == posPlayer[1])
                         {
-                            miniMapShape.setColor(gf::Color::Red);
+                            miniMapShape.setColor(gf::Color4f(1.0,0.0,0.0,0.75));
                         }
-                        miniMapShape.setPosition({baseCoordinatesMiniMap[0] + i * HudMinimapSize, baseCoordinatesMiniMap[1] + j * HudMinimapSize});
+                        miniMapShape.setPosition({baseCoordinatesMiniMap[0] + i * miniMapShapeSize[0], baseCoordinatesMiniMap[1] + j * miniMapShapeSize[1]});
 
                         target.draw( miniMapShape, states );
                     }
