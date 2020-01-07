@@ -155,7 +155,7 @@ namespace redsquare
  
         while ( it != monsters.end() )
         {
-            if ( it->second.m_Pos == targetPos )
+            if ( it->second.isInsideMe( targetPos ) )
             {
                 return true;
             }
@@ -167,7 +167,7 @@ namespace redsquare
  
         while ( it2 != props.end() )
         {
-            if ( it2->second.m_Pos == targetPos )
+            if ( it2->second.isInsideMe( targetPos ) )
             {
                 return true;
             }

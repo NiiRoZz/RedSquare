@@ -14,11 +14,13 @@
 
 namespace redsquare
 {
-    Hud::Hud(Game &game, gf::Font &font)
+    Hud::Hud(Game &game, gf::Font &font, gf::ExtendView &view)
     : m_Game(game)
     , m_Chat(font)
     , m_Inventory(font)
     , m_Font(font)
+    , m_View(view)
+    , m_ShowMap(false)
     {
         gMessageManager().registerHandler<SpellUpdateMessage>(&Hud::onSpellUpdate, this);
 
@@ -26,6 +28,7 @@ namespace redsquare
 
     static constexpr float HudSpellSize = 55.0f;
     static constexpr float HudSpellTextureSize = 16.0f;
+    static constexpr float HudMinimapSize = 3.0f;
     
     void Hud::render(gf::RenderTarget& target, const gf::RenderStates& states)
     {
@@ -33,6 +36,50 @@ namespace redsquare
         m_Inventory.render(target, states);
 
         gf::Coordinates coordinates(target);
+
+        //Draw MiniMap
+        if (m_ShowMap)
+        {
+            gf::Vector2f baseCoordinatesMiniMap = coordinates.getRelativePoint({ 0.03f, 0.1f });
+            gf::RectangleShape miniMapShape({HudMinimapSize,HudMinimapSize});
+            gf::Vector2i posPlayer = m_Game.getMyPlayer()->m_Pos;
+
+            for(int i = 0; i < World::MapSize; ++i)
+            {
+                for (int j = 0; j < World::MapSize; ++j)
+                {  
+                    bool draw = true;
+                    Tile tileType = m_Game.m_World.m_World({i,j});
+                    switch (tileType)
+                    {
+                        case Tile::Room:
+                        case Tile::Stair:
+                        case Tile::Corridor:
+                        {
+                            miniMapShape.setColor(gf::Color::Green);
+                            break;
+                        }
+
+                        default:
+                        {
+                            draw = false;
+                            break;
+                        }
+                    }
+
+                    if (draw)
+                    {
+                        if (i == posPlayer[0] && j == posPlayer[1])
+                        {
+                            miniMapShape.setColor(gf::Color::Red);
+                        }
+                        miniMapShape.setPosition({baseCoordinatesMiniMap[0] + i * HudMinimapSize, baseCoordinatesMiniMap[1] + j * HudMinimapSize});
+
+                        target.draw( miniMapShape, states );
+                    }
+                }
+            } 
+        }
 
         //Draw floor
         gf::Text text;
@@ -130,5 +177,10 @@ namespace redsquare
         }
 
         return gf::MessageStatus::Keep;
+    }
+
+    void Hud::showMap()
+    {
+        m_ShowMap = !m_ShowMap;
     }
 }

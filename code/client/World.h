@@ -20,6 +20,7 @@ namespace redsquare
         static constexpr int TileSetSize = 16; // size of a tileset
 
         gf::SquareMap m_SquareMap;
+        gf::Array2D<Tile> m_World;
 
         void generateWorld( gf::Array2D<Tile> world );
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
@@ -30,7 +31,6 @@ namespace redsquare
         World();
 
     private:
-        gf::Array2D<Tile> m_World;
 
         gf::Texture &m_TileTexture;
         gf::TileLayer m_TileSet;

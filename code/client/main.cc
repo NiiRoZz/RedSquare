@@ -91,6 +91,10 @@ int main( int argc, char **argv )
     inventoryAction.addKeycodeKeyControl(gf::Keycode::I);
     actions.addAction(inventoryAction);
 
+    gf::Action mapAction("Map");
+    mapAction.addKeycodeKeyControl(gf::Keycode::M);
+    actions.addAction(mapAction);
+
     gf::Action leftAction("Left");
     leftAction.addScancodeKeyControl(gf::Scancode::A);
     leftAction.addScancodeKeyControl(gf::Scancode::Left);
@@ -139,7 +143,7 @@ int main( int argc, char **argv )
 
     gf::EntityContainer hudEntities;
     // add entities to hudEntities
-    Hud hud(game, fontChat);
+    Hud hud(game, fontChat, mainView);
     hudEntities.addEntity(hud);
 
     gf::Cursor defaultCursor(gf::Cursor::Type::Arrow);
@@ -285,6 +289,10 @@ int main( int argc, char **argv )
         {
             InventoryUpdateMessage message;
             gMessageManager().sendMessage(&message);
+        }
+        if (mapAction.isActive())
+        {
+            hud.showMap();
         }
         
         // 2. update

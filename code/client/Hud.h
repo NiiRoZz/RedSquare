@@ -16,7 +16,7 @@ namespace redsquare
     class Hud: public gf::Entity
     {
     public:
-        Hud(Game &game, gf::Font &font);
+        Hud(Game &game, gf::Font &font, gf::ExtendView &view);
 
         virtual void update(gf::Time time) override;
 
@@ -26,20 +26,23 @@ namespace redsquare
 
         bool hoveringChat();
         bool typingInChat();
+
+        void showMap();
         
     private:
         Game &m_Game;
         Chat m_Chat;
         Inventory m_Inventory;
         gf::Font &m_Font;
+        //View of the game
+        gf::ExtendView &m_View;
         std::vector<gf::Texture*> m_spellsTextures;
-        
 
+        bool m_ShowMap;
+        
         gf::Texture* getTextureFromSpellType(SpellType type);
 
         gf::MessageStatus onSpellUpdate(gf::Id id, gf::Message *msg);
-
-
     };
 
 }
