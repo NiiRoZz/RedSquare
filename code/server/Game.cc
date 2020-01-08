@@ -809,7 +809,7 @@ namespace redsquare
         // Iterate over the map using Iterator till end.
         while ( it != m_Players.end() )
         {
-            if (it->second.m_Pos[0] == pos[0] && it->second.m_Pos[1] == pos[1])
+            if (it->second.isInsideMe(pos))
             {
                 return &it->second;
             }
@@ -827,7 +827,7 @@ namespace redsquare
         // Iterate over the map using Iterator till end.
         while ( it != m_Monsters.end() )
         {
-            if (it->second.m_Pos[0] == pos[0] && it->second.m_Pos[1] == pos[1])
+            if (it->second.isInsideMe(pos))
             {
                 return &it->second;
             }
@@ -845,7 +845,7 @@ namespace redsquare
         // Iterate over the map using Iterator till end.
         while ( it != m_Props.end() )
         {
-            if (it->second.m_Pos[0] == pos[0] && it->second.m_Pos[1] == pos[1])
+            if (it->second.isInsideMe(pos))
             {
                 return &it->second;
             }
