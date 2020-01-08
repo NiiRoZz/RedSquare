@@ -5,6 +5,7 @@
 #include <gf/Window.h>
 #include <gf/Font.h>
 #include <gf/Color.h>
+#include <gf/Coordinates.h>
 
 static const char *VertexShader = R"(
 #version 100
@@ -57,6 +58,22 @@ namespace redsquare
 
     void Chat::update(gf::Time time)
     {
+        
+    }
+
+    void Chat::render(gf::RenderTarget& target, const gf::RenderStates& states)
+    {
+        if (m_HoveringChat || m_TypingInChat)
+        {
+            m_ChatShader.setUniform("u_backgroundColor", gf::Color::Opaque(1.0f));
+        }
+        else
+        {
+            m_ChatShader.setUniform("u_backgroundColor", gf::Color::Opaque(0.75f));
+        }
+                    
+        gf::Coordinates coordinates(target);
+        gf::Vector2f InventoryWindowSize=coordinates.getRelativeSize({ 0.22f,0.40f });
         static gf::UICharBuffer box(512);
         static gf::UICharBuffer text(64);
 
@@ -65,7 +82,7 @@ namespace redsquare
 
         m_UI.setCharacterSize(12);
 
-        if( m_UI.begin("Chat", gf::RectF::fromPositionSize( {0, 350}, {220, 220} ),  gf::UIWindow::Movable |gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
+        if( m_UI.begin("Chat", gf::RectF::fromPositionSize( coordinates.getRelativePoint({ 0.00f,0.600f }),InventoryWindowSize),  gf::UIWindow::Movable |gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
         {
             m_HoveringChat = m_UI.isWindowHovered();
             
@@ -103,19 +120,7 @@ namespace redsquare
             } 
             m_UI.end();
         }
-    }
 
-    void Chat::render(gf::RenderTarget& target, const gf::RenderStates& states)
-    {
-        if (m_HoveringChat || m_TypingInChat)
-        {
-            m_ChatShader.setUniform("u_backgroundColor", gf::Color::Opaque(1.0f));
-        }
-        else
-        {
-            m_ChatShader.setUniform("u_backgroundColor", gf::Color::Opaque(0.75f));
-        }
-        
         gf::RenderStates localChatStates = states;
         localChatStates.shader = &m_ChatShader;
         target.draw(m_UI, localChatStates);
