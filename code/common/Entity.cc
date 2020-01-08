@@ -114,4 +114,20 @@ namespace redsquare
 
         return false;
     }
+
+    bool Entity::isInsideMe(Entity &entity)
+    {
+        for(uint i = 0; i < entity.m_Size[0]; ++i)
+        {
+            for(uint j = 0; j < entity.m_Size[1]; ++j)
+            {
+                if (isInsideMe({entity.m_Pos[0] + (int)i, entity.m_Pos[1] + (int)j}))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }

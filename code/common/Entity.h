@@ -35,6 +35,7 @@ namespace redsquare
         Entity(gf::Id entityID, const EntitySubType typeOfEntity);
 
         bool isInsideMe(gf::Vector2i pos);
+        bool isInsideMe(Entity &entity);
     };
 }
 

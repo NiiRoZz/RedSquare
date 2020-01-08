@@ -10,6 +10,7 @@
 #include <gf/RenderTarget.h>
 #include <gf/Color.h>
 #include <gf/Text.h>
+#include <gf/Particles.h>
 #include <vector> 
 
 namespace redsquare
@@ -41,8 +42,8 @@ namespace redsquare
         {
             gf::Vector2f baseCoordinatesMiniMap = coordinates.getRelativePoint({ 0.03f, 0.1f });
             gf::Vector2f miniMapShapeSize = coordinates.getRelativeSize({ 0.001953125f, 0.003472222f });
-            gf::RectangleShape miniMapShape(miniMapShapeSize);
-            gf::Vector2i posPlayer = m_Game.getMyPlayer()->m_Pos;
+            Player *myPlayer = m_Game.getMyPlayer();
+            gf::ShapeParticles shapeParticles;
 
             for(uint i = 0; i < World::MapSize; ++i)
             {
@@ -50,13 +51,15 @@ namespace redsquare
                 {  
                     bool draw = true;
                     Tile tileType = m_Game.m_World.m_World({i,j});
+                    gf::Color4f color;
+
                     switch (tileType)
                     {
                         case Tile::Room:
                         case Tile::Stair:
                         case Tile::Corridor:
                         {
-                            miniMapShape.setColor(gf::Color4f(0.0078, 0.1765, 0.451, 0.75));
+                            color = std::move(gf::Color4f(0.0078, 0.1765, 0.451, 0.75));
                             break;
                         }
 
@@ -69,16 +72,25 @@ namespace redsquare
 
                     if (draw)
                     {
-                        if (i == posPlayer[0] && j == posPlayer[1])
+                        Player *playerAtPos = m_Game.getPlayer({(int)i,(int)j});
+                        if (playerAtPos != nullptr)
                         {
-                            miniMapShape.setColor(gf::Color4f(1.0,0.0,0.0,0.75));
+                            if (playerAtPos != myPlayer)
+                            {
+                                color = std::move(gf::Color4f(0.0, 1.0, 0.0, 0.75));
+                            }
+                            else
+                            {
+                                color = std::move(gf::Color4f(1.0, 0.0, 0.0, 0.75));
+                            }
                         }
-                        miniMapShape.setPosition({baseCoordinatesMiniMap[0] + i * miniMapShapeSize[0], baseCoordinatesMiniMap[1] + j * miniMapShapeSize[1]});
 
-                        target.draw( miniMapShape, states );
+                        shapeParticles.addRectangle( {baseCoordinatesMiniMap[0] + i * miniMapShapeSize[0], baseCoordinatesMiniMap[1] + j * miniMapShapeSize[1]}, miniMapShapeSize, color );
                     }
                 }
-            } 
+            }
+
+            target.draw( shapeParticles, states );
         }
 
         //Draw floor

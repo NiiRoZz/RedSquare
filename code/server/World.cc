@@ -349,31 +349,20 @@ namespace redsquare
                 posY = rand() % currentRoom[3]; // width of the room
             } while (!m_SquareWorld.isWalkable({(int)(currentRoom[0]+posX),(int)(currentRoom[1]+posY)}) || !m_SquareWorld.isWalkable({(int)(currentRoom[0]+posX+prop.m_Size[0]), (int)(currentRoom[1]+posY)}) || !m_SquareWorld.isWalkable({(int)(currentRoom[0]+posX), (int)(currentRoom[1]+posY+prop.m_Size[1])}) || !m_SquareWorld.isWalkable({(int)(currentRoom[0]+posX+prop.m_Size[0]), (int)(currentRoom[1]+posY+prop.m_Size[1])}) );
         }
-        auto it = m_Props.begin();
 
+        auto it = m_Props.begin();
         while ( it != m_Props.end() )
         {
-            if (it->first != prop.m_EntityID && it->second.isInsideMe({(int)posX, (int)posY}))
+            if (it->first != prop.m_EntityID && it->second.isInsideMe(prop))
             {
                 spawnProps(prop,m_Props,currentRoom);
                 return;
             }
             it++;
         }
-        if (prop.m_Size == gf::Vector2u {1,1}){
-
-            prop.m_Pos = {((int)currentRoom[0]+((int)posX)),((int)currentRoom[1]+((int)posY))};
-            m_SquareWorld.setWalkable({((int)currentRoom[0]+((int)posX)),((int)currentRoom[1]+((int)posY))}, false);
-        }else{
-            m_SquareWorld.setWalkable({((int)currentRoom[0]+((int)posX)),((int)currentRoom[1]+((int)posY))}, false);
-            prop.m_Pos = {((int)currentRoom[0]+((int)posX)),((int)currentRoom[1]+((int)posY))};
-            for(int i = 0; i < prop.m_Size[0]; ++i){
-                for(int j = 0; j < prop.m_Size[1]; ++j){
-                    m_SquareWorld.setWalkable({((int)currentRoom[0]+((int)posX))+i,((int)currentRoom[1]+((int)posY))+j}, false);
-                }
-            }
-        }
         
+        prop.m_Pos = {((int)currentRoom[0]+((int)posX)),((int)currentRoom[1]+((int)posY))};
+        setWalkableFromEntity(&prop, false);
     }
 
     void World::monsterSpawn(Monster &monster, std::map<gf::Id,Monster> &m_Monsters, uint m_Floor){ // set to a monster a spawn
@@ -395,7 +384,7 @@ namespace redsquare
         {
             if( it->first != monster.m_EntityID )
             {
-                if (it->second.m_Pos[0] == monster.m_Pos[0] && it->second.m_Pos[1] == monster.m_Pos[1])
+                if (it->second.isInsideMe(monster))
                 {
                     monsterSpawn(monster,m_Monsters,m_Floor);
                     return;
@@ -403,6 +392,7 @@ namespace redsquare
             }
             ++it;
         }
+        
         drawRoutine(monster);
     }
 
