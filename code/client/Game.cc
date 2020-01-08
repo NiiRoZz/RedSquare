@@ -638,4 +638,11 @@ namespace redsquare
 
         return false;
     }
+    
+    void Game::changeSpell(int spell){
+
+        m_CurrentSpell = m_Spell[spell];
+
+        return;
+    }
 }

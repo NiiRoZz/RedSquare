@@ -24,9 +24,9 @@ namespace redsquare
         /* CLASSES */
         Magus,
         Warrior,
+        Rogue,
         // Paladin,
         // Archer,
-        // Rogue,
         // Healer,
         /* CLASSES */
 

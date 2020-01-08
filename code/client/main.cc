@@ -126,6 +126,21 @@ int main( int argc, char **argv )
     gf::Action clicAction("Clic");
     clicAction.addMouseButtonControl(gf::MouseButton::Left);
 
+    gf::Action changeSpell1("Spell1");
+    changeSpell1.addScancodeKeyControl(gf::Scancode::Num1);
+    changeSpell1.addScancodeKeyControl(gf::Scancode::Numpad1);
+    actions.addAction(changeSpell1);
+
+    gf::Action changeSpell2("Spell2");
+    changeSpell2.addScancodeKeyControl(gf::Scancode::Num2);
+    changeSpell2.addScancodeKeyControl(gf::Scancode::Numpad2);
+    actions.addAction(changeSpell2);
+
+    gf::Action changeSpell3("Spell3");
+    changeSpell3.addScancodeKeyControl(gf::Scancode::Num3);
+    changeSpell3.addScancodeKeyControl(gf::Scancode::Numpad3);
+    actions.addAction(changeSpell3);
+
     // entities
     gf::EntityContainer mainEntities;
     // add entities to mainEntities
@@ -293,6 +308,18 @@ int main( int argc, char **argv )
         if (mapAction.isActive())
         {
             hud.showMap();
+        }
+        if( changeSpell1.isActive() && !hud.hoveringChat() && !hud.typingInChat())
+        {
+           // game.changeSpell(1);
+        }
+        if( changeSpell2.isActive() && !hud.hoveringChat() && !hud.typingInChat())
+        {
+            // game.changeSpell(2);
+        }
+        if( changeSpell3.isActive() && !hud.hoveringChat() && !hud.typingInChat())
+        {
+            // game.changeSpell(3);
         }
         
         // 2. update

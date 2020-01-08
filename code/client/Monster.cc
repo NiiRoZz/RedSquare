@@ -57,7 +57,7 @@ namespace redsquare
             */
             default:
             {
-                monsterTexture = &gResourceManager().getTexture("data/redsquare/img/spirit.png");
+                monsterTexture = &gResourceManager().getTexture("img/spirit.png");
                 break;
             }
         }

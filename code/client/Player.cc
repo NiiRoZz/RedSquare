@@ -103,35 +103,19 @@ namespace redsquare
         switch (type)
         {
             case EntitySubType::Magus:
-            {
                 playerTexture = &gResourceManager().getTexture("img/goblin.png");
                 break;
-            }
 
             case EntitySubType::Warrior:
-            {
                 playerTexture = &gResourceManager().getTexture("img/knight.png");
                 break;
-            }
 
-            /*
-            case 2:
-            {
-                playerTexture.loadFromFile("data/redsquare/img/bat.png");
+            case EntitySubType::Rogue:
+                playerTexture = &gResourceManager().getTexture("img/Rogue.png");
                 break;
-            }
-
-            case 3:
-            {
-                playerTexture.loadFromFile("data/redsquare/img/slime.png");
-                break;
-            }
-            */
-        
+                
             default:
-            {
                 break;
-            }
         }
     }
 
