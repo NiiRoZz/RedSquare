@@ -66,7 +66,7 @@ int main( int argc, char **argv )
     // initialization redsquare
     gf::Font &fontChat(gResourceManager().getFont("font/arial.ttf"));
     
-    
+    bool inventoryVisible = false;
     
     // views
     gf::ViewContainer views;
@@ -218,7 +218,7 @@ int main( int argc, char **argv )
             {
                 case gf::EventType::MouseButtonPressed:
                 {
-                    if (!hud.hoveringChat() && !hud.typingInChat())
+                    if (!hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
                     {
                         end = std::chrono::system_clock::now();
                         int elapsed_seconds = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count();
@@ -247,7 +247,7 @@ int main( int argc, char **argv )
 
                 case gf::EventType::MouseMoved:
                 {
-                    if (!hud.hoveringChat() && !hud.typingInChat())
+                    if (!hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
                     {
                         gf::Vector2i pos = renderer.mapPixelToCoords(event.mouseCursor.coords,mainView) / World::TileSize;
 
@@ -304,24 +304,24 @@ int main( int argc, char **argv )
         {
             window.toggleFullscreen();
         }
-        if (rightAction.isActive() && !hud.hoveringChat() && !hud.typingInChat())
+        if (rightAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
         {
             game.movePlayer( 1, 0 );
         } 
-        else if (leftAction.isActive() && !hud.hoveringChat() && !hud.typingInChat())
+        else if (leftAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
         {
             game.movePlayer( -1, 0 );
         } 
-        else if (upAction.isActive() && !hud.hoveringChat() && !hud.typingInChat())
+        else if (upAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
         {
             game.movePlayer( 0, -1 );
         } 
-        else if (downAction.isActive() && !hud.hoveringChat() && !hud.typingInChat())
+        else if (downAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
         {
             game.movePlayer( 0, 1 );
         }
 
-        if (passTurn.isActive() && !hud.hoveringChat() && !hud.typingInChat())
+        if (passTurn.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
         {
             game.passTurn();
         }
@@ -329,6 +329,8 @@ int main( int argc, char **argv )
         {
             InventoryUpdateMessage message;
             gMessageManager().sendMessage(&message);
+
+            inventoryVisible = !inventoryVisible;
         }
         if (mapAction.isActive())
         {

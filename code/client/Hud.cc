@@ -32,9 +32,6 @@ namespace redsquare
     
     void Hud::render(gf::RenderTarget& target, const gf::RenderStates& states)
     {
-        m_Chat.render(target, states);
-        m_Inventory.render(target, states);
-
         gf::Coordinates coordinates(target);
 
         //Draw MiniMap
@@ -143,6 +140,9 @@ namespace redsquare
                 index++;
             }
         }
+
+        m_Chat.render(target, states);
+        m_Inventory.render(target, states);
     }
 
     void Hud::update(gf::Time time)

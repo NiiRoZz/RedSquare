@@ -73,7 +73,12 @@ namespace redsquare
         }
                     
         gf::Coordinates coordinates(target);
-        gf::Vector2f InventoryWindowSize=coordinates.getRelativeSize({ 0.22f,0.40f });
+        gf::Vector2f ChatWindowSize=coordinates.getRelativeSize({ 0.22f,0.40f });
+        gf::Vector2f sizeInterChat=ChatWindowSize*gf::Vector2f(0.700,0.954);
+        gf::Vector2f sizeMessageReceiveChat=ChatWindowSize*gf::Vector2f(0.136,0.840);
+        gf::Vector2f sizeMessageBackground=ChatWindowSize*gf::Vector2f(0.200,0.954);
+        gf::Vector2f sizeMessageToSend=ChatWindowSize*gf::Vector2f(0.100,0.113);
+        
         static gf::UICharBuffer box(512);
         static gf::UICharBuffer text(64);
 
@@ -82,32 +87,32 @@ namespace redsquare
 
         m_UI.setCharacterSize(12);
 
-        if( m_UI.begin("Chat", gf::RectF::fromPositionSize( coordinates.getRelativePoint({ 0.00f,0.600f }),InventoryWindowSize),  gf::UIWindow::Movable |gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
+        if( m_UI.begin("Chat", gf::RectF::fromPositionSize( coordinates.getRelativePoint({ 0.00f,0.595f }),ChatWindowSize),gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
         {
             m_HoveringChat = m_UI.isWindowHovered();
             
-            m_UI.layoutRowStatic(150, 210, 1);
-            if (m_UI.groupBegin(""))
+            m_UI.layoutRowStatic(sizeInterChat[0], sizeInterChat[1], 1);
+            if (m_UI.groupBegin("",gf::UIWindow::ScrollAutoHide))
             {
-                m_UI.layoutRowStatic(30, 185, 1);
+                m_UI.layoutRowStatic(sizeMessageReceiveChat[0],sizeMessageReceiveChat[1], 1);
                 m_UI.edit(gf::UIEditType::Box | gf::UIEdit::ReadOnly  , box);
 
-                m_UI.layoutRowStatic(30, 185, 1);
+                m_UI.layoutRowStatic(sizeMessageReceiveChat[0],sizeMessageReceiveChat[1], 1);
                 m_UI.edit(gf::UIEditType::Box | gf::UIEdit::ReadOnly, box);
 
                 m_UI.groupEnd();
             }
-            m_UI.layoutRowStatic(50, 200, 1);
+            m_UI.layoutRowStatic(sizeMessageBackground[0], sizeMessageBackground[1], 1);
 
-            if (m_UI.groupBegin(""))
+            if (m_UI.groupBegin("",gf::UIWindow::Border))
             {
-                m_UI.layoutRowBegin(gf::UILayout::Static, 25, 2);
-                m_UI.layoutRowPush(113);
+                m_UI.layoutRowBegin(gf::UILayout::Dynamic, sizeMessageToSend[0], 2);
+                m_UI.layoutRowPush(0.7f);
                 
                 gf::UIEditEventFlags flags = m_UI.edit(gf::UIEditType::Field | gf::UIEdit::SigEnter, text, gf::UIEditFilter::Ascii);
                 m_TypingInChat = (flags & gf::UIEditEvent::Active);
 
-                m_UI.layoutRowPush(60);
+                m_UI.layoutRowPush(0.30f);
                 
                 if ( m_UI.buttonLabel("Submit") || flags.test(gf::UIEditEvent::Commited) )
                 {
