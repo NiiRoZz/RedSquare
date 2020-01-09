@@ -13,7 +13,7 @@ namespace redsquare
     {
         m_World.generateWorld(); // generate map
         placeProps(); // place props
-        addNewMonsters(0); // place monsters
+        addNewMonsters(10); // place monsters
         m_World.putStair(m_Props); // put stair on map
         m_World.prettyPrint();  // print the map in server console
         m_World.getSpawnPoint(m_Props,m_Monsters); // place the spawn of player
@@ -730,7 +730,7 @@ namespace redsquare
                             m_Floor++;
                             m_World.generateWorld();
                             placeProps();
-                            addNewMonsters(0);
+                            addNewMonsters(10);
                             m_World.putStair(m_Props);
                             m_World.prettyPrint();  
                             m_World.getSpawnPoint(m_Props,m_Monsters);
@@ -878,6 +878,12 @@ namespace redsquare
                 }
                 break;
             }
+
+            case PacketType::UpdateSpells:
+                break;
+
+            default :
+                break;
 
            /* case PacketType::Message:{
                 

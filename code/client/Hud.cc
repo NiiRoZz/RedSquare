@@ -169,7 +169,41 @@ namespace redsquare
 
     gf::Texture* Hud::getTextureFromSpellType(SpellType type)
     {
-        return &gResourceManager().getTexture("img/redsquare.png");
+        std::string texture;
+
+        switch (type)
+        {
+        case SpellType::FireBall :
+            texture = "img/SpellIcon/Named/Fireball1.png";
+            break;
+        case SpellType::Devastate :
+            texture = "img/SpellIcon/Named/Devastate1.png";
+            break;
+        case SpellType::Lacerate :
+            texture = "img/SpellIcon/Named/Lacerate1.png";
+            break;
+        case SpellType::ArmorUp :
+            texture = "img/SpellIcon/Named/ArmorUP1.png";
+            break;
+        case SpellType::Heal :
+            texture = "img/SpellIcon/Named/Heal1.png";
+            break;
+        case SpellType::Berserk :
+            texture = "img/SpellIcon/Named/Berserk1.png";
+            break;
+        case SpellType::DamageUp :
+            texture = "img/SpellIcon/Named/DamageUP1.png";
+            break;
+        case SpellType::Revenge :
+            texture = "img/SpellIcon/Named/Revenge1.png";
+            break;
+        case SpellType::Unknow :
+            texture = "img/redsquare.png";
+        default:
+            texture = "img/SpellIcon/Named/Basic1.png";
+            break;
+        }
+        return &gResourceManager().getTexture(texture);
     }
 
     gf::MessageStatus Hud::onSpellUpdate(gf::Id id, gf::Message *msg)
