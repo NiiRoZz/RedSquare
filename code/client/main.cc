@@ -141,6 +141,31 @@ int main( int argc, char **argv )
     changeSpell3.addScancodeKeyControl(gf::Scancode::Numpad3);
     actions.addAction(changeSpell3);
 
+    gf::Action changeSpell4("Spell4");
+    changeSpell4.addScancodeKeyControl(gf::Scancode::Num4);
+    changeSpell4.addScancodeKeyControl(gf::Scancode::Numpad4);
+    actions.addAction(changeSpell4);
+
+    gf::Action changeSpell5("Spell5");
+    changeSpell5.addScancodeKeyControl(gf::Scancode::Num5);
+    changeSpell5.addScancodeKeyControl(gf::Scancode::Numpad5);
+    actions.addAction(changeSpell5);
+
+    gf::Action changeSpell6("Spell6");
+    changeSpell6.addScancodeKeyControl(gf::Scancode::Num6);
+    changeSpell6.addScancodeKeyControl(gf::Scancode::Numpad6);
+    actions.addAction(changeSpell6);
+
+    gf::Action changeSpell7("Spell7");
+    changeSpell7.addScancodeKeyControl(gf::Scancode::Num7);
+    changeSpell7.addScancodeKeyControl(gf::Scancode::Numpad7);
+    actions.addAction(changeSpell7);
+
+    gf::Action changeSpell8("Spell8");
+    changeSpell8.addScancodeKeyControl(gf::Scancode::Num8);
+    changeSpell8.addScancodeKeyControl(gf::Scancode::Numpad8);
+    actions.addAction(changeSpell8);
+
     // entities
     gf::EntityContainer mainEntities;
     // add entities to mainEntities
@@ -309,18 +334,38 @@ int main( int argc, char **argv )
         {
             hud.showMap();
         }
-        if( changeSpell1.isActive() && !hud.hoveringChat() && !hud.typingInChat())
+        if( changeSpell1.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 2)
         {
-           // game.changeSpell(1);
+            game.changeSpell(1);
         }
-        if( changeSpell2.isActive() && !hud.hoveringChat() && !hud.typingInChat())
+        if( changeSpell2.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 2)
         {
-            // game.changeSpell(2);
+             game.changeSpell(2);
         }
-        if( changeSpell3.isActive() && !hud.hoveringChat() && !hud.typingInChat())
+        if( changeSpell3.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 3 )
         {
-            // game.changeSpell(3);
+            game.changeSpell(3);
         }
+        if( changeSpell4.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 4 )
+        {
+            game.changeSpell(4);
+        }
+       /* if( changeSpell5.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 5 )
+        {
+            game.changeSpell(5);
+        }
+        if( changeSpell6.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 6 )
+        {
+            game.changeSpell(6);
+        }
+        if( changeSpell7.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 7 )
+        {
+            game.changeSpell(7);
+        }
+        if( changeSpell8.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 8 )
+        {
+            game.changeSpell(8);
+        }*/
         
         // 2. update
         gf::Time time = clock.restart();

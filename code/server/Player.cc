@@ -144,9 +144,9 @@ namespace redsquare
         {
             case EntitySubType::Warrior:  
                 if(m_Level == 2){
-                    m_SpellTab.push_back(SpellType::ArmorUp);
-                }else if(m_Level == 3){
                     m_SpellTab.push_back(SpellType::DamageUp);
+                }else if(m_Level == 3){
+                    m_SpellTab.push_back(SpellType::ArmorUp);
                 }else if(m_Level == 4){
                     m_SpellTab.push_back(SpellType::Berserk);
                 }else if(m_Level == 5){
@@ -279,16 +279,19 @@ namespace redsquare
         switch (spellType)
         {
             case SpellType::BasicAttack:
-            {
                 BasicAttack(target);
                 break;
-            }
-
+            case SpellType::DamageUp:
+                DamageUp();
+                break;
             case SpellType::FireBall:
-            {
                 Fireball(target);
                 break;
-            }
+            case SpellType::ArmorUp:
+                ArmorUp();
+                break;
+            default:
+                break;
         }
 
         if( target->m_LifePoint <= 0 )
@@ -303,6 +306,7 @@ namespace redsquare
 
     void Player::BasicAttack(ServerEntity *target){
         target->m_LifePoint -= (m_AttackPoint - target->m_DefensePoint);
+        std::cout << "BasicAttack" << std::endl;
     }
 
     void Player::Fireball(ServerEntity *target){
@@ -360,10 +364,12 @@ namespace redsquare
     void Player::DamageUp(){ 
         int critical = rand() % 100;
         if(critical > 90){
-            m_AttackPoint += 5;
-        }else{
             m_AttackPoint += 10;
+        }else{
+            m_AttackPoint += 5;
         }
+
+        std::cout << "DAMAGEUP" << std::endl;
     }
 
 

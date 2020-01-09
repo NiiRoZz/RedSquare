@@ -24,6 +24,7 @@ namespace redsquare
         int m_MaxXP;
         /* Characteristic*/
         EntitySubType m_Class;
+        SpellType m_CurrentSpell;
         std::vector<SpellType> m_SpellTab;
 
         uint8_t m_PointInRound;

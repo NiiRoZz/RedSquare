@@ -25,6 +25,7 @@ namespace redsquare
     , m_NextPosTexture(gResourceManager().getTexture("img/case_selected.png"))
     , m_Name(name)
     , m_Floor(0)
+    , m_CurrentSpell(SpellType::BasicAttack)
     {
     }
      //, m_ChatCom(hostname, port+1, m_ChatQueue)
@@ -217,7 +218,7 @@ namespace redsquare
             Packet packet;
             packet.type = PacketType::RequestAttack;
             packet.requestAttack.playerID = m_PlayerID;
-            packet.requestAttack.spellType = SpellType::BasicAttack; //TODO: do a check here, to know wich attack selected
+            packet.requestAttack.spellType = m_CurrentSpell; //TODO: do a check here, to know wich attack selected
             packet.requestAttack.posX = m_AttackX;
             packet.requestAttack.posY = m_AttackY;
 
@@ -641,7 +642,13 @@ namespace redsquare
     
     void Game::changeSpell(int spell){
 
-        m_CurrentSpell = m_Spell[spell];
+        auto currentPlayer = Game::getMyPlayer();
+        if(currentPlayer != nullptr){
+            Game::m_CurrentSpell = currentPlayer->m_SpellTab[spell-1];
+        }else{
+            std::cout << "ERROR" <<std::endl;
+        }
+        std::cout << "SPELL CHANGED FOR SPELL N°" << spell << std::endl;
 
         return;
     }
