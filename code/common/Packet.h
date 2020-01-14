@@ -24,9 +24,9 @@ namespace redsquare
         /* CLASSES */
         Magus,
         Warrior,
+        Rogue,
         // Paladin,
         // Archer,
-        // Rogue,
         // Healer,
         /* CLASSES */
 
@@ -34,11 +34,47 @@ namespace redsquare
         //Class count for random
         EntityClassCount,
 
-        /* PROP */
-        Box,
+        /* SMALL PROP */
+        BrokenPots,
         Pot,
+        LitllePots,
         Torch,
-        /* PROP */
+        Chest,
+        OpenedChest,
+        Stool,
+        PileWood,
+        GreyBrokenPillar,
+        BrownBrokenPillar,
+        ExtinctTorch,
+        Rock,
+        BrownRock,
+        /* SMALL PROP */
+
+
+        /* BIG PROPS */
+        BlankShelf,
+        BookShelf,
+        BrokenShelf,
+        BrownDualRock,
+        BrownPillar1,
+        BrownPillar2,
+        BrownQuadRock,
+        Box1,
+        Box2,
+        DualBox,
+        EmptyStand,
+        GreyDualRock,
+        GreyPillar1,
+        GreyPillar2,
+        GreyQuadRock,
+        LeftChain,
+        RightChain,
+        PotShelf,
+        Table,
+        Throne,
+        WeaponShelf1,
+        WeaponShelf2,
+        /* BIG PROPS */
     };
 
     enum class Tile: uint8_t

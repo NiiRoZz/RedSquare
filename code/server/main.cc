@@ -133,7 +133,7 @@ int main( int argc, char **argv )
 			bool isTarget = false;
 			bool hasAttacked = false;
 			game.m_World.m_SquareWorld.clearFieldOfVision();
-			game.m_World.m_SquareWorld.computeLocalFieldOfVision(it->second.m_Pos,7);
+			game.m_World.m_SquareWorld.computeLocalFieldOfVision(it->second.m_Pos,10);
 
 			auto it2 = game.m_Players.begin();
 			while ( it2 != game.m_Players.end() )
@@ -208,30 +208,37 @@ int main( int argc, char **argv )
 					{
 						game.m_World.drawRoutine(it->second);
 					}
-						
-        			game.m_World.m_SquareWorld.setWalkable(it->second.m_Pos, true);
+					
+					game.m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&(it->second)), true);
 					game.m_World.m_SquareWorld.setTransparent(it->second.m_Pos, true);
 
 					//std::cout << "Target : " << isTarget << "      Pos actu w : " << game.m_World.m_SquareWorld.isWalkable(it->second.m_Pos) << "      Pos routine w : " << game.m_World.m_SquareWorld.isWalkable(it->second.m_Routine) << "     Pos ROUTINE : " << it->second.m_Routine[0] << "/" << it->second.m_Routine[1] << "     Pos Actuelle : "<<it->second.m_Pos[0] << "/" << it->second.m_Pos[1] <<std::endl;
 
 					std::vector<gf::Vector2i> points = game.m_World.m_SquareWorld.computeRoute(it->second.m_Pos, it->second.m_Routine, 0.0);
 
-					it->second.m_Pos = points[1];
-					if( isTarget )
+					if (points.empty())
 					{
-						game.m_World.m_SquareWorld.setWalkable(it->second.m_Routine, false);
+						game.m_World.drawRoutine(it->second);
 					}
+					else
+					{
+						it->second.m_Pos = points[1];
+						if( isTarget )
+						{
+							game.m_World.m_SquareWorld.setWalkable(it->second.m_Routine, false);
+						}
 
-					game.m_World.m_SquareWorld.setWalkable(it->second.m_Pos, false);
+						game.m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&(it->second)), false);
 
-					Packet sendPacket;
-					sendPacket.type = PacketType::ReceiveMove;
-					sendPacket.receiveMove.entityID = it->second.m_EntityID;
-					sendPacket.receiveMove.typeEntity = EntityType::Monster;
-					sendPacket.receiveMove.posX = it->second.m_Pos[0];
-					sendPacket.receiveMove.posY = it->second.m_Pos[1];
+						Packet sendPacket;
+						sendPacket.type = PacketType::ReceiveMove;
+						sendPacket.receiveMove.entityID = it->second.m_EntityID;
+						sendPacket.receiveMove.typeEntity = EntityType::Monster;
+						sendPacket.receiveMove.posX = it->second.m_Pos[0];
+						sendPacket.receiveMove.posY = it->second.m_Pos[1];
 
-					game.sendPacketToAllPlayers( sendPacket );
+						game.sendPacketToAllPlayers( sendPacket );
+					}
 				}
 			}
 		}

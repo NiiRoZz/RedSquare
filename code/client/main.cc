@@ -31,7 +31,7 @@
 #include "Hud.h"
 #include "../common/Singletons.h"
 #include "../common/Packet.h"
-#include "../../config.h"
+#include "config.h"
 #include <gf/TileLayer.h>
 
 
@@ -43,7 +43,7 @@ int main( int argc, char **argv )
     if ( argc != 5 )
     {
         std::cerr << "Usage : ./RedSquare ip port playerName typePlayer" << std::endl;
-        std::cerr << "typePlayer: " << std::endl << "0 for Magus" << std::endl << "1 for Warrior" << std::endl;
+        std::cerr << "typePlayer: " << std::endl << "0 for Magus" << std::endl << "1 for Warrior" << std::endl << "2 for Rogue" << std::endl;
         return 1;
     }
 
@@ -65,9 +65,9 @@ int main( int argc, char **argv )
 
     // initialization redsquare
     gf::Font &fontChat(gResourceManager().getFont("font/arial.ttf"));
-    
-    
-    
+
+    bool inventoryVisible = false;
+
     // views
     gf::ViewContainer views;
     gf::ExtendView mainView( ViewCenter, ViewSize );
@@ -86,6 +86,14 @@ int main( int argc, char **argv )
     gf::Action fullscreenAction("Fullscreen");
     fullscreenAction.addKeycodeKeyControl(gf::Keycode::F);
     actions.addAction(fullscreenAction);
+
+    gf::Action inventoryAction("Inventory");
+    inventoryAction.addKeycodeKeyControl(gf::Keycode::I);
+    actions.addAction(inventoryAction);
+
+    gf::Action mapAction("Map");
+    mapAction.addKeycodeKeyControl(gf::Keycode::M);
+    actions.addAction(mapAction);
 
     gf::Action leftAction("Left");
     leftAction.addScancodeKeyControl(gf::Scancode::A);
@@ -114,9 +122,49 @@ int main( int argc, char **argv )
     gf::Action passTurn("PassTurn");
     passTurn.addKeycodeKeyControl(gf::Keycode::Space);
     actions.addAction(passTurn);
-    
+
     gf::Action clicAction("Clic");
     clicAction.addMouseButtonControl(gf::MouseButton::Left);
+
+    gf::Action changeSpell1("Spell1");
+    changeSpell1.addScancodeKeyControl(gf::Scancode::Num1);
+    changeSpell1.addScancodeKeyControl(gf::Scancode::Numpad1);
+    actions.addAction(changeSpell1);
+
+    gf::Action changeSpell2("Spell2");
+    changeSpell2.addScancodeKeyControl(gf::Scancode::Num2);
+    changeSpell2.addScancodeKeyControl(gf::Scancode::Numpad2);
+    actions.addAction(changeSpell2);
+
+    gf::Action changeSpell3("Spell3");
+    changeSpell3.addScancodeKeyControl(gf::Scancode::Num3);
+    changeSpell3.addScancodeKeyControl(gf::Scancode::Numpad3);
+    actions.addAction(changeSpell3);
+
+    gf::Action changeSpell4("Spell4");
+    changeSpell4.addScancodeKeyControl(gf::Scancode::Num4);
+    changeSpell4.addScancodeKeyControl(gf::Scancode::Numpad4);
+    actions.addAction(changeSpell4);
+
+    gf::Action changeSpell5("Spell5");
+    changeSpell5.addScancodeKeyControl(gf::Scancode::Num5);
+    changeSpell5.addScancodeKeyControl(gf::Scancode::Numpad5);
+    actions.addAction(changeSpell5);
+
+    gf::Action changeSpell6("Spell6");
+    changeSpell6.addScancodeKeyControl(gf::Scancode::Num6);
+    changeSpell6.addScancodeKeyControl(gf::Scancode::Numpad6);
+    actions.addAction(changeSpell6);
+
+    gf::Action changeSpell7("Spell7");
+    changeSpell7.addScancodeKeyControl(gf::Scancode::Num7);
+    changeSpell7.addScancodeKeyControl(gf::Scancode::Numpad7);
+    actions.addAction(changeSpell7);
+
+    gf::Action changeSpell8("Spell8");
+    changeSpell8.addScancodeKeyControl(gf::Scancode::Num8);
+    changeSpell8.addScancodeKeyControl(gf::Scancode::Numpad8);
+    actions.addAction(changeSpell8);
 
     // entities
     gf::EntityContainer mainEntities;
@@ -126,7 +174,7 @@ int main( int argc, char **argv )
     char  Cport_Chat[10] ;
     sprintf(Cport_Chat,"%d",Iport_Chat);
     std::cout << "hud : "<< Cport_Chat<<std::endl;
-    Hud hud(game, fontChat,Cport_Chat,argv[1]);
+    Hud hud(game, fontChat,Cport_Chat,argv[1],mainView);
 
     //Send info about us, before get world
     game.sendInfoConnection(static_cast<EntitySubType>(atoi(argv[4])), argv[3]);
@@ -139,12 +187,10 @@ int main( int argc, char **argv )
 
     gf::EntityContainer hudEntities;
     // add entities to hudEntities
-    
-   
     hudEntities.addEntity(hud);
 
     gf::Cursor defaultCursor(gf::Cursor::Type::Arrow);
-    
+
     gf::Image attackImage(std::move(gResourceManager().getTexture("img/attackCursor.png").copyToImage()));
     attackImage.flipHorizontally();
     gf::Cursor attackCursor(attackImage, { 8u, 8u });
@@ -164,7 +210,7 @@ int main( int argc, char **argv )
     {
         // 1. input
         gf::Event event;
-        
+
         while (window.pollEvent(event))
         {
             actions.processEvent(event);
@@ -175,7 +221,7 @@ int main( int argc, char **argv )
             {
                 case gf::EventType::MouseButtonPressed:
                 {
-                    if (!hud.hoveringChat())
+                    if (!hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
                     {
                         end = std::chrono::system_clock::now();
                         int elapsed_seconds = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count();
@@ -204,7 +250,7 @@ int main( int argc, char **argv )
 
                 case gf::EventType::MouseMoved:
                 {
-                    if (!hud.hoveringChat())
+                    if (!hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
                     {
                         gf::Vector2i pos = renderer.mapPixelToCoords(event.mouseCursor.coords,mainView) / World::TileSize;
 
@@ -224,7 +270,10 @@ int main( int argc, char **argv )
 
                                 std::vector<gf::Vector2i> allPos = game.m_World.m_SquareMap.computeRoute(myPlayer->m_Pos, pos, 0.0);
 
-                                game.m_TempMove.insert(game.m_TempMove.end(), ++allPos.begin(), allPos.end());
+                                if (!allPos.empty())
+                                {
+                                    game.m_TempMove.insert(game.m_TempMove.end(), ++allPos.begin(), allPos.end());
+                                }
                             }
                             else
                             {
@@ -243,7 +292,7 @@ int main( int argc, char **argv )
                         game.m_TempMove.clear();
                         window.setMouseCursor(defaultCursor);
                     }
-                    
+
                     break;
                 }
             }
@@ -254,33 +303,75 @@ int main( int argc, char **argv )
             window.close();
         }
 
-        if (fullscreenAction.isActive() && !hud.hoveringChat())
+        if (fullscreenAction.isActive() && !hud.hoveringChat() && !hud.typingInChat())
         {
             window.toggleFullscreen();
         }
-
-        if (rightAction.isActive() && !hud.hoveringChat())
+        if (rightAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
         {
             game.movePlayer( 1, 0 );
-        } 
-        else if (leftAction.isActive() && !hud.hoveringChat())
+        }
+        else if (leftAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
         {
             game.movePlayer( -1, 0 );
-        } 
-        else if (upAction.isActive() && !hud.hoveringChat())
+        }
+        else if (upAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
         {
             game.movePlayer( 0, -1 );
-        } 
-        else if (downAction.isActive() && !hud.hoveringChat())
+        }
+        else if (downAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
         {
             game.movePlayer( 0, 1 );
         }
 
-        if (passTurn.isActive() && !hud.hoveringChat())
+        if (passTurn.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
         {
             game.passTurn();
         }
-        
+        if (inventoryAction.isActive() && !hud.hoveringChat() && !hud.typingInChat())
+        {
+            InventoryUpdateMessage message;
+            gMessageManager().sendMessage(&message);
+
+            inventoryVisible = !inventoryVisible;
+        }
+        if (mapAction.isActive())
+        {
+            hud.showMap();
+        }
+        if( changeSpell1.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 2)
+        {
+            game.changeSpell(1);
+        }
+        if( changeSpell2.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 2)
+        {
+             game.changeSpell(2);
+        }
+        if( changeSpell3.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 3 )
+        {
+            game.changeSpell(3);
+        }
+        if( changeSpell4.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 4 )
+        {
+            game.changeSpell(4);
+        }
+       /* if( changeSpell5.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 5 )
+        {
+            game.changeSpell(5);
+        }
+        if( changeSpell6.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 6 )
+        {
+            game.changeSpell(6);
+        }
+        if( changeSpell7.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 7 )
+        {
+            game.changeSpell(7);
+        }
+        if( changeSpell8.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 8 )
+        {
+            game.changeSpell(8);
+        }*/
+
         // 2. update
         gf::Time time = clock.restart();
         mainEntities.update(time);
@@ -295,6 +386,6 @@ int main( int argc, char **argv )
         renderer.display();
         actions.reset();
 	}
-    
+
 	return 0;
 }

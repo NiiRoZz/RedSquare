@@ -24,6 +24,7 @@ namespace redsquare
         int m_MaxXP;
         /* Characteristic*/
         EntitySubType m_Class;
+        SpellType m_CurrentSpell;
         std::vector<SpellType> m_SpellTab;
 
         uint8_t m_PointInRound;
@@ -43,7 +44,6 @@ namespace redsquare
         bool playerDisconnected() const;
         void spawn();
 
-        bool canAttack(gf::Vector2i m_TargetPos);
         void attack(SpellType spellType, ServerEntity *target);
         
         void levelUp();

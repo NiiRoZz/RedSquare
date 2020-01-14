@@ -27,7 +27,6 @@ namespace redsquare
             m_Range = 2;
 
             m_SpellTab.push_back(SpellType::BasicAttack);
-            m_SpellTab.push_back(SpellType::FireBall);
             break;
 
         case EntitySubType::Warrior : // ------------------- Warrior -------------------
@@ -47,7 +46,25 @@ namespace redsquare
             m_Range = 1;
 
             m_SpellTab.push_back(SpellType::BasicAttack);
-            m_SpellTab.push_back(SpellType::Berserk);
+            break;
+
+        case EntitySubType::Rogue : // ------------------- Rogue -------------------
+            m_Class = EntitySubType::Rogue;
+            m_LifePoint = 125;
+            m_ManaPoint = 10;
+
+            m_MaxLifePoint = 125;
+            m_MaxManaPoint = 10;
+
+            m_AttackPoint = 25;
+            m_DefensePoint = 0;
+
+            m_MaxAttackPoint = 25;
+            m_MaxDefensePoint = 0;
+
+            m_Range = 1;
+
+            m_SpellTab.push_back(SpellType::BasicAttack);
             break;
         
         default:
@@ -82,13 +99,13 @@ namespace redsquare
 
         if ( newPosY >= 0 && newPosY < World::MapSize-1 && newPosX >= 0 && newPosX < World::MapSize-1 && world.m_SquareWorld.isWalkable( {newPosX, newPosY} ) )
         {
-            world.m_SquareWorld.setWalkable(m_Pos, true);
+            world.setWalkableFromEntity(static_cast<redsquare::Entity*>(this), true);
             world.m_SquareWorld.setTransparent(m_Pos, true);
 
             m_Pos[1] = newPosY;
             m_Pos[0] = newPosX;
 
-            world.m_SquareWorld.setWalkable(m_Pos, false);
+            world.setWalkableFromEntity(static_cast<redsquare::Entity*>(this), false);
             world.m_SquareWorld.setTransparent(m_Pos, false);
 
             return true;
@@ -109,7 +126,7 @@ namespace redsquare
      void Player::levelUp(){ // method to level up a player
 
         m_MaxLifePoint += 2;
-        m_LifePoint += 2;
+        m_LifePoint = m_MaxLifePoint;
 
         m_MaxManaPoint += 2;
         m_ManaPoint += 2;
@@ -125,89 +142,55 @@ namespace redsquare
     
         switch (m_Class)
         {
-            case EntitySubType::Warrior:
-            {   
-                for(int i = 0 ; i < 3; ++ i){
-                    int randomWarriorSpell = rand() % 6;
-                    switch (randomWarriorSpell){
-                        case 0 :{ 
-                            // add spell to display 
-                            break;
-                        }
-                        case 1 :{ 
-                            // add spell to display 
-                            break;
-                        }
-                        case 2 :{ 
-                            // add spell to display
-                            break;
-                        }
-                        case 3 :{ 
-                            // add spell to display
-                            break;
-                        }
-                        case 4 :{ 
-                            // add spell to display
-                            break;
-                        }
-                        case 5 :{ 
-                            // add spell to display
-                            break;
-                        }
-                        case 6 :{ 
-                            // add spell to display
-                            break;
-                        }
+            case EntitySubType::Warrior:  
+                if(m_Level == 2){
+                    m_SpellTab.push_back(SpellType::DamageUp);
+                }else if(m_Level == 3){
+                    m_SpellTab.push_back(SpellType::ArmorUp);
+                }else if(m_Level == 4){
+                    m_SpellTab.push_back(SpellType::Berserk);
+                }else if(m_Level == 5){
+                    m_SpellTab.push_back(SpellType::Revenge);
+                }else{
 
-                    }
                 }
-            
-
                 sendUpdateOfSpells();
                 break;
-            }
 
             case EntitySubType::Magus:
-            {
-                for(int i = 0 ; i < 3; ++ i){
-                    int randomWarriorSpell = rand() % 6;
-                    switch (randomWarriorSpell){
-                        case 0 :{ 
-                            // add spell to display 
-                            break;
-                        }
-                        case 1 :{ 
-                            // add spell to display 
-                            break;
-                        }
-                        case 2 :{ 
-                            // add spell to display 
-                            break;
-                        }
-                        case 3 :{ 
-                            // add spell to display 
-                            break;
-                        }
-                        case 4 :{ 
-                            // add spell to display 
-                            break;
-                        }
-                        case 5 :{ 
-                            // add spell to display 
-                            break;
-                        }
-                        case 6 :{ 
-                            // add spell to display     
-                            break;
-                        }
+                if(m_Level == 2){
+                   // m_SpellTab.push_back(SpellType::FireBall);
+                }else if(m_Level == 3){
+                  // m_SpellTab.push_back(SpellType::Incinerate);
+                }else if(m_Level == 4){
+                   // m_SpellTab.push_back(SpellType::Energize);
+                }else if(m_Level == 5){
+                   // m_SpellTab.push_back(SpellType::LightningStrike);
+                }else{
 
-                    }
                 }
                 sendUpdateOfSpells();
                 break;
-            }
+
+            case EntitySubType::Rogue:  
+                if(m_Level == 2){
+                    // m_SpellTab.push_back(SpellType::Lacerate);
+                }else if(m_Level == 3){
+                    // m_SpellTab.push_back(SpellType::Massacre);
+                }else if(m_Level == 4){
+                    // m_SpellTab.push_back(SpellType::Berserk);
+                }else if(m_Level == 5){
+                    // m_SpellTab.push_back(SpellType::Scorch);
+                }else{
+
+                }
+                sendUpdateOfSpells();
+                break;
+
+            default: 
+                break;
         }
-        
+        std::cout << "update 1" << std::endl;
     }
 
     void Player::createCarPacket(Packet &packet) // create the packet of the caracteristic who will be send to player
@@ -250,7 +233,7 @@ namespace redsquare
         {
             std::copy(m_SpellTab.begin(), m_SpellTab.end(), packet.updateSpells.spells);
         }
-
+        std::cout << "update X" << std::endl;
         sendPacket(packet);
     }
 
@@ -291,21 +274,24 @@ namespace redsquare
 
     void Player::attack(SpellType spellType, ServerEntity *target)
     {
-        m_PointInRound -= 1;
+        m_PointInRound -= m_PointInRound;
 
         switch (spellType)
         {
             case SpellType::BasicAttack:
-            {
                 BasicAttack(target);
                 break;
-            }
-
+            case SpellType::DamageUp:
+                DamageUp();
+                break;
             case SpellType::FireBall:
-            {
                 Fireball(target);
                 break;
-            }
+            case SpellType::ArmorUp:
+                ArmorUp();
+                break;
+            default:
+                break;
         }
 
         if( target->m_LifePoint <= 0 )
@@ -320,6 +306,7 @@ namespace redsquare
 
     void Player::BasicAttack(ServerEntity *target){
         target->m_LifePoint -= (m_AttackPoint - target->m_DefensePoint);
+        std::cout << "BasicAttack" << std::endl;
     }
 
     void Player::Fireball(ServerEntity *target){
@@ -334,7 +321,6 @@ namespace redsquare
                 // target is burned
             }
         }
-
     }
 
     void Player::ArmorUp(){ // WARRIOR
@@ -378,10 +364,12 @@ namespace redsquare
     void Player::DamageUp(){ 
         int critical = rand() % 100;
         if(critical > 90){
-            m_AttackPoint += 5;
-        }else{
             m_AttackPoint += 10;
+        }else{
+            m_AttackPoint += 5;
         }
+
+        std::cout << "DAMAGEUP" << std::endl;
     }
 
 

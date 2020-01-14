@@ -22,12 +22,11 @@ namespace redsquare
     , m_PassTurn(false)
     , m_TempMoveTarget(false)
     , m_PlayerDead(false)
-    , m_NextPosTexture(gResourceManager().getTexture("img/redsquare.png"))
+    , m_NextPosTexture(gResourceManager().getTexture("img/case_selected.png"))
     , m_Name(name)
     , m_Floor(0)
+    , m_CurrentSpell(SpellType::BasicAttack)
     {
-        //TODO: Remove this
-        m_Props.emplace(gf::Id(56466), Prop(10, EntitySubType::Torch, {1,1}));
     }
      //, m_ChatCom(hostname, port+1, m_ChatQueue)
     void Game::startThreadCom()
@@ -80,14 +79,14 @@ namespace redsquare
             ++it1;
         }
 
-        auto it2 = m_Players.begin();
+        auto it4 = m_Props.begin();
 
         // Iterate over the map using Iterator till end.
-        while (it2 != m_Players.end())
+        while (it4 != m_Props.end())
         {
-            it2->second.render( target, states );
+            it4->second.render( target, states );
 
-            ++it2;
+            ++it4;
         }
 
         auto it3 = m_Monsters.begin();
@@ -100,14 +99,14 @@ namespace redsquare
             ++it3;
         }
 
-        auto it4 = m_Props.begin();
+        auto it2 = m_Players.begin();
 
         // Iterate over the map using Iterator till end.
-        while (it4 != m_Props.end())
+        while (it2 != m_Players.end())
         {
-            it4->second.render( target, states );
+            it2->second.render( target, states );
 
-            ++it4;
+            ++it2;
         }
     }
 
@@ -176,18 +175,21 @@ namespace redsquare
 
                 std::vector<gf::Vector2i> allPos = m_World.m_SquareMap.computeRoute(myPlayer->m_Pos, m_MovePlayer.first, 0.0);
 
-                m_TempMove.insert(m_TempMove.end(), ++(++allPos.begin()), allPos.end());
-
-                packet.requestMove.dirX = (allPos[1] - myPlayer->m_Pos)[0];
-                packet.requestMove.dirY = (allPos[1] - myPlayer->m_Pos)[1];
-
-                if (allPos.size() > 2)
+                if (!allPos.empty())
                 {
-                    m_TempMoveTarget = m_MovePlayer.first;
-                }
-                else
-                {
-                    m_TempMoveTarget = {0, 0};
+                    m_TempMove.insert(m_TempMove.end(), ++(++allPos.begin()), allPos.end());
+
+                    packet.requestMove.dirX = (allPos[1] - myPlayer->m_Pos)[0];
+                    packet.requestMove.dirY = (allPos[1] - myPlayer->m_Pos)[1];
+
+                    if (allPos.size() > 2)
+                    {
+                        m_TempMoveTarget = m_MovePlayer.first;
+                    }
+                    else
+                    {
+                        m_TempMoveTarget = {0, 0};
+                    }
                 }
             }
             else
@@ -209,7 +211,7 @@ namespace redsquare
             Packet packet;
             packet.type = PacketType::RequestAttack;
             packet.requestAttack.playerID = m_PlayerID;
-            packet.requestAttack.spellType = SpellType::BasicAttack; //TODO: do a check here, to know wich attack selected
+            packet.requestAttack.spellType = m_CurrentSpell; //TODO: do a check here, to know wich attack selected
             packet.requestAttack.posX = m_AttackX;
             packet.requestAttack.posY = m_AttackY;
 
@@ -251,13 +253,13 @@ namespace redsquare
                             Player* player = getPlayer( packet.receiveMove.entityID );
                             assert( player != nullptr );
 
-                            m_World.m_SquareMap.setWalkable(player->m_Pos, true);
+                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(player), true);
 					        m_World.m_SquareMap.setTransparent(player->m_Pos, true);
 
                             player->m_Pos[0] = packet.receiveMove.posX;
                             player->m_Pos[1] = packet.receiveMove.posY;
 
-                            m_World.m_SquareMap.setWalkable(player->m_Pos, false);
+                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(player), false);
                             break;
                         }
 
@@ -266,13 +268,13 @@ namespace redsquare
                             Monster* monster = getMonster( packet.receiveMove.entityID );
                             assert( monster != nullptr );
 
-                            m_World.m_SquareMap.setWalkable(monster->m_Pos, true);
+                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(monster), true);
 					        m_World.m_SquareMap.setTransparent(monster->m_Pos, true);
 
                             monster->m_Pos[0] = packet.receiveMove.posX;
                             monster->m_Pos[1] = packet.receiveMove.posY;
 
-                            m_World.m_SquareMap.setWalkable(monster->m_Pos, false);
+                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(monster), false);
                             break;
                         }
                     }
@@ -288,7 +290,7 @@ namespace redsquare
                             Player* player = getPlayer( packet.entityDisconnected.entityID );
                             assert( player != nullptr );
 
-                            m_World.m_SquareMap.setWalkable(player->m_Pos, true);
+                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(player), true);
 					        m_World.m_SquareMap.setTransparent(player->m_Pos, true);
 
                             m_Players.erase( packet.entityDisconnected.entityID );
@@ -300,7 +302,7 @@ namespace redsquare
                             Monster* monster = getMonster( packet.entityDisconnected.entityID );
                             assert( monster != nullptr );
 
-                            m_World.m_SquareMap.setWalkable(monster->m_Pos, true);
+                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(monster), true);
 					        m_World.m_SquareMap.setTransparent(monster->m_Pos, true);
 
                             m_Monsters.erase( packet.entityDisconnected.entityID );
@@ -312,7 +314,7 @@ namespace redsquare
                             Prop* prop = getProp( packet.entityDisconnected.entityID );
                             assert( prop != nullptr );
 
-                            m_World.m_SquareMap.setWalkable(prop->m_Pos, true);
+                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(prop), true);
 					        m_World.m_SquareMap.setTransparent(prop->m_Pos, true);
 
                             m_Props.erase( packet.entityDisconnected.entityID );
@@ -338,25 +340,28 @@ namespace redsquare
 
                         std::vector<gf::Vector2i> allPos = m_World.m_SquareMap.computeRoute(myPlayer->m_Pos, m_TempMoveTarget, 0.0);
 
-                        m_TempMove.insert(m_TempMove.end(), ++(++allPos.begin()), allPos.end());
-
-                        gf::Vector2i pos = allPos[1];
-
-                        if ( getPlayer(pos) == nullptr && getMonster(pos) == nullptr )
+                        if (!allPos.empty())
                         {
-                            Packet packet;
-                            packet.type = PacketType::RequestMove;
-                            packet.requestMove.playerID = m_PlayerID;
-                            packet.requestMove.dirX = (pos - myPlayer->m_Pos)[0];
-                            packet.requestMove.dirY = (pos - myPlayer->m_Pos)[1];
+                            m_TempMove.insert(m_TempMove.end(), ++(++allPos.begin()), allPos.end());
 
-                            m_ThreadCom.sendPacket( packet );
+                            gf::Vector2i pos = allPos[1];
 
-                            /*packet.type = PacketType::PassTurn;
-                            packet.passTurn.playerID = m_PlayerID;
+                            if ( getPlayer(pos) == nullptr && getMonster(pos) == nullptr )
+                            {
+                                Packet packet;
+                                packet.type = PacketType::RequestMove;
+                                packet.requestMove.playerID = m_PlayerID;
+                                packet.requestMove.dirX = (pos - myPlayer->m_Pos)[0];
+                                packet.requestMove.dirY = (pos - myPlayer->m_Pos)[1];
 
-                            m_ThreadCom.sendPacket( packet );*/
-                            break;
+                                m_ThreadCom.sendPacket( packet );
+
+                                /*packet.type = PacketType::PassTurn;
+                                packet.passTurn.playerID = m_PlayerID;
+
+                                m_ThreadCom.sendPacket( packet );*/
+                                break;
+                            }
                         }
                     }
 
@@ -364,7 +369,6 @@ namespace redsquare
                     m_TempMove.clear();
 
                     m_CanPlay = packet.playerTurn.playerTurn;
-                    std::cout << "It's your turn!!!" << std::endl;
 
                     break;
                 }
@@ -378,7 +382,7 @@ namespace redsquare
                             auto it = m_Players.insert( std::make_pair( packet.spawnEntity.entityID, Player( packet.spawnEntity.entityID, packet.spawnEntity.typeOfEntity, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) ) ) );
                             assert( it.second );
 
-                            m_World.m_SquareMap.setWalkable(gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY), false);
+                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&(it.first->second)), false);
                             break;
                         }
 
@@ -387,7 +391,7 @@ namespace redsquare
                             auto it = m_Monsters.insert( std::make_pair( packet.spawnEntity.entityID, Monster( packet.spawnEntity.entityID, packet.spawnEntity.typeOfEntity, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) ) ) );
                             assert( it.second );
 
-                            m_World.m_SquareMap.setWalkable(gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY), false);
+                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&(it.first->second)), false);
                             break;
                         }
 
@@ -396,7 +400,7 @@ namespace redsquare
                             auto it = m_Props.insert( std::make_pair( packet.spawnEntity.entityID, Prop( packet.spawnEntity.entityID, packet.spawnEntity.typeOfEntity, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) ) ) );
                             assert( it.second );
 
-                            m_World.m_SquareMap.setWalkable(gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY), false);
+                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&(it.first->second)), false);
                             break;
                         }
                     }
@@ -550,7 +554,7 @@ namespace redsquare
         // Iterate over the map using Iterator till end.
         while ( it != m_Players.end() )
         {
-            if ( it->second.m_Pos[0] == pos[0] && it->second.m_Pos[1] == pos[1] )
+            if ( it->second.isInsideMe(pos) )
             {
                 return &it->second;
             }
@@ -580,7 +584,7 @@ namespace redsquare
         // Iterate over the map using Iterator till end.
         while ( it != m_Monsters.end() )
         {
-            if ( it->second.m_Pos[0] == pos[0] && it->second.m_Pos[1] == pos[1] )
+            if ( it->second.isInsideMe(pos) )
             {
                 return &it->second;
             }
@@ -627,5 +631,18 @@ namespace redsquare
         }
 
         return false;
+    }
+    
+    void Game::changeSpell(int spell){
+
+        auto currentPlayer = Game::getMyPlayer();
+        if(currentPlayer != nullptr){
+            Game::m_CurrentSpell = currentPlayer->m_SpellTab[spell-1];
+        }else{
+            std::cout << "ERROR" <<std::endl;
+        }
+        std::cout << "SPELL CHANGED FOR SPELL N°" << spell << std::endl;
+
+        return;
     }
 }

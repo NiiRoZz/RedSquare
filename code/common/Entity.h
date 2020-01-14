@@ -15,6 +15,7 @@ namespace redsquare
         const EntitySubType m_TypeOfEntity;
 
         gf::Vector2i m_Pos;
+        gf::Vector2u m_Size;
 
         int m_LifePoint;
         int m_MaxLifePoint;
@@ -32,6 +33,9 @@ namespace redsquare
         Entity();
         Entity(gf::Id entityID);
         Entity(gf::Id entityID, const EntitySubType typeOfEntity);
+
+        bool isInsideMe(gf::Vector2i pos);
+        bool isInsideMe(Entity &entity);
     };
 }
 

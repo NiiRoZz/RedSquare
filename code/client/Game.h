@@ -76,6 +76,8 @@ namespace redsquare
 
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
+        void changeSpell(int spell);
+
     private:
         const char *m_Name;
         //Thread for communication
@@ -93,6 +95,8 @@ namespace redsquare
         //Attack of player
         int m_AttackX;
         int m_AttackY;
+        SpellType m_CurrentSpell;
+        std::vector<SpellType> m_Spell;
 
         //Pass turn
         bool m_PassTurn;

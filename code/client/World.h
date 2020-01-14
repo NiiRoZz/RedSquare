@@ -2,6 +2,7 @@
 #define REDSQUARE_CLIENT_WORLD_H
 
 #include "../common/Packet.h"
+#include "../common/Entity.h"
 
 #include <gf/Entity.h>
 #include <gf/TileLayer.h>
@@ -19,15 +20,17 @@ namespace redsquare
         static constexpr int TileSetSize = 16; // size of a tileset
 
         gf::SquareMap m_SquareMap;
+        gf::Array2D<Tile> m_World;
 
         void generateWorld( gf::Array2D<Tile> world );
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
         int rigthTile(gf::Vector2i tile);
 
+        void setWalkableFromEntity(redsquare::Entity *entity, bool walkable);
+
         World();
 
     private:
-        gf::Array2D<Tile> m_World;
 
         gf::Texture &m_TileTexture;
         gf::TileLayer m_TileSet;

@@ -2,6 +2,8 @@
 #define REDSQUARE_SERVER_WORLD_H
 
 #include "../common/Packet.h"
+#include "../common/Entity.h"
+
 #include <gf/Array2D.h>
 #include <gf/Map.h>
 #include <list>
@@ -30,6 +32,9 @@ namespace redsquare
         void monsterSpawn(Monster &monster, std::map<gf::Id,Monster> &m_Monsters, uint m_Floor); // spawn of a monster
         void spawnProps(Prop &prop,std::map<gf::Id,Prop> &m_Props,gf::Vector4u currentRoom); // spawn of props
 
+        void setWalkableFromEntity(redsquare::Entity *entity, bool walkable);
+        void prettyPrintWalkable(); // print if the map on which tile is walkable
+
     private:
         std::vector<gf::Vector4u> grid(uint sizeGrid); // return all the cell of the grid in a vector
         void generateFloorV2(uint nbRoom, uint sizeGrind, std::vector<gf::Vector4u> MapGrind); // return all the room in a vector
@@ -40,7 +45,6 @@ namespace redsquare
         void buildWallCorridor(); // build wall around ground
         bool nextToGround(uint x, uint y); // check if the tile is next to a ground tile
         void setWalkable(); // set a tile walkable
-        void prettyPrintWalkable(); // print if the map on which tile is walkable
         
 
     };
