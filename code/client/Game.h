@@ -45,7 +45,7 @@ namespace redsquare
 
         std::vector<gf::Vector2i> m_TempMove;
 
-        Game( char* hostname, char *port, gf::ExtendView &view , const char * name);
+        Game( char* hostname, char *port,gf::ExtendView &view , const char * name);
 
         Player* getMyPlayer();
         Player* getPlayer( gf::Id playerID );
@@ -66,10 +66,6 @@ namespace redsquare
 
         void movePlayer( int dirX, int dirY, bool mouseClic = false );
 
-        void sendMessage(std::string message );
-
-        void receiveMessage(std::string message);
-
         void attackPos( int posX, int posY );
 
         void passTurn();
@@ -84,12 +80,8 @@ namespace redsquare
         const char *m_Name;
         //Thread for communication
         ThreadCom m_ThreadCom;
-
-       // ThreadCom m_ChatCom;
         //Queue for message
         gf::Queue<Packet> m_ComQueue;
-
-        gf::Queue<Packet> m_ChatQueue;
 
 
         gf::Texture &m_NextPosTexture;

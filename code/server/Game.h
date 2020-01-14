@@ -25,7 +25,7 @@ namespace redsquare
 
         Game();
 
-        void addNewPlayer(SocketTcp socket);
+        gf::Id addNewPlayer(SocketTcp socket);
         void addNewMonsters(int nbMonster);
 
         void processPackets( Packet &packet );
@@ -48,7 +48,6 @@ namespace redsquare
         gf::Id generateId() const;
 
         gf::Queue<Packet> m_ComQueue;
-        gf::Queue<Message> m_chatQueue;
 
         int m_PlayerSpawned;
     };

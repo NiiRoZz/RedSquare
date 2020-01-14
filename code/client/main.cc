@@ -122,6 +122,11 @@ int main( int argc, char **argv )
     gf::EntityContainer mainEntities;
     // add entities to mainEntities
     Game game( argv[1], argv[2], mainView, argv[3] );
+    int Iport_Chat=atoi(argv[2])+1;
+    char  Cport_Chat[10] ;
+    sprintf(Cport_Chat,"%d",Iport_Chat);
+    std::cout << "hud : "<< Cport_Chat<<std::endl;
+    Hud hud(game, fontChat,Cport_Chat,argv[1]);
 
     //Send info about us, before get world
     game.sendInfoConnection(static_cast<EntitySubType>(atoi(argv[4])), argv[3]);
@@ -132,14 +137,14 @@ int main( int argc, char **argv )
     game.startThreadCom();
     mainEntities.addEntity( game );
 
-
     gf::EntityContainer hudEntities;
     // add entities to hudEntities
-    Hud hud(game, fontChat);
+    
+   
     hudEntities.addEntity(hud);
 
     gf::Cursor defaultCursor(gf::Cursor::Type::Arrow);
-
+    
     gf::Image attackImage(std::move(gResourceManager().getTexture("img/attackCursor.png").copyToImage()));
     attackImage.flipHorizontally();
     gf::Cursor attackCursor(attackImage, { 8u, 8u });

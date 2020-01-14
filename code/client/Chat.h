@@ -5,15 +5,19 @@
 #include <gf/Window.h>
 #include <gf/Font.h>
 #include <gf/RenderWindow.h>
+#include "ThreadCom.h"
+
 
 namespace redsquare
 {
     class Chat
     {
     public:
-        Chat(gf::Font &font);
+        Chat(gf::Font &,char *port, char *hostname);
 
         void update(gf::Time time);
+
+        void chatThread();
 
         void render(gf::RenderTarget& target, const gf::RenderStates& states);
 
@@ -24,6 +28,15 @@ namespace redsquare
     private:
         gf::Shader m_ChatShader;
         gf::UI m_UI;
+        char * m_hostname;
+
+        //Thread chat communication
+        gf::Queue<Packet> m_ChatQueue;
+
+        //queue of message
+        ThreadCom m_ChatCom;
+
+
 
     };
 }

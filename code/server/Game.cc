@@ -19,7 +19,7 @@ namespace redsquare
         m_World.getSpawnPoint(m_Props,m_Monsters); // place the spawn of player
     }
 
-    void Game::addNewPlayer(SocketTcp socket)
+    gf::Id Game::addNewPlayer(SocketTcp socket)
     {
         // Generate a new ID
         gf::Id id = generateId();
@@ -108,6 +108,7 @@ namespace redsquare
         }
 
         itNewPlayer->second.sendUpdateOfSpells();
+        return id;
     }
 
     void Game::addNewMonsters(int nbMonster)

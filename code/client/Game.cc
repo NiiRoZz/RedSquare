@@ -33,7 +33,6 @@ namespace redsquare
     void Game::startThreadCom()
     {
         m_ThreadCom.start();
-        //m_ChatCom.start();
     }
 
     void Game::sendInfoConnection(EntitySubType type, char *name)
@@ -46,13 +45,7 @@ namespace redsquare
         m_ThreadCom.sendPacket(sendPacket);
     }
 
-    /*void Game::sendMessage(std::string message){
-        Packet sendPacket;
-        sendPacket.type = PacketType::Message;
-        strncpy( sendPacket.reveiveMessage.message, message.c_str(),1024);
-        strncpy( sendPacket.reveiveMessage.from, m_Name,30);
-        m_ChatCom.sendPacket(sendPacket);
-    }*/
+
 
     void Game::receiveWorld()
     {
