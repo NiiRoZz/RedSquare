@@ -135,6 +135,7 @@ namespace redsquare
         PlayerDead,
         NewMap,
         UpdateSpells,
+        Message,
     };
 
     struct NewPlayer
@@ -357,12 +358,12 @@ namespace redsquare
                 break;
             }
 
-            /*case PacketType::Message:
+            case PacketType::Message:
             {
                 ar | packet.reveiveMessage.from;
                 ar | packet.reveiveMessage.message;
                 break;
-            }*/
+            }
 
             case PacketType::UpdateSpells:
             {

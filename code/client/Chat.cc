@@ -47,13 +47,17 @@ void main(void) {
 
 namespace redsquare
 {
-    Chat::Chat(gf::Font &font)
+    Chat::Chat(gf::Font &font, char *port, char *hostname)
     : m_HoveringChat(false)
     , m_TypingInChat(false)
     , m_UI(font)
     , m_ChatShader(VertexShader, FragmentShader)
+    , m_ChatCom(hostname, port, m_ChatQueue)
     {
+        m_hostname = hostname;
         m_ChatShader.setUniform("u_backgroundColor", gf::Color::Opaque(0.75f));
+        m_ChatCom.start();
+
     }
 
     void Chat::update(gf::Time time)
@@ -117,8 +121,14 @@ namespace redsquare
                 if ( m_UI.buttonLabel("Submit") || flags.test(gf::UIEditEvent::Commited) )
                 {
                     std::cout << "envoyé" << std::endl;
-                    //box.append(text);
-                    //text.clear();
+                    Packet sendPacket;
+                    sendPacket.type = PacketType::Message;
+                    strcpy(sendPacket.reveiveMessage.from,m_hostname);
+                    char cpy[256];
+                    std::string s = box.asString();
+                    strcpy(cpy,s.c_str()) ;
+                    strcpy(sendPacket.reveiveMessage.message,cpy);
+                    m_ChatCom.sendPacket(sendPacket);
                 }
                 m_UI.layoutRowEnd();
                 m_UI.groupEnd();

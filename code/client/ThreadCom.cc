@@ -2,11 +2,17 @@
 
 #include <iostream>
 #include <thread>
+#include <sstream>
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+#include <string>
 
 namespace redsquare 
 {
 
-    ThreadCom::ThreadCom(SocketTcp socket, gf::Queue<Packet> &queue)
+    ThreadCom::ThreadCom(SocketTcp socket, gf::Queue<Packet> &queue  )
     : m_socket(std::move(socket))
     , m_queue(&queue)
     {
@@ -68,7 +74,7 @@ namespace redsquare
             }
 
             m_queue->push(packet);
-
+            
             if (packet.type == PacketType::NewMap)
             {
                 break;

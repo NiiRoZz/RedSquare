@@ -17,7 +17,7 @@ namespace redsquare
     class Hud: public gf::Entity
     {
     public:
-        Hud(Game &game, gf::Font &font, gf::ExtendView &view);
+        Hud(Game &game, gf::Font &font,char* port, char *hostname, gf::ExtendView &view);
 
         virtual void update(gf::Time time) override;
 
