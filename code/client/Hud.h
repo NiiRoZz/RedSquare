@@ -3,6 +3,7 @@
 
 #include "Chat.h"
 #include "Game.h"
+#include "MainMenu.h"
 #include "Inventory.h"
 #include "../common/Message.h"
 #include <gf/Font.h>
@@ -28,17 +29,23 @@ namespace redsquare
         bool typingInChat();
 
         void showMap();
+        void hideChat();
+
+        MainMenu m_MainMenu;
         
     private:
         Game &m_Game;
         Chat m_Chat;
         Inventory m_Inventory;
+       
         gf::Font &m_Font;
         //View of the game
         gf::ExtendView &m_View;
         std::vector<gf::Texture*> m_spellsTextures;
 
         bool m_ShowMap;
+        bool m_HideChat;
+        
         
         gf::Texture* getTextureFromSpellType(SpellType type);
 

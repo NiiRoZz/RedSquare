@@ -26,6 +26,7 @@ add_executable(RedSquare
   code/common/Sockets.cc
   code/common/Entity.cc
   code/common/Singletons.cc
+  code/client/MainMenu.cc
 )
 
 target_link_libraries(RedSquare

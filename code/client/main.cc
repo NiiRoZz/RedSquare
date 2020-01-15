@@ -28,6 +28,7 @@
 #include "Game.h"
 #include "Chat.h"
 #include "Inventory.h"
+#include "MainMenu.h"
 #include "Hud.h"
 #include "../common/Singletons.h"
 #include "../common/Packet.h"
@@ -67,6 +68,7 @@ int main( int argc, char **argv )
     gf::Font &fontChat(gResourceManager().getFont("font/arial.ttf"));
     
     bool inventoryVisible = false;
+    bool MainMenuVisible = false;
     
     // views
     gf::ViewContainer views;
@@ -87,6 +89,10 @@ int main( int argc, char **argv )
     fullscreenAction.addKeycodeKeyControl(gf::Keycode::F);
     actions.addAction(fullscreenAction);
 
+    gf::Action MainMenuAction("AfficheMainMenu");
+    MainMenuAction.addKeycodeKeyControl(gf::Keycode::N);
+    actions.addAction(MainMenuAction);
+
     gf::Action inventoryAction("Inventory");
     inventoryAction.addKeycodeKeyControl(gf::Keycode::I);
     actions.addAction(inventoryAction);
@@ -94,6 +100,10 @@ int main( int argc, char **argv )
     gf::Action mapAction("Map");
     mapAction.addKeycodeKeyControl(gf::Keycode::M);
     actions.addAction(mapAction);
+
+    gf::Action chatAction("Chat");
+    chatAction.addKeycodeKeyControl(gf::Keycode::C);
+    actions.addAction(chatAction);
 
     gf::Action leftAction("Left");
     leftAction.addScancodeKeyControl(gf::Scancode::A);
@@ -335,6 +345,14 @@ int main( int argc, char **argv )
         if (mapAction.isActive())
         {
             hud.showMap();
+        }
+        if (chatAction.isActive())
+        {
+            hud.hideChat();
+        }
+        if (MainMenuAction.isActive())
+        {
+            hud.m_MainMenu.m_ShowMainMenu = !hud.m_MainMenu.m_ShowMainMenu;
         }
         if( changeSpell1.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 2)
         {
