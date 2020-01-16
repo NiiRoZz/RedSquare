@@ -28,6 +28,7 @@
 #include "Game.h"
 #include "Chat.h"
 #include "Inventory.h"
+#include "MainMenu.h"
 #include "Hud.h"
 #include "../common/Singletons.h"
 #include "../common/Packet.h"
@@ -65,8 +66,9 @@ int main( int argc, char **argv )
 
     // initialization redsquare
     gf::Font &fontChat(gResourceManager().getFont("font/arial.ttf"));
-    
+
     bool inventoryVisible = false;
+    bool MainMenuVisible = false;
     
     // views
     gf::ViewContainer views;
@@ -87,6 +89,10 @@ int main( int argc, char **argv )
     fullscreenAction.addKeycodeKeyControl(gf::Keycode::F);
     actions.addAction(fullscreenAction);
 
+    gf::Action MainMenuAction("AfficheMainMenu");
+    MainMenuAction.addKeycodeKeyControl(gf::Keycode::N);
+    actions.addAction(MainMenuAction);
+
     gf::Action inventoryAction("Inventory");
     inventoryAction.addKeycodeKeyControl(gf::Keycode::I);
     actions.addAction(inventoryAction);
@@ -94,6 +100,10 @@ int main( int argc, char **argv )
     gf::Action mapAction("Map");
     mapAction.addKeycodeKeyControl(gf::Keycode::M);
     actions.addAction(mapAction);
+
+    gf::Action chatAction("Chat");
+    chatAction.addKeycodeKeyControl(gf::Keycode::C);
+    actions.addAction(chatAction);
 
     gf::Action leftAction("Left");
     leftAction.addScancodeKeyControl(gf::Scancode::A);
@@ -122,7 +132,7 @@ int main( int argc, char **argv )
     gf::Action passTurn("PassTurn");
     passTurn.addKeycodeKeyControl(gf::Keycode::Space);
     actions.addAction(passTurn);
-    
+
     gf::Action clicAction("Clic");
     clicAction.addMouseButtonControl(gf::MouseButton::Left);
 
@@ -170,6 +180,11 @@ int main( int argc, char **argv )
     gf::EntityContainer mainEntities;
     // add entities to mainEntities
     Game game( argv[1], argv[2], mainView, argv[3] );
+    int Iport_Chat=atoi(argv[2])+1;
+    char  Cport_Chat[10] ;
+    sprintf(Cport_Chat,"%d",Iport_Chat);
+    std::cout << "hud : "<< Cport_Chat<<std::endl;
+    Hud hud(game, fontChat,Cport_Chat,argv[1],mainView);
 
     //Send info about us, before get world
     game.sendInfoConnection(static_cast<EntitySubType>(atoi(argv[4])), argv[3]);
@@ -180,10 +195,8 @@ int main( int argc, char **argv )
     game.startThreadCom();
     mainEntities.addEntity( game );
 
-
     gf::EntityContainer hudEntities;
     // add entities to hudEntities
-    Hud hud(game, fontChat, mainView);
     hudEntities.addEntity(hud);
 
     gf::Cursor defaultCursor(gf::Cursor::Type::Arrow);
@@ -207,7 +220,7 @@ int main( int argc, char **argv )
     {
         // 1. input
         gf::Event event;
-        
+
         while (window.pollEvent(event))
         {
             actions.processEvent(event);
@@ -289,7 +302,7 @@ int main( int argc, char **argv )
                         game.m_TempMove.clear();
                         window.setMouseCursor(defaultCursor);
                     }
-                    
+
                     break;
                 }
             }
@@ -307,15 +320,15 @@ int main( int argc, char **argv )
         if (rightAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
         {
             game.movePlayer( 1, 0 );
-        } 
+        }
         else if (leftAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
         {
             game.movePlayer( -1, 0 );
-        } 
+        }
         else if (upAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
         {
             game.movePlayer( 0, -1 );
-        } 
+        }
         else if (downAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
         {
             game.movePlayer( 0, 1 );
@@ -335,6 +348,14 @@ int main( int argc, char **argv )
         if (mapAction.isActive())
         {
             hud.showMap();
+        }
+        if (chatAction.isActive())
+        {
+            hud.hideChat();
+        }
+        if (MainMenuAction.isActive())
+        {
+            hud.m_MainMenu.m_ShowMainMenu = !hud.m_MainMenu.m_ShowMainMenu;
         }
         if( changeSpell1.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 2)
         {
@@ -368,7 +389,7 @@ int main( int argc, char **argv )
         {
             game.changeSpell(8);
         }*/
-        
+
         // 2. update
         gf::Time time = clock.restart();
         mainEntities.update(time);
@@ -383,6 +404,6 @@ int main( int argc, char **argv )
         renderer.display();
         actions.reset();
 	}
-    
+
 	return 0;
 }

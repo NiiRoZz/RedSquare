@@ -3,6 +3,7 @@
 #include "../common/Packet.h"
 #include "Player.h"
 #include "Game.h"
+#include "Chat.h"
 #include <time.h>
 #include <stdlib.h>
 
@@ -41,21 +42,30 @@ int main( int argc, char **argv )
   	gf::SingletonStorage<gf::Random> storageForRandom(gRandom);
 
     Game game;
+	Chat myChat;
 	
 	
 	boost::asio::io_service m_IoService;
     boost::asio::ip::tcp::acceptor m_Acceptor(m_IoService, tcp::endpoint(tcp::v4(), port));
 
 
+	boost::asio::io_service m_IoServiceChat;
+    boost::asio::ip::tcp::acceptor m_AcceptorChat(m_IoServiceChat, tcp::endpoint(tcp::v4(), port+1));
+
 	while( game.m_Players.size() != nmbPlayers )
 	{
 		tcp::socket socket(m_IoService);
 		m_Acceptor.accept(socket);
+
+		tcp::socket socketChat(m_IoServiceChat);
+		m_AcceptorChat.accept(socketChat);
 		
 
 		SocketTcp wrapper(std::move(socket));
+		SocketTcp wrapperChat(std::move(socketChat));
 
-		game.addNewPlayer(std::move(wrapper));
+		gf::Id idPlayer = game.addNewPlayer(std::move(wrapper));
+		myChat.addPlayer(idPlayer,std::move(wrapperChat));
 	}
 
 	//Start the game and play until all players has disconnected

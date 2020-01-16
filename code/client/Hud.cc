@@ -11,17 +11,19 @@
 #include <gf/Color.h>
 #include <gf/Text.h>
 #include <gf/Particles.h>
-#include <vector> 
+#include <vector>
 
 namespace redsquare
 {
-    Hud::Hud(Game &game, gf::Font &font, gf::ExtendView &view)
+    Hud::Hud(Game &game, gf::Font &font,char* port,char* hostname, gf::ExtendView &view)
     : m_Game(game)
-    , m_Chat(font)
+    , m_Chat(font,port,hostname)
     , m_Inventory(font, game)
+    , m_MainMenu(font)
     , m_Font(font)
     , m_View(view)
     , m_ShowMap(false)
+    , m_HideChat(true)
     {
         gMessageManager().registerHandler<SpellUpdateMessage>(&Hud::onSpellUpdate, this);
 
@@ -29,7 +31,7 @@ namespace redsquare
 
     static constexpr float HudSpellSize = 55.0f;
     static constexpr float HudSpellTextureSize = 16.0f;
-    
+
     void Hud::render(gf::RenderTarget& target, const gf::RenderStates& states)
     {
         gf::Coordinates coordinates(target);
@@ -45,7 +47,7 @@ namespace redsquare
             for(uint i = 0; i < World::MapSize; ++i)
             {
                 for (uint j = 0; j < World::MapSize; ++j)
-                {  
+                {
                     bool draw = true;
                     Tile tileType = m_Game.m_World.m_World({i,j});
                     gf::Color4f color;
@@ -141,20 +143,32 @@ namespace redsquare
             }
         }
 
-        m_Chat.render(target, states);
+        if (m_HideChat)
+        {
+            m_Chat.render(target, states);
+        }
         m_Inventory.render(target, states);
+        m_MainMenu.render(target,states);
     }
 
     void Hud::update(gf::Time time)
     {
-        m_Chat.update(time);
+        if (m_HideChat)
+        {
+            m_Chat.update(time);
+        }
         m_Inventory.update(time);
+        m_MainMenu.update(time);
     }
 
     void Hud::processEvent(const gf::Event &event)
     {
-        m_Chat.processEvent(event);
+        if (m_HideChat)
+        {
+            m_Chat.processEvent(event);
+        }
         m_Inventory.processEvent(event);
+        m_MainMenu.processEvent(event);
     }
 
     bool Hud::hoveringChat()
@@ -211,7 +225,7 @@ namespace redsquare
         assert(id == SpellUpdateMessage::type);
 
         auto message = static_cast<SpellUpdateMessage*>(msg);
-        
+
         m_spellsTextures.clear();
 
         for(auto it = message->spells.begin(); it != message->spells.end(); ++it)
@@ -229,4 +243,10 @@ namespace redsquare
     {
         m_ShowMap = !m_ShowMap;
     }
+
+    void Hud::hideChat()
+    {
+        m_HideChat = !m_HideChat;
+    }
+    
 }

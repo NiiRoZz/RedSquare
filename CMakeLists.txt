@@ -27,6 +27,7 @@ add_executable(RedSquare
   code/common/Sockets.cc
   code/common/Entity.cc
   code/common/Singletons.cc
+  code/client/MainMenu.cc
 )
 
 target_link_libraries(RedSquare
@@ -51,6 +52,7 @@ add_executable(RedSquare-Server
   code/server/Game.cc
   code/server/World.cc
   code/server/Monster.cc
+  code/server/Chat.cc
   code/server/ServerEntity.cc
   code/server/Prop.cc
   code/server/Inventory.cc
