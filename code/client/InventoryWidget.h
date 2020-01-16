@@ -10,7 +10,10 @@ namespace redsquare
     {
     public:
         InventoryWidget();
+        InventoryWidget(const gf::Texture &texture);
         InventoryWidget(const gf::Texture &defaultTexture, const gf::Texture &selectedTexture, const gf::Texture &disabledTexture);
+
+        void unsetTextures();
 
         bool currDragging;
     };

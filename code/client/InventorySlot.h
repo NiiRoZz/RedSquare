@@ -2,13 +2,15 @@
 #define REDSQUARE_CLIENT_INVENTORYSLOT_H
 
 #include "InventoryWidget.h"
+#include "../common/Packet.h"
+#include "Item.h"
 
 namespace redsquare
 {
     class InventorySlot
     {
     public:
-        InventorySlot(bool item);
+        InventorySlot(InventorySlotType slotType, uint pos = 0);
 
         void render(gf::RenderTarget& target, const gf::RenderStates& states);
 
@@ -18,14 +20,23 @@ namespace redsquare
 
         InventoryWidget* getItemWidget(gf::Vector2f coords);
 
-        bool haveItem;
+        InventorySlotType getSlotType() const;
+        uint getSlotPos() const;
+
+        bool haveItem() const;
+
+        Item *getItem() const;
+
+        void setItem(Item *item);
 
     private:
         gf::Texture &m_BackgroundTexture;
         InventoryWidget m_BackgroundWidget;
-        //TODO: Do item here : Item *m_Item and remove m_ItemTexture
-        gf::Texture &m_ItemTexture;
+        Item *m_Item;
         InventoryWidget m_ItemWidget;
+
+        InventorySlotType m_SlotType;
+        uint m_SlotPos;
     };
 }
 

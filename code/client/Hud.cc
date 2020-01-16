@@ -18,7 +18,7 @@ namespace redsquare
     Hud::Hud(Game &game, gf::Font &font, gf::ExtendView &view)
     : m_Game(game)
     , m_Chat(font)
-    , m_Inventory(font)
+    , m_Inventory(font, game)
     , m_Font(font)
     , m_View(view)
     , m_ShowMap(false)

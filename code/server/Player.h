@@ -6,6 +6,7 @@
 #include "World.h"
 #include "Monster.h"
 #include "../common/Packet.h"
+#include "Inventory.h"
 
 #include <gf/Queue.h>
 #include <gf/Id.h>
@@ -52,8 +53,15 @@ namespace redsquare
 
         void sendUpdateOfSpells();
 
+        Inventory& getInventory();
+
+        //Send update of the inventory to client.  pos is used only if slotType == Cargo
+        void sendUpdateItem(InventorySlotType slotType, bool remove, uint pos = 0u);
+
     private:
         SocketTcp m_Socket;
+        Inventory m_Inventory;
+
         void BasicAttack(ServerEntity *target);
         void Fireball(ServerEntity *target);
         void ArmorUp();
