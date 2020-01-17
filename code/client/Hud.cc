@@ -18,10 +18,12 @@ namespace redsquare
     Hud::Hud(Game &game, gf::Font &font,char* port,char* hostname, gf::ExtendView &view)
     : m_Game(game)
     , m_Chat(font,port,hostname)
-    , m_Inventory(font)
+    , m_Inventory(font, game)
+    , m_MainMenu(font)
     , m_Font(font)
     , m_View(view)
     , m_ShowMap(false)
+    , m_HideChat(true)
     {
         gMessageManager().registerHandler<SpellUpdateMessage>(&Hud::onSpellUpdate, this);
 
@@ -141,20 +143,32 @@ namespace redsquare
             }
         }
 
-        m_Chat.render(target, states);
+        if (m_HideChat)
+        {
+            m_Chat.render(target, states);
+        }
         m_Inventory.render(target, states);
+        m_MainMenu.render(target,states);
     }
 
     void Hud::update(gf::Time time)
     {
-        m_Chat.update(time);
+        if (m_HideChat)
+        {
+            m_Chat.update(time);
+        }
         m_Inventory.update(time);
+        m_MainMenu.update(time);
     }
 
     void Hud::processEvent(const gf::Event &event)
     {
-        m_Chat.processEvent(event);
+        if (m_HideChat)
+        {
+            m_Chat.processEvent(event);
+        }
         m_Inventory.processEvent(event);
+        m_MainMenu.processEvent(event);
     }
 
     bool Hud::hoveringChat()
@@ -253,4 +267,10 @@ namespace redsquare
     {
         m_ShowMap = !m_ShowMap;
     }
+
+    void Hud::hideChat()
+    {
+        m_HideChat = !m_HideChat;
+    }
+    
 }

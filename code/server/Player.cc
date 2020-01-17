@@ -141,7 +141,29 @@ namespace redsquare
         return (m_Socket.getState() == SocketState::Disconnected);
     }
 
-     void Player::levelUp(){ // method to level up a player
+    Inventory& Player::getInventory()
+    {
+        return m_Inventory;
+    }
+
+    void Player::sendUpdateItem(InventorySlotType slotType, bool remove, uint pos)
+    {
+        Packet packet;
+        packet.type = PacketType::UpdateItem;
+        packet.updateItem.slotType = slotType;
+        packet.updateItem.pos = pos;
+        packet.updateItem.removeItem = remove;
+
+        Item* item = m_Inventory.getItem(slotType, pos);
+        if (item != nullptr)
+        {
+            packet.updateItem.typeItem = item->getType();
+        }
+
+        sendPacket(packet);
+    }
+
+    void Player::levelUp(){ // method to level up a player
 
         m_MaxLifePoint += 2;
         m_LifePoint = m_MaxLifePoint;

@@ -80,6 +80,8 @@ namespace redsquare
 
         void changeSpell(int spell);
 
+        void sendPacket(Packet &packet);
+
     private:
         const char *m_Name;
         //Thread for communication

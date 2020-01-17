@@ -132,6 +132,22 @@ namespace redsquare
         Reaper, // dmg in front of you
     };
 
+    enum class InventorySlotType: uint8_t
+    {
+        Helmet = 1,
+        ChestPlate = 2,
+        Legging = 4,
+        Boot = 8,
+        Weapon = 16,
+        Shield = 32,
+        Cargo = 64,
+    };
+
+    enum class ItemType: uint16_t
+    {
+        Sword,
+    };
+
     enum class PacketType : uint16_t
     {
         PlayerInfoConnection,
@@ -146,6 +162,8 @@ namespace redsquare
         PlayerDead,
         NewMap,
         UpdateSpells,
+        UpdateItem,
+        MoveItem,
         Message,
     };
 
@@ -257,6 +275,23 @@ namespace redsquare
         SpellType spells[MAX_SPELL_PER_PLAYER];
     };
 
+    struct UpdateItem
+    {
+        InventorySlotType slotType;
+        uint pos;
+        ItemType typeItem;
+        bool removeItem;
+    };
+
+    struct MoveItem
+    {
+        gf::Id playerID;
+        InventorySlotType oldSlotType;
+        uint oldPos;
+        InventorySlotType newSlotType;
+        uint newPos;
+    };
+
     struct Packet
     {
         PacketType type;
@@ -274,6 +309,8 @@ namespace redsquare
             EntityCar entityCar;
             Message reveiveMessage;
             UpdateSpells updateSpells;
+            UpdateItem updateItem;
+            MoveItem moveItem;
         };
     };
 
@@ -379,6 +416,25 @@ namespace redsquare
             case PacketType::UpdateSpells:
             {
                 ar | packet.updateSpells.spells;
+                break;
+            }
+
+            case PacketType::UpdateItem:
+            {
+                ar | packet.updateItem.slotType;
+                ar | packet.updateItem.pos;
+                ar | packet.updateItem.typeItem;
+                ar | packet.updateItem.removeItem;
+                break;
+            }
+
+            case PacketType::MoveItem:
+            {
+                ar | packet.moveItem.playerID;
+                ar | packet.moveItem.oldSlotType;
+                ar | packet.moveItem.oldPos;
+                ar | packet.moveItem.newSlotType;
+                ar | packet.moveItem.newPos;
                 break;
             }
         }

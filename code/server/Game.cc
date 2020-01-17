@@ -32,7 +32,6 @@ namespace redsquare
         //Receive info of client, freeze until we receive them
         socket.receive(packet);
     
-
         // Create a new player
         std::tie(itNewPlayer, std::ignore) = m_Players.emplace(id, Player(std::move(socket), id, packet.playerInfoConnection.entitySubType));
         itNewPlayer->second.playerSpawn(m_World,++m_PlayerSpawned);
@@ -40,7 +39,7 @@ namespace redsquare
         NewPlayer packetNewPlayer( m_World.m_World, id, m_Floor );
         itNewPlayer->second.sendPacket(packetNewPlayer);
 
-        //HACKY, too, sending fake move to all other players INCLUDE HIMSELF!!! Should be reworked
+        //sending fake move to all other players include himself
         packet.type = PacketType::SpawnEntity;
         packet.spawnEntity.entityID = id;
         packet.spawnEntity.typeEntity = EntityType::Player;
@@ -110,6 +109,14 @@ namespace redsquare
         }
 
         itNewPlayer->second.sendUpdateOfSpells();
+
+        Item testItem(ItemType::Sword);
+        ssize_t pos = itNewPlayer->second.getInventory().addItem(InventorySlotType::Cargo, std::move(testItem));
+        if (pos != -1)
+        {
+            itNewPlayer->second.sendUpdateItem(InventorySlotType::Cargo, false, pos);
+        }
+
         return id;
     }
 
@@ -935,6 +942,18 @@ namespace redsquare
                     player->m_PointInRound -= player->m_PointInRound;
                 }
                 break;
+            }
+
+            case PacketType::MoveItem:
+            {
+                Player *player = getPlayer( packet.moveItem.playerID );
+                if ( player != nullptr )
+                {
+                    if ( player->getInventory().moveItem(packet.moveItem) )
+                    {
+                        player->sendPacket(packet);
+                    }
+                }
             }
 
             case PacketType::UpdateSpells:

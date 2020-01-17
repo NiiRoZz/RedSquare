@@ -487,6 +487,27 @@ namespace redsquare
                     gMessageManager().sendMessage(&message);
                     break;
                 }
+
+                case PacketType::UpdateItem:
+                {
+                    ItemUpdateMessage message;
+                    message.itemMessage = packet.updateItem;
+
+                    gMessageManager().sendMessage(&message);
+
+                    break;
+                }
+
+                case PacketType::MoveItem:
+                {
+
+                    ItemMoveMessage message;
+                    message.itemMessage = packet.moveItem;
+
+                    gMessageManager().sendMessage(&message);
+
+                    break;
+                }
             }
         }
     }
@@ -644,5 +665,10 @@ namespace redsquare
         std::cout << "SPELL CHANGED FOR SPELL N°" << spell << std::endl;
 
         return;
+    }
+
+    void Game::sendPacket(Packet &packet)
+    {
+        m_ThreadCom.sendPacket(packet);
     }
 }
