@@ -20,6 +20,7 @@ namespace redsquare
         bool checkRoutine();
         void attack(ServerEntity *target);
         void levelUp(uint m_Floor);
+        int Variance(int range);
        
 
     private:

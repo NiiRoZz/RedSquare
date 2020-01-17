@@ -12,7 +12,7 @@ namespace redsquare
     {
     public:
         const gf::Id m_EntityID;
-        const EntitySubType m_TypeOfEntity;
+        EntitySubType m_TypeOfEntity;
 
         gf::Vector2i m_Pos;
         gf::Vector2u m_Size;

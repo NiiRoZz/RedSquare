@@ -25,10 +25,19 @@ namespace redsquare
         Magus,
         Warrior,
         Rogue,
+        Ranger,
+        Healer,
         // Paladin,
-        // Archer,
         // Healer,
         /* CLASSES */
+
+        /* MONSTER */
+        Bat,
+        Slime,
+        SkeletonKnife,
+        SkeletonMagus,
+        Spirit,
+        /* MONSTER */
 
 
         //Class count for random
@@ -94,6 +103,7 @@ namespace redsquare
         BasicAttack, // basic attack ------- ALL
         FireBall, // randed attack that can burn foes ------- MAGUS
         ArmorUp, // gain a bonus of armor for x turns ------- WARRIOR
+        RangeUp, // gain 1 range for x turns ---------- MAGUS / SHOOTER
         DoubleStrike, // IDK for now
         Heal, // heal a foes ------- PRIEST
         Assasinate, // can one shot a foes  with high miss rate ------- ROGUE
@@ -119,6 +129,7 @@ namespace redsquare
         Backstab, // deal damage to foes : x2 if behind foes
         Energize, // next attack deal more damage
         SoulLink, // take damage that ally can receive
+        Reaper, // dmg in front of you
     };
 
     enum class PacketType : uint16_t
@@ -135,6 +146,7 @@ namespace redsquare
         PlayerDead,
         NewMap,
         UpdateSpells,
+        Message,
     };
 
     struct NewPlayer
@@ -357,12 +369,12 @@ namespace redsquare
                 break;
             }
 
-            /*case PacketType::Message:
+            case PacketType::Message:
             {
                 ar | packet.reveiveMessage.from;
                 ar | packet.reveiveMessage.message;
                 break;
-            }*/
+            }
 
             case PacketType::UpdateSpells:
             {

@@ -23,6 +23,7 @@
 #include <gf/VertexArray.h>
 #include <gf/Cursor.h>
 #include <gf/Font.h>
+#include <gf/TileLayer.h>
 
 #include "World.h"
 #include "Game.h"
@@ -32,15 +33,14 @@
 #include "../common/Singletons.h"
 #include "../common/Packet.h"
 #include "config.h"
-#include <gf/TileLayer.h>
 
-
+#define NBTYPEPLAYER 3
 
 using namespace redsquare;
 
 int main( int argc, char **argv )
 {
-    if ( argc != 5 )
+    if ( argc != 5 || atoi(argv[4]) > NBTYPEPLAYER || atoi(argv[4]) < 0)
     {
         std::cerr << "Usage : ./RedSquare ip port playerName typePlayer" << std::endl;
         std::cerr << "typePlayer: " << std::endl << "0 for Magus" << std::endl << "1 for Warrior" << std::endl << "2 for Rogue" << std::endl;
@@ -65,9 +65,9 @@ int main( int argc, char **argv )
 
     // initialization redsquare
     gf::Font &fontChat(gResourceManager().getFont("font/arial.ttf"));
-    
+
     bool inventoryVisible = false;
-    
+
     // views
     gf::ViewContainer views;
     gf::ExtendView mainView( ViewCenter, ViewSize );
@@ -122,7 +122,7 @@ int main( int argc, char **argv )
     gf::Action passTurn("PassTurn");
     passTurn.addKeycodeKeyControl(gf::Keycode::Space);
     actions.addAction(passTurn);
-    
+
     gf::Action clicAction("Clic");
     clicAction.addMouseButtonControl(gf::MouseButton::Left);
 
@@ -170,6 +170,11 @@ int main( int argc, char **argv )
     gf::EntityContainer mainEntities;
     // add entities to mainEntities
     Game game( argv[1], argv[2], mainView, argv[3] );
+    int Iport_Chat=atoi(argv[2])+1;
+    char  Cport_Chat[10] ;
+    sprintf(Cport_Chat,"%d",Iport_Chat);
+    std::cout << "hud : "<< Cport_Chat<<std::endl;
+    Hud hud(game, fontChat,Cport_Chat,argv[1],mainView);
 
     //Send info about us, before get world
     game.sendInfoConnection(static_cast<EntitySubType>(atoi(argv[4])), argv[3]);
@@ -180,10 +185,8 @@ int main( int argc, char **argv )
     game.startThreadCom();
     mainEntities.addEntity( game );
 
-
     gf::EntityContainer hudEntities;
     // add entities to hudEntities
-    Hud hud(game, fontChat, mainView);
     hudEntities.addEntity(hud);
 
     gf::Cursor defaultCursor(gf::Cursor::Type::Arrow);
@@ -207,7 +210,7 @@ int main( int argc, char **argv )
     {
         // 1. input
         gf::Event event;
-        
+
         while (window.pollEvent(event))
         {
             actions.processEvent(event);
@@ -231,7 +234,7 @@ int main( int argc, char **argv )
                             Player* myPlayer = game.getPlayer(game.m_PlayerID);
                             if ( myPlayer != nullptr && game.m_CanPlay )
                             {
-                                if ( myPlayer->canAttack(pos, game.m_Monsters, game.m_Props) )
+                                if ( myPlayer->canAttack(pos, game) )
                                 {
                                     game.attackPos( pos[0], pos[1] );
                                 }
@@ -254,7 +257,7 @@ int main( int argc, char **argv )
                         Player* myPlayer = game.getPlayer(game.m_PlayerID);
                         if ( myPlayer != nullptr && game.m_CanPlay )
                         {
-                            if ( myPlayer->canAttack(pos, game.m_Monsters, game.m_Props) )
+                            if ( myPlayer->canAttack(pos, game) )
                             {
                                 window.setMouseCursor(attackCursor);
                                 game.m_TempMove.clear();
@@ -289,7 +292,7 @@ int main( int argc, char **argv )
                         game.m_TempMove.clear();
                         window.setMouseCursor(defaultCursor);
                     }
-                    
+
                     break;
                 }
             }
@@ -307,15 +310,15 @@ int main( int argc, char **argv )
         if (rightAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
         {
             game.movePlayer( 1, 0 );
-        } 
+        }
         else if (leftAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
         {
             game.movePlayer( -1, 0 );
-        } 
+        }
         else if (upAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
         {
             game.movePlayer( 0, -1 );
-        } 
+        }
         else if (downAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
         {
             game.movePlayer( 0, 1 );
@@ -368,7 +371,7 @@ int main( int argc, char **argv )
         {
             game.changeSpell(8);
         }*/
-        
+
         // 2. update
         gf::Time time = clock.restart();
         mainEntities.update(time);
@@ -383,6 +386,6 @@ int main( int argc, char **argv )
         renderer.display();
         actions.reset();
 	}
-    
+
 	return 0;
 }

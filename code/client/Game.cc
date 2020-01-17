@@ -32,7 +32,6 @@ namespace redsquare
     void Game::startThreadCom()
     {
         m_ThreadCom.start();
-        //m_ChatCom.start();
     }
 
     void Game::sendInfoConnection(EntitySubType type, char *name)
@@ -45,13 +44,7 @@ namespace redsquare
         m_ThreadCom.sendPacket(sendPacket);
     }
 
-    /*void Game::sendMessage(std::string message){
-        Packet sendPacket;
-        sendPacket.type = PacketType::Message;
-        strncpy( sendPacket.reveiveMessage.message, message.c_str(),1024);
-        strncpy( sendPacket.reveiveMessage.from, m_Name,30);
-        m_ChatCom.sendPacket(sendPacket);
-    }*/
+
 
     void Game::receiveWorld()
     {
@@ -218,7 +211,7 @@ namespace redsquare
             Packet packet;
             packet.type = PacketType::RequestAttack;
             packet.requestAttack.playerID = m_PlayerID;
-            packet.requestAttack.spellType = m_CurrentSpell; //TODO: do a check here, to know wich attack selected
+            packet.requestAttack.spellType = m_CurrentSpell;
             packet.requestAttack.posX = m_AttackX;
             packet.requestAttack.posY = m_AttackY;
 

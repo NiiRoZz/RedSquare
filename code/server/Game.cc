@@ -21,7 +21,7 @@ namespace redsquare
         m_World.prettyPrint();
     }
 
-    void Game::addNewPlayer(SocketTcp socket)
+    gf::Id Game::addNewPlayer(SocketTcp socket)
     {
         // Generate a new ID
         gf::Id id = generateId();
@@ -110,6 +110,7 @@ namespace redsquare
         }
 
         itNewPlayer->second.sendUpdateOfSpells();
+        return id;
     }
 
     void Game::addNewMonsters(int nbMonster)
@@ -812,10 +813,65 @@ namespace redsquare
                 if ( player != nullptr )
                 {
                     gf::Vector2i posTarget({packet.requestAttack.posX, packet.requestAttack.posY});
-
                     ServerEntity *targetServerEntity;
-                
+
                     Monster *targetMonster = getMonster(posTarget);
+                    Player *targetPlayer = getPlayer(posTarget);
+                    Prop *targetProp = getProp(posTarget);
+
+                    if(targetPlayer != nullptr){
+
+                        targetServerEntity = dynamic_cast<ServerEntity*>(targetPlayer);
+                        player->attack(packet.requestAttack.spellType, targetServerEntity);
+                        Packet sendPacket;
+                        player->createCarPacket(sendPacket);
+                        sendPacketToAllPlayers( sendPacket );
+
+                    }else if(targetMonster != nullptr){
+                        
+                        std::cout << "koko" << std::endl;
+                        targetServerEntity = dynamic_cast<ServerEntity*>(targetMonster);
+                        int level = player->m_Level;
+                        player->attack(packet.requestAttack.spellType, targetServerEntity);
+
+
+                        Packet sendPacket;
+                        Packet sendPacket2;
+                        if ( targetMonster->m_LifePoint > 0 ){
+                            targetMonster->createCarPacket(sendPacket);
+                            player->createCarPacket(sendPacket2);
+                        }else {   
+                            sendPacket.type = PacketType::EntityDisconnected;
+                            sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
+                            sendPacket.entityDisconnected.entityID = targetMonster->m_EntityID;
+
+                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(targetMonster), true);
+                            m_World.m_SquareWorld.setTransparent(targetMonster->m_Pos, true);
+
+                            m_Monsters.erase(targetMonster->m_EntityID);
+                        }
+
+                        sendPacketToAllPlayers( sendPacket );
+                        sendPacketToAllPlayers( sendPacket2 );
+
+                        if(player->m_Level != level){
+                            player->createCarPacket(sendPacket);
+                            sendPacketToAllPlayers( sendPacket );
+                        }
+                    }else if(targetProp != nullptr){
+                        Packet sendPacket;
+                        sendPacket.type = PacketType::EntityDisconnected;
+                        sendPacket.entityDisconnected.typeEntity = EntityType::Prop;
+                        sendPacket.entityDisconnected.entityID = targetProp->m_EntityID;
+
+                        m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(targetProp), true);
+                        m_World.m_SquareWorld.setTransparent(targetProp->m_Pos);
+
+                        m_Props.erase(targetProp->m_EntityID);
+
+                        sendPacketToAllPlayers( sendPacket );
+                    }
+                    /*Monster *targetMonster = getMonster(posTarget);
                     targetServerEntity = dynamic_cast<ServerEntity*>(targetMonster);
                     if ( targetMonster != nullptr && targetServerEntity != nullptr )
                     {
@@ -848,6 +904,7 @@ namespace redsquare
                     }
                     else
                     {
+                        std::cout << " nul a chier " << std::endl;
                         Prop *targetProp = getProp(posTarget);
 
                         if ( targetProp != nullptr )
@@ -864,8 +921,9 @@ namespace redsquare
 
                             sendPacketToAllPlayers( sendPacket );
                         }
-                    }
+                    }*/
                 }
+
                 break;
             }
 
