@@ -426,7 +426,7 @@ namespace redsquare
         }
     }
 
-    std::vector<std::tuple<Packet,Monster>> Player::attack(SpellType spellType, ServerEntity *target,std::map<gf::Id, Monster> monsters){
+    std::vector<Monster*> Player::attack(SpellType spellType, ServerEntity *target,std::map<gf::Id, Monster> &monsters){
         m_PointInRound -= m_PointInRound;
 
         switch (spellType){
@@ -845,7 +845,7 @@ namespace redsquare
         }
     }
 
-    std::vector<std::tuple<Packet,Monster>> Player::LightningStrike(ServerEntity *target,std::map<gf::Id, Monster> monsters){
+    std::vector<Monster*> Player::LightningStrike(ServerEntity *target,std::map<gf::Id, Monster> &monsters){
         /* example of use:
              X
             XOX
@@ -855,17 +855,12 @@ namespace redsquare
             X: Ennemy     60% of a basic attack damage
         */
 
-        std::vector<std::tuple<Packet,Monster>> allPacket;
+        std::vector<Monster*> allPacket;
         if(m_ManaPoint < 7){
             std::cout << "NOT ENOUGH MANA" << std::endl;
 
             return allPacket;
         }
-
-        Packet sendPacket;
-        Packet sendPacket1;
-        Packet sendPacket2;
-        Packet sendPacket3;
 
         gf::Vector2i mainPos = target->m_Pos; // pos of the main target
         //std::cout << mainPos[0] << ":" << mainPos[1] << std::endl;
@@ -893,8 +888,7 @@ namespace redsquare
                     it->second.m_LifePoint -= damage;
                 }
 
-                it->second.createCarPacket(sendPacket);
-                allPacket.push_back({sendPacket,it->second});
+                allPacket.push_back(&it->second);
                 std::cout << "LightningStrike dealed " << damage << " to the target" << std::endl;
             }else if(it->second.m_Pos == Pos2){
                 damage += Variance(-(damage / 10));
@@ -909,8 +903,7 @@ namespace redsquare
                     it->second.m_LifePoint -= damage;
                 }
 
-                it->second.createCarPacket(sendPacket1);
-                allPacket.push_back({sendPacket1,it->second});
+                allPacket.push_back(&it->second);
                 std::cout << "LightningStrike dealed " << damage << " to the target" << std::endl;
             }else if(it->second.m_Pos == Pos3){
                 damage += Variance(-(damage / 10));
@@ -925,8 +918,7 @@ namespace redsquare
                     it->second.m_LifePoint -= damage;
                 }
 
-                it->second.createCarPacket(sendPacket2);
-                allPacket.push_back({sendPacket2,it->second});
+                allPacket.push_back(&it->second);
                 std::cout << "LightningStrike dealed " << damage << " to the target" << std::endl;
             }else if(it->second.m_Pos == Pos4){
                 damage += Variance(-(damage / 10));
@@ -941,8 +933,7 @@ namespace redsquare
                     it->second.m_LifePoint -= damage;
                 }
 
-                it->second.createCarPacket(sendPacket3);
-                allPacket.push_back({sendPacket3,it->second});
+                allPacket.push_back(&it->second);
                 std::cout << "LightningStrike dealed " << damage << " to the target" << std::endl;
             
             }
@@ -1089,7 +1080,7 @@ namespace redsquare
         std::cout << "Torpedo dealed " << damage << std::endl;
     }
 
-    std::vector<std::tuple<Packet,Monster>> Player::Reaper(ServerEntity *target,std::map<gf::Id, Monster> monsters){ // deal damage to the 3 tile in front of user 
+    std::vector<Monster*> Player::Reaper(ServerEntity *target,std::map<gf::Id, Monster> &monsters){ // deal damage to the 3 tile in front of user 
 
         /* Example of use:
 
@@ -1102,18 +1093,12 @@ namespace redsquare
              +: Other monster   60% of a basic attack damage
         */
 
-        std::vector<std::tuple<Packet,Monster>> allPacket;
+        std::vector<Monster*> allPacket;
         if(m_ManaPoint < 7){
             std::cout << "NOT ENOUGH MANA" << std::endl;
 
             return allPacket;
         }
-
-        Packet sendPacket;
-        Packet sendPacket1;
-        Packet sendPacket2;
-        Packet sendPacket3;
-        Packet sendPacket4;
 
         gf::Vector2i mainPos = target->m_Pos; // pos of the main target
 
@@ -1148,8 +1133,7 @@ namespace redsquare
                         it->second.m_LifePoint -= sideDamage;
                     }
 
-                    it->second.createCarPacket(sendPacket1);
-                    allPacket.push_back({sendPacket1,it->second});
+                    allPacket.push_back(&it->second);
                     std::cout << "Reaper dealed " << sideDamage << " to the side target" << std::endl;
                 }
             }else if(it->second.m_Pos == Pos2){
@@ -1167,8 +1151,7 @@ namespace redsquare
                         it->second.m_LifePoint -= sideDamage;
                     }
 
-                    it->second.createCarPacket(sendPacket2);
-                    allPacket.push_back({sendPacket2,it->second});
+                    allPacket.push_back(&it->second);
                     std::cout << "Reaper dealed " << sideDamage << " to the side target" << std::endl;
                 }
             }else if(it->second.m_Pos == Pos3){
@@ -1185,8 +1168,7 @@ namespace redsquare
                     }else{
                         it->second.m_LifePoint -= sideDamage;
                     }
-                    it->second.createCarPacket(sendPacket3);
-                    allPacket.push_back({sendPacket3,it->second});
+                    allPacket.push_back(&it->second);
                     std::cout << "Reaper dealed " << sideDamage << " to the side target" << std::endl;
                 }
             }else if(it->second.m_Pos == Pos4){
@@ -1203,8 +1185,7 @@ namespace redsquare
                     }else{
                         it->second.m_LifePoint -= sideDamage;
                     }
-                    it->second.createCarPacket(sendPacket4);
-                    allPacket.push_back({sendPacket4,it->second});
+                    allPacket.push_back(&it->second);
                     std::cout << "Reaper dealed " << sideDamage << " to the side target" << std::endl;
                 }
             }
@@ -1221,9 +1202,7 @@ namespace redsquare
                 }else{
                     target->m_LifePoint -= mainDamage;
                 }
-
-                target->createCarPacket(sendPacket);
-                allPacket.push_back({sendPacket,targetMonster});
+                allPacket.push_back(&it->second);
             }
             /* main target */
             it++;

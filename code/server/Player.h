@@ -49,7 +49,7 @@ namespace redsquare
         void spawn();
 
         void attack(SpellType spellType, ServerEntity *target);
-        std::vector<std::tuple<Packet,Monster>> attack(SpellType spellType, ServerEntity *target, std::map<gf::Id, Monster> monsters);
+        std::vector<Monster*> attack(SpellType spellType, ServerEntity *target, std::map<gf::Id, Monster> &monsters);
         
         void levelUp();
 
@@ -85,8 +85,8 @@ namespace redsquare
         void Shoot(ServerEntity *target); // DONE
         void Backstab(ServerEntity *target); // DONE
         void Torpedo(ServerEntity *target); // DONE
-        std::vector<std::tuple<Packet,Monster>> Reaper(ServerEntity *target,std::map<gf::Id, Monster> monsters); // DONE
-        std::vector<std::tuple<Packet,Monster>> LightningStrike(ServerEntity *target,std::map<gf::Id, Monster> monsters); // need to fix smthg
+        std::vector<Monster*> Reaper(ServerEntity *target,std::map<gf::Id, Monster> &monsters); // DONE
+        std::vector<Monster*> LightningStrike(ServerEntity *target,std::map<gf::Id, Monster> &monsters); // need to fix smthg
         int Variance(int range); // DONE
 
     };

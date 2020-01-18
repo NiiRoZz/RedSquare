@@ -834,20 +834,18 @@ namespace redsquare
                         Packet sendPacket;
 
                         if( packet.requestAttack.spellType == SpellType::LightningStrike ){ // TODO fix the bug where you use 2 time this attack and it only deal the damage once
-                            std::vector<std::tuple<Packet,Monster>> allPacket;
-                            allPacket = player->attack(packet.requestAttack.spellType, targetServerEntity, m_Monsters);
-                           // std::cout << "post : "<<  allPacket.size() << std::endl;
-                            for(std::tuple<Packet,Monster> currentPacket : allPacket){
-                                if( std::get<0>(currentPacket).entityCar.m_LifePoint <= 0 ){
-                                    std::get<0>(currentPacket).type = PacketType::EntityDisconnected;
-                                    std::get<0>(currentPacket).entityDisconnected.typeEntity = EntityType::Monster;
-                                    std::get<0>(currentPacket).entityDisconnected.entityID = std::get<0>(currentPacket).entityCar.entityID;
-                                    m_World.setWalkableFromEntity( std::get<0>(currentPacket).entityCar.m_Pos , {1,1}, true);
-                                    m_World.m_SquareWorld.setTransparent(std::get<1>(currentPacket).m_Pos,true);
-                                    m_Monsters.erase(std::get<0>(currentPacket).entityCar.entityID);
+                            std::vector<Monster*> allPacket = player->attack(packet.requestAttack.spellType, targetServerEntity, m_Monsters);
+                            for(auto currentMonster : allPacket){
+                                if( currentMonster->m_LifePoint <= 0 ){
+                                    sendPacket.type = PacketType::EntityDisconnected;
+                                    sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
+                                    sendPacket.entityDisconnected.entityID = currentMonster->m_EntityID;
+                                    m_World.setWalkableFromEntity( currentMonster, true);
+                                    m_Monsters.erase(currentMonster->m_EntityID);
+                                }else{
+                                    currentMonster->createCarPacket(sendPacket);
                                 }
-                                std::cout  << std::get<0>(currentPacket).entityCar.m_LifePoint << std::endl;
-                                sendPacketToAllPlayers( std::get<0>(currentPacket));
+                                sendPacketToAllPlayers( sendPacket);
                             }
 
                             if(player->m_Level != level){
@@ -871,20 +869,19 @@ namespace redsquare
                         int level = player->m_Level;
                         Packet sendPacket;
 
-                        if(packet.requestAttack.spellType == SpellType::Reaper){
-                            std::vector<std::tuple<Packet,Monster>> allPacket;
-                            allPacket = player->attack(packet.requestAttack.spellType, targetServerEntity,m_Monsters);
-                            for(std::tuple<Packet,Monster> currentPacket : allPacket){
-                                if( std::get<0>(currentPacket).entityCar.m_LifePoint <= 0 ){
-                                    std::get<0>(currentPacket).type = PacketType::EntityDisconnected;
-                                    std::get<0>(currentPacket).entityDisconnected.typeEntity = EntityType::Monster;
-                                    std::get<0>(currentPacket).entityDisconnected.entityID = std::get<0>(currentPacket).entityCar.entityID;
-                                    m_World.setWalkableFromEntity( std::get<0>(currentPacket).entityCar.m_Pos , {1,1}, true);
-                                    m_World.m_SquareWorld.setTransparent(std::get<1>(currentPacket).m_Pos,true);
-                                    m_Monsters.erase(std::get<0>(currentPacket).entityCar.entityID);
-                                    
+                        if( packet.requestAttack.spellType == SpellType::Reaper ){ // TODO fix the bug where you use 2 time this attack and it only deal the damage once
+                            std::vector<Monster*> allPacket = player->attack(packet.requestAttack.spellType, targetServerEntity, m_Monsters);
+                            for(auto currentMonster : allPacket){
+                                if( currentMonster->m_LifePoint <= 0 ){
+                                    sendPacket.type = PacketType::EntityDisconnected;
+                                    sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
+                                    sendPacket.entityDisconnected.entityID = currentMonster->m_EntityID;
+                                    m_World.setWalkableFromEntity( currentMonster, true);
+                                    m_Monsters.erase(currentMonster->m_EntityID);
+                                }else{
+                                    currentMonster->createCarPacket(sendPacket);
                                 }
-                                sendPacketToAllPlayers( std::get<0>(currentPacket) );
+                                sendPacketToAllPlayers( sendPacket);
                             }
 
                             if(player->m_Level != level){
