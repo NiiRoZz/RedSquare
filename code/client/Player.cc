@@ -116,7 +116,7 @@ namespace redsquare
                 break;
 
             case EntitySubType::Ranger:
-                playerTexture = &gResourceManager().getTexture("img/Character/Magus.png");
+                playerTexture = &gResourceManager().getTexture("img/Character/Ranger.png");
                 break;
             
             case EntitySubType::Healer:
@@ -130,6 +130,15 @@ namespace redsquare
 
     bool Player::canAttack(gf::Vector2i targetPos, Game &game)
     {
+        gf::Distance2<int> distFn = gf::manhattanDistance<int, 2>;
+
+        float distance = distFn(m_Pos, targetPos);
+
+        if ( distance > m_Range )
+        {
+            return false;
+        }
+
         switch (game.m_CurrentSpell)
         {
             case SpellType::Heal :
@@ -172,21 +181,23 @@ namespace redsquare
                     return true;
                 }
                 break;
-            
+            case SpellType::LightningStrike :
+                if ( isInsideMe(targetPos) ){
+                    return true;
+                }
+                break;
+            case SpellType::Berserk :
+                if ( isInsideMe(targetPos) ){
+                    return true;
+                }else{
+                    return false;
+                }
+                break;
             default:
                 break;
         }
 
         if ( isInsideMe(targetPos) )
-        {
-            return false;
-        }
-        
-        gf::Distance2<int> distFn = gf::manhattanDistance<int, 2>;
-
-        float distance = distFn(m_Pos, targetPos);
-
-        if ( distance > m_Range )
         {
             return false;
         }

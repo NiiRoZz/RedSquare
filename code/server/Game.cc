@@ -3,6 +3,7 @@
 
 #include <gf/Random.h>
 #include <gf/VectorOps.h>
+#include <tuple>
 #include <iostream>
 
 namespace redsquare
@@ -829,42 +830,98 @@ namespace redsquare
                     if(targetPlayer != nullptr){
 
                         targetServerEntity = dynamic_cast<ServerEntity*>(targetPlayer);
-                        player->attack(packet.requestAttack.spellType, targetServerEntity);
+                        int level = player->m_Level;
                         Packet sendPacket;
+
+                        if( packet.requestAttack.spellType == SpellType::LightningStrike ){ // TODO fix the bug where you use 2 time this attack and it only deal the damage once
+                            std::vector<std::tuple<Packet,Monster>> allPacket;
+                            allPacket = player->attack(packet.requestAttack.spellType, targetServerEntity, m_Monsters);
+                           // std::cout << "post : "<<  allPacket.size() << std::endl;
+                            for(std::tuple<Packet,Monster> currentPacket : allPacket){
+                                if( std::get<0>(currentPacket).entityCar.m_LifePoint <= 0 ){
+                                    std::get<0>(currentPacket).type = PacketType::EntityDisconnected;
+                                    std::get<0>(currentPacket).entityDisconnected.typeEntity = EntityType::Monster;
+                                    std::get<0>(currentPacket).entityDisconnected.entityID = std::get<0>(currentPacket).entityCar.entityID;
+                                    m_World.setWalkableFromEntity( std::get<0>(currentPacket).entityCar.m_Pos , {1,1}, true);
+                                    m_World.m_SquareWorld.setTransparent(std::get<1>(currentPacket).m_Pos,true);
+                                    m_Monsters.erase(std::get<0>(currentPacket).entityCar.entityID);
+                                }
+                                std::cout  << std::get<0>(currentPacket).entityCar.m_LifePoint << std::endl;
+                                sendPacketToAllPlayers( std::get<0>(currentPacket));
+                            }
+
+                            if(player->m_Level != level){
+                                player->createCarPacket(sendPacket);
+                                sendPacketToAllPlayers( sendPacket );
+                            }else{
+                                player->createCarPacket(sendPacket);
+                                sendPacketToAllPlayers( sendPacket );
+                            }
+                        }else{
+                            targetServerEntity = dynamic_cast<ServerEntity*>(targetPlayer);
+                            player->attack(packet.requestAttack.spellType, targetServerEntity);
+                        }
+                        
                         player->createCarPacket(sendPacket);
                         sendPacketToAllPlayers( sendPacket );
 
                     }else if(targetMonster != nullptr){
                         
-                        std::cout << "koko" << std::endl;
                         targetServerEntity = dynamic_cast<ServerEntity*>(targetMonster);
                         int level = player->m_Level;
-                        player->attack(packet.requestAttack.spellType, targetServerEntity);
-
-
                         Packet sendPacket;
-                        Packet sendPacket2;
-                        if ( targetMonster->m_LifePoint > 0 ){
-                            targetMonster->createCarPacket(sendPacket);
-                            player->createCarPacket(sendPacket2);
-                        }else {   
-                            sendPacket.type = PacketType::EntityDisconnected;
-                            sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
-                            sendPacket.entityDisconnected.entityID = targetMonster->m_EntityID;
 
-                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(targetMonster), true);
-                            m_World.m_SquareWorld.setTransparent(targetMonster->m_Pos, true);
+                        if(packet.requestAttack.spellType == SpellType::Reaper){
+                            std::vector<std::tuple<Packet,Monster>> allPacket;
+                            allPacket = player->attack(packet.requestAttack.spellType, targetServerEntity,m_Monsters);
+                            for(std::tuple<Packet,Monster> currentPacket : allPacket){
+                                if( std::get<0>(currentPacket).entityCar.m_LifePoint <= 0 ){
+                                    std::get<0>(currentPacket).type = PacketType::EntityDisconnected;
+                                    std::get<0>(currentPacket).entityDisconnected.typeEntity = EntityType::Monster;
+                                    std::get<0>(currentPacket).entityDisconnected.entityID = std::get<0>(currentPacket).entityCar.entityID;
+                                    m_World.setWalkableFromEntity( std::get<0>(currentPacket).entityCar.m_Pos , {1,1}, true);
+                                    m_World.m_SquareWorld.setTransparent(std::get<1>(currentPacket).m_Pos,true);
+                                    m_Monsters.erase(std::get<0>(currentPacket).entityCar.entityID);
+                                    
+                                }
+                                sendPacketToAllPlayers( std::get<0>(currentPacket) );
+                            }
 
-                            m_Monsters.erase(targetMonster->m_EntityID);
-                        }
+                            if(player->m_Level != level){
+                                player->createCarPacket(sendPacket);
+                                sendPacketToAllPlayers( sendPacket );
+                            }else{
+                                player->createCarPacket(sendPacket);
+                                sendPacketToAllPlayers( sendPacket );
+                            }
+                        }else{
+                            player->attack(packet.requestAttack.spellType, targetServerEntity);
+                            Packet sendPacket;
+                            Packet sendPacket2;
+                            if ( targetMonster->m_LifePoint > 0 ){
+                                targetMonster->createCarPacket(sendPacket);
+                                player->createCarPacket(sendPacket2);
+                                std::cout<< "packet " << std::endl;
+                            }else{   
+                                sendPacket.type = PacketType::EntityDisconnected;
+                                sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
+                                sendPacket.entityDisconnected.entityID = targetMonster->m_EntityID;
 
-                        sendPacketToAllPlayers( sendPacket );
-                        sendPacketToAllPlayers( sendPacket2 );
+                                m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(targetMonster), true);
+                                m_World.m_SquareWorld.setTransparent(targetMonster->m_Pos, true);
 
-                        if(player->m_Level != level){
-                            player->createCarPacket(sendPacket);
+                                m_Monsters.erase(targetMonster->m_EntityID);
+                            }
+
                             sendPacketToAllPlayers( sendPacket );
+                            sendPacketToAllPlayers( sendPacket2 );
+
+                            if(player->m_Level != level){
+                                player->createCarPacket(sendPacket);
+                                sendPacketToAllPlayers( sendPacket );
+                            }
                         }
+
                     }else if(targetProp != nullptr){
                         Packet sendPacket;
                         sendPacket.type = PacketType::EntityDisconnected;
@@ -878,57 +935,6 @@ namespace redsquare
 
                         sendPacketToAllPlayers( sendPacket );
                     }
-                    /*Monster *targetMonster = getMonster(posTarget);
-                    targetServerEntity = dynamic_cast<ServerEntity*>(targetMonster);
-                    if ( targetMonster != nullptr && targetServerEntity != nullptr )
-                    {
-                        int level = player->m_Level;
-                        player->attack(packet.requestAttack.spellType, targetServerEntity);
-
-                        Packet sendPacket;
-                        if ( targetMonster->m_LifePoint > 0 )
-                        {
-                            targetMonster->createCarPacket(sendPacket);
-                        }
-                        else
-                        {   
-                            sendPacket.type = PacketType::EntityDisconnected;
-                            sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
-                            sendPacket.entityDisconnected.entityID = targetMonster->m_EntityID;
-
-                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(targetMonster), true);
-                            m_World.m_SquareWorld.setTransparent(targetMonster->m_Pos, true);
-
-                            m_Monsters.erase(targetMonster->m_EntityID);
-                        }
-                        sendPacketToAllPlayers( sendPacket );
-
-                        if(player->m_Level != level)
-                        {
-                            player->createCarPacket(sendPacket);
-                            sendPacketToAllPlayers( sendPacket );
-                        }
-                    }
-                    else
-                    {
-                        std::cout << " nul a chier " << std::endl;
-                        Prop *targetProp = getProp(posTarget);
-
-                        if ( targetProp != nullptr )
-                        {
-                            Packet sendPacket;
-                            sendPacket.type = PacketType::EntityDisconnected;
-                            sendPacket.entityDisconnected.typeEntity = EntityType::Prop;
-                            sendPacket.entityDisconnected.entityID = targetProp->m_EntityID;
-
-                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(targetProp), true);
-                            m_World.m_SquareWorld.setTransparent(targetProp->m_Pos);
-
-                            m_Props.erase(targetProp->m_EntityID);
-
-                            sendPacketToAllPlayers( sendPacket );
-                        }
-                    }*/
                 }
 
                 break;

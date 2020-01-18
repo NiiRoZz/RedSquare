@@ -114,21 +114,12 @@ namespace redsquare
         Incinerate, // deal damage to foes and can burn ennemy
         Devastate, // AOE dmg
         Massacre, // bleed dmg
-        Impact, // dash attack ?
         LightningStrike, // AOE dmg
         Scorch, // dmg + bleed
-        Chaos, // AOE dmg
         Berserk, // gain attack, loose defence
-        Cleanse, // purge all status effect
-        Mirror, // deal a percentage of damage receice to attacker
         Torpedo, // 
-        Stun, // stun ennemy for x turns
-        Warp, // dash 
-        Reincarnate, // 
         Shoot, // long attack range
         Backstab, // deal damage to foes : x2 if behind foes
-        Energize, // next attack deal more damage
-        SoulLink, // take damage that ally can receive
         Reaper, // dmg in front of you
     };
 
@@ -220,6 +211,7 @@ namespace redsquare
 
         int m_MaxXP;
         int m_Level;
+        gf::Vector2i m_Pos;
     };
 
     struct RequestMove

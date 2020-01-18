@@ -1,5 +1,6 @@
 #include "Player.h"
 #include <iostream>
+#include "Game.h"
 
 #define RATIO 1.3
 
@@ -184,57 +185,55 @@ namespace redsquare
         {
             case EntitySubType::Warrior:  
                 if(m_Level == 2){
-                    m_SpellTab.push_back(SpellType::DamageUp);
+                    m_SpellTab.push_back(SpellType::DamageUp); // gain damage 
                 }else if(m_Level == 3){
-                   m_SpellTab.push_back(SpellType::ArmorUp);
+                    m_SpellTab.push_back(SpellType::Massacre); // lifesteal attack
                 }else if(m_Level == 4){
-                    m_SpellTab.push_back(SpellType::Berserk);
+                    m_SpellTab.push_back(SpellType::Berserk); // gain damage and defense
                 }else if(m_Level == 5){
-                    m_SpellTab.push_back(SpellType::Revenge);
+                    m_SpellTab.push_back(SpellType::Revenge); // more damage the less life you have
                 }else if(m_Level == 6){
-                    m_SpellTab.push_back(SpellType::Massacre);
+                    m_SpellTab.push_back(SpellType::Reaper); // damage in front of you 
                 }else if(m_Level == 7){
-                    m_SpellTab.push_back(SpellType::Protection);
+                    m_SpellTab.push_back(SpellType::Protection); // give armor to target
                 }else if(m_Level == 8){
+                   m_SpellTab.push_back(SpellType::ArmorUp); // gain armor
                 }
                 sendUpdateOfSpells();
                 break;
 
             case EntitySubType::Magus:
                 if(m_Level == 2){
-                    m_SpellTab.push_back(SpellType::Heal);
-                    m_SpellTab.push_back(SpellType::FireBall);
-                    
-                    m_SpellTab.push_back(SpellType::Incinerate);
-                    m_SpellTab.push_back(SpellType::Energize);
-                    m_SpellTab.push_back(SpellType::LightningStrike);
+                    m_SpellTab.push_back(SpellType::FireBall); // damage
                 }else if(m_Level == 3){
-                   m_SpellTab.push_back(SpellType::Incinerate);
+                   m_SpellTab.push_back(SpellType::Incinerate); // more damage the more life target has
                 }else if(m_Level == 4){
-                    m_SpellTab.push_back(SpellType::Energize);
+                    m_SpellTab.push_back(SpellType::LightningStrike); // AOE
                 }else if(m_Level == 5){
-                    m_SpellTab.push_back(SpellType::LightningStrike);
+                    m_SpellTab.push_back(SpellType::Heal); // heal
                 }else if(m_Level == 6){
-                   // m_SpellTab.push_back(SpellType::Massacre);
+                    m_SpellTab.push_back(SpellType::Scorch); // damage
                 }else if(m_Level == 7){
-                   // m_SpellTab.push_back(SpellType::Massacre);
+                    m_SpellTab.push_back(SpellType::DamageUp); // gain damage 
+                }else if(m_Level == 8){
+                    m_SpellTab.push_back(SpellType::Revenge); // more damage the less life you have
                 }
                 sendUpdateOfSpells();
                 break;
 
             case EntitySubType::Rogue:  
                 if(m_Level == 2){
-                    m_SpellTab.push_back(SpellType::Lacerate);
-                }else if(m_Level == 3){
-                    m_SpellTab.push_back(SpellType::Massacre);
+                    m_SpellTab.push_back(SpellType::Lacerate); // the more life the target has the more damage it deal
                 }else if(m_Level == 4){
-                    m_SpellTab.push_back(SpellType::Berserk);
+                    m_SpellTab.push_back(SpellType::Berserk); // gain damage and defense
                 }else if(m_Level == 5){
-                    m_SpellTab.push_back(SpellType::Scorch);
+                    m_SpellTab.push_back(SpellType::Scorch); // damage
                 }else if(m_Level == 6){
-                    m_SpellTab.push_back(SpellType::DoubleStrike);
+                    m_SpellTab.push_back(SpellType::DoubleStrike); // double attack 
                 }else if(m_Level == 7){
-                    m_SpellTab.push_back(SpellType::DamageUp);
+                    m_SpellTab.push_back(SpellType::DamageUp); // gain damage
+                }else if(m_Level == 8){
+                    m_SpellTab.push_back(SpellType::Massacre); // lifesteal attack
                 }
                 sendUpdateOfSpells();
                 break;
@@ -243,15 +242,18 @@ namespace redsquare
                 if(m_Level == 2){
                     m_SpellTab.push_back(SpellType::Shoot);
                 }else if(m_Level == 3){
-                    m_SpellTab.push_back(SpellType::RangeUp);
+                    //m_SpellTab.push_back(SpellType::RangeUp); too op for now
+                    m_SpellTab.push_back(SpellType::Berserk); // gain damage and defense
                 }else if(m_Level == 4){
                     m_SpellTab.push_back(SpellType::Torpedo);
                 }else if(m_Level == 5){
                     m_SpellTab.push_back(SpellType::Scorch);
                 }else if(m_Level == 6){
-                   // m_SpellTab.push_back(SpellType::DoubleStrike);
+                    m_SpellTab.push_back(SpellType::Revenge); // more damage the less life you have
                 }else if(m_Level == 7){
-                   // m_SpellTab.push_back(SpellType::Massacre);
+                    m_SpellTab.push_back(SpellType::DamageUp); // gain damage
+                }else if(m_Level == 8){
+                    m_SpellTab.push_back(SpellType::LightningStrike); // AOE
                 }
                 sendUpdateOfSpells();
                 break;
@@ -356,16 +358,12 @@ namespace redsquare
         }
     }
 
-    void Player::attack(SpellType spellType, ServerEntity *target)
-    {
-        std::cout << "XD" << std::endl; 
+    void Player::attack(SpellType spellType, ServerEntity *target){
         m_PointInRound -= m_PointInRound;
 
         switch (spellType)
         {
             case SpellType::BasicAttack:
-
-                std::cout << "XD2" << std::endl; 
                 BasicAttack(target);
                 break;
             case SpellType::DamageUp:
@@ -410,8 +408,8 @@ namespace redsquare
             case SpellType::Incinerate:
                 Incinerate(target);
                 break;
-            case SpellType::Reaper:
-                Incinerate(target);
+            case SpellType::Heal:
+                Heal(target);
                 break;
             default:
                 BasicAttack(target);
@@ -425,6 +423,19 @@ namespace redsquare
             {
                 levelUp();
             }
+        }
+    }
+
+    std::vector<std::tuple<Packet,Monster>> Player::attack(SpellType spellType, ServerEntity *target,std::map<gf::Id, Monster> monsters){
+        m_PointInRound -= m_PointInRound;
+
+        switch (spellType){
+            case SpellType::Reaper:
+                return Reaper(target,monsters);
+                break;
+            case SpellType::LightningStrike:
+                return LightningStrike(target,monsters);
+                break;
         }
     }
 
@@ -598,6 +609,10 @@ namespace redsquare
             heal += Variance(-(heal / 15));
         }
 
+        if(heal < 0 ){
+            heal = -heal;
+        }
+
         if(target->m_LifePoint + heal > target->m_MaxLifePoint){
             target->m_LifePoint = target->m_MaxLifePoint;
         }else{
@@ -655,7 +670,7 @@ namespace redsquare
     }
 
 
-    void Player::Protection(ServerEntity *target){ // segfault ?????
+    void Player::Protection(ServerEntity *target){ // WARRIOR
         if(m_ManaPoint < 5){
             std::cout << "NOT ENOUGH MANA" << std::endl;
             return;
@@ -677,7 +692,7 @@ namespace redsquare
         std::cout << "The target Gained " << defense << " DefensePoints"<< std::endl;
     }
 
-    void Player::Revenge(ServerEntity *target){ // Need formula on missing health
+    void Player::Revenge(ServerEntity *target){ // WARRIOR ROGUE
         if(m_ManaPoint < 5){
             std::cout << "NOT ENOUGH MANA" << std::endl;
             return;
@@ -713,7 +728,10 @@ namespace redsquare
 
         int critical = rand() % 100;
         int damage;
-        int currentHealth = (target->m_LifePoint / target->m_MaxLifePoint) * 2;
+        double currentHealth = (target->m_LifePoint / target->m_MaxLifePoint) * 2;
+        if(currentHealth == 0){
+            currentHealth = 0.5;
+        }
         if(critical > 90){
             damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) * currentHealth;
             damage *= 2;
@@ -740,7 +758,10 @@ namespace redsquare
 
         int critical = rand() % 100;
         int damage;
-        int currentHealth = (target->m_LifePoint / target->m_MaxLifePoint) * 1.5;
+        double currentHealth = (target->m_LifePoint / target->m_MaxLifePoint) * 1.5;
+        if(currentHealth == 0){
+            currentHealth = 0.5;
+        }
         if(critical > 90){
             damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) * currentHealth;
             damage *= 2;
@@ -824,8 +845,112 @@ namespace redsquare
         }
     }
 
-    void Player::LightningStrike(ServerEntity *target, int zone){
-        // TODO get all foes in an area and attack them
+    std::vector<std::tuple<Packet,Monster>> Player::LightningStrike(ServerEntity *target,std::map<gf::Id, Monster> monsters){
+        /* example of use:
+             X
+            XOX
+             X
+
+            O: Player
+            X: Ennemy     60% of a basic attack damage
+        */
+
+        std::vector<std::tuple<Packet,Monster>> allPacket;
+        if(m_ManaPoint < 7){
+            std::cout << "NOT ENOUGH MANA" << std::endl;
+
+            return allPacket;
+        }
+
+        Packet sendPacket;
+        Packet sendPacket1;
+        Packet sendPacket2;
+        Packet sendPacket3;
+
+        gf::Vector2i mainPos = target->m_Pos; // pos of the main target
+        //std::cout << mainPos[0] << ":" << mainPos[1] << std::endl;
+        /* adjacent tile */
+        gf::Vector2i Pos1{ mainPos[0]+1 , mainPos[1]}; 
+        gf::Vector2i Pos2{ mainPos[0]-1 , mainPos[1]};
+        gf::Vector2i Pos3{ mainPos[0] , mainPos[1]+1};
+        gf::Vector2i Pos4{ mainPos[0] , mainPos[1]-1};
+        /* adjacent tile */
+
+        int damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint)*0.7;
+
+        auto it = monsters.begin();
+        while(it != monsters.end()){
+            if(it->second.m_Pos == Pos1){
+                damage += Variance(-(damage / 10));
+                if(it->second.m_LifePoint - damage < 0){
+                    
+                    it->second.m_LifePoint = 0;
+                    m_XP += target->m_Level*10;
+                    if(m_XP >= m_MaxXP){
+                        levelUp();
+                    }
+                }else{
+                    it->second.m_LifePoint -= damage;
+                }
+
+                it->second.createCarPacket(sendPacket);
+                allPacket.push_back({sendPacket,it->second});
+                std::cout << "LightningStrike dealed " << damage << " to the target" << std::endl;
+            }else if(it->second.m_Pos == Pos2){
+                damage += Variance(-(damage / 10));
+                if(it->second.m_LifePoint - damage < 0){
+                    
+                    it->second.m_LifePoint = 0;
+                    m_XP += target->m_Level*10;
+                    if(m_XP >= m_MaxXP){
+                        levelUp();
+                    }
+                }else{
+                    it->second.m_LifePoint -= damage;
+                }
+
+                it->second.createCarPacket(sendPacket1);
+                allPacket.push_back({sendPacket1,it->second});
+                std::cout << "LightningStrike dealed " << damage << " to the target" << std::endl;
+            }else if(it->second.m_Pos == Pos3){
+                damage += Variance(-(damage / 10));
+                if(it->second.m_LifePoint - damage < 0){
+                    
+                    it->second.m_LifePoint = 0;
+                    m_XP += target->m_Level*10;
+                    if(m_XP >= m_MaxXP){
+                        levelUp();
+                    }
+                }else{
+                    it->second.m_LifePoint -= damage;
+                }
+
+                it->second.createCarPacket(sendPacket2);
+                allPacket.push_back({sendPacket2,it->second});
+                std::cout << "LightningStrike dealed " << damage << " to the target" << std::endl;
+            }else if(it->second.m_Pos == Pos4){
+                damage += Variance(-(damage / 10));
+                if(it->second.m_LifePoint - damage < 0){
+                    
+                    it->second.m_LifePoint = 0;
+                    m_XP += target->m_Level*10;
+                    if(m_XP >= m_MaxXP){
+                        levelUp();
+                    }
+                }else{
+                    it->second.m_LifePoint -= damage;
+                }
+
+                it->second.createCarPacket(sendPacket3);
+                allPacket.push_back({sendPacket3,it->second});
+                std::cout << "LightningStrike dealed " << damage << " to the target" << std::endl;
+            
+            }
+            it++;
+        }
+        m_ManaPoint -= 7;
+        std::cout << allPacket.size() << std::endl;
+        return allPacket;
     }
 
 
@@ -861,33 +986,22 @@ namespace redsquare
     }
 
     void Player::Berserk(){ // WARRIOR
+        if(m_ManaPoint < 7){
+            std::cout << "NOT ENOUGH MANA" << std::endl;
+            return;
+        }
         int critical = rand() % 100;
         if(critical > 90){
-            m_AttackPoint += 5;
+            m_AttackPoint += 7;
+            m_DefensePoint += 7;
+            std::cout << "+7 attack and defense point" <<  std::endl;
         }else{
             m_AttackPoint += 5;
-            if(m_DefensePoint - 10 < 0){
-                m_DefensePoint = 0;
-            }else{
-                m_DefensePoint -= 10;
-            }
+            m_DefensePoint += 5;
+            std::cout << "+5 attack and defense point" <<  std::endl;
         }
-    }
 
-    void Player::Cleanse(){
-        // TODO cleanse
-    }
-
-    void Player::Mirror(){
-        // TODO Mirror
-    }
-
-    void Player::Stun(ServerEntity *target){
-        // TODO stun for x turn
-    }
-
-    void Player::Warp(gf::Vector2i dash){
-        m_Pos = dash;
+        m_ManaPoint -= 7;
     }
 
     void Player::Shoot(ServerEntity *target){
@@ -947,10 +1061,6 @@ namespace redsquare
 
     }
 
-
-    void Player::Energize(){
-    }
-
     void Player::Torpedo(ServerEntity *target){ // RANGER DONE
 
         if(m_ManaPoint < 5){
@@ -979,12 +1089,149 @@ namespace redsquare
         std::cout << "Torpedo dealed " << damage << std::endl;
     }
 
-    void Player::SoulLink(ServerEntity *target){
-        // TODO
-    }
+    std::vector<std::tuple<Packet,Monster>> Player::Reaper(ServerEntity *target,std::map<gf::Id, Monster> monsters){ // deal damage to the 3 tile in front of user 
+
+        /* Example of use:
+
+            +O+      +       +      X
+             X       OX     XO     +O+
+                     +       + 
+
+             X: Player
+             O: Main target      70% of a basic attack damage
+             +: Other monster   60% of a basic attack damage
+        */
+
+        std::vector<std::tuple<Packet,Monster>> allPacket;
+        if(m_ManaPoint < 7){
+            std::cout << "NOT ENOUGH MANA" << std::endl;
+
+            return allPacket;
+        }
+
+        Packet sendPacket;
+        Packet sendPacket1;
+        Packet sendPacket2;
+        Packet sendPacket3;
+        Packet sendPacket4;
+
+        gf::Vector2i mainPos = target->m_Pos; // pos of the main target
+
+        /* adjacent tile */
+        gf::Vector2i Pos1{ mainPos[0]+1 , mainPos[1]}; 
+        gf::Vector2i Pos2{ mainPos[0]-1 , mainPos[1]};
+        gf::Vector2i Pos3{ mainPos[0] , mainPos[1]+1};
+        gf::Vector2i Pos4{ mainPos[0] , mainPos[1]-1};
+        /* adjacent tile */
+
+        int mainDamage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint)*0.7;
+        mainDamage += Variance(-(mainDamage / 10));
+        int sideDamage;
+
+        std::cout << "Reaper dealed " << mainDamage << " to the main target" << std::endl;
+
+        auto it = monsters.begin();
+        while(it != monsters.end()){
+            if(it->second.m_Pos == Pos1){
+                if(m_Pos != Pos2){ // avoid dealing damage to the tile behind the main target
+                    sideDamage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + it->second.m_DefensePoint) * 0.6;
+                    sideDamage += Variance(-(sideDamage / 10));
+
+                    if(it->second.m_LifePoint - sideDamage < 0){
+                        
+                        it->second.m_LifePoint = 0;
+                        m_XP += target->m_Level*10;
+                        if(m_XP >= m_MaxXP){
+                            levelUp();
+                        }
+                    }else{
+                        it->second.m_LifePoint -= sideDamage;
+                    }
+
+                    it->second.createCarPacket(sendPacket1);
+                    allPacket.push_back({sendPacket1,it->second});
+                    std::cout << "Reaper dealed " << sideDamage << " to the side target" << std::endl;
+                }
+            }else if(it->second.m_Pos == Pos2){
+                if(m_Pos != Pos1){ // avoid dealing damage to the tile behind the main target
+                    sideDamage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + it->second.m_DefensePoint) * 0.6;
+                    sideDamage += Variance(-(sideDamage / 10));
+
+                    if(it->second.m_LifePoint - sideDamage < 0){
+                        it->second.m_LifePoint = 0;
+                        m_XP += target->m_Level*10;
+                        if(m_XP >= m_MaxXP){
+                            levelUp();
+                        }
+                    }else{
+                        it->second.m_LifePoint -= sideDamage;
+                    }
+
+                    it->second.createCarPacket(sendPacket2);
+                    allPacket.push_back({sendPacket2,it->second});
+                    std::cout << "Reaper dealed " << sideDamage << " to the side target" << std::endl;
+                }
+            }else if(it->second.m_Pos == Pos3){
+                if(m_Pos != Pos4){ // avoid dealing damage to the tile behind the main target
+                    sideDamage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + it->second.m_DefensePoint) * 0.6;
+                    sideDamage += Variance(-(sideDamage / 10));
+
+                    if(it->second.m_LifePoint - sideDamage < 0){
+                        it->second.m_LifePoint = 0;
+                        m_XP += target->m_Level*10;
+                        if(m_XP >= m_MaxXP){
+                            levelUp();
+                        }
+                    }else{
+                        it->second.m_LifePoint -= sideDamage;
+                    }
+                    it->second.createCarPacket(sendPacket3);
+                    allPacket.push_back({sendPacket3,it->second});
+                    std::cout << "Reaper dealed " << sideDamage << " to the side target" << std::endl;
+                }
+            }else if(it->second.m_Pos == Pos4){
+                if(m_Pos != Pos3){ // avoid dealing damage to the tile behind the main target
+                    sideDamage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + it->second.m_DefensePoint) * 0.6;
+                    sideDamage += Variance(-(sideDamage / 10));
+
+                    if(it->second.m_LifePoint - sideDamage < 0){
+                        it->second.m_LifePoint = 0;
+                        m_XP += target->m_Level*10;
+                        if(m_XP >= m_MaxXP){
+                            levelUp();
+                        }
+                    }else{
+                        it->second.m_LifePoint -= sideDamage;
+                    }
+                    it->second.createCarPacket(sendPacket4);
+                    allPacket.push_back({sendPacket4,it->second});
+                    std::cout << "Reaper dealed " << sideDamage << " to the side target" << std::endl;
+                }
+            }
+            /* main target */ // need to be done here to obtain targetMonster value
+            if(it->second.m_Pos == target->m_Pos){
+                Monster targetMonster(it->second);
+
+                if(target->m_LifePoint - mainDamage < 0){
+                    target->m_LifePoint = 0;
+                    m_XP += target->m_Level*10;
+                    if(m_XP >= m_MaxXP){
+                        levelUp();
+                    }
+                }else{
+                    target->m_LifePoint -= mainDamage;
+                }
+
+                target->createCarPacket(sendPacket);
+                allPacket.push_back({sendPacket,targetMonster});
+            }
+            /* main target */
+            it++;
+        }
 
 
-    void Player::Reaper(ServerEntity *target){
+        m_ManaPoint -= 7;
 
+        return allPacket;
     }
 }

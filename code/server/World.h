@@ -33,6 +33,7 @@ namespace redsquare
         void spawnProps(Prop &prop,std::map<gf::Id,Prop> &m_Props,gf::Vector4u currentRoom); // spawn of props
 
         void setWalkableFromEntity(redsquare::Entity *entity, bool walkable);
+        void setWalkableFromEntity(gf::Vector2i Pos, gf::Vector2i size, bool walkable);
         void prettyPrintWalkable(); // print if the map on which tile is walkable
 
     private:

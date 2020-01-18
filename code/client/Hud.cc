@@ -235,6 +235,9 @@ namespace redsquare
         case SpellType::LightningStrike :
             texture = "img/SpellIcon/Named/LightningStrike1.png";
             break;
+        case SpellType::Reaper :
+            texture = "img/SpellIcon/Named/Reaper1.png";
+            break;
         case SpellType::Unknow :
             texture = "img/SpellIcon/Named/Basic1.png";
         default:

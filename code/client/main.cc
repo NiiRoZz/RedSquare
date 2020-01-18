@@ -35,7 +35,7 @@
 #include "../common/Packet.h"
 #include "config.h"
 
-#define NBTYPEPLAYER 3
+#define NBTYPEPLAYER 4
 
 using namespace redsquare;
 
@@ -44,7 +44,7 @@ int main( int argc, char **argv )
     if ( argc != 5 || atoi(argv[4]) > NBTYPEPLAYER || atoi(argv[4]) < 0)
     {
         std::cerr << "Usage : ./RedSquare ip port playerName typePlayer" << std::endl;
-        std::cerr << "typePlayer: " << std::endl << "0 for Magus" << std::endl << "1 for Warrior" << std::endl << "2 for Rogue" << std::endl;
+        std::cerr << "typePlayer: " << std::endl << "0 for Magus" << std::endl << "1 for Warrior" << std::endl << "2 for Rogue" <<  "3 for Ranger" <<  std::endl;
         return 1;
     }
 
@@ -373,7 +373,7 @@ int main( int argc, char **argv )
         {
             game.changeSpell(4);
         }
-       /* if( changeSpell5.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 5 )
+        if( changeSpell5.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 5 )
         {
             game.changeSpell(5);
         }
@@ -388,7 +388,7 @@ int main( int argc, char **argv )
         if( changeSpell8.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 8 )
         {
             game.changeSpell(8);
-        }*/
+        }
 
         // 2. update
         gf::Time time = clock.restart();

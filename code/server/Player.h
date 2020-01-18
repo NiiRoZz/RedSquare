@@ -14,6 +14,9 @@
 
 namespace redsquare
 {
+    // forward class
+    class Game;
+
     class Player: public ServerEntity
     {
     public:
@@ -46,6 +49,7 @@ namespace redsquare
         void spawn();
 
         void attack(SpellType spellType, ServerEntity *target);
+        std::vector<std::tuple<Packet,Monster>> attack(SpellType spellType, ServerEntity *target, std::map<gf::Id, Monster> monsters);
         
         void levelUp();
 
@@ -60,6 +64,7 @@ namespace redsquare
 
     private:
         SocketTcp m_Socket;
+        Inventory m_Inventory;
         void BasicAttack(ServerEntity *target); // DONE
         void Fireball(ServerEntity *target); // DONE
         void RangeUp(); // DONE
@@ -75,19 +80,13 @@ namespace redsquare
         void Devastate(ServerEntity *target, int zone);
         void Massacre(ServerEntity *target); // DONE
         void Impact(ServerEntity *target,gf::SquareMap m_SquareWorld);
-        void LightningStrike(ServerEntity *target, int zone);
         void Scorch(ServerEntity *target); // DONE
         void Berserk(); // DONE
-        void Cleanse();
-        void Mirror();
-        void Stun(ServerEntity *target);
-        void Warp(gf::Vector2i dash);
         void Shoot(ServerEntity *target); // DONE
         void Backstab(ServerEntity *target); // DONE
-        void Energize();
         void Torpedo(ServerEntity *target); // DONE
-        void SoulLink(ServerEntity *target);
-        void Reaper(ServerEntity *target);
+        std::vector<std::tuple<Packet,Monster>> Reaper(ServerEntity *target,std::map<gf::Id, Monster> monsters); // DONE
+        std::vector<std::tuple<Packet,Monster>> LightningStrike(ServerEntity *target,std::map<gf::Id, Monster> monsters); // need to fix smthg
         int Variance(int range); // DONE
 
     };
