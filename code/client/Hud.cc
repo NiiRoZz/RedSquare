@@ -132,6 +132,12 @@ namespace redsquare
                 sprite.setScale((HudSpellSize / HudSpellTextureSize)*coordinates.getRelativeSize({ 0.001f, 0.001f }).height);
                 target.draw(sprite, states);
                 x += 1.2;
+                
+                if(it.first == m_Game.m_CurrentSpell){
+                    sprite.setTexture( gResourceManager().getTexture("img/SpellIcon/frame-9-red.png") );
+                    target.draw(sprite, states);
+                }
+
 
                 if ( index % 4 == 0 )
                 {

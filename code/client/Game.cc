@@ -327,6 +327,8 @@ namespace redsquare
 
                 case PacketType::PlayerTurn:
                 {
+                    // TODO cd on some spell
+
                     Player* myPlayer = getMyPlayer();
 
                     if ( myPlayer == nullptr )
@@ -658,7 +660,8 @@ namespace redsquare
 
         auto currentPlayer = Game::getMyPlayer();
         if(currentPlayer != nullptr){
-            Game::m_CurrentSpell = currentPlayer->m_SpellTab[spell-1];
+            m_CurrentSpell = currentPlayer->m_SpellTab[spell-1];
+            // render selector
         }else{
             std::cout << "ERROR" <<std::endl;
         }
