@@ -121,12 +121,12 @@ namespace redsquare
         float y = 0;
         uint index = 1;
 
-        for (auto it = m_spellsTextures.begin(); it != m_spellsTextures.end(); ++it)
+        for (auto &it: m_SpellsTextures)
         {
-            if (*it != nullptr)
+            if (it.second != nullptr)
             {
                 gf::Sprite sprite;
-                sprite.setTexture(**it);
+                sprite.setTexture(*(it.second));
                 sprite.setAnchor(gf::Anchor::TopLeft);
                 sprite.setPosition(coordinates.getRelativePoint({ 0.43f, 0.86f })+gf::Vector2f(x, y)+ HudSpellSize*gf::Vector2f(x, y)*coordinates.getRelativeSize({ 0.001f, 0.001f }).height);
                 sprite.setScale((HudSpellSize / HudSpellTextureSize)*coordinates.getRelativeSize({ 0.001f, 0.001f }).height);
@@ -253,13 +253,13 @@ namespace redsquare
 
         auto message = static_cast<SpellUpdateMessage*>(msg);
 
-        m_spellsTextures.clear();
+        m_SpellsTextures.clear();
 
         for(auto it = message->spells.begin(); it != message->spells.end(); ++it)
         {
             if (*it != SpellType::Unknow)
             {
-                m_spellsTextures.push_back(getTextureFromSpellType(*it));
+                m_SpellsTextures.insert(std::make_pair(*it,getTextureFromSpellType(*it)));
             }
         }
 

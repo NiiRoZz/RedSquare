@@ -41,7 +41,7 @@ namespace redsquare
         gf::Font &m_Font;
         //View of the game
         gf::ExtendView &m_View;
-        std::vector<gf::Texture*> m_spellsTextures;
+        std::map<SpellType, gf::Texture*> m_SpellsTextures;
 
         bool m_ShowMap;
         bool m_HideChat;
