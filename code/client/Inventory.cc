@@ -148,7 +148,7 @@ namespace redsquare
                                 continue;
                             }
 
-                            gf::Vector2f posVector = startGearPos + gf::Vector2f({InventoryWindowSize[0] * 0.2, sizeItem * pos + SpaceBetweenSlots * pos});
+                            gf::Vector2f posVector = startGearPos + gf::Vector2f({InventoryWindowSize[0] * 0.2f, sizeItem * pos + SpaceBetweenSlots * pos});
                             x.second.update(posVector, scale);
                             break;
                         }
@@ -183,35 +183,47 @@ namespace redsquare
             {
                 case gf::EventType::MouseButtonPressed:
                 {
-                    bool found = false;
-
-                    for( auto &x: m_SpecialSlots)
+                    switch (event.mouseButton.button)
                     {
-                        InventoryWidget *itemWidget = x.second.getItemWidget(event.mouseButton.coords);
-                        if ( itemWidget != nullptr )
+                        case gf::MouseButton::Left:
                         {
-                            itemWidget->currDragging = true;
-                            m_OldSlot = &(x.second);
-                            m_CurrMovingWidget = itemWidget;
-                            m_OffsetDrag = event.mouseButton.coords - itemWidget->getPosition();
-                            found = true;
+                            bool found = false;
+
+                            for( auto &x: m_SpecialSlots)
+                            {
+                                InventoryWidget *itemWidget = x.second.getItemWidget(event.mouseButton.coords);
+                                if ( itemWidget != nullptr )
+                                {
+                                    itemWidget->currDragging = true;
+                                    m_OldSlot = &(x.second);
+                                    m_CurrMovingWidget = itemWidget;
+                                    m_OffsetDrag = event.mouseButton.coords - itemWidget->getPosition();
+                                    found = true;
+                                    break;
+                                }
+                            }
+
+                            if (!found)
+                            {
+                                for( auto &x: m_CargoSlots)
+                                {
+                                    InventoryWidget *itemWidget = x.second.getItemWidget(event.mouseButton.coords);
+                                    if ( itemWidget != nullptr )
+                                    {
+                                        itemWidget->currDragging = true;
+                                        m_OldSlot = &(x.second);
+                                        m_CurrMovingWidget = itemWidget;
+                                        m_OffsetDrag = event.mouseButton.coords - itemWidget->getPosition();
+                                        break;
+                                    }
+                                }
+                            }
                             break;
                         }
-                    }
 
-                    if (!found)
-                    {
-                        for( auto &x: m_CargoSlots)
+                        case gf::MouseButton::Right:
                         {
-                            InventoryWidget *itemWidget = x.second.getItemWidget(event.mouseButton.coords);
-                            if ( itemWidget != nullptr )
-                            {
-                                itemWidget->currDragging = true;
-                                m_OldSlot = &(x.second);
-                                m_CurrMovingWidget = itemWidget;
-                                m_OffsetDrag = event.mouseButton.coords - itemWidget->getPosition();
-                                break;
-                            }
+                            break;
                         }
                     }
 
@@ -375,7 +387,6 @@ namespace redsquare
 
         if (message)
         {
-
             if (message->itemMessage.oldSlotType == InventorySlotType::Cargo)
             {
                 auto oldIt = m_CargoItems.find(message->itemMessage.oldPos);
