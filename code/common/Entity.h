@@ -11,7 +11,7 @@ namespace redsquare
     class Entity
     {
     public:
-        gf::Id m_EntityID;
+        const gf::Id m_EntityID;
         EntitySubType m_TypeOfEntity;
 
         gf::Vector2i m_Pos;
