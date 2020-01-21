@@ -7,9 +7,9 @@ namespace redsquare
 
     }
 
-    ssize_t Inventory::addItem(InventorySlotType slotType, Item &&item)
+    ssize_t Inventory::addItem(InventorySlotType slotType, ServerItem &&item)
     {
-        if (slotType == InventorySlotType::Cargo)
+        if (slotType == InventorySlotType::Cargo && item.canBeInSlot(slotType))
         {
             for(uint i = 0; i < RowCargoSlotNmb; ++i )
             {
@@ -25,7 +25,7 @@ namespace redsquare
         }
         else
         {
-            if (m_SpecialItems.find(slotType) == m_SpecialItems.end())
+            if (m_SpecialItems.find(slotType) == m_SpecialItems.end() && item.canBeInSlot(slotType))
             {
                 m_SpecialItems.insert(std::make_pair(slotType, std::move(item)));
                 return 0;
@@ -35,9 +35,9 @@ namespace redsquare
         return -1;
     }
 
-    bool Inventory::addItem(InventorySlotType slotType, Item &&item, uint pos)
+    bool Inventory::addItem(InventorySlotType slotType, ServerItem &&item, uint pos)
     {
-        if (slotType == InventorySlotType::Cargo)
+        if (slotType == InventorySlotType::Cargo && item.canBeInSlot(slotType))
         {
             auto it = m_CargoItems.find(pos);
             if (it == m_CargoItems.end())
@@ -49,7 +49,7 @@ namespace redsquare
         else
         {
             auto it = m_SpecialItems.find(slotType);
-            if (it == m_SpecialItems.end())
+            if (it == m_SpecialItems.end() && item.canBeInSlot(slotType))
             {
                 m_SpecialItems.insert(std::make_pair(slotType, std::move(item)));
                 return true;
@@ -83,7 +83,7 @@ namespace redsquare
         return false;
     }
 
-    Item* Inventory::getItem(InventorySlotType slotType, uint pos)
+    ServerItem* Inventory::getItem(InventorySlotType slotType, uint pos)
     {
         if (slotType == InventorySlotType::Cargo)
         {
@@ -112,7 +112,7 @@ namespace redsquare
             auto oldIt = m_CargoItems.find(moveItem.oldPos);
             if (oldIt != m_CargoItems.end())
             {
-                Item item = std::move(oldIt->second);
+                ServerItem item = std::move(oldIt->second);
                 m_CargoItems.erase(oldIt);
 
                 if ( addItem(moveItem.newSlotType, std::move(item), moveItem.newPos) )
@@ -126,7 +126,7 @@ namespace redsquare
             auto oldIt = m_SpecialItems.find(moveItem.oldSlotType);
             if (oldIt != m_SpecialItems.end())
             {
-                Item item = std::move(oldIt->second);
+                ServerItem item = std::move(oldIt->second);
                 m_SpecialItems.erase(oldIt);
 
                 if ( addItem(moveItem.newSlotType, std::move(item), moveItem.newPos) )

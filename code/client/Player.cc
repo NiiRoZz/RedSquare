@@ -12,20 +12,51 @@
 
 namespace redsquare
 {
+    gf::Texture* Player::getTexture( const EntitySubType type )
+    {
+        switch (type)
+        {
+            case EntitySubType::Magus:
+                return &gResourceManager().getTexture("img/Character/Magus.png");
+                break;
+
+            case EntitySubType::Warrior:
+                return &gResourceManager().getTexture("img/Character/Warrior.png");
+                break;
+
+            case EntitySubType::Rogue:
+                return &gResourceManager().getTexture("img/Character/Rogue.png");
+                break;
+
+            case EntitySubType::Ranger:
+                return &gResourceManager().getTexture("img/Character/Ranger.png");
+                break;
+            
+            case EntitySubType::Healer:
+                return &gResourceManager().getTexture("img/Character/Magus.png");
+                break;
+                
+            default:
+                break;
+        }
+
+        return &gResourceManager().getTexture("img/Character/Magus.png");
+    }
+
     Player::Player( gf::Id entityID )
     : redsquare::Entity(entityID,static_cast<EntitySubType>(rand() % static_cast<int>(EntitySubType::EntityClassCount)))
     , m_Font(gResourceManager().getFont("font/arial.ttf"))
+    , m_PlayerTexture(Player::getTexture(EntitySubType::Magus))
     {
         m_Pos = gf::Vector2i( 0, 0 );
-        loadTexture();
     }
 
     Player::Player( gf::Id entityID, EntitySubType type, gf::Vector2i pos )
     : redsquare::Entity(entityID,type)
     , m_Font(gResourceManager().getFont("font/arial.ttf"))
+    , m_PlayerTexture(Player::getTexture(type))
     {
         m_Pos = pos;
-        loadTexture(type);
     }
 
     void Player::render(gf::RenderTarget& target, const gf::RenderStates& states)
@@ -42,7 +73,7 @@ namespace redsquare
 
         sprite.setPosition( m_Pos * World::TileSize );
         sprite.setScale( 1 );
-        sprite.setTexture( *playerTexture );
+        sprite.setTexture( *m_PlayerTexture );
         target.draw(sprite, states);
         
         gf::Color4f color(255,0,0,174);
@@ -97,35 +128,6 @@ namespace redsquare
     void Player::update(gf::Time time)
     {
         //Do something
-    }
-
-    void Player::loadTexture( const EntitySubType type )
-    {
-        switch (type)
-        {
-            case EntitySubType::Magus:
-                playerTexture = &gResourceManager().getTexture("img/Character/Magus.png");
-                break;
-
-            case EntitySubType::Warrior:
-                playerTexture = &gResourceManager().getTexture("img/Character/Warrior.png");
-                break;
-
-            case EntitySubType::Rogue:
-                playerTexture = &gResourceManager().getTexture("img/Character/Rogue.png");
-                break;
-
-            case EntitySubType::Ranger:
-                playerTexture = &gResourceManager().getTexture("img/Character/Ranger.png");
-                break;
-            
-            case EntitySubType::Healer:
-                playerTexture = &gResourceManager().getTexture("img/Character/Magus.png");
-                break;
-                
-            default:
-                break;
-        }
     }
 
     bool Player::canAttack(gf::Vector2i targetPos, Game &game)

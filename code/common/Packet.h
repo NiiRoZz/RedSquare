@@ -273,6 +273,7 @@ namespace redsquare
         uint pos;
         ItemType typeItem;
         bool removeItem;
+        uint8_t slotMask;
     };
 
     struct MoveItem
@@ -417,6 +418,7 @@ namespace redsquare
                 ar | packet.updateItem.pos;
                 ar | packet.updateItem.typeItem;
                 ar | packet.updateItem.removeItem;
+                ar | packet.updateItem.slotMask;
                 break;
             }
 

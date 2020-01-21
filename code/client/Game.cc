@@ -158,7 +158,7 @@ namespace redsquare
         //Player want to move
         if ( m_MovePlayer.first[0] != 0 || m_MovePlayer.first[1] != 0 )
         {
-            //don't forget to call m_CanPlay false when sent action
+            //don't forget to call m_CanPlay false when send action
             m_CanPlay = false;
 
             Packet packet;
@@ -205,7 +205,7 @@ namespace redsquare
         }
         else if ( m_AttackX != 0 || m_AttackY != 0 )
         {
-            //don't forget to call m_CanPlay false when sent action
+            //don't forget to call m_CanPlay false when send action
             m_CanPlay = false;
 
             Packet packet;
@@ -223,7 +223,7 @@ namespace redsquare
         }
         else if ( m_PassTurn )
         {
-            //don't forget to call m_CanPlay false when sent action
+            //don't forget to call m_CanPlay false when send action
             m_CanPlay = false;
 
             Packet packet;
@@ -384,6 +384,14 @@ namespace redsquare
                             auto it = m_Players.insert( std::make_pair( packet.spawnEntity.entityID, Player( packet.spawnEntity.entityID, packet.spawnEntity.typeOfEntity, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) ) ) );
                             assert( it.second );
 
+                            if (packet.spawnEntity.entityID == m_PlayerID)
+                            {
+                                MyPlayerReceivedTypeMessage message;
+                                message.entityType = packet.spawnEntity.typeOfEntity;
+
+                                gMessageManager().sendMessage(&message);
+                            }
+
                             m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&(it.first->second)), false);
                             break;
                         }
@@ -502,7 +510,6 @@ namespace redsquare
 
                 case PacketType::MoveItem:
                 {
-
                     ItemMoveMessage message;
                     message.itemMessage = packet.moveItem;
 

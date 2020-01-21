@@ -62,9 +62,9 @@ namespace redsquare
         //Send update of the inventory to client.  pos is used only if slotType == Cargo
         void sendUpdateItem(InventorySlotType slotType, bool remove, uint pos = 0u);
 
+        void defaultInventoryStuff();
+
     private:
-        SocketTcp m_Socket;
-        Inventory m_Inventory;
         void BasicAttack(ServerEntity *target); // DONE
         void Fireball(ServerEntity *target); // DONE
         void RangeUp(); // DONE
@@ -89,6 +89,8 @@ namespace redsquare
         std::vector<Monster*> LightningStrike(ServerEntity *target,std::map<gf::Id, Monster> &monsters); // need to fix smthg
         int Variance(int range); // DONE
 
+        SocketTcp m_Socket;
+        Inventory m_Inventory;
     };
 }
 

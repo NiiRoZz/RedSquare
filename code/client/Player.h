@@ -19,6 +19,8 @@ namespace redsquare
     class Player: public gf::Entity, public redsquare::Entity
     {
     public:
+        static gf::Texture* getTexture(const EntitySubType type);
+        
         /* Characteristic */
         int m_ManaPoint;
         int m_MaxManaPoint;
@@ -31,8 +33,6 @@ namespace redsquare
         Player( gf::Id entityID );
         Player( gf::Id entityID, EntitySubType type, gf::Vector2i pos );
 
-        void loadTexture(const EntitySubType type = EntitySubType::Magus);
-
         virtual void update(gf::Time time) override;
 
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
@@ -41,7 +41,7 @@ namespace redsquare
         bool canMove( gf::Vector2i targetPos, std::map<gf::Id, Player> &players, std::map<gf::Id, Monster> &monsters, std::map<gf::Id, Prop> &props, gf::SquareMap &map );
 
     private:
-        gf::Texture *playerTexture;
+        gf::Texture *m_PlayerTexture;
         gf::Font &m_Font;
 
     };

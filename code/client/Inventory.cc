@@ -22,10 +22,12 @@ namespace redsquare
     , m_PlayerWidget(gResourceManager().getTexture("img/goblin.png"))
     , m_OldSlot(nullptr)
     , m_CurrMovingWidget(nullptr)
+    , m_CurrMovingItem(nullptr)
     {
         gMessageManager().registerHandler<InventoryUpdateMessage>(&Inventory::onInventoryUpdate, this);
         gMessageManager().registerHandler<ItemUpdateMessage>(&Inventory::onItemUpdate, this);
         gMessageManager().registerHandler<ItemMoveMessage>(&Inventory::onItemMove, this);
+        gMessageManager().registerHandler<MyPlayerReceivedTypeMessage>(&Inventory::onMyPlayerReceived, this);
 
         for(uint i = 0; i < RowCargoSlotNmb; ++i )
         {
@@ -45,7 +47,15 @@ namespace redsquare
 
     void Inventory::update(gf::Time time)
     {
-        
+        for( auto &x: m_CargoSlots )
+        {
+            x.second.update(time);
+        }
+
+        for( auto &x: m_SpecialSlots )
+        {
+            x.second.update(time);
+        }
     }
 
     void Inventory::render(gf::RenderTarget& target, const gf::RenderStates& states)
@@ -157,7 +167,7 @@ namespace redsquare
                  
                 m_UI.end();
 
-                target.draw(m_UI);
+                target.draw( m_UI , states );
                 target.draw( m_PlayerWidget, states );
 
                 for( auto &x: m_CargoSlots )
@@ -168,6 +178,12 @@ namespace redsquare
                 for( auto &x: m_SpecialSlots )
                 {
                     x.second.render( target, states );
+                }
+
+                //Draw the current moving widget, so he can be over any slot case
+                if (m_CurrMovingWidget != nullptr)
+                {
+                    target.draw( *m_CurrMovingWidget, states );
                 }
             }
         }
@@ -197,6 +213,7 @@ namespace redsquare
                                     itemWidget->currDragging = true;
                                     m_OldSlot = &(x.second);
                                     m_CurrMovingWidget = itemWidget;
+                                    m_CurrMovingItem = x.second.getItem();
                                     m_OffsetDrag = event.mouseButton.coords - itemWidget->getPosition();
                                     found = true;
                                     break;
@@ -213,6 +230,7 @@ namespace redsquare
                                         itemWidget->currDragging = true;
                                         m_OldSlot = &(x.second);
                                         m_CurrMovingWidget = itemWidget;
+                                        m_CurrMovingItem = x.second.getItem();
                                         m_OffsetDrag = event.mouseButton.coords - itemWidget->getPosition();
                                         break;
                                     }
@@ -232,13 +250,13 @@ namespace redsquare
 
                 case gf::EventType::MouseButtonReleased:
                 {
-                    if (m_CurrMovingWidget != nullptr)
+                    if (m_CurrMovingWidget != nullptr && m_CurrMovingItem != nullptr)
                     {
-                        bool found = false;
+                        bool sendedPacket = false;
 
                         for( auto &x: m_SpecialSlots)
                         {
-                            if (x.second.contains(event.mouseButton.coords))
+                            if (x.second.contains(event.mouseButton.coords) && !(x.second.haveItem()) && m_CurrMovingItem->canBeInSlot(x.second.getSlotType()))
                             {
                                 //Request move item here
                                 Packet packet;
@@ -251,16 +269,16 @@ namespace redsquare
 
                                 m_Game.sendPacket(packet);
 
-                                found = true;
+                                sendedPacket = true;
                                 break;
                             }
                         }
 
-                        if (!found)
+                        if (!sendedPacket)
                         {
                             for( auto &x: m_CargoSlots)
                             {
-                                if (x.second.contains(event.mouseButton.coords))
+                                if (x.second.contains(event.mouseButton.coords) && !(x.second.haveItem()) && m_CurrMovingItem->canBeInSlot(x.second.getSlotType()))
                                 {
                                     //Request move item here
                                     Packet packet;
@@ -273,14 +291,21 @@ namespace redsquare
 
                                     m_Game.sendPacket(packet);
 
+                                    sendedPacket = true;
                                     break;
                                 }
                             }
                         }
 
+                        if (sendedPacket)
+                        {
+                            m_OldSlot->setMoveItemRequest();
+                        }
+                        
                         m_CurrMovingWidget->currDragging = false;
                         m_OldSlot = nullptr;
                         m_CurrMovingWidget = nullptr;
+                        m_CurrMovingItem = nullptr;
                         m_OffsetDrag = {0,0};
                     }
                 }
@@ -297,26 +322,44 @@ namespace redsquare
         }
     }
 
-    void Inventory::addItem(InventorySlotType slotType, Item &&item, uint pos)
+    void Inventory::addItem(InventorySlotType slotType, ClientItem &&item, uint pos)
     {
         if (slotType == InventorySlotType::Cargo)
         {
             auto it = m_CargoItems.find(pos);
             auto it2 = m_CargoSlots.find(pos);
-            if (it == m_CargoItems.end() && it2 != m_CargoSlots.end())
+            if ( it2 != m_CargoSlots.end() )
             {
-                it2->second.setItem(&item);
-                m_CargoItems.insert(std::make_pair(pos, std::move(item)));
+                //If item exist already, we replace it by the new one
+                if ( it != m_CargoItems.end() )
+                {
+                    it2->second.setItem(nullptr);
+                    m_CargoItems.erase(it);
+                }
+
+                auto it3 = m_CargoItems.emplace(pos, std::move(item));
+                assert(it3.second);
+                
+                it2->second.setItem(&(it3.first->second));
             }
         }
         else
         {
             auto it = m_SpecialItems.find(slotType);
             auto it2 = m_SpecialSlots.find(slotType);
-            if (it == m_SpecialItems.end() && it2 != m_SpecialSlots.end())
+            if ( it2 != m_SpecialSlots.end() )
             {
-                it2->second.setItem(&item);
-                m_SpecialItems.insert(std::make_pair(slotType, std::move(item)));
+                //If item exist already, we replace it by the new one
+                if (it != m_SpecialItems.end())
+                {
+                    it2->second.setItem(nullptr);
+                    m_SpecialItems.erase(it);
+                }
+
+                auto it3 = m_SpecialItems.emplace(slotType, std::move(item));
+                assert(it3.second);
+
+                it2->second.setItem(&(it3.first->second));
             }
         }
     }
@@ -352,7 +395,7 @@ namespace redsquare
                 }
                 else
                 {
-                    Item newItem(message->itemMessage.typeItem);
+                    ClientItem newItem(message->itemMessage.typeItem, message->itemMessage.slotMask);
                     addItem(message->itemMessage.slotType, std::move(newItem), message->itemMessage.pos);
                 }
             }
@@ -370,7 +413,7 @@ namespace redsquare
                 }
                 else
                 {
-                    Item newItem(message->itemMessage.typeItem);
+                    ClientItem newItem(message->itemMessage.typeItem, message->itemMessage.slotMask);
                     addItem(message->itemMessage.slotType, std::move(newItem));
                 }
             }
@@ -394,7 +437,7 @@ namespace redsquare
                 if (oldIt != m_CargoItems.end() && oldIt2 != m_CargoSlots.end())
                 {
                     oldIt2->second.setItem(nullptr);
-                    Item item = std::move(oldIt->second);
+                    ClientItem item = std::move(oldIt->second);
                     m_CargoItems.erase(oldIt);
 
                     addItem(message->itemMessage.newSlotType, std::move(item), message->itemMessage.newPos);
@@ -407,7 +450,7 @@ namespace redsquare
                 if (oldIt != m_SpecialItems.end() && oldIt2 != m_SpecialSlots.end())
                 {
                     oldIt2->second.setItem(nullptr);
-                    Item item = std::move(oldIt->second);
+                    ClientItem item = std::move(oldIt->second);
                     m_SpecialItems.erase(oldIt);
 
                     addItem(message->itemMessage.newSlotType, std::move(item), message->itemMessage.newPos);
@@ -416,5 +459,20 @@ namespace redsquare
         }
         
         return gf::MessageStatus::Keep;
+    }
+
+    gf::MessageStatus Inventory::onMyPlayerReceived(gf::Id id, gf::Message *msg)
+    {
+        assert(id == MyPlayerReceivedTypeMessage::type);
+        
+        MyPlayerReceivedTypeMessage *message = static_cast<MyPlayerReceivedTypeMessage*>(msg);
+
+        if (message)
+        {
+            gf::Texture* texturePlayer = Player::getTexture(message->entityType);
+            m_PlayerWidget.setDefaultSprite(*texturePlayer, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
+            m_PlayerWidget.setDisabledSprite(*texturePlayer, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
+            m_PlayerWidget.setSelectedSprite(*texturePlayer, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
+        }
     }
 }

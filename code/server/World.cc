@@ -331,7 +331,7 @@ namespace redsquare
         if (prop.m_Size == gf::Vector2u {1,1}){ // 1x1 props
             do{
                 if(numberOfTry == 10){
-                    m_Props.erase(prop.m_EntityID);
+                    m_Props.erase(prop.getEntityID());
                     return;
                 }
                 numberOfTry++;
@@ -341,7 +341,7 @@ namespace redsquare
         }else{ // props bigger than 1x1
             do{
                 if(numberOfTry == 10){
-                    m_Props.erase(prop.m_EntityID);
+                    m_Props.erase(prop.getEntityID());
                     return;
                 }
                 numberOfTry++;
@@ -353,7 +353,7 @@ namespace redsquare
         auto it = m_Props.begin();
         while ( it != m_Props.end() )
         {
-            if (it->first != prop.m_EntityID && it->second.isInsideMe(prop))
+            if (it->first != prop.getEntityID() && it->second.isInsideMe(prop))
             {
                 spawnProps(prop,m_Props,currentRoom);
                 return;
@@ -382,7 +382,7 @@ namespace redsquare
 
         while ( it != m_Monsters.end() )
         {
-            if( it->first != monster.m_EntityID )
+            if( it->first != monster.getEntityID() )
             {
                 if (it->second.isInsideMe(monster))
                 {

@@ -111,12 +111,7 @@ namespace redsquare
 
         itNewPlayer->second.sendUpdateOfSpells();
 
-        Item testItem(ItemType::Sword);
-        ssize_t pos = itNewPlayer->second.getInventory().addItem(InventorySlotType::Cargo, std::move(testItem));
-        if (pos != -1)
-        {
-            itNewPlayer->second.sendUpdateItem(InventorySlotType::Cargo, false, pos);
-        }
+        itNewPlayer->second.defaultInventoryStuff();
 
         return id;
     }
@@ -839,9 +834,9 @@ namespace redsquare
                                 if( currentMonster->m_LifePoint <= 0 ){
                                     sendPacket.type = PacketType::EntityDisconnected;
                                     sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
-                                    sendPacket.entityDisconnected.entityID = currentMonster->m_EntityID;
+                                    sendPacket.entityDisconnected.entityID = currentMonster->getEntityID();
                                     m_World.setWalkableFromEntity( currentMonster, true);
-                                    m_Monsters.erase(currentMonster->m_EntityID);
+                                    m_Monsters.erase(currentMonster->getEntityID());
                                 }else{
                                     currentMonster->createCarPacket(sendPacket);
                                 }
@@ -875,9 +870,9 @@ namespace redsquare
                                 if( currentMonster->m_LifePoint <= 0 ){
                                     sendPacket.type = PacketType::EntityDisconnected;
                                     sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
-                                    sendPacket.entityDisconnected.entityID = currentMonster->m_EntityID;
+                                    sendPacket.entityDisconnected.entityID = currentMonster->getEntityID();
                                     m_World.setWalkableFromEntity( currentMonster, true);
-                                    m_Monsters.erase(currentMonster->m_EntityID);
+                                    m_Monsters.erase(currentMonster->getEntityID());
                                 }else{
                                     currentMonster->createCarPacket(sendPacket);
                                 }
@@ -902,12 +897,12 @@ namespace redsquare
                             }else{   
                                 sendPacket.type = PacketType::EntityDisconnected;
                                 sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
-                                sendPacket.entityDisconnected.entityID = targetMonster->m_EntityID;
+                                sendPacket.entityDisconnected.entityID = targetMonster->getEntityID();
 
                                 m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(targetMonster), true);
                                 m_World.m_SquareWorld.setTransparent(targetMonster->m_Pos, true);
 
-                                m_Monsters.erase(targetMonster->m_EntityID);
+                                m_Monsters.erase(targetMonster->getEntityID());
                             }
 
                             sendPacketToAllPlayers( sendPacket );
@@ -923,12 +918,12 @@ namespace redsquare
                         Packet sendPacket;
                         sendPacket.type = PacketType::EntityDisconnected;
                         sendPacket.entityDisconnected.typeEntity = EntityType::Prop;
-                        sendPacket.entityDisconnected.entityID = targetProp->m_EntityID;
+                        sendPacket.entityDisconnected.entityID = targetProp->getEntityID();
 
                         m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(targetProp), true);
                         m_World.m_SquareWorld.setTransparent(targetProp->m_Pos);
 
-                        m_Props.erase(targetProp->m_EntityID);
+                        m_Props.erase(targetProp->getEntityID());
 
                         sendPacketToAllPlayers( sendPacket );
                     }

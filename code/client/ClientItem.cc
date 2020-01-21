@@ -1,9 +1,9 @@
-#include "Item.h"
+#include "ClientItem.h"
 #include "../common/Singletons.h"
 
 namespace redsquare
 {
-    gf::Texture& Item::getTexture( ItemType type )
+    gf::Texture& ClientItem::getTexture( ItemType type )
     {
         switch (type)
         {
@@ -13,16 +13,18 @@ namespace redsquare
                 break;
             }
         }
+
+        return gResourceManager().getTexture("img/attackCursor.png");
     }
 
-    Item::Item(ItemType type)
-    : m_Type(type)
-    , m_Icon(Item::getTexture(type))
+    ClientItem::ClientItem(ItemType type, uint8_t slotMask)
+    : Item(type, slotMask)
+    , m_Icon(ClientItem::getTexture(type))
     {
         
     }
 
-    gf::Texture& Item::getIcon() const
+    gf::Texture& ClientItem::getIcon() const
     {
         return m_Icon;
     }

@@ -3,7 +3,9 @@
 
 #include "InventoryWidget.h"
 #include "../common/Packet.h"
-#include "Item.h"
+#include "ClientItem.h"
+
+#include <gf/Time.h>
 
 namespace redsquare
 {
@@ -16,6 +18,8 @@ namespace redsquare
 
         void update(gf::Vector2f pos, gf::Vector2f scale);
 
+        void update(gf::Time time);
+
         bool contains(gf::Vector2f coords);
 
         InventoryWidget* getItemWidget(gf::Vector2f coords);
@@ -25,18 +29,25 @@ namespace redsquare
 
         bool haveItem() const;
 
-        Item *getItem() const;
+        ClientItem *getItem() const;
 
-        void setItem(Item *item);
+        void setItem(ClientItem *item);
+
+        void setMoveItemRequest();
 
     private:
+        void resetMoveItemRequest();
+
         gf::Texture &m_BackgroundTexture;
         InventoryWidget m_BackgroundWidget;
-        Item *m_Item;
+        ClientItem *m_Item;
         InventoryWidget m_ItemWidget;
 
         InventorySlotType m_SlotType;
         uint m_SlotPos;
+
+        bool m_MoveItemRequested;
+        gf::Time m_TimeSinceMoveItemRequest;
     };
 }
 

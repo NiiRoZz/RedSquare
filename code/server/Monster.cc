@@ -97,7 +97,7 @@ namespace redsquare
     {
         packet.type = PacketType::EntityCar;
         packet.entityCar.entityType = EntityType::Monster;
-        packet.entityCar.entityID = m_EntityID;
+        packet.entityCar.entityID = getEntityID();
 
         packet.entityCar.m_LifePoint = m_LifePoint;
         packet.entityCar.m_MaxLifePoint = m_MaxLifePoint;

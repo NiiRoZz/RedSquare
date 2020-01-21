@@ -31,6 +31,12 @@ namespace redsquare
         static const gf::Id type = "ItemMove"_id;
         MoveItem itemMessage;
     };
+
+    struct MyPlayerReceivedTypeMessage : public gf::Message
+    {
+        static const gf::Id type = "MyPlayerReceived"_id;
+        EntitySubType entityType;
+    };
 }
 
 #endif // REDSQUARE_COMMON_MESSAGE_H

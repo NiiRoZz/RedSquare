@@ -155,13 +155,39 @@ namespace redsquare
         packet.updateItem.pos = pos;
         packet.updateItem.removeItem = remove;
 
-        Item* item = m_Inventory.getItem(slotType, pos);
+        ServerItem* item = m_Inventory.getItem(slotType, pos);
         if (item != nullptr)
         {
             packet.updateItem.typeItem = item->getType();
+            packet.updateItem.slotMask = item->getSlotMask();
         }
 
         sendPacket(packet);
+    }
+    
+    void Player::defaultInventoryStuff()
+    {
+        switch (m_TypeOfEntity)
+        {
+            case EntitySubType::Magus:
+            {
+                //Example how to spawn item in weapon slot
+                ServerItem item1(ItemType::Sword);
+                ssize_t pos = m_Inventory.addItem(InventorySlotType::Weapon, std::move(item1));
+                if (pos != -1)
+                {
+                    sendUpdateItem(InventorySlotType::Weapon, false, pos);
+                }
+
+                //Example how to spawn item in cargo slot
+                ServerItem item2(ItemType::Sword);
+                pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item2));
+                if (pos != -1)
+                {
+                    sendUpdateItem(InventorySlotType::Cargo, false, pos);
+                }
+            }
+        }
     }
 
     void Player::levelUp(){ // method to level up a player
@@ -284,7 +310,7 @@ namespace redsquare
     {
         packet.type = PacketType::EntityCar;
         packet.entityCar.entityType = EntityType::Player;
-        packet.entityCar.entityID = m_EntityID;
+        packet.entityCar.entityID = getEntityID();
 
         packet.entityCar.m_LifePoint = m_LifePoint;
         packet.entityCar.m_ManaPoint = m_ManaPoint;

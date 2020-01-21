@@ -11,7 +11,6 @@ namespace redsquare
     class Entity
     {
     public:
-        const gf::Id m_EntityID;
         EntitySubType m_TypeOfEntity;
 
         gf::Vector2i m_Pos;
@@ -36,6 +35,11 @@ namespace redsquare
 
         bool isInsideMe(gf::Vector2i pos);
         bool isInsideMe(Entity &entity);
+
+        gf::Id getEntityID() const;
+
+    private:
+        gf::Id m_EntityID;
     };
 }
 

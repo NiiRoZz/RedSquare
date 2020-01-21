@@ -37,8 +37,9 @@ namespace redsquare
         gf::MessageStatus onInventoryUpdate(gf::Id id, gf::Message *msg);
         gf::MessageStatus onItemUpdate(gf::Id id, gf::Message *msg);
         gf::MessageStatus onItemMove(gf::Id id, gf::Message *msg);
+        gf::MessageStatus onMyPlayerReceived(gf::Id id, gf::Message *msg);
 
-        void addItem(InventorySlotType slotType, Item &&item, uint pos = 0);
+        void addItem(InventorySlotType slotType, ClientItem &&item, uint pos = 0);
 
         const float IconSize = 16.f;
 
@@ -53,18 +54,19 @@ namespace redsquare
         const float HeightPercentageSpecialSlot = 0.3;
         const float WidthPositionGearStuff = 0.35;
         std::map<InventorySlotType, InventorySlot> m_SpecialSlots;
-        std::map<InventorySlotType, Item> m_SpecialItems;
+        std::map<InventorySlotType, ClientItem> m_SpecialItems;
 
         const uint RowCargoSlotNmb = 6;
         const uint ColumnCargoSlotNmb = 10;
         const float SpaceBetweenSlots = 5.f;
         const float StartPercentagePos = 0.4;
         std::map<uint, InventorySlot> m_CargoSlots;
-        std::map<uint, Item> m_CargoItems;
+        std::map<uint, ClientItem> m_CargoItems;
 
         //For drag
         InventorySlot *m_OldSlot;
         InventoryWidget *m_CurrMovingWidget;
+        ClientItem *m_CurrMovingItem;
         gf::Vector2f m_OffsetDrag;
     };
 }

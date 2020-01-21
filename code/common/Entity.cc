@@ -153,4 +153,9 @@ namespace redsquare
 
         return false;
     }
+
+    gf::Id Entity::getEntityID() const
+    {
+        return m_EntityID;
+    }
 }
