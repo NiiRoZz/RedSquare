@@ -8,11 +8,12 @@
 #include <gf/Color.h>
 #include <gf/Text.h>
 
+#define NBMONSTER 5;
+
 namespace redsquare
 {
     Monster::Monster( gf::Id entityID )
-    : redsquare::Entity(entityID,static_cast<EntitySubType>(rand() % static_cast<int>(EntitySubType::EntityClassCount)))
-    , m_Font(gResourceManager().getFont("font/arial.ttf"))
+    : m_Font(gResourceManager().getFont("font/arial.ttf"))
     {
         m_Pos = gf::Vector2i( 0, 0 );
         loadTexture();
@@ -30,36 +31,29 @@ namespace redsquare
     {
         switch (type)
         {
-            case EntitySubType::Magus:
-            {
-                monsterTexture = &gResourceManager().getTexture("img/spirit.png");
+            case EntitySubType::Bat:
+                monsterTexture = &gResourceManager().getTexture("img/Monster/Bat.png");
                 break;
-            }
 
-            case EntitySubType::Warrior:
-            {
-                monsterTexture = &gResourceManager().getTexture("img/knifeSkull.png");
+            case EntitySubType::SkeletonKnife:
+                monsterTexture = &gResourceManager().getTexture("img/Monster/SkeletonKnife.png");
                 break;
-            }
 
-            /*
-            case 1:
-            {
-                monsterTexture.loadFromFile("data/redsquare/img/pickAxeSkull.png");
+            case EntitySubType::SkeletonMagus:
+                monsterTexture = &gResourceManager().getTexture("img/Monster/SkeletonMagus.png");
                 break;
-            }
+    
+            case EntitySubType::Slime:
+                monsterTexture = &gResourceManager().getTexture("img/Monster/Slime.png");
+                break;
 
-            case 3:
-            {
-                monsterTexture.loadFromFile("data/redsquare/img/vampire.png");
+            case EntitySubType::Spirit:
+                monsterTexture = &gResourceManager().getTexture("img/Monster/Spirit.png");
                 break;
-            }
-            */
+
             default:
-            {
-                monsterTexture = &gResourceManager().getTexture("img/spirit.png");
+                monsterTexture = &gResourceManager().getTexture("img/Monster/Slime.png");
                 break;
-            }
         }
     }
 

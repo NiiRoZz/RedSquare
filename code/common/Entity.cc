@@ -1,6 +1,7 @@
 #include "Entity.h"
-
 #include <gf/VectorOps.h>
+
+#define NBMONSTER 5;
 
 namespace redsquare
 {
@@ -14,10 +15,32 @@ namespace redsquare
 
     Entity::Entity(gf::Id entityID)
     : m_EntityID(entityID)
-    , m_TypeOfEntity(EntitySubType::Magus)
     , m_Size({1,1})
     {
-        
+        EntitySubType typeOfEntity;
+        int randomMonster = rand() % NBMONSTER;
+
+        switch (randomMonster)
+        {
+        case 0:
+            m_TypeOfEntity = EntitySubType::Bat;
+            break;
+        case 1:
+            m_TypeOfEntity = EntitySubType::SkeletonKnife;
+            break;
+        case 2:
+            m_TypeOfEntity = EntitySubType::SkeletonMagus;
+            break;
+        case 3:
+            m_TypeOfEntity = EntitySubType::Slime;
+            break;
+        case 4:
+            m_TypeOfEntity = EntitySubType::Spirit;
+            break;
+        default:
+            m_TypeOfEntity = EntitySubType::Bat;
+            break;
+        }
     }
 
     Entity::Entity(gf::Id entityID, const EntitySubType typeOfEntity)

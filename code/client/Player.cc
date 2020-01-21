@@ -8,6 +8,7 @@
 #include <gf/Color.h>
 #include <gf/Text.h>
 
+#include "Game.h"
 
 namespace redsquare
 {
@@ -103,15 +104,23 @@ namespace redsquare
         switch (type)
         {
             case EntitySubType::Magus:
-                playerTexture = &gResourceManager().getTexture("img/goblin.png");
+                playerTexture = &gResourceManager().getTexture("img/Character/Magus.png");
                 break;
 
             case EntitySubType::Warrior:
-                playerTexture = &gResourceManager().getTexture("img/knight.png");
+                playerTexture = &gResourceManager().getTexture("img/Character/Warrior.png");
                 break;
 
             case EntitySubType::Rogue:
-                playerTexture = &gResourceManager().getTexture("img/Rogue.png");
+                playerTexture = &gResourceManager().getTexture("img/Character/Rogue.png");
+                break;
+
+            case EntitySubType::Ranger:
+                playerTexture = &gResourceManager().getTexture("img/Character/Ranger.png");
+                break;
+            
+            case EntitySubType::Healer:
+                playerTexture = &gResourceManager().getTexture("img/Character/Magus.png");
                 break;
                 
             default:
@@ -119,13 +128,8 @@ namespace redsquare
         }
     }
 
-    bool Player::canAttack(gf::Vector2i targetPos, std::map<gf::Id, Monster> &monsters, std::map<gf::Id, Prop> &props)
+    bool Player::canAttack(gf::Vector2i targetPos, Game &game)
     {
-        if ( isInsideMe(targetPos) )
-        {
-            return false;
-        }
-        
         gf::Distance2<int> distFn = gf::manhattanDistance<int, 2>;
 
         float distance = distFn(m_Pos, targetPos);
@@ -135,9 +139,72 @@ namespace redsquare
             return false;
         }
 
-        auto it = monsters.begin();
- 
-        while ( it != monsters.end() )
+        switch (game.m_CurrentSpell)
+        {
+            case SpellType::Heal :
+                if ( isInsideMe(targetPos) ){
+                    return true;
+                }
+                if( game.getPlayer(targetPos) != nullptr){
+                    return true;
+                }
+                break;
+            case SpellType::Protection :
+                if ( isInsideMe(targetPos) ){
+                    return true;
+                }
+                if( game.getPlayer(targetPos) != nullptr){
+                    return true;
+                }
+                break;
+            case SpellType::RangeUp :
+                if ( isInsideMe(targetPos) ){
+                    return true;
+                }
+                if( game.getPlayer(targetPos) != nullptr){
+                    return true;
+                }
+                break;
+            case SpellType::DamageUp :
+                if ( isInsideMe(targetPos) ){
+                    return true;
+                }
+                if( game.getPlayer(targetPos) != nullptr){
+                    return true;
+                }
+                break;
+            case SpellType::ArmorUp :
+                if ( isInsideMe(targetPos) ){
+                    return true;
+                }
+                if( game.getPlayer(targetPos) != nullptr){
+                    return true;
+                }
+                break;
+            case SpellType::LightningStrike :
+                if ( isInsideMe(targetPos) ){
+                    return true;
+                }
+                break;
+            case SpellType::Berserk :
+                if ( isInsideMe(targetPos) ){
+                    return true;
+                }else{
+                    return false;
+                }
+                break;
+            default:
+                break;
+        }
+
+        if ( isInsideMe(targetPos) )
+        {
+            return false;
+        }
+
+        auto it = game.m_Monsters.begin();
+
+        while ( it != game.m_Monsters.end() )
         {
             if ( it->second.isInsideMe( targetPos ) )
             {
@@ -147,9 +214,9 @@ namespace redsquare
             ++it;
         }
 
-        auto it2 = props.begin();
+        auto it2 = game.m_Props.begin();
  
-        while ( it2 != props.end() )
+        while ( it2 != game.m_Props.end() )
         {
             if ( it2->second.isInsideMe( targetPos ) )
             {

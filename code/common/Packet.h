@@ -25,10 +25,19 @@ namespace redsquare
         Magus,
         Warrior,
         Rogue,
+        Ranger,
+        Healer,
         // Paladin,
-        // Archer,
         // Healer,
         /* CLASSES */
+
+        /* MONSTER */
+        Bat,
+        Slime,
+        SkeletonKnife,
+        SkeletonMagus,
+        Spirit,
+        /* MONSTER */
 
 
         //Class count for random
@@ -94,6 +103,7 @@ namespace redsquare
         BasicAttack, // basic attack ------- ALL
         FireBall, // randed attack that can burn foes ------- MAGUS
         ArmorUp, // gain a bonus of armor for x turns ------- WARRIOR
+        RangeUp, // gain 1 range for x turns ---------- MAGUS / SHOOTER
         DoubleStrike, // IDK for now
         Heal, // heal a foes ------- PRIEST
         Assasinate, // can one shot a foes  with high miss rate ------- ROGUE
@@ -104,21 +114,29 @@ namespace redsquare
         Incinerate, // deal damage to foes and can burn ennemy
         Devastate, // AOE dmg
         Massacre, // bleed dmg
-        Impact, // dash attack ?
         LightningStrike, // AOE dmg
         Scorch, // dmg + bleed
-        Chaos, // AOE dmg
         Berserk, // gain attack, loose defence
-        Cleanse, // purge all status effect
-        Mirror, // deal a percentage of damage receice to attacker
         Torpedo, // 
-        Stun, // stun ennemy for x turns
-        Warp, // dash 
-        Reincarnate, // 
         Shoot, // long attack range
         Backstab, // deal damage to foes : x2 if behind foes
-        Energize, // next attack deal more damage
-        SoulLink, // take damage that ally can receive
+        Reaper, // dmg in front of you
+    };
+
+    enum class InventorySlotType: uint8_t
+    {
+        Helmet = 1,
+        ChestPlate = 2,
+        Legging = 4,
+        Boot = 8,
+        Weapon = 16,
+        Shield = 32,
+        Cargo = 64,
+    };
+
+    enum class ItemType: uint16_t
+    {
+        Sword,
     };
 
     enum class PacketType : uint16_t
@@ -135,6 +153,8 @@ namespace redsquare
         PlayerDead,
         NewMap,
         UpdateSpells,
+        UpdateItem,
+        MoveItem,
         Message,
     };
 
@@ -191,6 +211,7 @@ namespace redsquare
 
         int m_MaxXP;
         int m_Level;
+        gf::Vector2i m_Pos;
     };
 
     struct RequestMove
@@ -246,6 +267,23 @@ namespace redsquare
         SpellType spells[MAX_SPELL_PER_PLAYER];
     };
 
+    struct UpdateItem
+    {
+        InventorySlotType slotType;
+        uint pos;
+        ItemType typeItem;
+        bool removeItem;
+    };
+
+    struct MoveItem
+    {
+        gf::Id playerID;
+        InventorySlotType oldSlotType;
+        uint oldPos;
+        InventorySlotType newSlotType;
+        uint newPos;
+    };
+
     struct Packet
     {
         PacketType type;
@@ -263,6 +301,8 @@ namespace redsquare
             EntityCar entityCar;
             Message receiveMessage;
             UpdateSpells updateSpells;
+            UpdateItem updateItem;
+            MoveItem moveItem;
         };
     };
 
@@ -368,6 +408,25 @@ namespace redsquare
             case PacketType::UpdateSpells:
             {
                 ar | packet.updateSpells.spells;
+                break;
+            }
+
+            case PacketType::UpdateItem:
+            {
+                ar | packet.updateItem.slotType;
+                ar | packet.updateItem.pos;
+                ar | packet.updateItem.typeItem;
+                ar | packet.updateItem.removeItem;
+                break;
+            }
+
+            case PacketType::MoveItem:
+            {
+                ar | packet.moveItem.playerID;
+                ar | packet.moveItem.oldSlotType;
+                ar | packet.moveItem.oldPos;
+                ar | packet.moveItem.newSlotType;
+                ar | packet.moveItem.newPos;
                 break;
             }
         }

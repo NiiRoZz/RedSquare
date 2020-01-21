@@ -129,7 +129,6 @@ int main( int argc, char **argv )
 			}
 		}
 
-		//std::cout << "---------------------------------TURN ----------------------------------------------" << std::endl;
 		for (auto it = game.m_Monsters.begin(); it != game.m_Monsters.end(); ++it)
 		{
 			bool hasFocus = false;
@@ -215,8 +214,6 @@ int main( int argc, char **argv )
 					game.m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&(it->second)), true);
 					game.m_World.m_SquareWorld.setTransparent(it->second.m_Pos, true);
 
-					//std::cout << "Target : " << isTarget << "      Pos actu w : " << game.m_World.m_SquareWorld.isWalkable(it->second.m_Pos) << "      Pos routine w : " << game.m_World.m_SquareWorld.isWalkable(it->second.m_Routine) << "     Pos ROUTINE : " << it->second.m_Routine[0] << "/" << it->second.m_Routine[1] << "     Pos Actuelle : "<<it->second.m_Pos[0] << "/" << it->second.m_Pos[1] <<std::endl;
-
 					std::vector<gf::Vector2i> points = game.m_World.m_SquareWorld.computeRoute(it->second.m_Pos, it->second.m_Routine, 0.0);
 
 					if (points.empty())
@@ -245,20 +242,6 @@ int main( int argc, char **argv )
 				}
 			}
 		}
-
-		/*for(uint i = 0; i < World::MapSize; ++i){
-            for (uint j = 0; j < World::MapSize; ++j){    
-                gf::Vector2i pair({(int)j,(int)i});
-				if( game.getMonster(pair) != nullptr){
-					std::cout << "X";
-				}else if( game.m_World.m_SquareWorld.isWalkable(pair) &&  game.m_World.m_SquareWorld.isTransparent(pair) ){
-                    std::cout << "|";
-                }else{
-                    std::cout << " ";
-                }
-            }
-            std::cout << "\n";
-        }*/
 	}
 	return 0;
 }

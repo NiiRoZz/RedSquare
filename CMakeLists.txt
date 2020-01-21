@@ -23,10 +23,11 @@ add_executable(RedSquare
   code/client/Inventory.cc
   code/client/InventoryWidget.cc
   code/client/InventorySlot.cc
+  code/client/Item.cc
   code/common/Sockets.cc
   code/common/Entity.cc
   code/common/Singletons.cc
-
+  code/client/MainMenu.cc
 )
 
 target_link_libraries(RedSquare
@@ -54,6 +55,8 @@ add_executable(RedSquare-Server
   code/server/Chat.cc
   code/server/ServerEntity.cc
   code/server/Prop.cc
+  code/server/Inventory.cc
+  code/server/Item.cc
   code/common/Sockets.cc
   code/common/Singletons.cc
   code/common/Entity.cc

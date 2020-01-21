@@ -18,10 +18,12 @@ namespace redsquare
     Hud::Hud(Game &game, gf::Font &font,char* port,char* hostname, gf::ExtendView &view,const char* name)
     : m_Game(game)
     , m_Chat(font,port,hostname,name)
-    , m_Inventory(font)
+    , m_Inventory(font, game)
+    , m_MainMenu(font)
     , m_Font(font)
     , m_View(view)
     , m_ShowMap(false)
+    , m_HideChat(true)
     {
         gMessageManager().registerHandler<SpellUpdateMessage>(&Hud::onSpellUpdate, this);
 
@@ -119,17 +121,23 @@ namespace redsquare
         float y = 0;
         uint index = 1;
 
-        for (auto it = m_spellsTextures.begin(); it != m_spellsTextures.end(); ++it)
+        for (auto &it: m_SpellsTextures)
         {
-            if (*it != nullptr)
+            if (it.second != nullptr)
             {
                 gf::Sprite sprite;
-                sprite.setTexture(**it);
+                sprite.setTexture(*(it.second));
                 sprite.setAnchor(gf::Anchor::TopLeft);
                 sprite.setPosition(coordinates.getRelativePoint({ 0.43f, 0.86f })+gf::Vector2f(x, y)+ HudSpellSize*gf::Vector2f(x, y)*coordinates.getRelativeSize({ 0.001f, 0.001f }).height);
                 sprite.setScale((HudSpellSize / HudSpellTextureSize)*coordinates.getRelativeSize({ 0.001f, 0.001f }).height);
                 target.draw(sprite, states);
                 x += 1.2;
+                
+                if(it.first == m_Game.m_CurrentSpell){
+                    sprite.setTexture( gResourceManager().getTexture("img/SpellIcon/frame-9-red.png") );
+                    target.draw(sprite, states);
+                }
+
 
                 if ( index % 4 == 0 )
                 {
@@ -141,20 +149,32 @@ namespace redsquare
             }
         }
 
-        m_Chat.render(target, states);
+        if (m_HideChat)
+        {
+            m_Chat.render(target, states);
+        }
         m_Inventory.render(target, states);
+        m_MainMenu.render(target,states);
     }
 
     void Hud::update(gf::Time time)
     {
-        m_Chat.update(time);
+        if (m_HideChat)
+        {
+            m_Chat.update(time);
+        }
         m_Inventory.update(time);
+        m_MainMenu.update(time);
     }
 
     void Hud::processEvent(const gf::Event &event)
     {
-        m_Chat.processEvent(event);
+        if (m_HideChat)
+        {
+            m_Chat.processEvent(event);
+        }
         m_Inventory.processEvent(event);
+        m_MainMenu.processEvent(event);
     }
 
     bool Hud::hoveringChat()
@@ -197,8 +217,35 @@ namespace redsquare
         case SpellType::Revenge :
             texture = "img/SpellIcon/Named/Revenge1.png";
             break;
+        case SpellType::Incinerate :
+            texture = "img/SpellIcon/Named/Incinerate1.png";
+            break;
+        case SpellType::Scorch :
+            texture = "img/SpellIcon/Named/Scorch1.png";
+            break;
+        case SpellType::Shoot :
+            texture = "img/SpellIcon/Named/Shoot1.png";
+            break;
+        case SpellType::Torpedo :
+            texture = "img/SpellIcon/Named/Torpedo1.png";
+            break;
+        case SpellType::Massacre :
+            texture = "img/SpellIcon/Named/Massacre1.png";
+            break;
+        case SpellType::DoubleStrike :
+            texture = "img/SpellIcon/Named/DoubleStrike1.png";
+            break;
+        case SpellType::Protection :
+            texture = "img/SpellIcon/Named/Protection1.png";
+            break;
+        case SpellType::LightningStrike :
+            texture = "img/SpellIcon/Named/LightningStrike1.png";
+            break;
+        case SpellType::Reaper :
+            texture = "img/SpellIcon/Named/Reaper1.png";
+            break;
         case SpellType::Unknow :
-            texture = "img/redsquare.png";
+            texture = "img/SpellIcon/Named/Basic1.png";
         default:
             texture = "img/SpellIcon/Named/Basic1.png";
             break;
@@ -212,13 +259,13 @@ namespace redsquare
 
         auto message = static_cast<SpellUpdateMessage*>(msg);
 
-        m_spellsTextures.clear();
+        m_SpellsTextures.clear();
 
         for(auto it = message->spells.begin(); it != message->spells.end(); ++it)
         {
             if (*it != SpellType::Unknow)
             {
-                m_spellsTextures.push_back(getTextureFromSpellType(*it));
+                m_SpellsTextures.insert(std::make_pair(*it,getTextureFromSpellType(*it)));
             }
         }
 
@@ -229,4 +276,10 @@ namespace redsquare
     {
         m_ShowMap = !m_ShowMap;
     }
+
+    void Hud::hideChat()
+    {
+        m_HideChat = !m_HideChat;
+    }
+    
 }

@@ -45,6 +45,8 @@ namespace redsquare
 
         std::vector<gf::Vector2i> m_TempMove;
 
+        SpellType m_CurrentSpell;
+
         Game( char* hostname, char *port,gf::ExtendView &view , const char * name);
 
         Player* getMyPlayer();
@@ -78,6 +80,8 @@ namespace redsquare
 
         void changeSpell(int spell);
 
+        void sendPacket(Packet &packet);
+
     private:
         const char *m_Name;
         //Thread for communication
@@ -95,7 +99,6 @@ namespace redsquare
         //Attack of player
         int m_AttackX;
         int m_AttackY;
-        SpellType m_CurrentSpell;
         std::vector<SpellType> m_Spell;
 
         //Pass turn

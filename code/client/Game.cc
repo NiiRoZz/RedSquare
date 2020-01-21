@@ -211,7 +211,7 @@ namespace redsquare
             Packet packet;
             packet.type = PacketType::RequestAttack;
             packet.requestAttack.playerID = m_PlayerID;
-            packet.requestAttack.spellType = m_CurrentSpell; //TODO: do a check here, to know wich attack selected
+            packet.requestAttack.spellType = m_CurrentSpell;
             packet.requestAttack.posX = m_AttackX;
             packet.requestAttack.posY = m_AttackY;
 
@@ -327,6 +327,8 @@ namespace redsquare
 
                 case PacketType::PlayerTurn:
                 {
+                    // TODO cd on some spell
+
                     Player* myPlayer = getMyPlayer();
 
                     if ( myPlayer == nullptr )
@@ -487,6 +489,27 @@ namespace redsquare
                     gMessageManager().sendMessage(&message);
                     break;
                 }
+
+                case PacketType::UpdateItem:
+                {
+                    ItemUpdateMessage message;
+                    message.itemMessage = packet.updateItem;
+
+                    gMessageManager().sendMessage(&message);
+
+                    break;
+                }
+
+                case PacketType::MoveItem:
+                {
+
+                    ItemMoveMessage message;
+                    message.itemMessage = packet.moveItem;
+
+                    gMessageManager().sendMessage(&message);
+
+                    break;
+                }
             }
         }
     }
@@ -637,12 +660,18 @@ namespace redsquare
 
         auto currentPlayer = Game::getMyPlayer();
         if(currentPlayer != nullptr){
-            Game::m_CurrentSpell = currentPlayer->m_SpellTab[spell-1];
+            m_CurrentSpell = currentPlayer->m_SpellTab[spell-1];
+            // render selector
         }else{
             std::cout << "ERROR" <<std::endl;
         }
         std::cout << "SPELL CHANGED FOR SPELL N°" << spell << std::endl;
 
         return;
+    }
+
+    void Game::sendPacket(Packet &packet)
+    {
+        m_ThreadCom.sendPacket(packet);
     }
 }

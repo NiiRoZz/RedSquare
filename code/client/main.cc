@@ -23,27 +23,28 @@
 #include <gf/VertexArray.h>
 #include <gf/Cursor.h>
 #include <gf/Font.h>
+#include <gf/TileLayer.h>
 
 #include "World.h"
 #include "Game.h"
 #include "Chat.h"
 #include "Inventory.h"
+#include "MainMenu.h"
 #include "Hud.h"
 #include "../common/Singletons.h"
 #include "../common/Packet.h"
 #include "config.h"
-#include <gf/TileLayer.h>
 
-
+#define NBTYPEPLAYER 4
 
 using namespace redsquare;
 
 int main( int argc, char **argv )
 {
-    if ( argc != 5 )
+    if ( argc != 5 || atoi(argv[4]) > NBTYPEPLAYER || atoi(argv[4]) < 0)
     {
         std::cerr << "Usage : ./RedSquare ip port playerName typePlayer" << std::endl;
-        std::cerr << "typePlayer: " << std::endl << "0 for Magus" << std::endl << "1 for Warrior" << std::endl << "2 for Rogue" << std::endl;
+        std::cerr << "typePlayer: " << std::endl << "0 for Magus" << std::endl << "1 for Warrior" << std::endl << "2 for Rogue" <<  "3 for Ranger" <<  std::endl;
         return 1;
     }
 
@@ -67,7 +68,8 @@ int main( int argc, char **argv )
     gf::Font &fontChat(gResourceManager().getFont("font/arial.ttf"));
 
     bool inventoryVisible = false;
-
+    bool MainMenuVisible = false;
+    
     // views
     gf::ViewContainer views;
     gf::ExtendView mainView( ViewCenter, ViewSize );
@@ -87,6 +89,10 @@ int main( int argc, char **argv )
     fullscreenAction.addKeycodeKeyControl(gf::Keycode::F);
     actions.addAction(fullscreenAction);
 
+    gf::Action MainMenuAction("AfficheMainMenu");
+    MainMenuAction.addKeycodeKeyControl(gf::Keycode::N);
+    actions.addAction(MainMenuAction);
+
     gf::Action inventoryAction("Inventory");
     inventoryAction.addKeycodeKeyControl(gf::Keycode::I);
     actions.addAction(inventoryAction);
@@ -94,6 +100,10 @@ int main( int argc, char **argv )
     gf::Action mapAction("Map");
     mapAction.addKeycodeKeyControl(gf::Keycode::M);
     actions.addAction(mapAction);
+
+    gf::Action chatAction("Chat");
+    chatAction.addKeycodeKeyControl(gf::Keycode::C);
+    actions.addAction(chatAction);
 
     gf::Action leftAction("Left");
     leftAction.addScancodeKeyControl(gf::Scancode::A);
@@ -234,7 +244,7 @@ int main( int argc, char **argv )
                             Player* myPlayer = game.getPlayer(game.m_PlayerID);
                             if ( myPlayer != nullptr && game.m_CanPlay )
                             {
-                                if ( myPlayer->canAttack(pos, game.m_Monsters, game.m_Props) )
+                                if ( myPlayer->canAttack(pos, game) )
                                 {
                                     game.attackPos( pos[0], pos[1] );
                                 }
@@ -257,7 +267,7 @@ int main( int argc, char **argv )
                         Player* myPlayer = game.getPlayer(game.m_PlayerID);
                         if ( myPlayer != nullptr && game.m_CanPlay )
                         {
-                            if ( myPlayer->canAttack(pos, game.m_Monsters, game.m_Props) )
+                            if ( myPlayer->canAttack(pos, game) )
                             {
                                 window.setMouseCursor(attackCursor);
                                 game.m_TempMove.clear();
@@ -339,6 +349,14 @@ int main( int argc, char **argv )
         {
             hud.showMap();
         }
+        if (chatAction.isActive())
+        {
+            hud.hideChat();
+        }
+        if (MainMenuAction.isActive())
+        {
+            hud.m_MainMenu.m_ShowMainMenu = !hud.m_MainMenu.m_ShowMainMenu;
+        }
         if( changeSpell1.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 2)
         {
             game.changeSpell(1);
@@ -355,7 +373,7 @@ int main( int argc, char **argv )
         {
             game.changeSpell(4);
         }
-       /* if( changeSpell5.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 5 )
+        if( changeSpell5.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 5 )
         {
             game.changeSpell(5);
         }
@@ -370,7 +388,7 @@ int main( int argc, char **argv )
         if( changeSpell8.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 8 )
         {
             game.changeSpell(8);
-        }*/
+        }
 
         // 2. update
         gf::Time time = clock.restart();
