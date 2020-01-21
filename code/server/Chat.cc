@@ -28,6 +28,7 @@ namespace redsquare
                 if(packet.type != PacketType::Message){
                     continue;
                 }
+                std::cout<< " 2 : "<< packet.receiveMessage.from  << std::endl;
                 sendMessageToAll(packet);
             }
             
@@ -41,12 +42,13 @@ namespace redsquare
             Packet packet;
 
             socket.receive(packet);
+            std::cout<< " 1 " << packet.receiveMessage.from << std::endl;
 
             if(socket.getState()==SocketState::Disconnected){
                 return ;
             }
 
-            m_chatQueue.push(packet);
+            m_chatQueue.push(std::move(packet));
         }
         
     }
@@ -56,8 +58,7 @@ namespace redsquare
     }
     
     void Chat::addPlayer(gf::Id idPlayer, SocketTcp socket){
-       m_PlayersSocket.insert(std::make_pair(idPlayer, std::move(socket)));
-
+        m_PlayersSocket.insert(std::make_pair(idPlayer, std::move(socket)));
         std::thread(&Chat::receiveMessagePacket, this, std::ref(m_PlayersSocket[idPlayer])).detach();
     }
 

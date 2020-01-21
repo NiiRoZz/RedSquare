@@ -6,6 +6,7 @@
 #include <gf/Font.h>
 #include <gf/Color.h>
 #include <gf/Coordinates.h>
+#include <vector>
 
 static const char *VertexShader = R"(
 #version 100
@@ -47,21 +48,36 @@ void main(void) {
 
 namespace redsquare
 {
-    Chat::Chat(gf::Font &font, char *port, char *hostname)
+    Chat::Chat(gf::Font &font, char *port, char *hostname,const char* name)
     : m_HoveringChat(false)
     , m_TypingInChat(false)
     , m_UI(font)
     , m_ChatShader(VertexShader, FragmentShader)
     , m_ChatCom(hostname, port, m_ChatQueue)
     {
-        m_hostname = hostname;
-        m_ChatShader.setUniform("u_backgroundColor", gf::Color::Opaque(0.75f));
+        m_Name = name;
+        m_ChatShader.setUniform("u_backgroundColor", gf::Color::Opaque(1.0f));
         m_ChatCom.start();
 
     }
 
+    
     void Chat::update(gf::Time time)
     {
+        Packet packet;
+        while(m_ChatQueue.poll(packet)){
+             if(packet.type != PacketType::Message){
+                    continue;
+            }
+            std::string from = packet.receiveMessage.from;
+            std::cout <<from<<std::endl;
+            std::string message = packet.receiveMessage.message;
+            std::string text = from + " : "+message;
+            std::cout<< text<<std::endl;
+            gf::UICharBuffer box(512);
+            box.append(text);
+            m_tabCharBuffer.push_back(std::move(box));
+        }
         
     }
 
@@ -73,7 +89,7 @@ namespace redsquare
         }
         else
         {
-            m_ChatShader.setUniform("u_backgroundColor", gf::Color::Opaque(0.75f));
+            m_ChatShader.setUniform("u_backgroundColor", gf::Color::Opaque(1.0f));
         }
                     
         gf::Coordinates coordinates(target);
@@ -90,6 +106,7 @@ namespace redsquare
         m_TypingInChat = false;
 
         m_UI.setCharacterSize(12);
+        m_UI.setPredefinedStyle(gf::UIPredefinedStyle::Dark);
 
         if( m_UI.begin("Chat", gf::RectF::fromPositionSize( coordinates.getRelativePoint({ 0.00f,0.595f }),ChatWindowSize),gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
         {
@@ -99,17 +116,14 @@ namespace redsquare
             if (m_UI.groupBegin("",gf::UIWindow::ScrollAutoHide))
             {
                 m_UI.layoutRowStatic(sizeMessageReceiveChat[0],sizeMessageReceiveChat[1], 1);
-                m_UI.edit(gf::UIEditType::Box | gf::UIEdit::ReadOnly  , box);
-
-                m_UI.layoutRowStatic(sizeMessageReceiveChat[0],sizeMessageReceiveChat[1], 1);
-                m_UI.edit(gf::UIEditType::Box | gf::UIEdit::ReadOnly, box);
-
+                m_UI.edit(gf::UIEditType::Box | gf::UIEdit::ReadOnly,box);
                 m_UI.groupEnd();
             }
             m_UI.layoutRowStatic(sizeMessageBackground[0], sizeMessageBackground[1], 1);
 
             if (m_UI.groupBegin("",gf::UIWindow::Border))
             {
+                
                 m_UI.layoutRowBegin(gf::UILayout::Dynamic, sizeMessageToSend[0], 2);
                 m_UI.layoutRowPush(0.7f);
                 
@@ -120,15 +134,16 @@ namespace redsquare
                 
                 if ( m_UI.buttonLabel("Submit") || flags.test(gf::UIEditEvent::Commited) )
                 {
-                    std::cout << "envoyé" << std::endl;
                     Packet sendPacket;
                     sendPacket.type = PacketType::Message;
-                    strcpy(sendPacket.reveiveMessage.from,m_hostname);
-                    char cpy[256];
-                    std::string s = box.asString();
-                    strcpy(cpy,s.c_str()) ;
-                    strcpy(sendPacket.reveiveMessage.message,cpy);
+                    std::cout<<"name : "<<m_Name;
+                    //strcpy(sendPacket.receiveMessage.from,m_Name);
+                    strncpy(sendPacket.receiveMessage.from, m_Name, 30);
+
+                    //strcpy(sendPacket.receiveMessage.message,text.asString().c_str());
+                    strncpy(sendPacket.receiveMessage.message, text.asString().c_str(), 1024);
                     m_ChatCom.sendPacket(sendPacket);
+                    std::cout<< "envoyé : " <<sendPacket.receiveMessage.from <<std::endl;
                 }
                 m_UI.layoutRowEnd();
                 m_UI.groupEnd();

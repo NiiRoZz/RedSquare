@@ -68,9 +68,12 @@ int main( int argc, char **argv )
 		myChat.addPlayer(idPlayer,std::move(wrapperChat));
 	}
 
+	myChat.startChat();
+
 	//Start the game and play until all players has disconnected
 	while ( game.m_Players.size() > 0 )
-	{
+	{	
+		
 		for (auto it = game.m_Players.begin(); it != game.m_Players.end(); ++it)
 		{
 			//1: send to the player it's his turn

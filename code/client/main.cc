@@ -174,7 +174,7 @@ int main( int argc, char **argv )
     char  Cport_Chat[10] ;
     sprintf(Cport_Chat,"%d",Iport_Chat);
     std::cout << "hud : "<< Cport_Chat<<std::endl;
-    Hud hud(game, fontChat,Cport_Chat,argv[1],mainView);
+    Hud hud(game, fontChat,Cport_Chat,argv[1],mainView,argv[3]);
 
     //Send info about us, before get world
     game.sendInfoConnection(static_cast<EntitySubType>(atoi(argv[4])), argv[3]);
@@ -376,6 +376,7 @@ int main( int argc, char **argv )
         gf::Time time = clock.restart();
         mainEntities.update(time);
         hudEntities.update(time);
+        
 
         // 3. draw
         renderer.clear();

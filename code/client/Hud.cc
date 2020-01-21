@@ -15,9 +15,9 @@
 
 namespace redsquare
 {
-    Hud::Hud(Game &game, gf::Font &font,char* port,char* hostname, gf::ExtendView &view)
+    Hud::Hud(Game &game, gf::Font &font,char* port,char* hostname, gf::ExtendView &view,const char* name)
     : m_Game(game)
-    , m_Chat(font,port,hostname)
+    , m_Chat(font,port,hostname,name)
     , m_Inventory(font)
     , m_Font(font)
     , m_View(view)

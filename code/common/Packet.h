@@ -261,7 +261,7 @@ namespace redsquare
             PlayerTurn playerTurn;
             SpawnEntity spawnEntity;
             EntityCar entityCar;
-            Message reveiveMessage;
+            Message receiveMessage;
             UpdateSpells updateSpells;
         };
     };
@@ -360,8 +360,8 @@ namespace redsquare
 
             case PacketType::Message:
             {
-                ar | packet.reveiveMessage.from;
-                ar | packet.reveiveMessage.message;
+                ar | packet.receiveMessage.from;
+                ar | packet.receiveMessage.message;
                 break;
             }
 
