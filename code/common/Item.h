@@ -18,13 +18,11 @@ namespace redsquare
         void removeCompatibleSlot(InventorySlotType slotType);
         bool canBeInSlot(InventorySlotType slotType);
 
-        int m_PassiveLifePoint;
-        int m_PassiveAttackPoint;
-        int m_PassiveDefensePoint;
-
         int m_GiveLifePoint;
         int m_GiveAttackPoint;
         int m_GiveDefensePoint;
+
+        bool isUseable() const;
 
     protected:
         uint8_t m_SlotMask;
@@ -32,9 +30,14 @@ namespace redsquare
     private:
 
         void defaultCompatibleSlot();
-        void defaultCharacteristic();
+        void defaultData();
 
         ItemType m_Type;
+
+        bool m_Useable;
+
+        std::string m_Name;
+        std::string m_Description;
     };
 }
 

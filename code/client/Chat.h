@@ -24,7 +24,6 @@ namespace redsquare
         bool m_TypingInChat;
 
     private:
-        gf::Shader m_ChatShader;
         gf::UI m_UI;
         const char * m_Name;
 

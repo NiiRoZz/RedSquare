@@ -5,16 +5,22 @@ namespace redsquare
     Item::Item(ItemType type)
     : m_SlotMask(0)
     , m_Type(type)
+    , m_Useable(false)
+    , m_Name("")
+    , m_Description("")
     {
         defaultCompatibleSlot();
-        defaultCharacteristic();
+        defaultData();
     }
 
     Item::Item(ItemType type, uint8_t slotMask)
     : m_SlotMask(slotMask)
     , m_Type(type)
+    , m_Useable(false)
+    , m_Name("")
+    , m_Description("")
     {
-        defaultCharacteristic();
+        defaultData();
     }
 
     ItemType Item::getType() const
@@ -51,7 +57,7 @@ namespace redsquare
         addCompatibleSlot(InventorySlotType::Cargo);
     }
 
-    void Item::defaultCharacteristic()
+    void Item::defaultData()
     {
         switch (m_Type)
         {
@@ -70,8 +76,14 @@ namespace redsquare
                 m_GiveLifePoint = 0;
                 m_GiveAttackPoint = 0;
                 m_GiveDefensePoint = 0;
+                m_Useable = false;
                 break;
             }
         }
+    }
+
+    bool Item::isUseable() const
+    {
+        return m_Useable;
     }
 }
