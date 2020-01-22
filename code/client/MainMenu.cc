@@ -29,6 +29,7 @@ namespace redsquare
         gf::Vector2f sizeEspace2=MainMenuWindowSize*gf::Vector2f(0.030,0.7);
         if(m_ShowMainMenu)
         {
+            /*
             if( m_UI.begin("", gf::RectF::fromPositionSize(coordinates.getRelativePoint({ 0.0f,0.0f }),MainMenuWindowSize), gf::UIWindow::NoScrollbar))
             {
                 m_UI.layoutRowDynamic(sizeEspace[0], 3);
@@ -65,10 +66,23 @@ namespace redsquare
 
                     m_UI.groupEnd();
                 }
+                m_UI.layoutRowDynamic(sizeEspace2[0], 3);
+                float ratioTwo[] = { 0.2f, 0.6f, 0.2f };
+                float widthTwo[] = { 100.0f, 200.0f, 50.0f };
+
+                m_UI.layoutRowDynamic(30, 1);
+                m_UI.label("Dynamic array-based custom column layout with generated position and custom size:");
+                m_UI.layoutRow(gf::UILayout::Dynamic, 100, ratioTwo);
+                m_UI.buttonLabel("button");
+                m_UI.buttonLabel("button");
+                m_UI.buttonLabel("button");
+                    
+                
                 m_UI.end();
             }
         
             target.draw(m_UI);
+            */
         }
     }
 
