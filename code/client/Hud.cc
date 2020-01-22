@@ -25,6 +25,7 @@ namespace redsquare
     , m_SpellTypeHover(SpellType::Unknow)
     , m_ShowMap(false)
     , m_HideChat(true)
+    , m_UI(font) 
     {
         gMessageManager().registerHandler<SpellUpdateMessage>(&Hud::onSpellUpdate, this);
 
@@ -151,8 +152,20 @@ namespace redsquare
 
         if (m_SpellTypeHover != SpellType::Unknow)
         {
+            gf::Coordinates coordinates(target);
+            gf::Vector2f DescriptionWindowSize=coordinates.getRelativeSize({ 0.4f,0.3f });
+            
+
             std::string desc = getDescriptionFromSpellType(m_SpellTypeHover);
             std::cout << m_MouseHoverPostionOnSpell[0] << " " << m_MouseHoverPostionOnSpell[1] << " " << desc << std::endl;
+
+            if( m_UI.begin("Description", gf::RectF::fromPositionSize(coordinates.getRelativePoint({ 0.40f,0.4f }),DescriptionWindowSize), gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
+            {   
+                m_UI.layoutRowDynamic(30, 1);
+                m_UI.label(desc);
+                m_UI.end();
+            }
+            target.draw(m_UI);
         }
 
         if (m_HideChat)
@@ -293,6 +306,56 @@ namespace redsquare
             case SpellType::BasicAttack:
                 description = "Basic Attack";
                 break;
+
+            case SpellType::FireBall:
+                description = "Throw a fireball, used manapoint, need to be selected before using ";
+                break;
+            case SpellType::Lacerate:
+                description = "";
+                break;
+            case SpellType::ArmorUp:
+                description = "";
+                break;
+            case SpellType::Heal:
+                description = "";
+                break;
+            case SpellType::Berserk:
+                description = "";
+                break;
+            case SpellType::DamageUp:
+                description = "";
+                break;
+            case SpellType::Revenge:
+                description = "";
+                break;
+            case SpellType::Incinerate:
+                description = "";
+                break;
+            case SpellType::Scorch:
+                description = "";
+                break;
+            case SpellType::Shoot:
+                description = "";
+                break;
+            case SpellType::Torpedo:
+                description = "";
+                break;
+            case SpellType::Massacre:
+                description = "";
+                break;
+            case SpellType::DoubleStrike:
+                description = "";
+                break;
+            case SpellType::Protection:
+                description = "";
+                break;
+            case SpellType::LightningStrike:
+                description = "";
+                break;
+            case SpellType::Reaper:
+                description = "";
+                break;
+            
         }
 
         return description;

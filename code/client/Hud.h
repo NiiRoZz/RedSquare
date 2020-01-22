@@ -39,6 +39,7 @@ namespace redsquare
         Inventory m_Inventory;
        
         gf::Font &m_Font;
+        gf::UI m_UI;
         //View of the game
         gf::ExtendView &m_View;
         std::map<SpellType, gf::SpriteWidget> m_SpellsWidgets;
