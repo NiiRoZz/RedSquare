@@ -35,6 +35,9 @@ namespace redsquare
         ItemType m_Type;
 
         bool m_Useable;
+
+        std::string m_Name;
+        std::string m_Description;
     };
 }
 

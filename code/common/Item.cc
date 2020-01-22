@@ -5,6 +5,9 @@ namespace redsquare
     Item::Item(ItemType type)
     : m_SlotMask(0)
     , m_Type(type)
+    , m_Useable(false)
+    , m_Name("")
+    , m_Description("")
     {
         defaultCompatibleSlot();
         defaultData();
@@ -13,6 +16,9 @@ namespace redsquare
     Item::Item(ItemType type, uint8_t slotMask)
     : m_SlotMask(slotMask)
     , m_Type(type)
+    , m_Useable(false)
+    , m_Name("")
+    , m_Description("")
     {
         defaultData();
     }
