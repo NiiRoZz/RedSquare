@@ -66,6 +66,7 @@ namespace redsquare
                 m_PassiveLifePoint = 0;
                 m_PassiveAttackPoint = 0;
                 m_PassiveDefensePoint = 0;
+
                 m_GiveLifePoint = 0;
                 m_GiveAttackPoint = 0;
                 m_GiveDefensePoint = 0;

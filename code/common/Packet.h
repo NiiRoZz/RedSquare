@@ -136,7 +136,30 @@ namespace redsquare
 
     enum class ItemType: uint16_t
     {
+
+        // WEAPON 
         Sword,
+        Sword1,
+        Sword2,
+        Staff,
+        Bow,
+        Daguer,
+        SpellBook,
+        // WEAPON 
+
+        // ARMOR
+        Shield,
+        Helmet,
+        Chesplate,
+        Legging,
+        Boots,
+        // ARMOR
+
+        // CONSUMABLES
+        ManaPot,
+        HealthPot,
+        EnergyPot,
+        // CONSUMABLES
     };
 
     enum class PacketType : uint16_t
