@@ -18,14 +18,17 @@ namespace redsquare
         void removeCompatibleSlot(InventorySlotType slotType);
         bool canBeInSlot(InventorySlotType slotType);
 
-        uint8_t m_SlotMask;
+        int m_GiveLifePoint;
+        int m_GiveAttackPoint;
+        int m_GiveDefensePoint;
 
     protected:
-        
+        uint8_t m_SlotMask;
 
     private:
 
         void defaultCompatibleSlot();
+        void defaultCharacteristic();
 
         ItemType m_Type;
     };
