@@ -162,6 +162,14 @@ namespace redsquare
 
             if( m_UI.begin("Description", gf::RectF::fromPositionSize(coordinates.getRelativePoint({ 0.40f,0.4f }),DescriptionWindowSize), gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
             {   
+                m_UI.layoutRowDynamic(15, 1);
+                m_UI.label("Spell need to be selected before using it");
+                m_UI.layoutRowDynamic(15, 2);
+                m_UI.label("Shortcuts");
+                m_UI.label(" 1 2 3 4 ");
+                m_UI.layoutRowDynamic(5, 2);
+                m_UI.label("");
+                m_UI.label(" 5 6 7 8 ");
                 m_UI.layoutRowDynamic(30, 1);
                 m_UI.label(desc);
                 m_UI.end();
