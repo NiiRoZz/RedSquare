@@ -22,7 +22,7 @@ namespace redsquare
     , m_MainMenu(font)
     , m_Font(font)
     , m_View(view)
-    , m_SpellTypeHover(SpellType::Unknow)
+    , m_SpellWidgetHover(nullptr)
     , m_ShowMap(false)
     , m_HideChat(true)
     , m_UI(font) 
@@ -127,12 +127,13 @@ namespace redsquare
         {
             gf::Vector2f pos = coordinates.getRelativePoint({ 0.43f, 0.86f })+gf::Vector2f(x, y)+ HudSpellSize*gf::Vector2f(x, y)*coordinates.getRelativeSize({ 0.001f, 0.001f }).height;
             float scale = (HudSpellSize / HudSpellTextureSize)*coordinates.getRelativeSize({ 0.001f, 0.001f }).height;
-            it.second.setPosition(pos);
-            it.second.setScale(scale);
-            target.draw(it.second, states);
+            it.setPosition(pos);
+            it.setScale(scale);
+            target.draw(it, states);
             x += 1.2;
             
-            if(it.first == m_Game.m_CurrentSpell){
+            if(it.m_SpellType == m_Game.m_CurrentSpell)
+            {
                 gf::Sprite sprite;
                 sprite.setTexture( gResourceManager().getTexture("img/SpellIcon/frame-9-red.png") );
                 sprite.setPosition(pos);
@@ -150,13 +151,13 @@ namespace redsquare
             index++;
         }
 
-        if (m_SpellTypeHover != SpellType::Unknow)
+        if (m_SpellWidgetHover != nullptr)
         {
             gf::Coordinates coordinates(target);
             gf::Vector2f DescriptionWindowSize=coordinates.getRelativeSize({ 0.4f,0.3f });
             
 
-            std::string desc = getDescriptionFromSpellType(m_SpellTypeHover);
+            std::string desc = m_SpellWidgetHover->m_Description;
             std::cout << m_MouseHoverPostionOnSpell[0] << " " << m_MouseHoverPostionOnSpell[1] << " " << desc << std::endl;
 
             if( m_UI.begin("Description", gf::RectF::fromPositionSize(coordinates.getRelativePoint({ 0.40f,0.4f }),DescriptionWindowSize), gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
@@ -203,9 +204,9 @@ namespace redsquare
             bool found = false;
             for(auto &it: m_SpellsWidgets)
             {
-                if (it.second.contains(event.mouseCursor.coords))
+                if (it.contains(event.mouseCursor.coords))
                 {
-                    m_SpellTypeHover = it.first;
+                    m_SpellWidgetHover = &it;
                     m_MouseHoverPostionOnSpell = event.mouseCursor.coords;
                     found = true;
                     break;
@@ -214,7 +215,7 @@ namespace redsquare
 
             if (!found)
             {
-                m_SpellTypeHover = SpellType::Unknow;
+                m_SpellWidgetHover = nullptr;
                 m_MouseHoverPostionOnSpell = {0,0};
             }
         }
@@ -230,142 +231,17 @@ namespace redsquare
         return m_Chat.m_TypingInChat;
     }
 
-    gf::Texture& Hud::getTextureFromSpellType(SpellType type)
-    {
-        std::string texture;
-
-        switch (type)
-        {
-        case SpellType::FireBall :
-            texture = "img/SpellIcon/Named/Fireball1.png";
-            break;
-        case SpellType::Devastate :
-            texture = "img/SpellIcon/Named/Devastate1.png";
-            break;
-        case SpellType::Lacerate :
-            texture = "img/SpellIcon/Named/Lacerate1.png";
-            break;
-        case SpellType::ArmorUp :
-            texture = "img/SpellIcon/Named/ArmorUP1.png";
-            break;
-        case SpellType::Heal :
-            texture = "img/SpellIcon/Named/Heal1.png";
-            break;
-        case SpellType::Berserk :
-            texture = "img/SpellIcon/Named/Berserk1.png";
-            break;
-        case SpellType::DamageUp :
-            texture = "img/SpellIcon/Named/DamageUP1.png";
-            break;
-        case SpellType::Revenge :
-            texture = "img/SpellIcon/Named/Revenge1.png";
-            break;
-        case SpellType::Incinerate :
-            texture = "img/SpellIcon/Named/Incinerate1.png";
-            break;
-        case SpellType::Scorch :
-            texture = "img/SpellIcon/Named/Scorch1.png";
-            break;
-        case SpellType::Shoot :
-            texture = "img/SpellIcon/Named/Shoot1.png";
-            break;
-        case SpellType::Torpedo :
-            texture = "img/SpellIcon/Named/Torpedo1.png";
-            break;
-        case SpellType::Massacre :
-            texture = "img/SpellIcon/Named/Massacre1.png";
-            break;
-        case SpellType::DoubleStrike :
-            texture = "img/SpellIcon/Named/DoubleStrike1.png";
-            break;
-        case SpellType::Protection :
-            texture = "img/SpellIcon/Named/Protection1.png";
-            break;
-        case SpellType::LightningStrike :
-            texture = "img/SpellIcon/Named/LightningStrike1.png";
-            break;
-        case SpellType::Reaper :
-            texture = "img/SpellIcon/Named/Reaper1.png";
-            break;
-        case SpellType::Unknow :
-            texture = "img/SpellIcon/Named/Basic1.png";
-        default:
-            texture = "img/SpellIcon/Named/Basic1.png";
-            break;
-        }
-
-        return gResourceManager().getTexture(texture);
-    }
-
-    std::string Hud::getDescriptionFromSpellType(SpellType type)
-    {
-        std::string description;
-
-        switch (type)
-        {
-            case SpellType::BasicAttack:
-                description = "Basic Attack";
-                break;
-
-            case SpellType::FireBall:
-                description = "Throw a fireball, used manapoint, need to be selected before using ";
-                break;
-            case SpellType::Lacerate:
-                description = "";
-                break;
-            case SpellType::ArmorUp:
-                description = "";
-                break;
-            case SpellType::Heal:
-                description = "";
-                break;
-            case SpellType::Berserk:
-                description = "";
-                break;
-            case SpellType::DamageUp:
-                description = "";
-                break;
-            case SpellType::Revenge:
-                description = "";
-                break;
-            case SpellType::Incinerate:
-                description = "";
-                break;
-            case SpellType::Scorch:
-                description = "";
-                break;
-            case SpellType::Shoot:
-                description = "";
-                break;
-            case SpellType::Torpedo:
-                description = "";
-                break;
-            case SpellType::Massacre:
-                description = "";
-                break;
-            case SpellType::DoubleStrike:
-                description = "";
-                break;
-            case SpellType::Protection:
-                description = "";
-                break;
-            case SpellType::LightningStrike:
-                description = "";
-                break;
-            case SpellType::Reaper:
-                description = "";
-                break;
-            
-        }
-
-        return description;
-    }
-
     gf::MessageStatus Hud::onSpellUpdate(gf::Id id, gf::Message *msg)
     {
         assert(id == SpellUpdateMessage::type);
 
         auto message = static_cast<SpellUpdateMessage*>(msg);
+
+        if (m_SpellWidgetHover != nullptr)
+        {
+            m_SpellWidgetHover = nullptr;
+            m_MouseHoverPostionOnSpell = {0,0};
+        }
 
         m_SpellsWidgets.clear();
 
@@ -373,8 +249,7 @@ namespace redsquare
         {
             if (*it != SpellType::Unknow)
             {
-                gf::Texture &texture = getTextureFromSpellType(*it);
-                m_SpellsWidgets.emplace(std::make_pair(*it,std::move(gf::SpriteWidget(texture, texture, texture))));
+                m_SpellsWidgets.emplace_back(std::move(redsquare::SpellWidget(*it)));
             }
         }
 

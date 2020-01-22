@@ -25,6 +25,7 @@ add_executable(RedSquare
   code/client/InventorySlot.cc
   code/client/MainMenu.cc
   code/client/ClientItem.cc
+  code/client/SpellWidget.cc
   code/common/Sockets.cc
   code/common/Entity.cc
   code/common/Singletons.cc
