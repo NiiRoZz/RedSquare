@@ -22,6 +22,7 @@ namespace redsquare
     , m_MainMenu(font)
     , m_Font(font)
     , m_View(view)
+    , m_SpellTypeHover(SpellType::Unknow)
     , m_ShowMap(false)
     , m_HideChat(true)
     {
@@ -121,38 +122,44 @@ namespace redsquare
         float y = 0;
         uint index = 1;
 
-        for (auto &it: m_SpellsTextures)
+        for (auto &it: m_SpellsWidgets)
         {
-            if (it.second != nullptr)
-            {
+            gf::Vector2f pos = coordinates.getRelativePoint({ 0.43f, 0.86f })+gf::Vector2f(x, y)+ HudSpellSize*gf::Vector2f(x, y)*coordinates.getRelativeSize({ 0.001f, 0.001f }).height;
+            float scale = (HudSpellSize / HudSpellTextureSize)*coordinates.getRelativeSize({ 0.001f, 0.001f }).height;
+            it.second.setPosition(pos);
+            it.second.setScale(scale);
+            target.draw(it.second, states);
+            x += 1.2;
+            
+            if(it.first == m_Game.m_CurrentSpell){
                 gf::Sprite sprite;
-                sprite.setTexture(*(it.second));
-                sprite.setAnchor(gf::Anchor::TopLeft);
-                sprite.setPosition(coordinates.getRelativePoint({ 0.43f, 0.86f })+gf::Vector2f(x, y)+ HudSpellSize*gf::Vector2f(x, y)*coordinates.getRelativeSize({ 0.001f, 0.001f }).height);
-                sprite.setScale((HudSpellSize / HudSpellTextureSize)*coordinates.getRelativeSize({ 0.001f, 0.001f }).height);
+                sprite.setTexture( gResourceManager().getTexture("img/SpellIcon/frame-9-red.png") );
+                sprite.setPosition(pos);
+                sprite.setScale(scale);
                 target.draw(sprite, states);
-                x += 1.2;
-                
-                if(it.first == m_Game.m_CurrentSpell){
-                    sprite.setTexture( gResourceManager().getTexture("img/SpellIcon/frame-9-red.png") );
-                    target.draw(sprite, states);
-                }
-
-
-                if ( index % 4 == 0 )
-                {
-                    y += 1.2;
-                    x = 0;
-                }
-
-                index++;
             }
+
+
+            if ( index % 4 == 0 )
+            {
+                y += 1.2;
+                x = 0;
+            }
+
+            index++;
+        }
+
+        if (m_SpellTypeHover != SpellType::Unknow)
+        {
+            std::string desc = getDescriptionFromSpellType(m_SpellTypeHover);
+            std::cout << m_MouseHoverPostionOnSpell[0] << " " << m_MouseHoverPostionOnSpell[1] << " " << desc << std::endl;
         }
 
         if (m_HideChat)
         {
             m_Chat.render(target, states);
         }
+
         m_Inventory.render(target, states);
         m_MainMenu.render(target,states);
     }
@@ -163,6 +170,7 @@ namespace redsquare
         {
             m_Chat.update(time);
         }
+
         m_Inventory.update(time);
         m_MainMenu.update(time);
     }
@@ -173,8 +181,30 @@ namespace redsquare
         {
             m_Chat.processEvent(event);
         }
+
         m_Inventory.processEvent(event);
         m_MainMenu.processEvent(event);
+
+        if (event.type == gf::EventType::MouseMoved)
+        {
+            bool found = false;
+            for(auto &it: m_SpellsWidgets)
+            {
+                if (it.second.contains(event.mouseCursor.coords))
+                {
+                    m_SpellTypeHover = it.first;
+                    m_MouseHoverPostionOnSpell = event.mouseCursor.coords;
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found)
+            {
+                m_SpellTypeHover = SpellType::Unknow;
+                m_MouseHoverPostionOnSpell = {0,0};
+            }
+        }
     }
 
     bool Hud::hoveringChat()
@@ -187,7 +217,7 @@ namespace redsquare
         return m_Chat.m_TypingInChat;
     }
 
-    gf::Texture* Hud::getTextureFromSpellType(SpellType type)
+    gf::Texture& Hud::getTextureFromSpellType(SpellType type)
     {
         std::string texture;
 
@@ -250,7 +280,22 @@ namespace redsquare
             texture = "img/SpellIcon/Named/Basic1.png";
             break;
         }
-        return &gResourceManager().getTexture(texture);
+
+        return gResourceManager().getTexture(texture);
+    }
+
+    std::string Hud::getDescriptionFromSpellType(SpellType type)
+    {
+        std::string description;
+
+        switch (type)
+        {
+            case SpellType::BasicAttack:
+                description = "Basic Attack";
+                break;
+        }
+
+        return description;
     }
 
     gf::MessageStatus Hud::onSpellUpdate(gf::Id id, gf::Message *msg)
@@ -259,13 +304,14 @@ namespace redsquare
 
         auto message = static_cast<SpellUpdateMessage*>(msg);
 
-        m_SpellsTextures.clear();
+        m_SpellsWidgets.clear();
 
         for(auto it = message->spells.begin(); it != message->spells.end(); ++it)
         {
             if (*it != SpellType::Unknow)
             {
-                m_SpellsTextures.insert(std::make_pair(*it,getTextureFromSpellType(*it)));
+                gf::Texture &texture = getTextureFromSpellType(*it);
+                m_SpellsWidgets.emplace(std::make_pair(*it,std::move(gf::SpriteWidget(texture, texture, texture))));
             }
         }
 
