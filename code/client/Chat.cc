@@ -8,55 +8,15 @@
 #include <gf/Coordinates.h>
 #include <vector>
 
-static const char *VertexShader = R"(
-#version 100
-
-attribute vec2 a_position;
-attribute vec4 a_color;
-attribute vec2 a_texCoords;
-
-varying vec4 v_color;
-varying vec2 v_texCoords;
-
-uniform mat3 u_transform;
-
-void main(void) {
-  v_texCoords = a_texCoords;
-  v_color = a_color;
-  vec3 worldPosition = vec3(a_position, 1);
-  vec3 normalizedPosition = worldPosition * u_transform;
-  gl_Position = vec4(normalizedPosition.xy, 0, 1);
-}
-)";
-
-static const char *FragmentShader = R"(
-#version 100
-
-precision mediump float;
-
-varying vec4 v_color;
-varying vec2 v_texCoords;
-
-uniform sampler2D u_texture;
-uniform vec4 u_backgroundColor;
-
-void main(void) {
-  vec4 color = texture2D(u_texture, v_texCoords);
-  gl_FragColor = color * v_color * u_backgroundColor;
-}
-)";
-
 namespace redsquare
 {
     Chat::Chat(gf::Font &font, char *port, char *hostname,const char* name)
     : m_HoveringChat(false)
     , m_TypingInChat(false)
     , m_UI(font)
-    , m_ChatShader(VertexShader, FragmentShader)
     , m_ChatCom(hostname, port, m_ChatQueue)
     {
         m_Name = name;
-        m_ChatShader.setUniform("u_backgroundColor", gf::Color::Opaque(1.0f));
         m_ChatCom.start();
 
     }
@@ -83,14 +43,6 @@ namespace redsquare
 
     void Chat::render(gf::RenderTarget& target, const gf::RenderStates& states)
     {
-        if (m_HoveringChat || m_TypingInChat)
-        {
-            m_ChatShader.setUniform("u_backgroundColor", gf::Color::Opaque(1.0f));
-        }
-        else
-        {
-            m_ChatShader.setUniform("u_backgroundColor", gf::Color::Opaque(1.0f));
-        }
                     
         gf::Coordinates coordinates(target);
         gf::Vector2f ChatWindowSize=coordinates.getRelativeSize({ 0.22f,0.40f });
@@ -152,7 +104,6 @@ namespace redsquare
         }
 
         gf::RenderStates localChatStates = states;
-        localChatStates.shader = &m_ChatShader;
         target.draw(m_UI, localChatStates);
     }
 
