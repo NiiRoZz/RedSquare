@@ -27,6 +27,7 @@ namespace redsquare
         int rigthTile(gf::Vector2i tile);
 
         void setWalkableFromEntity(redsquare::Entity *entity, bool walkable);
+        void setTransparentFromEntity(redsquare::Entity *entity, bool transparent);
 
         World();
 

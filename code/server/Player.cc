@@ -119,13 +119,13 @@ namespace redsquare
         if ( newPosY >= 0 && newPosY < World::MapSize-1 && newPosX >= 0 && newPosX < World::MapSize-1 && world.m_SquareWorld.isWalkable( {newPosX, newPosY} ) )
         {
             world.setWalkableFromEntity(static_cast<redsquare::Entity*>(this), true);
-            world.m_SquareWorld.setTransparent(m_Pos, true);
+            world.setTransparentFromEntity( static_cast<redsquare::Entity*>(this), true );
 
             m_Pos[1] = newPosY;
             m_Pos[0] = newPosX;
 
             world.setWalkableFromEntity(static_cast<redsquare::Entity*>(this), false);
-            world.m_SquareWorld.setTransparent(m_Pos, false);
+            world.setTransparentFromEntity( static_cast<redsquare::Entity*>(this), false );
 
             return true;
         }

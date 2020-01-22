@@ -34,6 +34,7 @@ namespace redsquare
 
         void setWalkableFromEntity(redsquare::Entity *entity, bool walkable);
         void setWalkableFromEntity(gf::Vector2i Pos, gf::Vector2i size, bool walkable);
+        void setTransparentFromEntity(redsquare::Entity *entity, bool transparent);
         void prettyPrintWalkable(); // print if the map on which tile is walkable
 
     private:
