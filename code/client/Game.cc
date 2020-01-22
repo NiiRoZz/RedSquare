@@ -673,7 +673,6 @@ namespace redsquare
         auto currentPlayer = Game::getMyPlayer();
         if(currentPlayer != nullptr){
             m_CurrentSpell = currentPlayer->m_SpellTab[spell-1];
-            // render selector
         }else{
             std::cout << "ERROR" <<std::endl;
         }

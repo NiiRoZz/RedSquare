@@ -6,6 +6,8 @@
 #include "MainMenu.h"
 #include "Inventory.h"
 #include "../common/Message.h"
+#include "SpellWidget.h"
+
 #include <gf/Font.h>
 #include <iostream>
 #include <gf/UI.h>
@@ -41,16 +43,12 @@ namespace redsquare
         gf::Font &m_Font;
         //View of the game
         gf::ExtendView &m_View;
-        std::map<SpellType, gf::SpriteWidget> m_SpellsWidgets;
-        SpellType m_SpellTypeHover;
+        std::vector<SpellWidget> m_SpellsWidgets;
+        SpellWidget *m_SpellWidgetHover;
         gf::Vector2f m_MouseHoverPostionOnSpell;
 
         bool m_ShowMap;
         bool m_HideChat;
-        
-        
-        gf::Texture& getTextureFromSpellType(SpellType type);
-        std::string getDescriptionFromSpellType(SpellType type);
 
         gf::MessageStatus onSpellUpdate(gf::Id id, gf::Message *msg);
     };
