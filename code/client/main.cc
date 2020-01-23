@@ -93,6 +93,10 @@ int main( int argc, char **argv )
     MainMenuAction.addKeycodeKeyControl(gf::Keycode::N);
     actions.addAction(MainMenuAction);
 
+    gf::Action HelpMenuAction("AfficherAide");
+    HelpMenuAction.addKeycodeKeyControl(gf::Keycode::H);
+    actions.addAction(HelpMenuAction);
+
     gf::Action inventoryAction("Inventory");
     inventoryAction.addKeycodeKeyControl(gf::Keycode::I);
     actions.addAction(inventoryAction);
@@ -218,77 +222,99 @@ int main( int argc, char **argv )
 	start = std::chrono::system_clock::now();
     while (window.isOpen())
     {
-        // 1. input
-        gf::Event event;
-
-        while (window.pollEvent(event))
+        if (game.m_PlayerDead)
         {
-            actions.processEvent(event);
-            views.processEvent(event);
-            hud.processEvent(event);
+            gf::Event event;
 
-            switch (event.type)
+            while (window.pollEvent(event))
             {
-                case gf::EventType::MouseButtonPressed:
-                {
-                    if (!hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
-                    {
-                        end = std::chrono::system_clock::now();
-                        int elapsed_seconds = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count();
-                        if( elapsed_seconds >= 500 )
-                        {
-                            start = std::chrono::system_clock::now();
+                actions.processEvent(event);
+                views.processEvent(event);
+                hud.processEvent(event);
+            }
 
-                            gf::Vector2i pos = renderer.mapPixelToCoords(event.mouseButton.coords,mainView) / World::TileSize;
+            game.m_TempMove.clear();
+            window.setMouseCursor(defaultCursor);
+        }
+        else
+        {
+            // 1. input
+            gf::Event event;
+
+            while (window.pollEvent(event))
+            {
+                actions.processEvent(event);
+                views.processEvent(event);
+                hud.processEvent(event);
+
+                switch (event.type)
+                {
+                    case gf::EventType::MouseButtonPressed:
+                    {
+                        if (!hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
+                        {
+                            end = std::chrono::system_clock::now();
+                            int elapsed_seconds = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count();
+                            if( elapsed_seconds >= 500 )
+                            {
+                                start = std::chrono::system_clock::now();
+
+                                gf::Vector2i pos = renderer.mapPixelToCoords(event.mouseButton.coords,mainView) / World::TileSize;
+
+                                Player* myPlayer = game.getPlayer(game.m_PlayerID);
+                                if ( myPlayer != nullptr && game.m_CanPlay )
+                                {
+                                    if ( myPlayer->canAttack(pos, game) )
+                                    {
+                                        game.attackPos( pos[0], pos[1] );
+                                    }
+                                    else if (myPlayer->canMove(pos, game.m_Players, game.m_Monsters, game.m_Props, game.m_World.m_SquareMap))
+                                    {
+                                        game.movePlayer( pos[0], pos[1], true );
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    }
+
+                    case gf::EventType::MouseMoved:
+                    {
+                        if (!hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
+                        {
+                            gf::Vector2i pos = renderer.mapPixelToCoords(event.mouseCursor.coords,mainView) / World::TileSize;
 
                             Player* myPlayer = game.getPlayer(game.m_PlayerID);
                             if ( myPlayer != nullptr && game.m_CanPlay )
                             {
                                 if ( myPlayer->canAttack(pos, game) )
                                 {
-                                    game.attackPos( pos[0], pos[1] );
+                                    window.setMouseCursor(attackCursor);
+                                    game.m_TempMove.clear();
                                 }
                                 else if (myPlayer->canMove(pos, game.m_Players, game.m_Monsters, game.m_Props, game.m_World.m_SquareMap))
                                 {
-                                    game.movePlayer( pos[0], pos[1], true );
+                                    window.setMouseCursor(moveCursor);
+
+                                    game.m_TempMove.clear();
+
+                                    std::vector<gf::Vector2i> allPos = game.m_World.m_SquareMap.computeRoute(myPlayer->m_Pos, pos, 0.0);
+
+                                    if (!allPos.empty())
+                                    {
+                                        game.m_TempMove.insert(game.m_TempMove.end(), ++allPos.begin(), allPos.end());
+                                    }
                                 }
-                            }
-                        }
-                    }
-                    break;
-                }
-
-                case gf::EventType::MouseMoved:
-                {
-                    if (!hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
-                    {
-                        gf::Vector2i pos = renderer.mapPixelToCoords(event.mouseCursor.coords,mainView) / World::TileSize;
-
-                        Player* myPlayer = game.getPlayer(game.m_PlayerID);
-                        if ( myPlayer != nullptr && game.m_CanPlay )
-                        {
-                            if ( myPlayer->canAttack(pos, game) )
-                            {
-                                window.setMouseCursor(attackCursor);
-                                game.m_TempMove.clear();
-                            }
-                            else if (myPlayer->canMove(pos, game.m_Players, game.m_Monsters, game.m_Props, game.m_World.m_SquareMap))
-                            {
-                                window.setMouseCursor(moveCursor);
-
-                                game.m_TempMove.clear();
-
-                                std::vector<gf::Vector2i> allPos = game.m_World.m_SquareMap.computeRoute(myPlayer->m_Pos, pos, 0.0);
-
-                                if (!allPos.empty())
+                                else
                                 {
-                                    game.m_TempMove.insert(game.m_TempMove.end(), ++allPos.begin(), allPos.end());
+                                    window.setMouseCursor(defaultCursor);
+                                    game.m_TempMove.clear();
                                 }
                             }
                             else
                             {
-                                window.setMouseCursor(defaultCursor);
                                 game.m_TempMove.clear();
+                                window.setMouseCursor(defaultCursor);
                             }
                         }
                         else
@@ -296,105 +322,103 @@ int main( int argc, char **argv )
                             game.m_TempMove.clear();
                             window.setMouseCursor(defaultCursor);
                         }
-                    }
-                    else
-                    {
-                        game.m_TempMove.clear();
-                        window.setMouseCursor(defaultCursor);
-                    }
 
-                    break;
+                        break;
+                    }
                 }
+            }
+
+            if (fullscreenAction.isActive() && !hud.hoveringChat() && !hud.typingInChat())
+            {
+                window.toggleFullscreen();
+            }
+            if (rightAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
+            {
+                game.movePlayer( 1, 0 );
+            }
+            else if (leftAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
+            {
+                game.movePlayer( -1, 0 );
+            }
+            else if (upAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
+            {
+                game.movePlayer( 0, -1 );
+            }
+            else if (downAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
+            {
+                game.movePlayer( 0, 1 );
+            }
+
+            if (passTurn.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
+            {
+                game.passTurn();
+            }
+            if (inventoryAction.isActive() && !hud.hoveringChat() && !hud.typingInChat())
+            {
+                InventoryUpdateMessage message;
+                gMessageManager().sendMessage(&message);
+
+                inventoryVisible = !inventoryVisible;
+            }
+            if (mapAction.isActive())
+            {
+                hud.showMap();
+            }
+            if (chatAction.isActive())
+            {
+                hud.hideChat();
+            }
+            if (MainMenuAction.isActive())
+            {
+                hud.m_MainMenu.m_ShowMainMenu = !hud.m_MainMenu.m_ShowMainMenu;
+            }
+            if (HelpMenuAction.isActive())
+            {
+                hud.showHelp();
+            }
+            if( changeSpell1.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 2)
+            {
+                game.changeSpell(1);
+            }
+            if( changeSpell2.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 2)
+            {
+                game.changeSpell(2);
+            }
+            if( changeSpell3.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 3 )
+            {
+                game.changeSpell(3);
+            }
+            if( changeSpell4.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 4 )
+            {
+                game.changeSpell(4);
+            }
+            if( changeSpell5.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 5 )
+            {
+                game.changeSpell(5);
+            }
+            if( changeSpell6.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 6 )
+            {
+                game.changeSpell(6);
+            }
+            if( changeSpell7.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 7 )
+            {
+                game.changeSpell(7);
+            }
+            if( changeSpell8.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 8 )
+            {
+                game.changeSpell(8);
             }
         }
 
-        if (closeWindowAction.isActive() || game.m_PlayerDead)
+        if (closeWindowAction.isActive())
         {
             window.close();
-        }
-
-        if (fullscreenAction.isActive() && !hud.hoveringChat() && !hud.typingInChat())
-        {
-            window.toggleFullscreen();
-        }
-        if (rightAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
-        {
-            game.movePlayer( 1, 0 );
-        }
-        else if (leftAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
-        {
-            game.movePlayer( -1, 0 );
-        }
-        else if (upAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
-        {
-            game.movePlayer( 0, -1 );
-        }
-        else if (downAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
-        {
-            game.movePlayer( 0, 1 );
-        }
-
-        if (passTurn.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
-        {
-            game.passTurn();
-        }
-        if (inventoryAction.isActive() && !hud.hoveringChat() && !hud.typingInChat())
-        {
-            InventoryUpdateMessage message;
-            gMessageManager().sendMessage(&message);
-
-            inventoryVisible = !inventoryVisible;
-        }
-        if (mapAction.isActive())
-        {
-            hud.showMap();
-        }
-        if (chatAction.isActive())
-        {
-            hud.hideChat();
-        }
-        if (MainMenuAction.isActive())
-        {
-            hud.m_MainMenu.m_ShowMainMenu = !hud.m_MainMenu.m_ShowMainMenu;
-        }
-        if( changeSpell1.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 2)
-        {
-            game.changeSpell(1);
-        }
-        if( changeSpell2.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 2)
-        {
-             game.changeSpell(2);
-        }
-        if( changeSpell3.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 3 )
-        {
-            game.changeSpell(3);
-        }
-        if( changeSpell4.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 4 )
-        {
-            game.changeSpell(4);
-        }
-        if( changeSpell5.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 5 )
-        {
-            game.changeSpell(5);
-        }
-        if( changeSpell6.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 6 )
-        {
-            game.changeSpell(6);
-        }
-        if( changeSpell7.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 7 )
-        {
-            game.changeSpell(7);
-        }
-        if( changeSpell8.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 8 )
-        {
-            game.changeSpell(8);
         }
 
         // 2. update
         gf::Time time = clock.restart();
         mainEntities.update(time);
         hudEntities.update(time);
-        
 
         // 3. draw
         renderer.clear();

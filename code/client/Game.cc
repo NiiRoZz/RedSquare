@@ -63,50 +63,54 @@ namespace redsquare
     {
         m_World.render( target, states );
 
-        auto it1 = m_TempMove.begin();
-
-        // Iterate over the map using Iterator till end.
-        while (it1 != m_TempMove.end())
+        //Show only when the player is not dead
+        if (!m_PlayerDead)
         {
-            //create sprite here
-            gf::Sprite sprite;
+            auto it1 = m_TempMove.begin();
 
-            sprite.setPosition( (*it1) * World::TileSize );
-            sprite.setScale( 1 );
-            sprite.setTexture( m_NextPosTexture );
-            target.draw( sprite, states );
+            // Iterate over the map using Iterator till end.
+            while (it1 != m_TempMove.end())
+            {
+                //create sprite here
+                gf::Sprite sprite;
 
-            ++it1;
-        }
+                sprite.setPosition( (*it1) * World::TileSize );
+                sprite.setScale( 1 );
+                sprite.setTexture( m_NextPosTexture );
+                target.draw( sprite, states );
 
-        auto it4 = m_Props.begin();
+                ++it1;
+            }
 
-        // Iterate over the map using Iterator till end.
-        while (it4 != m_Props.end())
-        {
-            it4->second.render( target, states );
+            auto it4 = m_Props.begin();
 
-            ++it4;
-        }
+            // Iterate over the map using Iterator till end.
+            while (it4 != m_Props.end())
+            {
+                it4->second.render( target, states );
 
-        auto it3 = m_Monsters.begin();
+                ++it4;
+            }
 
-        // Iterate over the map using Iterator till end.
-        while (it3 != m_Monsters.end())
-        {
-            it3->second.render( target, states );
+            auto it3 = m_Monsters.begin();
 
-            ++it3;
-        }
+            // Iterate over the map using Iterator till end.
+            while (it3 != m_Monsters.end())
+            {
+                it3->second.render( target, states );
 
-        auto it2 = m_Players.begin();
+                ++it3;
+            }
 
-        // Iterate over the map using Iterator till end.
-        while (it2 != m_Players.end())
-        {
-            it2->second.render( target, states );
+            auto it2 = m_Players.begin();
 
-            ++it2;
+            // Iterate over the map using Iterator till end.
+            while (it2 != m_Players.end())
+            {
+                it2->second.render( target, states );
+
+                ++it2;
+            }
         }
     }
 
@@ -473,6 +477,10 @@ namespace redsquare
                 case PacketType::PlayerDead:
                 {
                     m_PlayerDead = true;
+
+                    MyPlayerDeadMessage message;
+
+                    gMessageManager().sendMessage(&message);
                     break;
                 }
 
