@@ -106,6 +106,13 @@ namespace redsquare
         text.setPosition(coordinates.getRelativePoint({ 0.03f, 0.05f }));
         target.draw(text, states);
 
+        //Draw HforHelp
+        text.setCharacterSize(coordinates.getRelativeCharacterSize(0.02f));
+        text.setString("Press H for help menu");
+        text.setAnchor(gf::Anchor::TopLeft);
+        text.setPosition(coordinates.getRelativePoint({ 0.875f, 0.97f }));
+        target.draw(text, states);
+
         //Draw it's your turn
         if (m_Game.m_CanPlay)
         {
@@ -154,12 +161,9 @@ namespace redsquare
 
         if (m_SpellWidgetHover != nullptr)
         {
-            gf::Coordinates coordinates(target);
             gf::Vector2f DescriptionWindowSize=coordinates.getRelativeSize({ 0.4f,0.3f });
-            
 
             std::string desc = m_SpellWidgetHover->m_Description;
-            std::cout << m_MouseHoverPostionOnSpell[0] << " " << m_MouseHoverPostionOnSpell[1] << " " << desc << std::endl;
 
             if( m_UI.begin("Description", gf::RectF::fromPositionSize(coordinates.getRelativePoint({ 0.40f,0.4f }),DescriptionWindowSize), gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
             {   
@@ -189,9 +193,8 @@ namespace redsquare
             gf::Vector2f DescriptionWindowSize=coordinates.getRelativeSize({ 0.4f,0.3f });
             if( m_UI.begin("Help", gf::RectF::fromPositionSize(coordinates.getRelativePoint({ 0.60f,0.6f }),DescriptionWindowSize), gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
             {   
-                m_UI.setCharacterSize(12);
                 m_UI.layoutRowDynamic(13, 1);
-                m_UI.label("Echap -> Close the game");
+                m_UI.label("Escape -> Close the game");
                 m_UI.label("C -> Hide/Chat");
                 m_UI.label("I -> Inventory/Hide");
                 m_UI.label("F -> Fullscreen");
@@ -200,7 +203,7 @@ namespace redsquare
                 m_UI.layoutRowDynamic(5, 2);
                 m_UI.label("Spell Shortcuts");
                 m_UI.label(" 1 2 3 4 ");
-                m_UI.layoutRowDynamic(8, 2);
+                m_UI.layoutRowDynamic(10, 2);
                 m_UI.label("");
                 m_UI.label(" 5 6 7 8 ");
                 m_UI.end();
