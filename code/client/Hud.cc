@@ -183,15 +183,16 @@ namespace redsquare
 
                 if( m_UI.begin("Description", gf::RectF::fromPositionSize(coordinates.getRelativePoint({ 0.40f,0.4f }),DescriptionWindowSize), gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
                 {   
-                    m_UI.layoutRowDynamic(15, 1);
+                    m_UI.setCharacterSize(coordinates.getRelativeCharacterSize(0.03f));
+                    m_UI.layoutRowDynamic(coordinates.getRelativeCharacterSize(0.03f), 1);
                     m_UI.label("Spell need to be selected before using it");
-                    m_UI.layoutRowDynamic(15, 2);
+                    m_UI.layoutRowDynamic(coordinates.getRelativeCharacterSize(0.03f), 2);
                     m_UI.label("Shortcuts");
                     m_UI.label(" 1 2 3 4 ");
-                    m_UI.layoutRowDynamic(5, 2);
+                    m_UI.layoutRowDynamic(coordinates.getRelativeCharacterSize(0.03f), 2);
                     m_UI.label("");
                     m_UI.label(" 5 6 7 8 ");
-                    m_UI.layoutRowDynamic(30, 1);
+                    m_UI.layoutRowDynamic(coordinates.getRelativeCharacterSize(0.03f), 1);
                     m_UI.label(desc);
                     m_UI.end();
                 }
@@ -209,17 +210,18 @@ namespace redsquare
                 gf::Vector2f DescriptionWindowSize=coordinates.getRelativeSize({ 0.4f,0.3f });
                 if( m_UI.begin("Help", gf::RectF::fromPositionSize(coordinates.getRelativePoint({ 0.60f,0.6f }),DescriptionWindowSize), gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
                 {   
-                    m_UI.layoutRowDynamic(13, 1);
+                    m_UI.setCharacterSize(coordinates.getRelativeCharacterSize(0.024f));
+                    m_UI.layoutRowDynamic(coordinates.getRelativeCharacterSize(0.024f), 1);
                     m_UI.label("Escape -> Close the game");
                     m_UI.label("C -> Hide/Chat");
                     m_UI.label("I -> Inventory/Hide");
                     m_UI.label("F -> Fullscreen");
                     m_UI.label("M -> Map/Hide");
                     m_UI.label("Spell description : pass your mouse hover spells icons");
-                    m_UI.layoutRowDynamic(5, 2);
+                    m_UI.layoutRowDynamic(coordinates.getRelativeCharacterSize(0.024f), 2);
                     m_UI.label("Spell Shortcuts");
                     m_UI.label(" 1 2 3 4 ");
-                    m_UI.layoutRowDynamic(10, 2);
+                    m_UI.layoutRowDynamic(coordinates.getRelativeCharacterSize(0.024f), 2);
                     m_UI.label("");
                     m_UI.label(" 5 6 7 8 ");
                     m_UI.end();
