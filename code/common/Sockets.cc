@@ -131,7 +131,7 @@ namespace redsquare
         ar | packet;
 
         boost::system::error_code error;
-        auto length = boost::asio::write(m_Socket, boost::asio::buffer(data, MaxLength), error);
+        boost::asio::write(m_Socket, boost::asio::buffer(data, MaxLength), error);
 
         if (error == boost::asio::error::eof || error == boost::asio::error::broken_pipe)
         {

@@ -130,13 +130,12 @@ namespace redsquare
         }
     }
     
-    void Game::placeProps(){
-        
-        int roomType; // type of the current room
+    void Game::placeProps()
+    {    
         int randChest = rand()%10; // rand if the room must contains a chest 
         for(gf::Vector4u currentRoom : m_World.TabRoom){ // for every room
 
-            roomType = rand()%13;
+            int roomType = rand()%13;
 
             gf::Id id; // if of the props
             std::map<gf::Id, Prop>::iterator itNewProp; // map of props
@@ -939,7 +938,7 @@ namespace redsquare
                 Player *player = getPlayer( packet.passTurn.playerID );
                 if ( player != nullptr )
                 {
-                    player->m_PointInRound -= player->m_PointInRound;
+                    player->m_PointInRound = 0;
                 }
                 break;
             }

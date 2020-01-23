@@ -96,7 +96,7 @@ namespace redsquare
                     sendPacket.receiveMessage.from[MAX_SIZE_FROM_CHAT - 1] = '\0';
 
                     strncpy(sendPacket.receiveMessage.message, text.asString().c_str(), MAX_SIZE_MESSAGE_CHAT);
-                    sendPacket.receiveMessage.from[MAX_SIZE_MESSAGE_CHAT - 1] = '\0';
+                    sendPacket.receiveMessage.message[MAX_SIZE_MESSAGE_CHAT - 1] = '\0';
 
                     m_ChatCom.sendPacket(sendPacket);
                 }

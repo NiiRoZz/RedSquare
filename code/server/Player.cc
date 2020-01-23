@@ -9,6 +9,7 @@ namespace redsquare
     Player::Player(SocketTcp socket, gf::Id playerID, const EntitySubType type)
     : ServerEntity(playerID,type)
     , m_Socket(std::move(socket))
+    , m_MovedInRound(false)
     {
         switch (m_TypeOfEntity){
         case EntitySubType::Magus : // ------------------- Magus -------------------
@@ -452,8 +453,9 @@ namespace redsquare
         }
     }
 
-    std::vector<Monster*> Player::attack(SpellType spellType, ServerEntity *target,std::map<gf::Id, Monster> &monsters){
-        m_PointInRound -= m_PointInRound;
+    std::vector<Monster*> Player::attack(SpellType spellType, ServerEntity *target,std::map<gf::Id, Monster> &monsters)
+    {
+        m_PointInRound = 0;
 
         switch (spellType){
             case SpellType::Reaper:
@@ -581,19 +583,19 @@ namespace redsquare
         int damage1;
         int damage2;
         if(critical > 90){
-            damage1 = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) / 1,5;
+            damage1 = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) / 1.5;
             damage1 += Variance(-(damage1/10)); // -10% to +10% dmg 
             target->m_LifePoint -= damage1;
 
-            damage2 = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) / 1,5;
+            damage2 = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) / 1.5;
             damage2 += Variance(-(damage2/10)); // -10% to +10% dmg 
 
         }else{
-            damage1 = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) / 1,7 ;
+            damage1 = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) / 1.7 ;
             damage1 += Variance(-(damage1/10)); // -10% to +10% dmg 
             target->m_LifePoint -= damage1;
 
-            damage2 = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) / 1,7;
+            damage2 = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) / 1.7;
             damage2 += Variance(-(damage2/10)); // -10% to +10% dmg 
         }
 

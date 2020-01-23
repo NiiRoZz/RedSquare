@@ -47,6 +47,7 @@ namespace redsquare
     : redsquare::Entity(entityID,static_cast<EntitySubType>(rand() % static_cast<int>(EntitySubType::EntityClassCount)))
     , m_Font(gResourceManager().getFont("font/arial.ttf"))
     , m_PlayerTexture(Player::getTexture(EntitySubType::Magus))
+    , m_Max_XP(0)
     {
         m_Pos = gf::Vector2i( 0, 0 );
     }
@@ -55,6 +56,7 @@ namespace redsquare
     : redsquare::Entity(entityID,type)
     , m_Font(gResourceManager().getFont("font/arial.ttf"))
     , m_PlayerTexture(Player::getTexture(type))
+    , m_Max_XP(0)
     {
         m_Pos = pos;
     }

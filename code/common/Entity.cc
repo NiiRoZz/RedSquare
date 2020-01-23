@@ -9,6 +9,7 @@ namespace redsquare
     : m_TypeOfEntity(EntitySubType::Magus)
     , m_EntityID(0)
     , m_Size({1,1})
+    , m_Level(0)
     {
         
     }
@@ -16,6 +17,7 @@ namespace redsquare
     Entity::Entity(gf::Id entityID)
     : m_EntityID(entityID)
     , m_Size({1,1})
+    , m_Level(0)
     {
         EntitySubType typeOfEntity;
         int randomMonster = rand() % NBMONSTER;
