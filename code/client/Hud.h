@@ -32,6 +32,7 @@ namespace redsquare
 
         void showMap();
         void hideChat();
+        void showHelp();
 
         MainMenu m_MainMenu;
         
@@ -50,6 +51,7 @@ namespace redsquare
 
         bool m_ShowMap;
         bool m_HideChat;
+        bool m_ShowHelp;
 
         gf::MessageStatus onSpellUpdate(gf::Id id, gf::Message *msg);
     };

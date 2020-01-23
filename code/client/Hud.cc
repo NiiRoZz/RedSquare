@@ -25,6 +25,7 @@ namespace redsquare
     , m_SpellWidgetHover(nullptr)
     , m_ShowMap(false)
     , m_HideChat(true)
+    , m_ShowHelp(false)
     , m_UI(font) 
     {
         gMessageManager().registerHandler<SpellUpdateMessage>(&Hud::onSpellUpdate, this);
@@ -181,6 +182,31 @@ namespace redsquare
         {
             m_Chat.render(target, states);
         }
+        if (m_ShowHelp) 
+        {
+            
+            gf::Coordinates coordinates(target);
+            gf::Vector2f DescriptionWindowSize=coordinates.getRelativeSize({ 0.4f,0.3f });
+            if( m_UI.begin("Help", gf::RectF::fromPositionSize(coordinates.getRelativePoint({ 0.60f,0.6f }),DescriptionWindowSize), gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
+            {   
+                m_UI.setCharacterSize(12);
+                m_UI.layoutRowDynamic(13, 1);
+                m_UI.label("Echap -> Close the game");
+                m_UI.label("C -> Hide/Chat");
+                m_UI.label("I -> Inventory/Hide");
+                m_UI.label("F -> Fullscreen");
+                m_UI.label("M -> Map/Hide");
+                m_UI.label("Spell description : pass your mouse hover spells icons");
+                m_UI.layoutRowDynamic(5, 2);
+                m_UI.label("Spell Shortcuts");
+                m_UI.label(" 1 2 3 4 ");
+                m_UI.layoutRowDynamic(8, 2);
+                m_UI.label("");
+                m_UI.label(" 5 6 7 8 ");
+                m_UI.end();
+            }
+            target.draw(m_UI);
+        }
 
         m_Inventory.render(target, states);
         m_MainMenu.render(target,states);
@@ -273,5 +299,9 @@ namespace redsquare
     {
         m_HideChat = !m_HideChat;
     }
-    
+
+    void Hud::showHelp()
+    {
+        m_ShowHelp = !m_ShowHelp;
+    }
 }

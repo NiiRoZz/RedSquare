@@ -93,6 +93,10 @@ int main( int argc, char **argv )
     MainMenuAction.addKeycodeKeyControl(gf::Keycode::N);
     actions.addAction(MainMenuAction);
 
+    gf::Action HelpMenuAction("AfficherAide");
+    HelpMenuAction.addKeycodeKeyControl(gf::Keycode::H);
+    actions.addAction(HelpMenuAction);
+
     gf::Action inventoryAction("Inventory");
     inventoryAction.addKeycodeKeyControl(gf::Keycode::I);
     actions.addAction(inventoryAction);
@@ -356,6 +360,10 @@ int main( int argc, char **argv )
         if (MainMenuAction.isActive())
         {
             hud.m_MainMenu.m_ShowMainMenu = !hud.m_MainMenu.m_ShowMainMenu;
+        }
+        if (HelpMenuAction.isActive())
+        {
+            hud.showHelp();
         }
         if( changeSpell1.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 2)
         {
