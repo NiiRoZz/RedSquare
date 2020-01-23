@@ -34,83 +34,83 @@ namespace redsquare
        switch (m_EntitySubType)
        {
        case EntitySubType::Bat:    
-            m_LifePoint = 75;
-            m_MaxLifePoint = 75;
+            m_LifePoint = 150;
+            m_MaxLifePoint = 150;
 
-            m_AttackPoint = 4;
-            m_MaxAttackPoint = 4;
+            m_AttackPoint = 8;
+            m_MaxAttackPoint = 8;
 
-            m_DefensePoint = 0;
-            m_MaxDefensePoint = 0;
+            m_DefensePoint = 4;
+            m_MaxDefensePoint = 4;
 
             m_Range = 1;
             m_Level = 1;
            break;
 
         case EntitySubType::SkeletonKnife:    
-            m_LifePoint = 90;
-            m_MaxLifePoint = 90;
+            m_LifePoint = 180;
+            m_MaxLifePoint = 180;
 
-            m_AttackPoint = 5;
-            m_MaxAttackPoint = 5;
+            m_AttackPoint = 15;
+            m_MaxAttackPoint = 15;
 
-            m_DefensePoint = 1;
-            m_MaxDefensePoint = 1;
+            m_DefensePoint = 5;
+            m_MaxDefensePoint = 5;
 
             m_Range = 1;
             m_Level = 1;
            break;
 
         case EntitySubType::SkeletonMagus:    
-            m_LifePoint = 80;
-            m_MaxLifePoint = 80;
+            m_LifePoint = 160;
+            m_MaxLifePoint = 160;
 
-            m_AttackPoint = 6;
-            m_MaxAttackPoint = 6;
+            m_AttackPoint = 10;
+            m_MaxAttackPoint = 10;
 
-            m_DefensePoint = 0;
-            m_MaxDefensePoint = 0;
+            m_DefensePoint = 5;
+            m_MaxDefensePoint = 5;
 
-            m_Range = 1;
+            m_Range = 2;
             m_Level = 1;
            break;
 
         case EntitySubType::Slime:    
-            m_LifePoint = 70;
-            m_MaxLifePoint = 70;
+            m_LifePoint = 140;
+            m_MaxLifePoint = 140;
 
-            m_AttackPoint = 5;
-            m_MaxAttackPoint = 5;
+            m_AttackPoint = 11;
+            m_MaxAttackPoint = 11;
 
-            m_DefensePoint = 0;
-            m_MaxDefensePoint = 0;
+            m_DefensePoint = 3;
+            m_MaxDefensePoint = 3;
 
             m_Range = 1;
             m_Level = 1;
            break;
 
         case EntitySubType::Spirit:    
-            m_LifePoint = 50;
-            m_MaxLifePoint = 50;
+            m_LifePoint = 100;
+            m_MaxLifePoint = 100;
 
-            m_AttackPoint = 6;
-            m_MaxAttackPoint = 6;
+            m_AttackPoint = 12;
+            m_MaxAttackPoint = 12;
 
-            m_DefensePoint = 0;
-            m_MaxDefensePoint = 0;
+            m_DefensePoint = 2;
+            m_MaxDefensePoint = 2;
 
             m_Range = 1;
             m_Level = 1;
            break;
        default:
-            m_LifePoint = 100;
-            m_MaxLifePoint = 100;
+            m_LifePoint = 200;
+            m_MaxLifePoint = 200;
 
-            m_AttackPoint = 5;
-            m_MaxAttackPoint = 5;
+            m_AttackPoint = 10;
+            m_MaxAttackPoint = 10;
 
-            m_DefensePoint = 0;
-            m_MaxDefensePoint = 0;
+            m_DefensePoint = 5;
+            m_MaxDefensePoint = 5;
 
             m_Range = 1;
             m_Level = 1;

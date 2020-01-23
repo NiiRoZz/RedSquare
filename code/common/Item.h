@@ -32,7 +32,8 @@ namespace redsquare
     private:
 
         void defaultCompatibleSlot();
-        void defaultData();
+        void defaultData(int floor);
+        int Variance(int range);
 
         ItemType m_Type;
 

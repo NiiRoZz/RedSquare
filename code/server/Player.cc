@@ -13,87 +13,81 @@ namespace redsquare
         switch (m_EntitySubType){
         case EntitySubType::Magus : // ------------------- Magus -------------------
             m_Class = EntitySubType::Magus;
-            m_LifePoint = 100;
+            m_LifePoint = 200;
             m_ManaPoint = 30;
 
-            m_MaxLifePoint = 100;
+            m_MaxLifePoint = 200;
             m_MaxManaPoint = 30;
 
-            m_AttackPoint = 30;
-            m_DefensePoint = 0;
+            m_AttackPoint = 60;
+            m_DefensePoint = 10;
 
-            m_MaxAttackPoint = 30;
-            m_MaxDefensePoint = 0;
+            m_MaxAttackPoint = 60;
+            m_MaxDefensePoint = 10;
 
             m_Range = 2;
-
-            m_SpellTab.push_back(SpellType::BasicAttack);
             break;
 
         case EntitySubType::Warrior : // ------------------- Warrior -------------------
             m_Class = EntitySubType::Warrior;
-            m_LifePoint = 150;
+            m_LifePoint = 300;
             m_ManaPoint = 20;
 
-            m_MaxLifePoint = 150;
+            m_MaxLifePoint = 300;
             m_MaxManaPoint = 20;
 
-            m_AttackPoint = 20;
-            m_DefensePoint = 0;
+            m_AttackPoint = 40;
+            m_DefensePoint = 20;
 
-            m_MaxAttackPoint = 20;
-            m_MaxDefensePoint = 0;
+            m_MaxAttackPoint = 40;
+            m_MaxDefensePoint = 20;
 
             m_Range = 1;
-
-            m_SpellTab.push_back(SpellType::BasicAttack);
             break;
 
         case EntitySubType::Rogue : // ------------------- Rogue -------------------
             m_Class = EntitySubType::Rogue;
-            m_LifePoint = 125;
+            m_LifePoint = 250;
             m_ManaPoint = 25;
 
-            m_MaxLifePoint = 125;
+            m_MaxLifePoint = 250;
             m_MaxManaPoint = 25;
 
-            m_AttackPoint = 25;
-            m_DefensePoint = 0;
+            m_AttackPoint = 50;
+            m_DefensePoint = 15;
 
-            m_MaxAttackPoint = 25;
-            m_MaxDefensePoint = 0;
+            m_MaxAttackPoint = 50;
+            m_MaxDefensePoint = 15;
 
             m_Range = 1;
-
-            m_SpellTab.push_back(SpellType::BasicAttack);
             break;
 
         case EntitySubType::Ranger : // ------------------- Rogue -------------------
             m_Class = EntitySubType::Ranger;
-            m_LifePoint = 80;
+            m_LifePoint = 160;
             m_ManaPoint = 20;
 
-            m_MaxLifePoint = 80;
+            m_MaxLifePoint = 160;
             m_MaxManaPoint = 20;
 
-            m_AttackPoint = 12;
-            m_DefensePoint = 0;
+            m_AttackPoint = 24;
+            m_DefensePoint = 5;
 
-            m_MaxAttackPoint = 12;
-            m_MaxDefensePoint = 0;
+            m_MaxAttackPoint = 24;
+            m_MaxDefensePoint = 5;
 
             m_Range = 3;
-            m_SpellTab.push_back(SpellType::BasicAttack);
             break;
         
         default:
             break;
         }
         m_XP = 0;
-        m_MaxXP = 10;
+        m_MaxXP = 15;
 
         m_Level = 1;
         m_MovedInRound = false;
+        m_SpellTab.push_back(SpellType::BasicAttack);
     }
 
     void Player::sendPacket(Packet &packet)
@@ -212,7 +206,7 @@ namespace redsquare
         m_DefensePoint += 2;
 
         m_XP = 0;
-        m_MaxXP += 20;
+        m_MaxXP += 30;
 
         m_Level++;
 
@@ -486,21 +480,21 @@ namespace redsquare
 
     void Player::BasicAttack(ServerEntity *target){ // DONE
 
-        std::cout << target->m_Level << std::endl;
         int damage;
         int critical = rand() % 100;
         if(critical > 95){ // critical hit
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
+            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) * 0.6;
             damage *= 2; // double the damage 
             std::cout << " CRITICAL !!! " << std::endl;
         }else{
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
+            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) * 0.6;
         }
 
         damage += Variance(-(damage/10)); // -10% to +10% dmg 
         
         if(target->m_LifePoint - damage <= 0){
             target->m_LifePoint = 0;
+            std::cout << " BasicAttack dealed : " << damage << std::endl;
             std::cout << " The target is dead" << std::endl;
             return;
         }else{
@@ -737,10 +731,10 @@ namespace redsquare
 
         int critical = rand() % 100;
         int damage;
-        int missingHealth = m_LifePoint * 100 / m_MaxLifePoint;
-        std::cout << "missingHealth " << missingHealth << std::endl;
+        int missingHealth = (m_LifePoint*2)/ m_MaxLifePoint;
+        //std::cout << "missingHealth " << missingHealth << std::endl;
         if(critical > 90){
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) * (100 - (missingHealth));
+            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) * missingHealth;
             damage *= 2;
             damage += Variance(-(damage / 10));
         }else{ 
