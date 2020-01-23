@@ -37,6 +37,11 @@ namespace redsquare
         static const gf::Id type = "MyPlayerReceived"_id;
         EntitySubType entityType;
     };
+
+    struct MyPlayerDeadMessage : public gf::Message
+    {
+        static const gf::Id type = "MyPlayerDead"_id;
+    };
 }
 
 #endif // REDSQUARE_COMMON_MESSAGE_H

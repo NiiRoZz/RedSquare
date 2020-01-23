@@ -37,6 +37,9 @@ namespace redsquare
         MainMenu m_MainMenu;
         
     private:
+        gf::MessageStatus onSpellUpdate(gf::Id id, gf::Message *msg);
+        gf::MessageStatus onPlayerDeadUpdate(gf::Id id, gf::Message *msg);
+
         Game &m_Game;
         Chat m_Chat;
         Inventory m_Inventory;
@@ -52,8 +55,7 @@ namespace redsquare
         bool m_ShowMap;
         bool m_HideChat;
         bool m_ShowHelp;
-
-        gf::MessageStatus onSpellUpdate(gf::Id id, gf::Message *msg);
+        bool m_PlayerDead;
     };
 
 }

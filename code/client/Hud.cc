@@ -21,15 +21,16 @@ namespace redsquare
     , m_Inventory(font, game)
     , m_MainMenu(font)
     , m_Font(font)
+    , m_UI(font) 
     , m_View(view)
     , m_SpellWidgetHover(nullptr)
     , m_ShowMap(false)
     , m_HideChat(true)
     , m_ShowHelp(false)
-    , m_UI(font) 
+    , m_PlayerDead(false)
     {
         gMessageManager().registerHandler<SpellUpdateMessage>(&Hud::onSpellUpdate, this);
-
+        gMessageManager().registerHandler<MyPlayerDeadMessage>(&Hud::onPlayerDeadUpdate, this);
     }
 
     static constexpr float HudSpellSize = 55.0f;
@@ -39,177 +40,184 @@ namespace redsquare
     {
         gf::Coordinates coordinates(target);
 
-        //Draw MiniMap
-        if (m_ShowMap)
+        if (m_PlayerDead)
         {
-            gf::Vector2f baseCoordinatesMiniMap = coordinates.getRelativePoint({ 0.03f, 0.1f });
-            gf::Vector2f miniMapShapeSize = coordinates.getRelativeSize({ 0.001953125f, 0.003472222f });
-            Player *myPlayer = m_Game.getMyPlayer();
-            gf::ShapeParticles shapeParticles;
-
-            for(uint i = 0; i < World::MapSize; ++i)
+            //Show message of death here
+        }
+        else
+        {
+            //Draw MiniMap
+            if (m_ShowMap)
             {
-                for (uint j = 0; j < World::MapSize; ++j)
+                gf::Vector2f baseCoordinatesMiniMap = coordinates.getRelativePoint({ 0.03f, 0.1f });
+                gf::Vector2f miniMapShapeSize = coordinates.getRelativeSize({ 0.001953125f, 0.003472222f });
+                Player *myPlayer = m_Game.getMyPlayer();
+                gf::ShapeParticles shapeParticles;
+
+                for(uint i = 0; i < World::MapSize; ++i)
                 {
-                    bool draw = true;
-                    Tile tileType = m_Game.m_World.m_World({i,j});
-                    gf::Color4f color;
-
-                    switch (tileType)
+                    for (uint j = 0; j < World::MapSize; ++j)
                     {
-                        case Tile::Room:
-                        case Tile::Stair:
-                        case Tile::Corridor:
-                        {
-                            color = std::move(gf::Color4f(0.0078, 0.1765, 0.451, 0.75));
-                            break;
-                        }
+                        bool draw = true;
+                        Tile tileType = m_Game.m_World.m_World({i,j});
+                        gf::Color4f color;
 
-                        default:
+                        switch (tileType)
                         {
-                            draw = false;
-                            break;
-                        }
-                    }
-
-                    if (draw)
-                    {
-                        Player *playerAtPos = m_Game.getPlayer({(int)i,(int)j});
-                        if (playerAtPos != nullptr)
-                        {
-                            if (playerAtPos != myPlayer)
+                            case Tile::Room:
+                            case Tile::Stair:
+                            case Tile::Corridor:
                             {
-                                color = std::move(gf::Color4f(0.0, 1.0, 0.0, 0.75));
+                                color = std::move(gf::Color4f(0.0078, 0.1765, 0.451, 0.75));
+                                break;
                             }
-                            else
+
+                            default:
                             {
-                                color = std::move(gf::Color4f(1.0, 0.0, 0.0, 0.75));
+                                draw = false;
+                                break;
                             }
                         }
 
-                        shapeParticles.addRectangle( {baseCoordinatesMiniMap[0] + i * miniMapShapeSize[0], baseCoordinatesMiniMap[1] + j * miniMapShapeSize[1]}, miniMapShapeSize, color );
+                        if (draw)
+                        {
+                            Player *playerAtPos = m_Game.getPlayer({(int)i,(int)j});
+                            if (playerAtPos != nullptr)
+                            {
+                                if (playerAtPos != myPlayer)
+                                {
+                                    color = std::move(gf::Color4f(0.0, 1.0, 0.0, 0.75));
+                                }
+                                else
+                                {
+                                    color = std::move(gf::Color4f(1.0, 0.0, 0.0, 0.75));
+                                }
+                            }
+
+                            shapeParticles.addRectangle( {baseCoordinatesMiniMap[0] + i * miniMapShapeSize[0], baseCoordinatesMiniMap[1] + j * miniMapShapeSize[1]}, miniMapShapeSize, color );
+                        }
                     }
                 }
+
+                target.draw( shapeParticles, states );
             }
 
-            target.draw( shapeParticles, states );
-        }
-
-        //Draw floor
-        gf::Text text;
-        text.setFont(m_Font);
-        text.setOutlineColor(gf::Color::White);
-        text.setOutlineThickness(coordinates.getRelativeSize({ 1.0f, 0.002f }).height);
-        text.setCharacterSize(coordinates.getRelativeCharacterSize(0.05f));
-        text.setString("Etage : " + std::to_string(m_Game.m_Floor));
-        text.setAnchor(gf::Anchor::TopLeft);
-        text.setPosition(coordinates.getRelativePoint({ 0.03f, 0.05f }));
-        target.draw(text, states);
-
-        //Draw it's your turn
-        if (m_Game.m_CanPlay)
-        {
+            //Draw floor
             gf::Text text;
             text.setFont(m_Font);
             text.setOutlineColor(gf::Color::White);
             text.setOutlineThickness(coordinates.getRelativeSize({ 1.0f, 0.002f }).height);
             text.setCharacterSize(coordinates.getRelativeCharacterSize(0.05f));
-            text.setString("C'est ton tour !");
+            text.setString("Etage : " + std::to_string(m_Game.m_Floor));
             text.setAnchor(gf::Anchor::TopLeft);
-            text.setPosition(coordinates.getRelativePoint({ 0.80f, 0.05f }));
+            text.setPosition(coordinates.getRelativePoint({ 0.03f, 0.05f }));
             target.draw(text, states);
-        }
 
-        float x = 0;
-        float y = 0;
-        uint index = 1;
-
-        for (auto &it: m_SpellsWidgets)
-        {
-            gf::Vector2f pos = coordinates.getRelativePoint({ 0.43f, 0.86f })+gf::Vector2f(x, y)+ HudSpellSize*gf::Vector2f(x, y)*coordinates.getRelativeSize({ 0.001f, 0.001f }).height;
-            float scale = (HudSpellSize / HudSpellTextureSize)*coordinates.getRelativeSize({ 0.001f, 0.001f }).height;
-            it.setPosition(pos);
-            it.setScale(scale);
-            target.draw(it, states);
-            x += 1.2;
-            
-            if(it.m_SpellType == m_Game.m_CurrentSpell)
+            //Draw it's your turn
+            if (m_Game.m_CanPlay)
             {
-                gf::Sprite sprite;
-                sprite.setTexture( gResourceManager().getTexture("img/SpellIcon/frame-9-red.png") );
-                sprite.setPosition(pos);
-                sprite.setScale(scale);
-                target.draw(sprite, states);
+                gf::Text text;
+                text.setFont(m_Font);
+                text.setOutlineColor(gf::Color::White);
+                text.setOutlineThickness(coordinates.getRelativeSize({ 1.0f, 0.002f }).height);
+                text.setCharacterSize(coordinates.getRelativeCharacterSize(0.05f));
+                text.setString("C'est ton tour !");
+                text.setAnchor(gf::Anchor::TopLeft);
+                text.setPosition(coordinates.getRelativePoint({ 0.80f, 0.05f }));
+                target.draw(text, states);
             }
 
+            float x = 0;
+            float y = 0;
+            uint index = 1;
 
-            if ( index % 4 == 0 )
+            for (auto &it: m_SpellsWidgets)
             {
-                y += 1.2;
-                x = 0;
+                gf::Vector2f pos = coordinates.getRelativePoint({ 0.43f, 0.86f })+gf::Vector2f(x, y)+ HudSpellSize*gf::Vector2f(x, y)*coordinates.getRelativeSize({ 0.001f, 0.001f }).height;
+                float scale = (HudSpellSize / HudSpellTextureSize)*coordinates.getRelativeSize({ 0.001f, 0.001f }).height;
+                it.setPosition(pos);
+                it.setScale(scale);
+                target.draw(it, states);
+                x += 1.2;
+                
+                if(it.m_SpellType == m_Game.m_CurrentSpell)
+                {
+                    gf::Sprite sprite;
+                    sprite.setTexture( gResourceManager().getTexture("img/SpellIcon/frame-9-red.png") );
+                    sprite.setPosition(pos);
+                    sprite.setScale(scale);
+                    target.draw(sprite, states);
+                }
+
+
+                if ( index % 4 == 0 )
+                {
+                    y += 1.2;
+                    x = 0;
+                }
+
+                index++;
             }
 
-            index++;
-        }
+            if (m_SpellWidgetHover != nullptr)
+            {
+                gf::Coordinates coordinates(target);
+                gf::Vector2f DescriptionWindowSize=coordinates.getRelativeSize({ 0.4f,0.3f });
+                
 
-        if (m_SpellWidgetHover != nullptr)
-        {
-            gf::Coordinates coordinates(target);
-            gf::Vector2f DescriptionWindowSize=coordinates.getRelativeSize({ 0.4f,0.3f });
-            
+                std::string desc = m_SpellWidgetHover->m_Description;
+                std::cout << m_MouseHoverPostionOnSpell[0] << " " << m_MouseHoverPostionOnSpell[1] << " " << desc << std::endl;
 
-            std::string desc = m_SpellWidgetHover->m_Description;
-            std::cout << m_MouseHoverPostionOnSpell[0] << " " << m_MouseHoverPostionOnSpell[1] << " " << desc << std::endl;
-
-            if( m_UI.begin("Description", gf::RectF::fromPositionSize(coordinates.getRelativePoint({ 0.40f,0.4f }),DescriptionWindowSize), gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
-            {   
-                m_UI.layoutRowDynamic(15, 1);
-                m_UI.label("Spell need to be selected before using it");
-                m_UI.layoutRowDynamic(15, 2);
-                m_UI.label("Shortcuts");
-                m_UI.label(" 1 2 3 4 ");
-                m_UI.layoutRowDynamic(5, 2);
-                m_UI.label("");
-                m_UI.label(" 5 6 7 8 ");
-                m_UI.layoutRowDynamic(30, 1);
-                m_UI.label(desc);
-                m_UI.end();
+                if( m_UI.begin("Description", gf::RectF::fromPositionSize(coordinates.getRelativePoint({ 0.40f,0.4f }),DescriptionWindowSize), gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
+                {   
+                    m_UI.layoutRowDynamic(15, 1);
+                    m_UI.label("Spell need to be selected before using it");
+                    m_UI.layoutRowDynamic(15, 2);
+                    m_UI.label("Shortcuts");
+                    m_UI.label(" 1 2 3 4 ");
+                    m_UI.layoutRowDynamic(5, 2);
+                    m_UI.label("");
+                    m_UI.label(" 5 6 7 8 ");
+                    m_UI.layoutRowDynamic(30, 1);
+                    m_UI.label(desc);
+                    m_UI.end();
+                }
+                target.draw(m_UI);
             }
-            target.draw(m_UI);
-        }
 
-        if (m_HideChat)
-        {
-            m_Chat.render(target, states);
-        }
-        if (m_ShowHelp) 
-        {
-            
-            gf::Coordinates coordinates(target);
-            gf::Vector2f DescriptionWindowSize=coordinates.getRelativeSize({ 0.4f,0.3f });
-            if( m_UI.begin("Help", gf::RectF::fromPositionSize(coordinates.getRelativePoint({ 0.60f,0.6f }),DescriptionWindowSize), gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
-            {   
-                m_UI.setCharacterSize(12);
-                m_UI.layoutRowDynamic(13, 1);
-                m_UI.label("Echap -> Close the game");
-                m_UI.label("C -> Hide/Chat");
-                m_UI.label("I -> Inventory/Hide");
-                m_UI.label("F -> Fullscreen");
-                m_UI.label("M -> Map/Hide");
-                m_UI.label("Spell description : pass your mouse hover spells icons");
-                m_UI.layoutRowDynamic(5, 2);
-                m_UI.label("Spell Shortcuts");
-                m_UI.label(" 1 2 3 4 ");
-                m_UI.layoutRowDynamic(8, 2);
-                m_UI.label("");
-                m_UI.label(" 5 6 7 8 ");
-                m_UI.end();
+            if (m_HideChat)
+            {
+                m_Chat.render(target, states);
             }
-            target.draw(m_UI);
-        }
+            if (m_ShowHelp) 
+            {
+                
+                gf::Coordinates coordinates(target);
+                gf::Vector2f DescriptionWindowSize=coordinates.getRelativeSize({ 0.4f,0.3f });
+                if( m_UI.begin("Help", gf::RectF::fromPositionSize(coordinates.getRelativePoint({ 0.60f,0.6f }),DescriptionWindowSize), gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
+                {   
+                    m_UI.setCharacterSize(12);
+                    m_UI.layoutRowDynamic(13, 1);
+                    m_UI.label("Echap -> Close the game");
+                    m_UI.label("C -> Hide/Chat");
+                    m_UI.label("I -> Inventory/Hide");
+                    m_UI.label("F -> Fullscreen");
+                    m_UI.label("M -> Map/Hide");
+                    m_UI.label("Spell description : pass your mouse hover spells icons");
+                    m_UI.layoutRowDynamic(5, 2);
+                    m_UI.label("Spell Shortcuts");
+                    m_UI.label(" 1 2 3 4 ");
+                    m_UI.layoutRowDynamic(8, 2);
+                    m_UI.label("");
+                    m_UI.label(" 5 6 7 8 ");
+                    m_UI.end();
+                }
+                target.draw(m_UI);
+            }
 
-        m_Inventory.render(target, states);
-        m_MainMenu.render(target,states);
+            m_Inventory.render(target, states);
+            m_MainMenu.render(target,states);
+        }
     }
 
     void Hud::update(gf::Time time)
@@ -288,6 +296,13 @@ namespace redsquare
         }
 
         return gf::MessageStatus::Keep;
+    }
+
+    gf::MessageStatus Hud::onPlayerDeadUpdate(gf::Id id, gf::Message *msg)
+    {
+        assert(id == MyPlayerDeadMessage::type);
+
+        m_PlayerDead = true;
     }
 
     void Hud::showMap()
