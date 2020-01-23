@@ -7,11 +7,21 @@ namespace redsquare
     {
         switch (type)
         {
-            case ItemType::Sword:
-            {
-                return gResourceManager().getTexture("img/attackCursor.png");
+            case ItemType::Sword1: 
+                return gResourceManager().getTexture("img/Item/Sword/Sword1.png");
                 break;
-            }
+            case ItemType::Sword2: 
+                return gResourceManager().getTexture("img/Item/Sword/Sword2.png");
+                break;
+            case ItemType::Sword3: 
+                return gResourceManager().getTexture("img/Item/Sword/Sword2.png");
+                break;
+            case ItemType::Staff1: 
+                return gResourceManager().getTexture("img/Item/Staff/Staff1.png");
+                break;
+            case ItemType::Bow1: 
+                return gResourceManager().getTexture("img/Item/Bow/Bow1.png");
+                break;
         }
 
         return gResourceManager().getTexture("img/attackCursor.png");

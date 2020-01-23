@@ -112,7 +112,6 @@ namespace redsquare
         Revenge, // deal damage to foes based on missing health of source
         Lacerate, // deal damage to foes based on missing health of targer
         Incinerate, // deal damage to foes and can burn ennemy
-        Devastate, // AOE dmg
         Massacre, // bleed dmg
         LightningStrike, // AOE dmg
         Scorch, // dmg + bleed
@@ -137,20 +136,114 @@ namespace redsquare
     enum class ItemType: uint16_t
     {
 
-        // WEAPON 
-        Sword,
         Sword1,
         Sword2,
-        Staff,
-        Bow,
-        Daguer,
-        SpellBook,
-        // WEAPON 
+        Sword3,
+        Sword4,
+        Sword5,
+        Sword6,
+        Sword7,
+        Sword8,
+        Sword9,
+        Sword10,
+        Sword11,
+        Sword12,
+        Sword13,
+        Sword14,
+        Sword15,
 
-        // ARMOR
-        Shield,
-        Helmet,
-        Chesplate,
+        Staff1,
+        Staff2,
+        Staff3,
+        Staff4,
+        Staff5,
+        Staff6,
+        Staff7,
+        Staff8,
+        Staff9,
+        Staff10,
+        Staff11,
+        Staff12,
+        Staff13,
+        Staff14,
+        Staff15,
+
+        Bow1,
+        Bow2,
+        Bow3,
+        Bow4,
+        Bow5,
+        Bow6,
+        Bow7,
+        Bow8,
+        Bow9,
+        Bow10,
+        Bow11,
+        Bow12,
+        Bow13,
+        Bow14,
+        Bow15,
+
+        SpellBook1,
+        SpellBook2,
+        SpellBook3,
+        SpellBook4,
+        SpellBook5,
+        SpellBook6,
+        SpellBook7,
+        SpellBook8,
+        SpellBook9,
+        SpellBook10,
+        SpellBook11,
+        SpellBook12,
+        SpellBook13,
+        SpellBook14,
+        SpellBook15,
+
+        Shield1,
+        Shield2,
+        Shield3,
+        Shield4,
+        Shield5,
+        Shield6,
+        Shield7,
+        Shield8,
+        Shield9,
+        Shield10,
+        Shield11,
+        Shield12,
+        Shield13,
+        Shield14,
+        Shield15,
+
+        Helmet1,
+        Helmet2,
+        Helmet3,
+        Helmet4,
+        Helmet5,
+        Helmet6,
+        Helmet7,
+        Helmet8,
+        Helmet9,
+        Helmet10,
+
+        Chesplate1,
+        Chesplate2,
+        Chesplate3,
+        Chesplate4,
+        Chesplate5,
+        Chesplate6,
+        Chesplate7,
+        Chesplate8,
+        Chesplate9,
+        Chesplate10,
+        Chesplate11,
+        Chesplate12,
+        Chesplate13,
+        Chesplate14,
+        Chesplate15,
+
+
         Legging,
         Boots,
         // ARMOR
@@ -159,6 +252,8 @@ namespace redsquare
         ManaPot,
         HealthPot,
         EnergyPot,
+        Fish,
+        Candy,
         // CONSUMABLES
     };
 

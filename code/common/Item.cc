@@ -47,7 +47,10 @@ namespace redsquare
     {
         switch (m_Type)
         {
-            case ItemType::Sword:
+            case ItemType::Staff1:
+            case ItemType::Sword1: 
+            case ItemType::Bow1: 
+            case ItemType::SpellBook1: 
             {
                 addCompatibleSlot(InventorySlotType::Weapon);
                 break;
@@ -61,18 +64,13 @@ namespace redsquare
     {
         switch (m_Type)
         {
-            case ItemType::Sword:
+            case ItemType::Sword1:
             {
-                
                 break;
             }
 
             default:
             {
-                m_PassiveLifePoint = 0;
-                m_PassiveAttackPoint = 0;
-                m_PassiveDefensePoint = 0;
-
                 m_GiveLifePoint = 0;
                 m_GiveAttackPoint = 0;
                 m_GiveDefensePoint = 0;

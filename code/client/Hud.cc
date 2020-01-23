@@ -196,9 +196,6 @@ namespace redsquare
         case SpellType::FireBall :
             texture = "img/SpellIcon/Named/Fireball1.png";
             break;
-        case SpellType::Devastate :
-            texture = "img/SpellIcon/Named/Devastate1.png";
-            break;
         case SpellType::Lacerate :
             texture = "img/SpellIcon/Named/Lacerate1.png";
             break;

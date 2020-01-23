@@ -89,7 +89,6 @@ namespace redsquare
         default:
             break;
         }
-       
         m_XP = 0;
         m_MaxXP = 10;
 
@@ -169,25 +168,55 @@ namespace redsquare
     {
         switch (m_TypeOfEntity)
         {
-            case EntitySubType::Magus:
-            {
+            case EntitySubType::Magus:{
                 //Example how to spawn item in weapon slot
-                ServerItem item1(ItemType::Sword);
+                ServerItem item1(ItemType::Staff1);
+                std::cout <<" azeaez" << std::endl;
                 ssize_t pos = m_Inventory.addItem(InventorySlotType::Weapon, std::move(item1));
                 if (pos != -1)
                 {
                     sendUpdateItem(InventorySlotType::Weapon, false, pos);
                 }
 
-                //Example how to spawn item in cargo slot
-                ServerItem item2(ItemType::Sword);
+               /* //Example how to spawn item in cargo slot
+                ServerItem item2(ItemType::Sword1);
                 pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item2));
                 if (pos != -1)
                 {
                     sendUpdateItem(InventorySlotType::Cargo, false, pos);
-                }
+                }*/
+                break;
             }
+            case EntitySubType::Warrior:  case EntitySubType::Rogue:{
+                ServerItem item1(ItemType::Sword1);
+                ssize_t pos = m_Inventory.addItem(InventorySlotType::Weapon, std::move(item1));
+                if (pos != -1)
+                {
+                    sendUpdateItem(InventorySlotType::Weapon, false, pos);
+                }
+                break;
+            }
+            case EntitySubType::Ranger:{
+                ServerItem item1(ItemType::Bow1);
+                ssize_t pos = m_Inventory.addItem(InventorySlotType::Weapon, std::move(item1));
+                if (pos != -1)
+                {
+                    sendUpdateItem(InventorySlotType::Weapon, false, pos);
+                }
+                break;
+            }
+            case EntitySubType::Healer:{
+                ServerItem item1(ItemType::SpellBook1);
+                ssize_t pos = m_Inventory.addItem(InventorySlotType::Weapon, std::move(item1));
+                if (pos != -1)
+                {
+                    sendUpdateItem(InventorySlotType::Weapon, false, pos);
+                }
+                break;
+            }
+                
         }
+        
     }
 
     void Player::levelUp(){ // method to level up a player
@@ -814,10 +843,6 @@ namespace redsquare
 
         m_ManaPoint -= 5;
         std::cout << "Incinerate dealed " << damage << std::endl;
-    }
-
-    void Player::Devastate(ServerEntity *target, int zone){
-        // TODO get all foes in an area and attack them
     }
 
     void Player::Massacre(ServerEntity *target){ // WARRIOR ROGUE
