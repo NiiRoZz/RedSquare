@@ -42,7 +42,16 @@ namespace redsquare
 
         if (m_PlayerDead)
         {
-            //Show message of death here
+            gf::Text text;
+            text.setFont(m_Font);
+            text.setColor(gf::Color::Red);
+            text.setOutlineColor(gf::Color::Black);
+            text.setOutlineThickness(coordinates.getRelativeSize({ 1.0f, 0.002f }).height);
+            text.setCharacterSize(coordinates.getRelativeCharacterSize(0.2f));
+            text.setString("YOU DIED");
+            text.setAnchor(gf::Anchor::TopLeft);
+            text.setPosition(coordinates.getRelativePoint({ 0.29f, 0.45f }));
+            target.draw(text, states);
         }
         else
         {
