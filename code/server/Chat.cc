@@ -6,7 +6,8 @@
 
 namespace redsquare
 {
-    void Chat::sendMessageToAll(Packet& packet){
+    void Chat::sendMessageToAll(Packet& packet)
+    {
         auto it = m_PlayersSocket.begin();
  
         // Iterate over the map using Iterator till end.
@@ -20,7 +21,6 @@ namespace redsquare
 
     void Chat::chatThread()
     {
-        
         for(;;){
             Packet packet;
             while ( m_chatQueue.poll(packet))
@@ -28,7 +28,7 @@ namespace redsquare
                 if(packet.type != PacketType::Message){
                     continue;
                 }
-                std::cout<< " 2 : "<< packet.receiveMessage.from  << std::endl;
+                std::cout<< "Chat::chatThread : "<< packet.receiveMessage.from << " " << packet.receiveMessage.message << std::endl;
                 sendMessageToAll(packet);
             }
             
@@ -42,22 +42,21 @@ namespace redsquare
             Packet packet;
 
             socket.receive(packet);
-            std::cout<< " 1 " << packet.receiveMessage.from << std::endl;
 
-            if(socket.getState()==SocketState::Disconnected){
-                return ;
-            }
+            if(socket.getState()==SocketState::Disconnected) return; 
 
             m_chatQueue.push(std::move(packet));
         }
         
     }
 
-    void Chat::startChat(){
+    void Chat::startChat()
+    {
         std::thread(&Chat::chatThread, this).detach();
     }
     
-    void Chat::addPlayer(gf::Id idPlayer, SocketTcp socket){
+    void Chat::addPlayer(gf::Id idPlayer, SocketTcp socket)
+    {
         m_PlayersSocket.insert(std::make_pair(idPlayer, std::move(socket)));
         std::thread(&Chat::receiveMessagePacket, this, std::ref(m_PlayersSocket[idPlayer])).detach();
     }

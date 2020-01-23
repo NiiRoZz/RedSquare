@@ -25,15 +25,13 @@ namespace redsquare
     void Chat::update(gf::Time time)
     {
         Packet packet;
-        while(m_ChatQueue.poll(packet)){
-             if(packet.type != PacketType::Message){
-                    continue;
-            }
+        while(m_ChatQueue.poll(packet))
+        {
+            if(packet.type != PacketType::Message) continue;
+
             std::string from = packet.receiveMessage.from;
-            std::cout <<from<<std::endl;
             std::string message = packet.receiveMessage.message;
-            std::string text = from + " : "+message;
-            std::cout<< text<<std::endl;
+            std::string text = from + " : "+ message;
             gf::UICharBuffer box(512);
             box.append(text);
             m_tabCharBuffer.push_back(std::move(box));
@@ -67,19 +65,24 @@ namespace redsquare
             m_UI.layoutRowStatic(sizeInterChat[0], sizeInterChat[1], 1);
             if (m_UI.groupBegin("",gf::UIWindow::ScrollAutoHide))
             {
-                m_UI.layoutRowStatic(sizeMessageReceiveChat[0],sizeMessageReceiveChat[1], 1);
-                m_UI.edit(gf::UIEditType::Box | gf::UIEdit::ReadOnly,box);
-                m_UI.groupEnd();
+                for(gf::UICharBuffer &curr : m_tabCharBuffer)
+                {
+                    m_UI.layoutRowStatic(sizeMessageReceiveChat[0],sizeMessageReceiveChat[1], 1);
+                    m_UI.edit(gf::UIEditType::Box | gf::UIEdit::ReadOnly, curr);
+                }
             }
+            m_UI.groupEnd();
+
             m_UI.layoutRowStatic(sizeMessageBackground[0], sizeMessageBackground[1], 1);
 
-            if (m_UI.groupBegin("",gf::UIWindow::Border))
+            if (m_UI.groupBegin("", gf::UIWindow::Border|gf::UIWindow::NoScrollbar ))
             {
-                
                 m_UI.layoutRowBegin(gf::UILayout::Dynamic, sizeMessageToSend[0], 2);
                 m_UI.layoutRowPush(0.7f);
                 
                 gf::UIEditEventFlags flags = m_UI.edit(gf::UIEditType::Field | gf::UIEdit::SigEnter, text, gf::UIEditFilter::Ascii);
+
+                //Detect if we are typing in the chat
                 m_TypingInChat = (flags & gf::UIEditEvent::Active);
 
                 m_UI.layoutRowPush(0.30f);
@@ -88,18 +91,19 @@ namespace redsquare
                 {
                     Packet sendPacket;
                     sendPacket.type = PacketType::Message;
-                    std::cout<<"name : "<<m_Name;
-                    //strcpy(sendPacket.receiveMessage.from,m_Name);
-                    strncpy(sendPacket.receiveMessage.from, m_Name, 30);
 
-                    //strcpy(sendPacket.receiveMessage.message,text.asString().c_str());
-                    strncpy(sendPacket.receiveMessage.message, text.asString().c_str(), 1024);
+                    strncpy(sendPacket.receiveMessage.from, m_Name, MAX_SIZE_FROM_CHAT);
+                    sendPacket.receiveMessage.from[MAX_SIZE_FROM_CHAT - 1] = '\0';
+
+                    strncpy(sendPacket.receiveMessage.message, text.asString().c_str(), MAX_SIZE_MESSAGE_CHAT);
+                    sendPacket.receiveMessage.from[MAX_SIZE_MESSAGE_CHAT - 1] = '\0';
+
                     m_ChatCom.sendPacket(sendPacket);
-                    std::cout<< "envoyé : " <<sendPacket.receiveMessage.from <<std::endl;
                 }
                 m_UI.layoutRowEnd();
-                m_UI.groupEnd();
             } 
+            m_UI.groupEnd();
+
             m_UI.end();
         }
 
