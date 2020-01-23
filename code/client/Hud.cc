@@ -113,6 +113,13 @@ namespace redsquare
             text.setPosition(coordinates.getRelativePoint({ 0.03f, 0.05f }));
             target.draw(text, states);
 
+            //Draw HforHelp
+            text.setCharacterSize(coordinates.getRelativeCharacterSize(0.02f));
+            text.setString("Press H for help menu");
+            text.setAnchor(gf::Anchor::TopLeft);
+            text.setPosition(coordinates.getRelativePoint({ 0.875f, 0.97f }));
+            target.draw(text, states);
+
             //Draw it's your turn
             if (m_Game.m_CanPlay)
             {
@@ -159,6 +166,29 @@ namespace redsquare
                 index++;
             }
 
+            if (m_SpellWidgetHover != nullptr)
+            {
+                gf::Vector2f DescriptionWindowSize=coordinates.getRelativeSize({ 0.4f,0.3f });
+
+                std::string desc = m_SpellWidgetHover->m_Description;
+
+                if( m_UI.begin("Description", gf::RectF::fromPositionSize(coordinates.getRelativePoint({ 0.40f,0.4f }),DescriptionWindowSize), gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
+                {   
+                    m_UI.layoutRowDynamic(15, 1);
+                    m_UI.label("Spell need to be selected before using it");
+                    m_UI.layoutRowDynamic(15, 2);
+                    m_UI.label("Shortcuts");
+                    m_UI.label(" 1 2 3 4 ");
+                    m_UI.layoutRowDynamic(5, 2);
+                    m_UI.label("");
+                    m_UI.label(" 5 6 7 8 ");
+                    m_UI.layoutRowDynamic(30, 1);
+                    m_UI.label(desc);
+                    m_UI.end();
+                }
+                target.draw(m_UI);
+            }
+
             if (m_HideChat)
             {
                 m_Chat.render(target, states);
@@ -185,11 +215,12 @@ namespace redsquare
                     m_UI.label(" 5 6 7 8 ");
                     m_UI.end();
                 }
-
-                m_Inventory.render(target, states);
-                m_MainMenu.render(target,states);
+                target.draw(m_UI);
             }
         }
+
+        m_Inventory.render(target, states);
+        m_MainMenu.render(target,states);
     }
 
     void Hud::update(gf::Time time)
