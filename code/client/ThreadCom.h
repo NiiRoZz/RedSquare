@@ -4,6 +4,7 @@
 #include <functional>
 #include <gf/Id.h>
 #include <gf/Queue.h>
+#include <thread>
 
 #include "../common/Packet.h"
 #include "../common/Sockets.h"
