@@ -697,8 +697,7 @@ namespace redsquare
 
                     if ( moved && !player->m_MovedInRound )
                     {
-                        //TODO: TEMP
-                        player->m_PointInRound -= player->m_PointInRound;
+                        player->m_PointInRound = 0;
                         player->m_MovedInRound = true;
 
                         Packet sendPacket;

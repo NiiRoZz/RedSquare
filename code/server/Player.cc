@@ -9,7 +9,6 @@ namespace redsquare
     Player::Player(SocketTcp socket, gf::Id playerID, const EntitySubType type)
     : ServerEntity(playerID,type)
     , m_Socket(std::move(socket))
-    , m_MovedInRound(false)
     {
         switch (m_TypeOfEntity){
         case EntitySubType::Magus : // ------------------- Magus -------------------
@@ -95,6 +94,7 @@ namespace redsquare
         m_MaxXP = 10;
 
         m_Level = 1;
+        m_MovedInRound = false;
     }
 
     void Player::sendPacket(Packet &packet)
@@ -386,7 +386,7 @@ namespace redsquare
     }
 
     void Player::attack(SpellType spellType, ServerEntity *target){
-        m_PointInRound -= m_PointInRound;
+        m_PointInRound = 0;
 
         switch (spellType)
         {

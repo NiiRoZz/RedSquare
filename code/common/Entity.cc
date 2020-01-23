@@ -9,16 +9,16 @@ namespace redsquare
     : m_TypeOfEntity(EntitySubType::Magus)
     , m_EntityID(0)
     , m_Size({1,1})
-    , m_Level(0)
     {
-        
+        m_Level = 0;
     }
 
     Entity::Entity(gf::Id entityID)
     : m_EntityID(entityID)
     , m_Size({1,1})
-    , m_Level(0)
     {
+        m_Level = 0;
+
         EntitySubType typeOfEntity;
         int randomMonster = rand() % NBMONSTER;
 
@@ -49,6 +49,8 @@ namespace redsquare
     : m_EntityID(entityID)
     , m_TypeOfEntity(typeOfEntity)
     {
+        m_Level = 0;
+
         switch (typeOfEntity)
         {
             case EntitySubType::BlankShelf : 
@@ -121,7 +123,6 @@ namespace redsquare
                 m_Size = {1,1};
                 break;     
         }
-
     }
 
     bool Entity::isInsideMe(gf::Vector2i pos)
