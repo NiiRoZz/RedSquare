@@ -49,6 +49,7 @@ namespace redsquare
     , m_PlayerTexture(Player::getTexture(EntitySubType::Magus))
     {
         m_Pos = gf::Vector2i( 0, 0 );
+        m_Max_XP = 0;
     }
 
     Player::Player( gf::Id entityID, EntitySubType type, gf::Vector2i pos )
@@ -57,6 +58,7 @@ namespace redsquare
     , m_PlayerTexture(Player::getTexture(type))
     {
         m_Pos = pos;
+        m_Max_XP = 0;
     }
 
     void Player::render(gf::RenderTarget& target, const gf::RenderStates& states)

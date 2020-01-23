@@ -22,6 +22,7 @@ namespace redsquare
 
     void MainMenu::render(gf::RenderTarget& target, const gf::RenderStates& states)
     {
+        /*
         gf::Coordinates coordinates(target);
         gf::Vector2f MainMenuWindowSize=coordinates.getRelativeSize({ 1.0f,1.0f });
         gf::Vector2f sizeNamePlayer=MainMenuWindowSize*gf::Vector2f(0.050,0.7);
@@ -29,7 +30,7 @@ namespace redsquare
         gf::Vector2f sizeEspace2=MainMenuWindowSize*gf::Vector2f(0.030,0.7);
         if(m_ShowMainMenu)
         {
-            /*
+            
             if( m_UI.begin("", gf::RectF::fromPositionSize(coordinates.getRelativePoint({ 0.0f,0.0f }),MainMenuWindowSize), gf::UIWindow::NoScrollbar))
             {
                 m_UI.layoutRowDynamic(sizeEspace[0], 3);
@@ -82,8 +83,9 @@ namespace redsquare
             }
         
             target.draw(m_UI);
-            */
+            
         }
+        */
     }
 
 
