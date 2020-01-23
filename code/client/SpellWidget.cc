@@ -15,10 +15,6 @@ namespace redsquare
             texturePath = "img/SpellIcon/Named/Fireball1.png";
             m_Description = "Throw a fireball";
             break;
-        case SpellType::Devastate :
-            texturePath = "img/SpellIcon/Named/Devastate1.png";
-            m_Description = "Deal damage the more target has of life";
-            break;
         case SpellType::Lacerate :
             texturePath = "img/SpellIcon/Named/Lacerate1.png";
             m_Description = "Deal damage the more target has of life";
