@@ -42,7 +42,16 @@ namespace redsquare
 
         if (m_PlayerDead)
         {
-            //Show message of death here
+            gf::Text text;
+            text.setFont(m_Font);
+            text.setColor(gf::Color::Red);
+            text.setOutlineColor(gf::Color::Black);
+            text.setOutlineThickness(coordinates.getRelativeSize({ 1.0f, 0.002f }).height);
+            text.setCharacterSize(coordinates.getRelativeCharacterSize(0.2f));
+            text.setString("YOU DIED");
+            text.setAnchor(gf::Anchor::TopLeft);
+            text.setPosition(coordinates.getRelativePoint({ 0.29f, 0.45f }));
+            target.draw(text, states);
         }
         else
         {
@@ -107,10 +116,17 @@ namespace redsquare
             text.setFont(m_Font);
             text.setOutlineColor(gf::Color::White);
             text.setOutlineThickness(coordinates.getRelativeSize({ 1.0f, 0.002f }).height);
-            text.setCharacterSize(coordinates.getRelativeCharacterSize(0.05f));
+            text.setCharacterSize(coordinates.getRelativeCharacterSize(0.045f));
             text.setString("Etage : " + std::to_string(m_Game.m_Floor));
             text.setAnchor(gf::Anchor::TopLeft);
             text.setPosition(coordinates.getRelativePoint({ 0.03f, 0.05f }));
+            target.draw(text, states);
+
+            //Draw HforHelp
+            text.setCharacterSize(coordinates.getRelativeCharacterSize(0.02f));
+            text.setString("Press H for help menu");
+            text.setAnchor(gf::Anchor::TopLeft);
+            text.setPosition(coordinates.getRelativePoint({ 0.875f, 0.97f }));
             target.draw(text, states);
 
             //Draw it's your turn
@@ -120,7 +136,7 @@ namespace redsquare
                 text.setFont(m_Font);
                 text.setOutlineColor(gf::Color::White);
                 text.setOutlineThickness(coordinates.getRelativeSize({ 1.0f, 0.002f }).height);
-                text.setCharacterSize(coordinates.getRelativeCharacterSize(0.05f));
+                text.setCharacterSize(coordinates.getRelativeCharacterSize(0.045f));
                 text.setString("C'est ton tour !");
                 text.setAnchor(gf::Anchor::TopLeft);
                 text.setPosition(coordinates.getRelativePoint({ 0.80f, 0.05f }));
@@ -161,24 +177,17 @@ namespace redsquare
 
             if (m_SpellWidgetHover != nullptr)
             {
-                gf::Coordinates coordinates(target);
-                gf::Vector2f DescriptionWindowSize=coordinates.getRelativeSize({ 0.4f,0.3f });
-                
+                gf::Vector2f DescriptionWindowSize=coordinates.getRelativeSize({ 0.4f,0.2f });
 
                 std::string desc = m_SpellWidgetHover->m_Description;
-                std::cout << m_MouseHoverPostionOnSpell[0] << " " << m_MouseHoverPostionOnSpell[1] << " " << desc << std::endl;
 
-                if( m_UI.begin("Description", gf::RectF::fromPositionSize(coordinates.getRelativePoint({ 0.40f,0.4f }),DescriptionWindowSize), gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
+                if( m_UI.begin("Description", gf::RectF::fromPositionSize(coordinates.getRelativePoint({ 0.40f,0.55f }),DescriptionWindowSize), gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
                 {   
-                    m_UI.layoutRowDynamic(15, 1);
+                    m_UI.setCharacterSize(coordinates.getRelativeCharacterSize(0.03f));
+                    m_UI.layoutRowDynamic(coordinates.getRelativeCharacterSize(0.03f), 1);
                     m_UI.label("Spell need to be selected before using it");
-                    m_UI.layoutRowDynamic(15, 2);
-                    m_UI.label("Shortcuts");
-                    m_UI.label(" 1 2 3 4 ");
-                    m_UI.layoutRowDynamic(5, 2);
-                    m_UI.label("");
-                    m_UI.label(" 5 6 7 8 ");
-                    m_UI.layoutRowDynamic(30, 1);
+                    m_UI.layoutRowDynamic(coordinates.getRelativeCharacterSize(0.04f), 1);
+                    
                     m_UI.label(desc);
                     m_UI.end();
                 }
@@ -196,28 +205,28 @@ namespace redsquare
                 gf::Vector2f DescriptionWindowSize=coordinates.getRelativeSize({ 0.4f,0.3f });
                 if( m_UI.begin("Help", gf::RectF::fromPositionSize(coordinates.getRelativePoint({ 0.60f,0.6f }),DescriptionWindowSize), gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
                 {   
-                    m_UI.setCharacterSize(12);
-                    m_UI.layoutRowDynamic(13, 1);
-                    m_UI.label("Echap -> Close the game");
+                    m_UI.setCharacterSize(coordinates.getRelativeCharacterSize(0.024f));
+                    m_UI.layoutRowDynamic(coordinates.getRelativeCharacterSize(0.024f), 1);
+                    m_UI.label("Escape -> Close the game");
                     m_UI.label("C -> Hide/Chat");
                     m_UI.label("I -> Inventory/Hide");
                     m_UI.label("F -> Fullscreen");
                     m_UI.label("M -> Map/Hide");
                     m_UI.label("Spell description : pass your mouse hover spells icons");
-                    m_UI.layoutRowDynamic(5, 2);
+                    m_UI.layoutRowDynamic(coordinates.getRelativeCharacterSize(0.024f), 2);
                     m_UI.label("Spell Shortcuts");
                     m_UI.label(" 1 2 3 4 ");
-                    m_UI.layoutRowDynamic(8, 2);
+                    m_UI.layoutRowDynamic(coordinates.getRelativeCharacterSize(0.024f), 2);
                     m_UI.label("");
                     m_UI.label(" 5 6 7 8 ");
                     m_UI.end();
                 }
                 target.draw(m_UI);
             }
-
-            m_Inventory.render(target, states);
-            m_MainMenu.render(target,states);
         }
+
+        m_Inventory.render(target, states);
+        m_MainMenu.render(target,states);
     }
 
     void Hud::update(gf::Time time)

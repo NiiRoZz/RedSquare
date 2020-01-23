@@ -79,12 +79,13 @@ namespace redsquare
             texturePath = "img/SpellIcon/Named/Reaper1.png";
             m_Description = "Deal damage in front of you";
             break;
-        case SpellType::Unknow :
-            texturePath = "img/SpellIcon/Named/Basic1.png";
-            m_Description = "";
-        default:
+        case SpellType::BasicAttack :
             texturePath = "img/SpellIcon/Named/Basic1.png";
             m_Description = "Basic Attack";
+            break;
+        default:
+            texturePath = "img/SpellIcon/Named/Basic1.png";
+            m_Description = "";
             break;
         }
 

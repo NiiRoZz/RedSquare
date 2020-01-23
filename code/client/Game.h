@@ -85,7 +85,7 @@ namespace redsquare
     private:
         const char *m_Name;
         //Thread for communication
-        ThreadCom m_ThreadCom;
+        ThreadCom<Packet> m_ThreadCom;
         //Queue for message
         gf::Queue<Packet> m_ComQueue;
 

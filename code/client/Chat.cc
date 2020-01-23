@@ -14,29 +14,25 @@ namespace redsquare
     : m_HoveringChat(false)
     , m_TypingInChat(false)
     , m_UI(font)
+    , m_Name(name)
     , m_ChatCom(hostname, port, m_ChatQueue)
     {
-        m_Name = name;
         m_ChatCom.start();
-
     }
 
     
     void Chat::update(gf::Time time)
     {
-        Packet packet;
+        Message packet;
         while(m_ChatQueue.poll(packet))
         {
-            if(packet.type != PacketType::Message) continue;
-
-            std::string from = packet.receiveMessage.from;
-            std::string message = packet.receiveMessage.message;
+            std::string from = packet.from;
+            std::string message = packet.message;
             std::string text = from + " : "+ message;
             gf::UICharBuffer box(512);
             box.append(text);
             m_tabCharBuffer.push_back(std::move(box));
         }
-        
     }
 
     void Chat::render(gf::RenderTarget& target, const gf::RenderStates& states)
@@ -63,7 +59,7 @@ namespace redsquare
             m_HoveringChat = m_UI.isWindowHovered();
             
             m_UI.layoutRowStatic(sizeInterChat[0], sizeInterChat[1], 1);
-            if (m_UI.groupBegin("",gf::UIWindow::ScrollAutoHide))
+            if (m_UI.groupBegin("MessageReceive",gf::UIWindow::ScrollAutoHide))
             {
                 for(gf::UICharBuffer &curr : m_tabCharBuffer)
                 {
@@ -75,7 +71,7 @@ namespace redsquare
 
             m_UI.layoutRowStatic(sizeMessageBackground[0], sizeMessageBackground[1], 1);
 
-            if (m_UI.groupBegin("", gf::UIWindow::Border|gf::UIWindow::NoScrollbar ))
+            if (m_UI.groupBegin("MessageToSend", gf::UIWindow::Border|gf::UIWindow::NoScrollbar ))
             {
                 m_UI.layoutRowBegin(gf::UILayout::Dynamic, sizeMessageToSend[0], 2);
                 m_UI.layoutRowPush(0.7f);
@@ -89,16 +85,18 @@ namespace redsquare
                 
                 if ( m_UI.buttonLabel("Submit") || flags.test(gf::UIEditEvent::Commited) )
                 {
-                    Packet sendPacket;
-                    sendPacket.type = PacketType::Message;
+                    Message sendPacket;
 
-                    strncpy(sendPacket.receiveMessage.from, m_Name, MAX_SIZE_FROM_CHAT);
-                    sendPacket.receiveMessage.from[MAX_SIZE_FROM_CHAT - 1] = '\0';
+                    std::size_t length = m_Name.copy(sendPacket.from, m_Name.length());
+                    sendPacket.from[length]='\0';
 
-                    strncpy(sendPacket.receiveMessage.message, text.asString().c_str(), MAX_SIZE_MESSAGE_CHAT);
-                    sendPacket.receiveMessage.from[MAX_SIZE_MESSAGE_CHAT - 1] = '\0';
+                    std::string message = text.asString();
+                    length = message.copy(sendPacket.message, message.length());
+                    sendPacket.message[length]='\0';
 
                     m_ChatCom.sendPacket(sendPacket);
+
+                    text.clear();
                 }
                 m_UI.layoutRowEnd();
             } 
