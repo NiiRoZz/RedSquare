@@ -241,4 +241,15 @@ namespace redsquare
             }
         }
     }
+
+    void World::setTransparentFromEntity(redsquare::Entity *entity, bool transparent)
+    {
+        for(uint i = 0; i < entity->m_Size[0]; ++i)
+        {
+            for(uint j = 0; j < entity->m_Size[1]; ++j)
+            {
+                m_SquareMap.setTransparent({entity->m_Pos[0] + (int)i, entity->m_Pos[1] + (int)j}, transparent);
+            }
+        }
+    }
 }

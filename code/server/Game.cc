@@ -836,6 +836,7 @@ namespace redsquare
                                     sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
                                     sendPacket.entityDisconnected.entityID = currentMonster->getEntityID();
                                     m_World.setWalkableFromEntity( currentMonster, true);
+                                    m_World.setTransparentFromEntity( currentMonster, true );
                                     m_Monsters.erase(currentMonster->getEntityID());
                                 }else{
                                     currentMonster->createCarPacket(sendPacket);
@@ -872,6 +873,7 @@ namespace redsquare
                                     sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
                                     sendPacket.entityDisconnected.entityID = currentMonster->getEntityID();
                                     m_World.setWalkableFromEntity( currentMonster, true);
+                                    m_World.setTransparentFromEntity( currentMonster, true );
                                     m_Monsters.erase(currentMonster->getEntityID());
                                 }else{
                                     currentMonster->createCarPacket(sendPacket);
@@ -900,7 +902,7 @@ namespace redsquare
                                 sendPacket.entityDisconnected.entityID = targetMonster->getEntityID();
 
                                 m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(targetMonster), true);
-                                m_World.m_SquareWorld.setTransparent(targetMonster->m_Pos, true);
+                                m_World.setTransparentFromEntity( static_cast<redsquare::Entity*>(targetMonster), true );
 
                                 m_Monsters.erase(targetMonster->getEntityID());
                             }
@@ -921,7 +923,7 @@ namespace redsquare
                         sendPacket.entityDisconnected.entityID = targetProp->getEntityID();
 
                         m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(targetProp), true);
-                        m_World.m_SquareWorld.setTransparent(targetProp->m_Pos);
+                        m_World.setTransparentFromEntity( static_cast<redsquare::Entity*>(targetProp), true );
 
                         m_Props.erase(targetProp->getEntityID());
 

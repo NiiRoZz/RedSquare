@@ -212,7 +212,7 @@ int main( int argc, char **argv )
 					}
 					
 					game.m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&(it->second)), true);
-					game.m_World.m_SquareWorld.setTransparent(it->second.m_Pos, true);
+					game.m_World.setTransparentFromEntity( static_cast<redsquare::Entity*>(&(it->second)), true );
 
 					std::vector<gf::Vector2i> points = game.m_World.m_SquareWorld.computeRoute(it->second.m_Pos, it->second.m_Routine, 0.0);
 
@@ -229,6 +229,7 @@ int main( int argc, char **argv )
 						}
 
 						game.m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&(it->second)), false);
+						game.m_World.setTransparentFromEntity( static_cast<redsquare::Entity*>(&(it->second)), false );
 
 						Packet sendPacket;
 						sendPacket.type = PacketType::ReceiveMove;

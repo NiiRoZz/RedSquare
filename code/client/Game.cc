@@ -254,12 +254,13 @@ namespace redsquare
                             assert( player != nullptr );
 
                             m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(player), true);
-					        m_World.m_SquareMap.setTransparent(player->m_Pos, true);
+                            m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(player), true);
 
                             player->m_Pos[0] = packet.receiveMove.posX;
                             player->m_Pos[1] = packet.receiveMove.posY;
 
                             m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(player), false);
+                            m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(player), false);
                             break;
                         }
 
@@ -269,12 +270,13 @@ namespace redsquare
                             assert( monster != nullptr );
 
                             m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(monster), true);
-					        m_World.m_SquareMap.setTransparent(monster->m_Pos, true);
+                            m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(monster), true);
 
                             monster->m_Pos[0] = packet.receiveMove.posX;
                             monster->m_Pos[1] = packet.receiveMove.posY;
 
                             m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(monster), false);
+                            m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(monster), false);
                             break;
                         }
                     }
@@ -291,7 +293,7 @@ namespace redsquare
                             assert( player != nullptr );
 
                             m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(player), true);
-					        m_World.m_SquareMap.setTransparent(player->m_Pos, true);
+                            m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(player), true);
 
                             m_Players.erase( packet.entityDisconnected.entityID );
                             break;
@@ -303,7 +305,7 @@ namespace redsquare
                             assert( monster != nullptr );
 
                             m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(monster), true);
-					        m_World.m_SquareMap.setTransparent(monster->m_Pos, true);
+                            m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(monster), true);
 
                             m_Monsters.erase( packet.entityDisconnected.entityID );
                             break;
@@ -315,7 +317,7 @@ namespace redsquare
                             assert( prop != nullptr );
 
                             m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(prop), true);
-					        m_World.m_SquareMap.setTransparent(prop->m_Pos, true);
+                            m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(prop), true);
 
                             m_Props.erase( packet.entityDisconnected.entityID );
                             break;
@@ -393,6 +395,7 @@ namespace redsquare
                             }
 
                             m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&(it.first->second)), false);
+                            m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(&(it.first->second)), false);
                             break;
                         }
 
@@ -402,6 +405,7 @@ namespace redsquare
                             assert( it.second );
 
                             m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&(it.first->second)), false);
+                            m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(&(it.first->second)), false);
                             break;
                         }
 
@@ -411,6 +415,7 @@ namespace redsquare
                             assert( it.second );
 
                             m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&(it.first->second)), false);
+                            m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(&(it.first->second)), false);
                             break;
                         }
                     }
@@ -668,7 +673,6 @@ namespace redsquare
         auto currentPlayer = Game::getMyPlayer();
         if(currentPlayer != nullptr){
             m_CurrentSpell = currentPlayer->m_SpellTab[spell-1];
-            // render selector
         }else{
             std::cout << "ERROR" <<std::endl;
         }

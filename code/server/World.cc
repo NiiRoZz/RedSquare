@@ -363,6 +363,7 @@ namespace redsquare
         
         prop.m_Pos = {((int)currentRoom[0]+((int)posX)),((int)currentRoom[1]+((int)posY))};
         setWalkableFromEntity(&prop, false);
+        setTransparentFromEntity(&prop, false);
     }
 
     void World::monsterSpawn(Monster &monster, std::map<gf::Id,Monster> &m_Monsters, uint m_Floor){ // set to a monster a spawn
@@ -463,6 +464,17 @@ namespace redsquare
             for(uint j = 0; j < size[1]; ++j)
             {
                 m_SquareWorld.setWalkable({Pos[0] + (int)i, Pos[1] + (int)j}, walkable);
+            }
+        }
+    }
+
+    void World::setTransparentFromEntity(redsquare::Entity *entity, bool transparent)
+    {
+        for(uint i = 0; i < entity->m_Size[0]; ++i)
+        {
+            for(uint j = 0; j < entity->m_Size[1]; ++j)
+            {
+                m_SquareWorld.setTransparent({entity->m_Pos[0] + (int)i, entity->m_Pos[1] + (int)j}, transparent);
             }
         }
     }
