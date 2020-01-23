@@ -9,6 +9,8 @@
 #include <string>
 
 #define MAX_SPELL_PER_PLAYER 8
+#define MAX_SIZE_MESSAGE_CHAT 1024
+#define MAX_SIZE_FROM_CHAT 30
 
 namespace redsquare
 {
@@ -178,8 +180,8 @@ namespace redsquare
 
     struct Message
     {
-        char from[30];
-        char message[1024];
+        char from[MAX_SIZE_FROM_CHAT];
+        char message[MAX_SIZE_MESSAGE_CHAT];
     };
 
     struct PlayerInfoConnection
