@@ -10,26 +10,93 @@
 
 namespace redsquare
 {
-  class ThreadCom
-  {
-  public:
-    ThreadCom(SocketTcp socket, gf::Queue<Packet> &queue);
-    ThreadCom(char* hostname, char *port, gf::Queue<Packet> &queue);
+    template<typename T>
+    class ThreadCom
+    {
+    public:
+        ThreadCom(SocketTcp socket, gf::Queue<T> &queue)
+        : m_socket(std::move(socket))
+        , m_queue(&queue)
+        {
 
-    void setQueue(gf::Queue<Packet>* queue);
+        }
 
-    void start();
-    bool sendPacket(Packet &packet);
-    bool receivePacket(Packet &packet);
-    bool receivePacket(NewPlayer &packet);
-    void receivePackets();
+        ThreadCom(char* hostname, char *port, gf::Queue<T> &queue)
+        : m_queue(&queue)
+        {
+            m_socket.connectTo(hostname, port);
+        }
 
-    bool socketWorking() const;
+        void start()
+        {
+            std::thread(&ThreadCom::receivePackets, this).detach();
+        }
 
-  private:
-    SocketTcp m_socket;
-    gf::Queue<Packet>* m_queue;
-  };
+        bool sendPacket(T &packet)
+        {
+            m_socket.send(packet);
+
+            return !(m_socket.getState() == SocketState::Disconnected);
+        }
+
+        bool receivePacket(T &packet)
+        {
+            m_socket.receive(packet);
+
+            return !(m_socket.getState() == SocketState::Disconnected);
+        }
+
+        bool receivePacket(NewPlayer &packet)
+        {
+            m_socket.receive(packet);
+
+            return !(m_socket.getState() == SocketState::Disconnected);
+        }
+
+        void receivePackets()
+        {
+            for(;;)
+            {
+                T packet;
+
+                if (!receivePacket(packet))
+                {
+                    break;
+                }
+
+                m_queue->push(packet);
+            }
+        }
+
+        bool socketWorking() const
+        {
+            return !(m_socket.getState() == SocketState::Disconnected);
+        }
+
+    private:
+        SocketTcp m_socket;
+        gf::Queue<T>* m_queue;
+    };
+
+    template<> inline void ThreadCom<Packet>::receivePackets()
+    {
+        for(;;)
+        {
+            Packet packet;
+
+            if (!receivePacket(packet))
+            {
+                break;
+            }
+
+            m_queue->push(packet);
+            
+            if (packet.type == PacketType::NewMap)
+            {
+                break;
+            }
+        }
+    }
 }
 
 #endif // REDSQUARE_COMMON_THREADCOM_H

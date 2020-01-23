@@ -19,24 +19,21 @@ namespace redsquare
         void chatThread();
         void render(gf::RenderTarget& target, const gf::RenderStates& states);
         void processEvent(const gf::Event &event);
-        void writeMessage(Packet packet);
+
         bool m_HoveringChat;
         bool m_TypingInChat;
 
     private:
         gf::UI m_UI;
-        const char * m_Name;
+        std::string m_Name;
 
         //Thread chat communication
-        gf::Queue<Packet> m_ChatQueue;
+        gf::Queue<Message> m_ChatQueue;
 
         //queue of message
-        ThreadCom m_ChatCom;
+        ThreadCom<Message> m_ChatCom;
 
         std::vector<gf::UICharBuffer> m_tabCharBuffer;
-
-
-
     };
 }
 

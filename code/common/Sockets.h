@@ -34,6 +34,9 @@ namespace redsquare {
     void send(NewPlayer &packet);
     void receive(NewPlayer &packet);
 
+    void send(Message &packet);
+    void receive(Message &packet);
+
   private:
     boost::asio::io_service m_IoService;
     boost::asio::ip::tcp::socket m_Socket;

@@ -6,7 +6,7 @@
 
 namespace redsquare
 {
-    void Chat::sendMessageToAll(Packet& packet)
+    void Chat::sendMessageToAll(Message& packet)
     {
         auto it = m_PlayersSocket.begin();
  
@@ -21,26 +21,20 @@ namespace redsquare
 
     void Chat::chatThread()
     {
-        for(;;){
-            Packet packet;
+        for(;;)
+        {
+            Message packet;
             while ( m_chatQueue.poll(packet))
             {
-                if(packet.type != PacketType::Message){
-                    continue;
-                }
-                std::cout<< "Chat::chatThread : "<< packet.receiveMessage.from << " " << packet.receiveMessage.message << std::endl;
                 sendMessageToAll(packet);
             }
-            
         }
-        
     }
 
     void Chat::receiveMessagePacket(SocketTcp& socket){
         for(;;)
         {
-            Packet packet;
-
+            Message packet;
             socket.receive(packet);
 
             if(socket.getState()==SocketState::Disconnected) return; 

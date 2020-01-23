@@ -14,7 +14,6 @@ add_executable(RedSquare
   code/client/main.cc
   code/client/Player.cc
   code/client/Game.cc
-  code/client/ThreadCom.cc
   code/client/World.cc
   code/client/Monster.cc
   code/client/Chat.cc

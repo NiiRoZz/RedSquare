@@ -302,7 +302,6 @@ namespace redsquare
             PlayerTurn playerTurn;
             SpawnEntity spawnEntity;
             EntityCar entityCar;
-            Message receiveMessage;
             UpdateSpells updateSpells;
             UpdateItem updateItem;
             MoveItem moveItem;
@@ -401,13 +400,6 @@ namespace redsquare
                 break;
             }
 
-            case PacketType::Message:
-            {
-                ar | packet.receiveMessage.from;
-                ar | packet.receiveMessage.message;
-                break;
-            }
-
             case PacketType::UpdateSpells:
             {
                 ar | packet.updateSpells.spells;
@@ -444,6 +436,14 @@ namespace redsquare
         ar | packet.playerID;
         ar | packet.floor;
         ar | packet.world;
+        return ar;
+    }
+
+    template<class Archive>
+    Archive& operator|(Archive& ar, Message& packet)
+    {
+        ar | packet.from;
+        ar | packet.message;
         return ar;
     }
 
