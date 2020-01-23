@@ -63,7 +63,7 @@ namespace redsquare
             m_HoveringChat = m_UI.isWindowHovered();
             
             m_UI.layoutRowStatic(sizeInterChat[0], sizeInterChat[1], 1);
-            if (m_UI.groupBegin("",gf::UIWindow::ScrollAutoHide))
+            if (m_UI.groupBegin("MessageReceive",gf::UIWindow::ScrollAutoHide))
             {
                 for(gf::UICharBuffer &curr : m_tabCharBuffer)
                 {
@@ -75,7 +75,7 @@ namespace redsquare
 
             m_UI.layoutRowStatic(sizeMessageBackground[0], sizeMessageBackground[1], 1);
 
-            if (m_UI.groupBegin("", gf::UIWindow::Border|gf::UIWindow::NoScrollbar ))
+            if (m_UI.groupBegin("MessageToSend", gf::UIWindow::Border|gf::UIWindow::NoScrollbar ))
             {
                 m_UI.layoutRowBegin(gf::UILayout::Dynamic, sizeMessageToSend[0], 2);
                 m_UI.layoutRowPush(0.7f);

@@ -360,11 +360,11 @@ int main( int argc, char **argv )
 
                 inventoryVisible = !inventoryVisible;
             }
-            if (mapAction.isActive())
+            if (mapAction.isActive() && !hud.hoveringChat() && !hud.typingInChat())
             {
                 hud.showMap();
             }
-            if (chatAction.isActive())
+            if (chatAction.isActive() && !hud.hoveringChat() && !hud.typingInChat())
             {
                 hud.hideChat();
             }
@@ -372,7 +372,7 @@ int main( int argc, char **argv )
             {
                 hud.m_MainMenu.m_ShowMainMenu = !hud.m_MainMenu.m_ShowMainMenu;
             }
-            if (HelpMenuAction.isActive())
+            if (HelpMenuAction.isActive() && !hud.hoveringChat() && !hud.typingInChat())
             {
                 hud.showHelp();
             }
