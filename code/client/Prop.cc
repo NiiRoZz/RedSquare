@@ -9,13 +9,13 @@
 
 namespace redsquare
 {
-    Prop::Prop( gf::Id entityID, EntitySubType type, gf::Vector2i pos )
-    : redsquare::Entity(entityID,type)
+    Prop::Prop( gf::Id entityID, EntitySubType entitySubType, gf::Vector2i pos )
+    : ClientEntity(entityID, EntityType::Prop, entitySubType)
     , m_Animated(false)
     {
         m_Pos = pos;
 
-        loadTexture(type);
+        loadTexture(entitySubType);
     }
 
     void Prop::loadTexture(const EntitySubType type)

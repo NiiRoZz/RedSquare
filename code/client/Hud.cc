@@ -18,7 +18,7 @@ namespace redsquare
     Hud::Hud(Game &game, gf::Font &font,char* port,char* hostname, gf::ExtendView &view,const char* name)
     : m_Game(game)
     , m_Chat(font,port,hostname,name)
-    , m_Inventory(font, game)
+    , m_InventoryUI(font, game)
     , m_MainMenu(font)
     , m_Font(font)
     , m_UI(font) 
@@ -225,7 +225,7 @@ namespace redsquare
             }
         }
 
-        m_Inventory.render(target, states);
+        m_InventoryUI.render(target, states);
         m_MainMenu.render(target,states);
     }
 
@@ -236,7 +236,7 @@ namespace redsquare
             m_Chat.update(time);
         }
 
-        m_Inventory.update(time);
+        m_InventoryUI.update(time);
         m_MainMenu.update(time);
     }
 
@@ -247,7 +247,7 @@ namespace redsquare
             m_Chat.processEvent(event);
         }
 
-        m_Inventory.processEvent(event);
+        m_InventoryUI.processEvent(event);
         m_MainMenu.processEvent(event);
 
         if (event.type == gf::EventType::MouseMoved)

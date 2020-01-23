@@ -6,11 +6,11 @@
 
 namespace redsquare
 {
-    Player::Player(SocketTcp socket, gf::Id playerID, const EntitySubType type)
-    : ServerEntity(playerID,type)
+    Player::Player(SocketTcp socket, gf::Id playerID, const EntitySubType entitySubType)
+    : ServerEntity(playerID, EntityType::Player, entitySubType)
     , m_Socket(std::move(socket))
     {
-        switch (m_TypeOfEntity){
+        switch (m_EntitySubType){
         case EntitySubType::Magus : // ------------------- Magus -------------------
             m_Class = EntitySubType::Magus;
             m_LifePoint = 100;
@@ -141,42 +141,19 @@ namespace redsquare
     {
         return (m_Socket.getState() == SocketState::Disconnected);
     }
-
-    Inventory& Player::getInventory()
-    {
-        return m_Inventory;
-    }
-
-    void Player::sendUpdateItem(InventorySlotType slotType, bool remove, uint pos)
-    {
-        Packet packet;
-        packet.type = PacketType::UpdateItem;
-        packet.updateItem.slotType = slotType;
-        packet.updateItem.pos = pos;
-        packet.updateItem.removeItem = remove;
-
-        ServerItem* item = m_Inventory.getItem(slotType, pos);
-        if (item != nullptr)
-        {
-            packet.updateItem.typeItem = item->getType();
-            packet.updateItem.slotMask = item->getSlotMask();
-        }
-
-        sendPacket(packet);
-    }
     
     void Player::defaultInventoryStuff()
     {
-        switch (m_TypeOfEntity)
+        switch (m_EntitySubType)
         {
             case EntitySubType::Magus:{
                 //Example how to spawn item in weapon slot
                 ServerItem item1(ItemType::Staff1);
-                std::cout <<" azeaez" << std::endl;
                 ssize_t pos = m_Inventory.addItem(InventorySlotType::Weapon, std::move(item1));
                 if (pos != -1)
                 {
-                    sendUpdateItem(InventorySlotType::Weapon, false, pos);
+                    Packet packet = createUpdateItemPacket(InventorySlotType::Weapon, false, pos);
+                    sendPacket(packet);
                 }
 
                /* //Example how to spawn item in cargo slot
@@ -193,7 +170,8 @@ namespace redsquare
                 ssize_t pos = m_Inventory.addItem(InventorySlotType::Weapon, std::move(item1));
                 if (pos != -1)
                 {
-                    sendUpdateItem(InventorySlotType::Weapon, false, pos);
+                    Packet packet = createUpdateItemPacket(InventorySlotType::Weapon, false, pos);
+                    sendPacket(packet);
                 }
                 break;
             }
@@ -202,7 +180,8 @@ namespace redsquare
                 ssize_t pos = m_Inventory.addItem(InventorySlotType::Weapon, std::move(item1));
                 if (pos != -1)
                 {
-                    sendUpdateItem(InventorySlotType::Weapon, false, pos);
+                    Packet packet = createUpdateItemPacket(InventorySlotType::Weapon, false, pos);
+                    sendPacket(packet);
                 }
                 break;
             }
@@ -211,7 +190,8 @@ namespace redsquare
                 ssize_t pos = m_Inventory.addItem(InventorySlotType::Weapon, std::move(item1));
                 if (pos != -1)
                 {
-                    sendUpdateItem(InventorySlotType::Weapon, false, pos);
+                    Packet packet = createUpdateItemPacket(InventorySlotType::Weapon, false, pos);
+                    sendPacket(packet);
                 }
                 break;
             }

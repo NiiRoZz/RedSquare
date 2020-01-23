@@ -1,9 +1,12 @@
 #ifndef REDSQUARE_COMMON_MESSAGE_H
 #define REDSQUARE_COMMON_MESSAGE_H
 
-#include "Packet.h"
+#include "../common/Packet.h"
+#include "../common/Entity.h"
+#include "ClientEntity.h"
 
 #include <gf/Message.h>
+#include <gf/Id.h>
 
 using namespace gf::literals;
 
@@ -15,27 +18,25 @@ namespace redsquare
         std::array<SpellType, MAX_SPELL_PER_PLAYER> spells;
     };
 
-    struct InventoryUpdateMessage : public gf::Message
+    struct InventoryShowUpdateMessage : public gf::Message
     {
-        static const gf::Id type = "InventoryUpdate"_id;
+        static const gf::Id type = "InventoryShowUpdate"_id;
     };
     
-    struct ItemUpdateMessage : public gf::Message
+    struct ItemUpdateUIMessage : public gf::Message
     {
         static const gf::Id type = "ItemUpdate"_id;
-        UpdateItem itemMessage;
-    };
-
-    struct ItemMoveMessage : public gf::Message
-    {
-        static const gf::Id type = "ItemMove"_id;
-        MoveItem itemMessage;
+        gf::Id entityID;
+        InventorySlotType slotType;
+        uint slotPos;
+        bool itemRemoved;
+        ClientItem *item;
     };
 
     struct MyPlayerReceivedTypeMessage : public gf::Message
     {
         static const gf::Id type = "MyPlayerReceived"_id;
-        EntitySubType entityType;
+        ClientEntity *player;
     };
 
     struct MyPlayerDeadMessage : public gf::Message

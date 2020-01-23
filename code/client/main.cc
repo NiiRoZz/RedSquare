@@ -355,7 +355,7 @@ int main( int argc, char **argv )
             }
             if (inventoryAction.isActive() && !hud.hoveringChat() && !hud.typingInChat())
             {
-                InventoryUpdateMessage message;
+                InventoryShowUpdateMessage message;
                 gMessageManager().sendMessage(&message);
 
                 inventoryVisible = !inventoryVisible;

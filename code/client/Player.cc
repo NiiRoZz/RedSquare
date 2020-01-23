@@ -43,19 +43,10 @@ namespace redsquare
         return &gResourceManager().getTexture("img/Character/Magus.png");
     }
 
-    Player::Player( gf::Id entityID )
-    : redsquare::Entity(entityID,static_cast<EntitySubType>(rand() % static_cast<int>(EntitySubType::EntityClassCount)))
+    Player::Player( gf::Id entityID, EntitySubType entitySubType, gf::Vector2i pos )
+    : ClientEntity(entityID, EntityType::Player, entitySubType)
     , m_Font(gResourceManager().getFont("font/arial.ttf"))
-    , m_PlayerTexture(Player::getTexture(EntitySubType::Magus))
-    {
-        m_Pos = gf::Vector2i( 0, 0 );
-        m_Max_XP = 0;
-    }
-
-    Player::Player( gf::Id entityID, EntitySubType type, gf::Vector2i pos )
-    : redsquare::Entity(entityID,type)
-    , m_Font(gResourceManager().getFont("font/arial.ttf"))
-    , m_PlayerTexture(Player::getTexture(type))
+    , m_PlayerTexture(Player::getTexture(entitySubType))
     {
         m_Pos = pos;
         m_Max_XP = 0;

@@ -24,8 +24,10 @@ namespace redsquare
 
         bool isUseable() const;
 
-    protected:
         uint8_t m_SlotMask;
+
+    protected:
+        
 
     private:
 

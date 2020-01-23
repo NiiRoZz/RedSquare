@@ -11,7 +11,7 @@ namespace redsquare
     class Entity
     {
     public:
-        EntitySubType m_TypeOfEntity;
+        EntitySubType m_EntitySubType;
 
         gf::Vector2i m_Pos;
         gf::Vector2u m_Size;
@@ -29,17 +29,20 @@ namespace redsquare
 
         int m_Level;
 
-        Entity();
-        Entity(gf::Id entityID);
-        Entity(gf::Id entityID, const EntitySubType typeOfEntity);
+        uint m_RowCargoSlotNmb;
+        uint m_ColumnCargoSlotNmb;
+
+        Entity( gf::Id entityID, const EntityType entityType, const EntitySubType entitySubType );
 
         bool isInsideMe(gf::Vector2i pos);
         bool isInsideMe(Entity &entity);
 
         gf::Id getEntityID() const;
 
-    private:
+    protected:
+
         gf::Id m_EntityID;
+        EntityType m_EntityType;
     };
 }
 

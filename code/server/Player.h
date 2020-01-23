@@ -36,7 +36,7 @@ namespace redsquare
 
         virtual void createCarPacket(Packet &packet) override;
         
-        Player(SocketTcp socket, gf::Id playerID, const EntitySubType type);
+        Player(SocketTcp socket, gf::Id playerID, const EntitySubType entitySubType);
 
         void sendPacket(Packet &packet);
         void receivePacket(Packet &packet);
@@ -57,12 +57,7 @@ namespace redsquare
 
         void sendUpdateOfSpells();
 
-        Inventory& getInventory();
-
-        //Send update of the inventory to client.  pos is used only if slotType == Cargo
-        void sendUpdateItem(InventorySlotType slotType, bool remove, uint pos = 0u);
-
-        void defaultInventoryStuff();
+        virtual void defaultInventoryStuff() override;
 
     private:
         void BasicAttack(ServerEntity *target); // DONE
@@ -90,7 +85,6 @@ namespace redsquare
         int Variance(int range); // DONE
 
         SocketTcp m_Socket;
-        Inventory m_Inventory;
     };
 }
 

@@ -4,8 +4,8 @@
 #include "Chat.h"
 #include "Game.h"
 #include "MainMenu.h"
-#include "Inventory.h"
-#include "../common/Message.h"
+#include "InventoryUI.h"
+#include "Message.h"
 #include "SpellWidget.h"
 
 #include <gf/Font.h>
@@ -42,7 +42,7 @@ namespace redsquare
 
         Game &m_Game;
         Chat m_Chat;
-        Inventory m_Inventory;
+        InventoryUI m_InventoryUI;
        
         gf::Font &m_Font;
         gf::UI m_UI;

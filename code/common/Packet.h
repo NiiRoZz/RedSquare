@@ -389,6 +389,8 @@ namespace redsquare
 
     struct UpdateItem
     {
+        gf::Id entityID;
+        EntityType entityType;
         InventorySlotType slotType;
         uint pos;
         ItemType typeItem;
@@ -398,7 +400,8 @@ namespace redsquare
 
     struct MoveItem
     {
-        gf::Id playerID;
+        gf::Id entityID;
+        EntityType entityType;
         InventorySlotType oldSlotType;
         uint oldPos;
         InventorySlotType newSlotType;
@@ -526,6 +529,8 @@ namespace redsquare
 
             case PacketType::UpdateItem:
             {
+                ar | packet.updateItem.entityID;
+                ar | packet.updateItem.entityType;
                 ar | packet.updateItem.slotType;
                 ar | packet.updateItem.pos;
                 ar | packet.updateItem.typeItem;
@@ -536,7 +541,8 @@ namespace redsquare
 
             case PacketType::MoveItem:
             {
-                ar | packet.moveItem.playerID;
+                ar | packet.moveItem.entityID;
+                ar | packet.moveItem.entityType;
                 ar | packet.moveItem.oldSlotType;
                 ar | packet.moveItem.oldPos;
                 ar | packet.moveItem.newSlotType;

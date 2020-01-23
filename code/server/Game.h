@@ -33,8 +33,10 @@ namespace redsquare
         Player* getPlayer( gf::Id playerID );
         Player* getPlayer( gf::Vector2i pos ); // getter of player pos
 
+        Monster* getMonster( gf::Id monsterID );
         Monster* getMonster( gf::Vector2i pos ); // getter of monster pos
 
+        Prop* getProp( gf::Id propID );
         Prop* getProp( gf::Vector2i pos ); // getter of props pos
 
         void sendPacketToAllPlayers( Packet &packet );

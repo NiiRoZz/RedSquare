@@ -8,23 +8,16 @@
 #include <gf/Color.h>
 #include <gf/Text.h>
 
-#define NBMONSTER 5;
+#define NBMONSTER 5
 
 namespace redsquare
 {
-    Monster::Monster( gf::Id entityID )
-    : m_Font(gResourceManager().getFont("font/arial.ttf"))
-    {
-        m_Pos = gf::Vector2i( 0, 0 );
-        loadTexture();
-    }
-
-    Monster::Monster( gf::Id entityID, EntitySubType type, gf::Vector2i pos )
-    : redsquare::Entity(entityID,type)
+    Monster::Monster( gf::Id entityID, EntitySubType entitySubType, gf::Vector2i pos )
+    : ClientEntity(entityID, EntityType::Monster, entitySubType)
     , m_Font(gResourceManager().getFont("font/arial.ttf"))
     {
         m_Pos = pos;
-        loadTexture(type);
+        loadTexture(entitySubType);
     }
 
     void Monster::loadTexture( const EntitySubType type )

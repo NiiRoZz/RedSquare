@@ -2,9 +2,9 @@
 
 namespace redsquare
 {
-    Prop::Prop(gf::Id entityID, EntitySubType type)
-    : redsquare::Entity(entityID,type)
+    Prop::Prop(gf::Id entityID, EntitySubType entitySubType)
+    : ServerEntity(entityID, EntityType::Prop, entitySubType)
     {
-        //m_Pos = pos;
+
     }
 }

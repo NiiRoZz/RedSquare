@@ -1,6 +1,6 @@
 #include "Game.h"
 #include "../common/Singletons.h"
-#include "../common/Message.h"
+#include "Message.h"
 
 #include <iostream>
 #include <utility>
@@ -393,7 +393,7 @@ namespace redsquare
                             if (packet.spawnEntity.entityID == m_PlayerID)
                             {
                                 MyPlayerReceivedTypeMessage message;
-                                message.entityType = packet.spawnEntity.typeOfEntity;
+                                message.player = static_cast<ClientEntity*>(&(it.first->second));
 
                                 gMessageManager().sendMessage(&message);
                             }
@@ -513,20 +513,80 @@ namespace redsquare
 
                 case PacketType::UpdateItem:
                 {
-                    ItemUpdateMessage message;
-                    message.itemMessage = packet.updateItem;
+                    ClientEntity *entity = nullptr;
 
-                    gMessageManager().sendMessage(&message);
+                    switch (packet.updateItem.entityType)
+                    {
+                        case EntityType::Player:
+                        {
+                            entity = getPlayer(packet.updateItem.entityID);
+                            assert(entity != nullptr);
+                            break;
+                        }
+
+                        case EntityType::Monster:
+                        {
+                            entity = getMonster(packet.updateItem.entityID);
+                            assert(entity != nullptr);
+                            break;
+                        }
+
+                        case EntityType::Prop:
+                        {
+                            entity = getProp(packet.updateItem.entityID);
+                            assert(entity != nullptr);
+                            break;
+                        }
+                    }
+
+                    if (entity)
+                    {
+                        if (packet.updateItem.removeItem)
+                        {
+                            entity->getInventory().removeItem(packet.updateItem.slotType, packet.updateItem.pos);
+                        }
+                        else
+                        {
+                            ClientItem item( packet.updateItem.typeItem, packet.updateItem.slotMask );
+                            entity->getInventory().addItem(packet.updateItem.slotType, std::move(item), packet.updateItem.pos);
+                        }
+                    }
 
                     break;
                 }
 
                 case PacketType::MoveItem:
                 {
-                    ItemMoveMessage message;
-                    message.itemMessage = packet.moveItem;
+                    ClientEntity *entity = nullptr;
 
-                    gMessageManager().sendMessage(&message);
+                    switch (packet.moveItem.entityType)
+                    {
+                        case EntityType::Player:
+                        {
+                            entity = getPlayer(packet.moveItem.entityID);
+                            assert(entity != nullptr);
+                            break;
+                        }
+
+                        case EntityType::Monster:
+                        {
+                            entity = getMonster(packet.moveItem.entityID);
+                            assert(entity != nullptr);
+                            break;
+                        }
+
+                        case EntityType::Prop:
+                        {
+                            entity = getProp(packet.moveItem.entityID);
+                            assert(entity != nullptr);
+                            break;
+                        }
+                    }
+
+                    if (entity)
+                    {
+                        entity->getInventory().moveItem(packet.moveItem);
+                    }
 
                     break;
                 }

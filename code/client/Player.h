@@ -1,7 +1,7 @@
 #ifndef REDSQUARE_CLIENT_PLAYER_H
 #define REDSQUARE_CLIENT_PLAYER_H
 
-#include "../common/Entity.h"
+#include "ClientEntity.h"
 #include "Monster.h"
 #include "Prop.h"
 
@@ -16,7 +16,7 @@ namespace redsquare
     // forward class
     class Game;
 
-    class Player: public gf::Entity, public redsquare::Entity
+    class Player: public ClientEntity
     {
     public:
         static gf::Texture* getTexture(const EntitySubType type);
@@ -30,14 +30,13 @@ namespace redsquare
 
         std::array<SpellType, MAX_SPELL_PER_PLAYER> m_SpellTab;
         
-        Player( gf::Id entityID );
-        Player( gf::Id entityID, EntitySubType type, gf::Vector2i pos );
+        Player( gf::Id entityID, EntitySubType entitySubType, gf::Vector2i pos );
 
         virtual void update(gf::Time time) override;
 
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
-        bool canAttack( gf::Vector2i targetPos,Game &game);
+        bool canAttack( gf::Vector2i targetPos, Game &game);
         bool canMove( gf::Vector2i targetPos, std::map<gf::Id, Player> &players, std::map<gf::Id, Monster> &monsters, std::map<gf::Id, Prop> &props, gf::SquareMap &map );
 
     private:

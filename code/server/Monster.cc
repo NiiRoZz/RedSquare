@@ -1,12 +1,37 @@
 #include "Monster.h"
 
+#define NBMONSTER 5
+
 namespace redsquare
 {
     Monster::Monster(gf::Id entityID)
-    : ServerEntity(entityID)
+    : ServerEntity(entityID, EntityType::Monster, EntitySubType::Slime)
     {
+        int randomMonster = rand() % NBMONSTER;
+
+        switch (randomMonster)
+        {
+        case 0:
+            m_EntitySubType = EntitySubType::Bat;
+            break;
+        case 1:
+            m_EntitySubType = EntitySubType::SkeletonKnife;
+            break;
+        case 2:
+            m_EntitySubType = EntitySubType::SkeletonMagus;
+            break;
+        case 3:
+            m_EntitySubType = EntitySubType::Slime;
+            break;
+        case 4:
+            m_EntitySubType = EntitySubType::Spirit;
+            break;
+        default:
+            m_EntitySubType = EntitySubType::Bat;
+            break;
+        }
     
-       switch (m_TypeOfEntity)
+       switch (m_EntitySubType)
        {
        case EntitySubType::Bat:    
             m_LifePoint = 75;
