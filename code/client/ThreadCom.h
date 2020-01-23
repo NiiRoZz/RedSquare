@@ -32,21 +32,16 @@ namespace redsquare
             std::thread(&ThreadCom::receivePackets, this).detach();
         }
 
-        bool sendPacket(T &packet)
+        template<typename U>
+        bool sendPacket(U &packet)
         {
             m_socket.send(packet);
 
             return !(m_socket.getState() == SocketState::Disconnected);
         }
 
-        bool receivePacket(T &packet)
-        {
-            m_socket.receive(packet);
-
-            return !(m_socket.getState() == SocketState::Disconnected);
-        }
-
-        bool receivePacket(NewPlayer &packet)
+        template<typename U>
+        bool receivePacket(U &packet)
         {
             m_socket.receive(packet);
 
