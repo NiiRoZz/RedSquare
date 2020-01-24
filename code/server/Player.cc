@@ -483,11 +483,11 @@ namespace redsquare
         int damage;
         int critical = rand() % 100;
         if(critical > 95){ // critical hit
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) * 0.6;
+            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
             damage *= 2; // double the damage 
             std::cout << " CRITICAL !!! " << std::endl;
         }else{
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) * 0.6;
+            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
         }
 
         damage += Variance(-(damage/10)); // -10% to +10% dmg 
