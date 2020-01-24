@@ -34,6 +34,8 @@ namespace redsquare
         void hideChat();
         void showHelp();
 
+        InventoryUI& getInventoryUI();
+
         MainMenu m_MainMenu;
         
     private:

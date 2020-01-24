@@ -121,4 +121,9 @@ namespace redsquare
     {
         return m_EntityID;
     }
+
+    EntityType Entity::getEntityType() const
+    {
+        return m_EntityType;
+    }
 }

@@ -57,6 +57,7 @@ namespace redsquare
         Monster* getMonster( gf::Vector2i pos );
 
         Prop* getProp( gf::Id propID );
+        Prop* getProp( gf::Vector2i pos );
 
         bool monsterInRange();
 

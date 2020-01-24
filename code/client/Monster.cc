@@ -17,37 +17,6 @@ namespace redsquare
     , m_Font(gResourceManager().getFont("font/arial.ttf"))
     {
         m_Pos = pos;
-        loadTexture(entitySubType);
-    }
-
-    void Monster::loadTexture( const EntitySubType type )
-    {
-        switch (type)
-        {
-            case EntitySubType::Bat:
-                monsterTexture = &gResourceManager().getTexture("img/Monster/Bat.png");
-                break;
-
-            case EntitySubType::SkeletonKnife:
-                monsterTexture = &gResourceManager().getTexture("img/Monster/SkeletonKnife.png");
-                break;
-
-            case EntitySubType::SkeletonMagus:
-                monsterTexture = &gResourceManager().getTexture("img/Monster/SkeletonMagus.png");
-                break;
-    
-            case EntitySubType::Slime:
-                monsterTexture = &gResourceManager().getTexture("img/Monster/Slime.png");
-                break;
-
-            case EntitySubType::Spirit:
-                monsterTexture = &gResourceManager().getTexture("img/Monster/Spirit.png");
-                break;
-
-            default:
-                monsterTexture = &gResourceManager().getTexture("img/Monster/Slime.png");
-                break;
-        }
     }
 
     void Monster::render(gf::RenderTarget& target, const gf::RenderStates& states)
@@ -60,7 +29,7 @@ namespace redsquare
 
         sprite.setPosition( m_Pos * World::TileSize );
         sprite.setScale( 1 );
-        sprite.setTexture( *monsterTexture );
+        sprite.setTexture( m_EntityTexture );
         target.draw(sprite, states);
 
         gf::Color4f color(255,0,0,174);

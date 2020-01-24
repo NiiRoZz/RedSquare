@@ -943,47 +943,75 @@ namespace redsquare
 
             case PacketType::MoveItem:
             {
-                switch (packet.moveItem.entityType)
+                ServerEntity *oldEntity = nullptr;
+                ServerEntity *newEntity = nullptr;
+
+                switch (packet.moveItem.oldEntityType)
                 {
                     case EntityType::Player:
                     {
-                        Player *player = getPlayer( packet.moveItem.entityID );
-                        if ( player != nullptr )
-                        {
-                            if ( player->getInventory().moveItem(packet.moveItem) )
-                            {
-                                player->sendPacket(packet);
-                            }
-                        }
+                        oldEntity = getPlayer( packet.moveItem.oldEntityID );
                         break;
                     }
 
                     case EntityType::Monster:
                     {
-                        Monster *monster = getMonster( packet.moveItem.entityID );
-                        if ( monster != nullptr )
-                        {
-                            if ( monster->getInventory().moveItem(packet.moveItem) )
-                            {
-                                sendPacketToAllPlayers(packet);
-                            }
-                        }
+                        oldEntity = getMonster( packet.moveItem.oldEntityID );
                         break;
                     }
 
                     case EntityType::Prop:
                     {
-                        Prop *prop = getProp( packet.moveItem.entityID );
-                        if ( prop != nullptr )
-                        {
-                            if ( prop->getInventory().moveItem(packet.moveItem) )
-                            {
-                                sendPacketToAllPlayers(packet);
-                            }
-                        }
+                        oldEntity = getProp( packet.moveItem.oldEntityID );
                         break;
                     }
                 }
+                assert(oldEntity != nullptr);
+
+                switch (packet.moveItem.newEntityType)
+                {
+                    case EntityType::Player:
+                    {
+                        newEntity = getPlayer( packet.moveItem.newEntityID );
+                        break;
+                    }
+
+                    case EntityType::Monster:
+                    {
+                        newEntity = getMonster( packet.moveItem.newEntityID );
+                        break;
+                    }
+
+                    case EntityType::Prop:
+                    {
+                        newEntity = getProp( packet.moveItem.newEntityID );
+                        break;
+                    }
+                }
+                assert(newEntity != nullptr);
+
+                if (oldEntity == newEntity)
+                {
+                    if ( newEntity->getInventory().moveItem(packet.moveItem) )
+                    {
+                        sendPacketToAllPlayers(packet);
+                    }
+                }
+                else
+                {
+                    ServerItem oldItem = oldEntity->getInventory().removeItem(packet.moveItem.oldSlotType, packet.moveItem.oldPos);
+                    Packet updatePacket = oldEntity->createUpdateItemPacket(packet.moveItem.oldSlotType, true, packet.moveItem.oldPos);
+                    sendPacketToAllPlayers(updatePacket);
+
+                    if (oldItem.getType() != ItemType::Unknow)
+                    {
+                        newEntity->getInventory().addItem(packet.moveItem.newSlotType, std::move(oldItem), packet.moveItem.newPos);
+                        updatePacket = newEntity->createUpdateItemPacket(packet.moveItem.newSlotType, false, packet.moveItem.newPos);
+                        sendPacketToAllPlayers(updatePacket);
+                    }
+                }
+
+                break;
             }
 
             case PacketType::UpdateSpells:

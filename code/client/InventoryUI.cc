@@ -25,6 +25,7 @@ namespace redsquare
     , m_OldSlot(nullptr)
     , m_CurrMovingWidget(nullptr)
     , m_CurrMovingItem(nullptr)
+    , m_OldEntity(nullptr)
     {
         gMessageManager().registerHandler<InventoryShowUpdateMessage>(&InventoryUI::onInventoryShowUpdate, this);
         gMessageManager().registerHandler<ItemUpdateUIMessage>(&InventoryUI::onItemUpdateUI, this);
@@ -171,6 +172,12 @@ namespace redsquare
 
                     if (m_UI.begin("InventoryVinicity", gf::RectF::fromPositionSize( VinicityInventoryWindowPoint, InventoryWindowSize ), gf::UIWindow::NoScrollbar))
                     {
+                        //Image of vinicity
+                        gf::Vector2f startVinictyWidgetPos({VinicityInventoryWindowPoint[0], VinicityInventoryWindowPoint[1] + InventoryWindowSize[1] * StartPercentagePosVinicityWidget});
+                        gf::Vector2f endVinicityWidgetPos({VinicityInventoryWindowPoint[0], VinicityInventoryWindowPoint[1] + InventoryWindowSize[1] * EndPercentagePosVinicityWidget});
+                        m_VinictyWidget.setPosition(startVinictyWidgetPos);
+                        m_VinictyWidget.setScale({(InventoryWindowSize[0] * WidthVinictyWidget) / PlayerTextureSize, (endVinicityWidgetPos[1] - startVinictyWidgetPos[1]) / PlayerTextureSize});
+
                         //Cargo slot rendering
                         gf::Vector2f firstSlotPos({VinicityInventoryWindowPoint[0], VinicityInventoryWindowPoint[1] + InventoryWindowSize[1] * m_StartPercentagePosVinicityCargo});
                         float sizeWidthItem = (InventoryWindowSize[0] - (m_VinicityEntity->m_ColumnCargoSlotNmb - 1) * m_SpaceBetweenPlayerSlotsCargo) / m_VinicityEntity->m_ColumnCargoSlotNmb;
@@ -193,6 +200,8 @@ namespace redsquare
 
                 target.draw( m_UI , states );
                 target.draw( m_PlayerWidget, states );
+
+                if ( m_VinicityEntity != nullptr ) target.draw( m_VinictyWidget, states );
 
                 for( auto &x: m_PlayerCargoSlots )
                 {
@@ -244,6 +253,7 @@ namespace redsquare
                                     m_CurrMovingWidget = itemWidget;
                                     m_CurrMovingItem = x.second.getItem();
                                     m_OffsetDrag = event.mouseButton.coords - itemWidget->getPosition();
+                                    m_OldEntity = m_PlayerEntity;
                                     found = true;
                                     break;
                                 }
@@ -261,7 +271,28 @@ namespace redsquare
                                         m_CurrMovingWidget = itemWidget;
                                         m_CurrMovingItem = x.second.getItem();
                                         m_OffsetDrag = event.mouseButton.coords - itemWidget->getPosition();
+                                        m_OldEntity = m_PlayerEntity;
+                                        found = true;
                                         break;
+                                    }
+                                }
+
+                                if (!found && m_VinicityEntity != nullptr)
+                                {
+                                    for( auto &x: m_VinicityCargoSlots)
+                                    {
+                                        InventoryWidget *itemWidget = x.second.getItemWidget(event.mouseButton.coords);
+                                        if ( itemWidget != nullptr )
+                                        {
+                                            itemWidget->currDragging = true;
+                                            m_OldSlot = &(x.second);
+                                            m_CurrMovingWidget = itemWidget;
+                                            m_CurrMovingItem = x.second.getItem();
+                                            m_OffsetDrag = event.mouseButton.coords - itemWidget->getPosition();
+                                            m_OldEntity = m_VinicityEntity;
+                                            found = true;
+                                            break;
+                                        }
                                     }
                                 }
                             }
@@ -290,10 +321,12 @@ namespace redsquare
                                 //Request move item here
                                 Packet packet;
                                 packet.type = PacketType::MoveItem;
-                                packet.moveItem.entityID = m_Game.m_PlayerID;
-                                packet.moveItem.entityType = EntityType::Player;
+                                packet.moveItem.oldEntityID = m_OldEntity->getEntityID();
+                                packet.moveItem.oldEntityType = m_OldEntity->getEntityType();
                                 packet.moveItem.oldSlotType = m_OldSlot->getSlotType();
                                 packet.moveItem.oldPos = m_OldSlot->getSlotPos();
+                                packet.moveItem.newEntityID = m_PlayerEntity->getEntityID();
+                                packet.moveItem.newEntityType = m_PlayerEntity->getEntityType();
                                 packet.moveItem.newSlotType = x.second.getSlotType();
                                 packet.moveItem.newPos = x.second.getSlotPos();
 
@@ -313,10 +346,12 @@ namespace redsquare
                                     //Request move item here
                                     Packet packet;
                                     packet.type = PacketType::MoveItem;
-                                    packet.moveItem.entityID = m_Game.m_PlayerID;
-                                    packet.moveItem.entityType = EntityType::Player;
+                                    packet.moveItem.oldEntityID = m_OldEntity->getEntityID();
+                                    packet.moveItem.oldEntityType = m_OldEntity->getEntityType();
                                     packet.moveItem.oldSlotType = m_OldSlot->getSlotType();
                                     packet.moveItem.oldPos = m_OldSlot->getSlotPos();
+                                    packet.moveItem.newEntityID = m_PlayerEntity->getEntityID();
+                                    packet.moveItem.newEntityType = m_PlayerEntity->getEntityType();
                                     packet.moveItem.newSlotType = x.second.getSlotType();
                                     packet.moveItem.newPos = x.second.getSlotPos();
 
@@ -324,6 +359,32 @@ namespace redsquare
 
                                     sendedPacket = true;
                                     break;
+                                }
+                            }
+
+                            if (!sendedPacket)
+                            {
+                                for( auto &x: m_VinicityCargoSlots)
+                                {
+                                    if (x.second.contains(event.mouseButton.coords) && (!(x.second.haveItem())) && (m_CurrMovingItem->canBeInSlot(x.second.getSlotType())))
+                                    {
+                                        //Request move item here
+                                        Packet packet;
+                                        packet.type = PacketType::MoveItem;
+                                        packet.moveItem.oldEntityID = m_OldEntity->getEntityID();
+                                        packet.moveItem.oldEntityType = m_OldEntity->getEntityType();
+                                        packet.moveItem.oldSlotType = m_OldSlot->getSlotType();
+                                        packet.moveItem.oldPos = m_OldSlot->getSlotPos();
+                                        packet.moveItem.newEntityID = m_VinicityEntity->getEntityID();
+                                        packet.moveItem.newEntityType = m_VinicityEntity->getEntityType();
+                                        packet.moveItem.newSlotType = x.second.getSlotType();
+                                        packet.moveItem.newPos = x.second.getSlotPos();
+
+                                        m_Game.sendPacket(packet);
+
+                                        sendedPacket = true;
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -337,6 +398,7 @@ namespace redsquare
                         m_OldSlot = nullptr;
                         m_CurrMovingWidget = nullptr;
                         m_CurrMovingItem = nullptr;
+                        m_OldEntity = nullptr;
                         m_OffsetDrag = {0,0};
                     }
                 }
@@ -363,9 +425,21 @@ namespace redsquare
             {
                 for(uint j = 0; j < vinicityObject->m_ColumnCargoSlotNmb; ++j )
                 {
-                    m_VinicityCargoSlots.insert(std::make_pair(i * vinicityObject->m_ColumnCargoSlotNmb + j, std::move(InventorySlot(InventorySlotType::Cargo, i * vinicityObject->m_ColumnCargoSlotNmb + j))));
+                    auto it = m_VinicityCargoSlots.insert(std::make_pair(i * vinicityObject->m_ColumnCargoSlotNmb + j, std::move(InventorySlot(InventorySlotType::Cargo, i * vinicityObject->m_ColumnCargoSlotNmb + j))));
+                    assert(it.second);
+
+                    ClientItem *item = vinicityObject->getInventory().getItem(InventorySlotType::Cargo, i * vinicityObject->m_ColumnCargoSlotNmb + j);
+                    if (item != nullptr)
+                    {
+                        it.first->second.setItem(item);
+                    }
                 }
             }
+
+            gf::Texture &vinicityTexture = vinicityObject->getEntityTexture();
+            m_VinictyWidget.setDefaultSprite(vinicityTexture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
+            m_VinictyWidget.setDisabledSprite(vinicityTexture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
+            m_VinictyWidget.setSelectedSprite(vinicityTexture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
         }
 
         m_VinicityEntity = vinicityObject;
@@ -376,6 +450,11 @@ namespace redsquare
         assert(id == InventoryShowUpdateMessage::type);
         
         m_ShowInventory = !m_ShowInventory;
+
+        if (!m_ShowInventory && m_VinicityEntity != nullptr)
+        {
+            setVinicityObject(nullptr);
+        }
         
         return gf::MessageStatus::Keep;
     }
@@ -388,10 +467,10 @@ namespace redsquare
         
         if (message && message->player)
         {
-            gf::Texture* playerTexture = Player::getTexture(message->player->m_EntitySubType);
-            m_PlayerWidget.setDefaultSprite(*playerTexture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
-            m_PlayerWidget.setDisabledSprite(*playerTexture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
-            m_PlayerWidget.setSelectedSprite(*playerTexture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
+            gf::Texture &playerTexture = message->player->getEntityTexture();
+            m_PlayerWidget.setDefaultSprite(playerTexture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
+            m_PlayerWidget.setDisabledSprite(playerTexture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
+            m_PlayerWidget.setSelectedSprite(playerTexture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
 
             m_PlayerEntity = message->player;
 
@@ -404,6 +483,8 @@ namespace redsquare
                 }
             }
         }
+
+        return gf::MessageStatus::Keep;
     }
 
     gf::MessageStatus InventoryUI::onItemUpdateUI(gf::Id id, gf::Message *msg)
@@ -414,7 +495,7 @@ namespace redsquare
 
         if (message)
         {
-            if (m_PlayerEntity->getEntityID() == message->entityID)
+            if (m_PlayerEntity != nullptr && m_PlayerEntity->getEntityID() == message->entityID)
             {
                 if (message->slotType == InventorySlotType::Cargo)
                 {
@@ -447,7 +528,7 @@ namespace redsquare
                     }
                 }
             }
-            else if (m_VinicityEntity->getEntityID() == message->entityID)
+            else if ( m_VinicityEntity != nullptr && m_VinicityEntity->getEntityID() == message->entityID)
             {
                 //Could only be cargo for entity other than player
                 if (message->slotType == InventorySlotType::Cargo)
@@ -467,5 +548,7 @@ namespace redsquare
                 }
             }
         }
+
+        return gf::MessageStatus::Keep;
     }
 }

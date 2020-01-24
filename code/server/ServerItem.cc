@@ -2,6 +2,11 @@
 
 namespace redsquare
 {
+    ServerItem::ServerItem()
+    : Item(ItemType::Unknow)
+    {
+
+    }
     ServerItem::ServerItem(ItemType type)
     : Item(type)
     {

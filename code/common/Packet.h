@@ -137,7 +137,9 @@ namespace redsquare
 
     enum class ItemType: uint16_t
     {
-
+        //Should be the first one
+        Unknow,
+        
         Sword1,
         Sword2,
         Sword3,
@@ -400,10 +402,12 @@ namespace redsquare
 
     struct MoveItem
     {
-        gf::Id entityID;
-        EntityType entityType;
+        gf::Id oldEntityID;
+        EntityType oldEntityType;
         InventorySlotType oldSlotType;
         uint oldPos;
+        gf::Id newEntityID;
+        EntityType newEntityType;
         InventorySlotType newSlotType;
         uint newPos;
     };
@@ -541,10 +545,12 @@ namespace redsquare
 
             case PacketType::MoveItem:
             {
-                ar | packet.moveItem.entityID;
-                ar | packet.moveItem.entityType;
+                ar | packet.moveItem.oldEntityID;
+                ar | packet.moveItem.oldEntityType;
                 ar | packet.moveItem.oldSlotType;
                 ar | packet.moveItem.oldPos;
+                ar | packet.moveItem.newEntityID;
+                ar | packet.moveItem.newEntityType;
                 ar | packet.moveItem.newSlotType;
                 ar | packet.moveItem.newPos;
                 break;

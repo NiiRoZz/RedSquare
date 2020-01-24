@@ -39,6 +39,8 @@ namespace redsquare
 
         gf::Id getEntityID() const;
 
+        EntityType getEntityType() const;
+
     protected:
 
         gf::Id m_EntityID;

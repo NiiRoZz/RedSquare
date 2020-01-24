@@ -328,4 +328,9 @@ namespace redsquare
     {
         m_ShowHelp = !m_ShowHelp;
     }
+
+    InventoryUI& Hud::getInventoryUI()
+    {
+        return m_InventoryUI;
+    }
 }

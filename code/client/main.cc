@@ -205,13 +205,17 @@ int main( int argc, char **argv )
 
     gf::Cursor defaultCursor(gf::Cursor::Type::Arrow);
 
-    gf::Image attackImage(std::move(gResourceManager().getTexture("img/attackCursor.png").copyToImage()));
+    gf::Image attackImage(std::move(gResourceManager().getTexture("img/Cursor/attackCursor.png").copyToImage()));
     attackImage.flipHorizontally();
     gf::Cursor attackCursor(attackImage, { 8u, 8u });
 
-    gf::Image moveImage(std::move(gResourceManager().getTexture("img/moveCursor.png").copyToImage()));
+    gf::Image moveImage(std::move(gResourceManager().getTexture("img/Cursor/moveCursor.png").copyToImage()));
     moveImage.flipHorizontally();
     gf::Cursor moveCursor(moveImage, { 8u, 8u });
+
+    gf::Image openChestImage(std::move(gResourceManager().getTexture("img/Cursor/chestCursor.png").copyToImage()));
+    openChestImage.flipHorizontally();
+    gf::Cursor openChestCursor(openChestImage, { 8u, 8u });
 
     window.setMouseCursor(defaultCursor);
 
@@ -261,7 +265,7 @@ int main( int argc, char **argv )
 
                                 gf::Vector2i pos = renderer.mapPixelToCoords(event.mouseButton.coords,mainView) / World::TileSize;
 
-                                Player* myPlayer = game.getPlayer(game.m_PlayerID);
+                                Player* myPlayer = game.getMyPlayer();
                                 if ( myPlayer != nullptr && game.m_CanPlay )
                                 {
                                     if ( myPlayer->canAttack(pos, game) )
@@ -271,6 +275,18 @@ int main( int argc, char **argv )
                                     else if (myPlayer->canMove(pos, game.m_Players, game.m_Monsters, game.m_Props, game.m_World.m_SquareMap))
                                     {
                                         game.movePlayer( pos[0], pos[1], true );
+                                    }
+                                    else if ( myPlayer->canOpenTargetInventory(pos, game) )
+                                    {
+                                        ClientEntity *entity = static_cast<ClientEntity*>(game.getProp(pos));
+                                        if (entity)
+                                        {
+                                            hud.getInventoryUI().setVinicityObject(entity);
+                                            InventoryShowUpdateMessage message;
+                                            gMessageManager().sendMessage(&message);
+
+                                            inventoryVisible = !inventoryVisible;
+                                        }
                                     }
                                 }
                             }
@@ -284,7 +300,7 @@ int main( int argc, char **argv )
                         {
                             gf::Vector2i pos = renderer.mapPixelToCoords(event.mouseCursor.coords,mainView) / World::TileSize;
 
-                            Player* myPlayer = game.getPlayer(game.m_PlayerID);
+                            Player* myPlayer = game.getMyPlayer();
                             if ( myPlayer != nullptr && game.m_CanPlay )
                             {
                                 if ( myPlayer->canAttack(pos, game) )
@@ -304,6 +320,11 @@ int main( int argc, char **argv )
                                     {
                                         game.m_TempMove.insert(game.m_TempMove.end(), ++allPos.begin(), allPos.end());
                                     }
+                                }
+                                else if ( myPlayer->canOpenTargetInventory(pos, game) )
+                                {
+                                    window.setMouseCursor(openChestCursor);
+                                    game.m_TempMove.clear();
                                 }
                                 else
                                 {

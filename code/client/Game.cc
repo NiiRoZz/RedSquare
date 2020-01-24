@@ -520,36 +520,31 @@ namespace redsquare
                         case EntityType::Player:
                         {
                             entity = getPlayer(packet.updateItem.entityID);
-                            assert(entity != nullptr);
                             break;
                         }
 
                         case EntityType::Monster:
                         {
                             entity = getMonster(packet.updateItem.entityID);
-                            assert(entity != nullptr);
                             break;
                         }
 
                         case EntityType::Prop:
                         {
                             entity = getProp(packet.updateItem.entityID);
-                            assert(entity != nullptr);
                             break;
                         }
                     }
+                    assert(entity != nullptr);
 
-                    if (entity)
+                    if (packet.updateItem.removeItem)
                     {
-                        if (packet.updateItem.removeItem)
-                        {
-                            entity->getInventory().removeItem(packet.updateItem.slotType, packet.updateItem.pos);
-                        }
-                        else
-                        {
-                            ClientItem item( packet.updateItem.typeItem, packet.updateItem.slotMask );
-                            entity->getInventory().addItem(packet.updateItem.slotType, std::move(item), packet.updateItem.pos);
-                        }
+                        entity->getInventory().removeItem(packet.updateItem.slotType, packet.updateItem.pos);
+                    }
+                    else
+                    {
+                        ClientItem item( packet.updateItem.typeItem, packet.updateItem.slotMask );
+                        entity->getInventory().addItem(packet.updateItem.slotType, std::move(item), packet.updateItem.pos);
                     }
 
                     break;
@@ -557,35 +552,56 @@ namespace redsquare
 
                 case PacketType::MoveItem:
                 {
-                    ClientEntity *entity = nullptr;
+                    ClientEntity *oldEntity = nullptr;
+                    ClientEntity *newEntity = nullptr;
 
-                    switch (packet.moveItem.entityType)
+                    switch (packet.moveItem.oldEntityType)
                     {
                         case EntityType::Player:
                         {
-                            entity = getPlayer(packet.moveItem.entityID);
-                            assert(entity != nullptr);
+                            oldEntity = getPlayer(packet.moveItem.oldEntityID);
                             break;
                         }
 
                         case EntityType::Monster:
                         {
-                            entity = getMonster(packet.moveItem.entityID);
-                            assert(entity != nullptr);
+                            oldEntity = getMonster(packet.moveItem.oldEntityID);
                             break;
                         }
 
                         case EntityType::Prop:
                         {
-                            entity = getProp(packet.moveItem.entityID);
-                            assert(entity != nullptr);
+                            oldEntity = getProp(packet.moveItem.oldEntityID);
                             break;
                         }
                     }
+                    assert(oldEntity != nullptr);
 
-                    if (entity)
+                    switch (packet.moveItem.newEntityType)
                     {
-                        entity->getInventory().moveItem(packet.moveItem);
+                        case EntityType::Player:
+                        {
+                            newEntity = getPlayer(packet.moveItem.newEntityID);
+                            break;
+                        }
+
+                        case EntityType::Monster:
+                        {
+                            newEntity = getMonster(packet.moveItem.newEntityID);
+                            break;
+                        }
+
+                        case EntityType::Prop:
+                        {
+                            newEntity = getProp(packet.moveItem.newEntityID);
+                            break;
+                        }
+                    }
+                    assert(newEntity != nullptr);
+
+                    if (oldEntity == newEntity)
+                    {
+                        assert(newEntity->getInventory().moveItem(packet.moveItem));
                     }
 
                     break;
@@ -705,6 +721,24 @@ namespace redsquare
         if ( prop != m_Props.end() )
         {
             return &prop->second;
+        }
+
+        return nullptr;
+    }
+
+    Prop* Game::getProp( gf::Vector2i pos )
+    {
+        auto it = m_Props.begin();
+
+        // Iterate over the map using Iterator till end.
+        while ( it != m_Props.end() )
+        {
+            if ( it->second.isInsideMe(pos) )
+            {
+                return &it->second;
+            }
+
+            ++it;
         }
 
         return nullptr;

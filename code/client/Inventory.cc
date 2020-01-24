@@ -49,6 +49,7 @@ namespace redsquare
 
             auto it2 = m_SpecialItems.emplace(slotType, std::move(item));
             assert(it2.second);
+
             message.item = &(it2.first->second);
 
             gMessageManager().sendMessage(&message);

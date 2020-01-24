@@ -29,11 +29,11 @@ namespace redsquare
 
         void processEvent(const gf::Event &event);
 
+        void setVinicityObject(ClientEntity *vinicityObject);
+
         bool m_ShowInventory;
 
     private:
-
-        void setVinicityObject(ClientEntity *vinicityObject);
 
         gf::MessageStatus onInventoryShowUpdate(gf::Id id, gf::Message *msg);
         gf::MessageStatus onItemUpdateUI(gf::Id id, gf::Message *msg);
@@ -63,15 +63,21 @@ namespace redsquare
         const float m_StartPercentagePosPlayerCargo = 0.4;
         std::map<uint, InventorySlot> m_PlayerCargoSlots;
 
-        const float m_SpaceBetweenVinictySlotsCargo = 10.f;
-        const float m_StartPercentagePosVinicityCargo = 0.01;
+        const float m_SpaceBetweenVinictySlotsCargo = 5.f;
+        const float m_StartPercentagePosVinicityCargo = 0.4;
         std::map<uint, InventorySlot> m_VinicityCargoSlots;
+
+        const float StartPercentagePosVinicityWidget = 0.042;
+        const float EndPercentagePosVinicityWidget = 0.38;
+        const float WidthVinictyWidget = 0.3;
+        InventoryWidget m_VinictyWidget;
 
         //For drag
         InventorySlot *m_OldSlot;
         InventoryWidget *m_CurrMovingWidget;
         ClientItem *m_CurrMovingItem;
         gf::Vector2f m_OffsetDrag;
+        ClientEntity *m_OldEntity;
     };
 }
 

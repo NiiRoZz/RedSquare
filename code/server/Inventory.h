@@ -17,7 +17,7 @@ namespace redsquare
         bool addItem(InventorySlotType slotType, ServerItem &&item, uint pos);
 
         //pos is used only if slotType == Cargo
-        bool removeItem(InventorySlotType slotType, uint pos = 0u);
+        ServerItem removeItem(InventorySlotType slotType, uint pos = 0u);
 
         //pos is used only if slotType == Cargo, nullptr if Item doesn't exist
         ServerItem* getItem(InventorySlotType slotType, uint pos = 0u);

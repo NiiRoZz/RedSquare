@@ -19,8 +19,6 @@ namespace redsquare
     class Player: public ClientEntity
     {
     public:
-        static gf::Texture* getTexture(const EntitySubType type);
-        
         /* Characteristic */
         int m_ManaPoint;
         int m_MaxManaPoint;
@@ -38,9 +36,9 @@ namespace redsquare
 
         bool canAttack( gf::Vector2i targetPos, Game &game);
         bool canMove( gf::Vector2i targetPos, std::map<gf::Id, Player> &players, std::map<gf::Id, Monster> &monsters, std::map<gf::Id, Prop> &props, gf::SquareMap &map );
+        bool canOpenTargetInventory( gf::Vector2i targetPos, Game &game);
 
     private:
-        gf::Texture *m_PlayerTexture;
         gf::Font &m_Font;
 
     };

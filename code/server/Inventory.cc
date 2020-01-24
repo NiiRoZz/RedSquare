@@ -59,15 +59,16 @@ namespace redsquare
         return false;
     }
 
-    bool Inventory::removeItem(InventorySlotType slotType, uint pos)
+    ServerItem Inventory::removeItem(InventorySlotType slotType, uint pos)
     {
         if (slotType == InventorySlotType::Cargo)
         {
             auto it = m_CargoItems.find(pos);
             if (it != m_CargoItems.end())
             {
+                ServerItem item = it->second;
                 m_CargoItems.erase(it);
-                return true;
+                return item;
             }
         }
         else
@@ -75,12 +76,13 @@ namespace redsquare
             auto it = m_SpecialItems.find(slotType);
             if (it != m_SpecialItems.end())
             {
+                ServerItem item = it->second;
                 m_SpecialItems.erase(it);
-                return true;
+                return item;
             }
         }
 
-        return false;
+        return ServerItem();
     }
 
     ServerItem* Inventory::getItem(InventorySlotType slotType, uint pos)

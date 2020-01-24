@@ -13,14 +13,11 @@ namespace redsquare
     public:
         Monster( gf::Id entityID, EntitySubType entitySubType, gf::Vector2i pos );
 
-        void loadTexture(const EntitySubType type = EntitySubType::Magus);
-
         virtual void update(gf::Time time) override;
 
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
     private:
-        gf::Texture *monsterTexture;
         gf::Font &m_Font;
     };
 }
