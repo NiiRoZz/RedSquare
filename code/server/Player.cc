@@ -3,6 +3,7 @@
 #include "Game.h"
 
 #define POTRATIO 0.4
+#define ENERGYPOTRATION 0.3
 
 namespace redsquare
 {
@@ -1224,13 +1225,31 @@ namespace redsquare
         switch (type)
         {
         case ItemType::HealthPot:
-            if(m_LifePoint + (m_LifePoint*POTRATIO) > m_MaxLifePoint){
+            if(m_LifePoint + (m_MaxLifePoint*POTRATIO) > m_MaxLifePoint){
                 m_LifePoint = m_MaxLifePoint;
             }else{
-                m_LifePoint += (m_LifePoint*POTRATIO);
+                m_LifePoint += (m_MaxLifePoint*POTRATIO);
             }
             break;
-        
+        case ItemType::ManaPot:
+            if(m_ManaPoint + (m_MaxManaPoint*POTRATIO) > m_MaxManaPoint){
+                m_ManaPoint = m_MaxManaPoint;
+            }else{
+                m_ManaPoint += (m_MaxManaPoint*POTRATIO);
+            }
+            break;
+        case ItemType::EnergyPot:
+            if(m_ManaPoint + (m_MaxManaPoint*ENERGYPOTRATION) > m_MaxManaPoint){
+                m_ManaPoint = m_MaxManaPoint;
+            }else{
+                m_ManaPoint += (m_MaxManaPoint*ENERGYPOTRATION);
+            }
+            if(m_LifePoint + (m_MaxLifePoint*ENERGYPOTRATION) > m_MaxLifePoint){
+                m_LifePoint = m_MaxLifePoint;
+            }else{
+                m_LifePoint += (m_MaxLifePoint*ENERGYPOTRATION);
+            }
+            break;
         default:
             break;
         }
