@@ -58,6 +58,7 @@ namespace redsquare
         void sendUpdateOfSpells();
 
         virtual void defaultInventoryStuff() override;
+        void UseItem(ItemType type);
 
     private:
         void BasicAttack(ServerEntity *target); // DONE
@@ -74,7 +75,6 @@ namespace redsquare
         void Incinerate(ServerEntity *target); // DONE
         void Devastate(ServerEntity *target, int zone);
         void Massacre(ServerEntity *target); // DONE
-        void Impact(ServerEntity *target,gf::SquareMap m_SquareWorld);
         void Scorch(ServerEntity *target); // DONE
         void Berserk(); // DONE
         void Shoot(ServerEntity *target); // DONE

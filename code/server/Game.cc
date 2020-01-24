@@ -1017,6 +1017,17 @@ namespace redsquare
             case PacketType::UpdateSpells:
                 break;
 
+            case PacketType::RequestUse:
+            {
+                Player *player = getPlayer( packet.requestUse.playerID );
+                Inventory inventory  = player->getInventory();
+                player->UseItem( packet.requestUse.type);
+                inventory.removeItem(InventorySlotType::Cargo,packet.requestUse.pos);
+                // send info to player
+                break;
+            }
+
+
             default :
                 break;
 

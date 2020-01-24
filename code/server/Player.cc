@@ -2,7 +2,7 @@
 #include <iostream>
 #include "Game.h"
 
-#define RATIO 1.3
+#define POTRATIO 0.4
 
 namespace redsquare
 {
@@ -504,7 +504,7 @@ namespace redsquare
         std::cout << " BasicAttack dealed : " << damage << std::endl;
     }
 
-    void Player::Fireball(ServerEntity *target){ // TODO : burning status
+    void Player::Fireball(ServerEntity *target){
 
         if(m_ManaPoint < 5){
             std::cout << "NOT ENOUGH MANA" << std::endl;
@@ -515,12 +515,11 @@ namespace redsquare
         int critical = rand() % 100;
         
         if(critical > 90){
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) * RATIO;
+            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
             damage *= 2; // double the damage 
             std::cout << " CRITICAL !!! " << std::endl;
-            //target is burned
         }else{
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) * RATIO;
+            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
         }
 
         damage += Variance(-(damage/10)); // -10% to +10% dmg 
@@ -534,12 +533,6 @@ namespace redsquare
             return;
         }else{
             target->m_LifePoint -= damage;
-        }
-
-        critical = rand() % 100;
-        if(critical > 70){
-            // target burned
-            std::cout << " The target is burned !!!" << std::endl;
         }
     }
 
@@ -856,20 +849,6 @@ namespace redsquare
         m_ManaPoint -= 5;
 
         std::cout << "Massacre dealed " << damage << " and healed you for " << health << std::endl;
-    }
-
-
-    void Player::Impact(ServerEntity *target,gf::SquareMap m_SquareWorld){ // WARRIOR
-        // dash attack
-        gf::Vector2i start = m_Pos;
-        gf::Vector2i end = target->m_Pos;
-
-        target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint);
-        std::vector<gf::Vector2i> dash = m_SquareWorld.computeRoute(start, end, 0.0); // first set of tile for the corridor
-
-        if(dash.size() > 1){ // techniccaly we have already check if the field of vision is clear from the source to target so there won't be anyone on the path 
-            m_Pos = dash[1]; // TODO check if correct
-        }
     }
 
     std::vector<Monster*> Player::LightningStrike(ServerEntity *target,std::map<gf::Id, Monster> &monsters){
@@ -1239,5 +1218,21 @@ namespace redsquare
         m_ManaPoint -= 7;
 
         return allPacket;
+    }
+
+    void Player::UseItem(ItemType type){
+        switch (type)
+        {
+        case ItemType::HealthPot:
+            if(m_LifePoint + (m_LifePoint*POTRATIO) > m_MaxLifePoint){
+                m_LifePoint = m_MaxLifePoint;
+            }else{
+                m_LifePoint += (m_LifePoint*POTRATIO);
+            }
+            break;
+        
+        default:
+            break;
+        }
     }
 }
