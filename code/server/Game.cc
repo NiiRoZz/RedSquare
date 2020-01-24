@@ -1040,7 +1040,9 @@ namespace redsquare
                 Inventory inventory  = player->getInventory();
                 player->UseItem( packet.requestUse.type);
                 inventory.removeItem(InventorySlotType::Cargo,packet.requestUse.pos);
-                // send info to player
+                Packet updatePacket;
+                player->createCarPacket(updatePacket);
+                sendPacketToAllPlayers(updatePacket);
                 break;
             }
 
