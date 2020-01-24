@@ -800,8 +800,25 @@ namespace redsquare
                             sendPacket.receiveMove.typeEntity = EntityType::Player;
                             sendPacket.receiveMove.posX = player->m_Pos[0];
                             sendPacket.receiveMove.posY = player->m_Pos[1];
-
                             sendPacketToAllPlayers( sendPacket );
+
+                            //Detect if the player walked on an item holder
+                            ItemHolder *itemHolder = getItemHolder(player->m_Pos);
+                            if ( itemHolder != nullptr )
+                            {
+                                ServerItem item(itemHolder->getItemTypeHolding());
+                                ssize_t pos = player->getInventory().addItem(InventorySlotType::Cargo, std::move(item));
+                                if (pos != -1)
+                                {
+                                    sendPacket.type = PacketType::EntityDisconnected;
+                                    sendPacket.entityDisconnected.typeEntity = EntityType::ItemHolder;
+                                    sendPacket.entityDisconnected.entityID = itemHolder->getEntityID();
+                                    sendPacketToAllPlayers( sendPacket );
+
+                                    sendPacket = player->createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                                    sendPacketToAllPlayers( sendPacket );
+                                }
+                            }
                         }
                     }
                 }
@@ -1129,6 +1146,36 @@ namespace redsquare
  
         // Iterate over the map using Iterator till end.
         while ( it != m_Props.end() )
+        {
+            if (it->second.isInsideMe(pos))
+            {
+                return &it->second;
+            }
+
+            ++it;
+        }
+
+        return nullptr;
+    }
+
+    ItemHolder* Game::getItemHolder( gf::Id itemHolderID )
+    {
+        auto itemHolder = m_ItemHolders.find( itemHolderID );
+
+        if ( itemHolder != m_ItemHolders.end() )
+        {
+            return &itemHolder->second;
+        }
+
+        return nullptr;
+    }
+
+    ItemHolder* Game::getItemHolder( gf::Vector2i pos )
+    {
+        auto it = m_ItemHolders.begin();
+ 
+        // Iterate over the map using Iterator till end.
+        while ( it != m_ItemHolders.end() )
         {
             if (it->second.isInsideMe(pos))
             {

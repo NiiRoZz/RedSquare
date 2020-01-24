@@ -27,6 +27,7 @@ add_executable(RedSquare
   code/client/SpellWidget.cc
   code/client/ClientEntity.cc
   code/client/Inventory.cc
+  code/client/ItemHolder.cc
   code/common/Sockets.cc
   code/common/Entity.cc
   code/common/Singletons.cc
@@ -60,6 +61,7 @@ add_executable(RedSquare-Server
   code/server/Prop.cc
   code/server/Inventory.cc
   code/server/ServerItem.cc
+  code/server/ItemHolder.cc
   code/common/Sockets.cc
   code/common/Singletons.cc
   code/common/Entity.cc

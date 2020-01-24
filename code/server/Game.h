@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Monster.h"
 #include "Prop.h"
+#include "ItemHolder.h"
 #include "World.h"
 
 #include <gf/Queue.h>
@@ -18,6 +19,7 @@ namespace redsquare
         std::map<gf::Id, Player> m_Players;
         std::map<gf::Id, Monster> m_Monsters;
         std::map<gf::Id, Prop> m_Props;
+        std::map<gf::Id, ItemHolder> m_ItemHolders;
 
         World m_World;
 
@@ -37,7 +39,10 @@ namespace redsquare
         Monster* getMonster( gf::Vector2i pos ); // getter of monster pos
 
         Prop* getProp( gf::Id propID );
-        Prop* getProp( gf::Vector2i pos ); // getter of props pos
+        Prop* getProp( gf::Vector2i pos ); // getter of prop pos
+
+        ItemHolder* getItemHolder( gf::Id itemHolderID );
+        ItemHolder* getItemHolder( gf::Vector2i pos ); // getter of itemHolder pos
 
         void sendPacketToAllPlayers( Packet &packet );
         void sendPacketToVisiblePlayers( Packet &packet, gf::Vector2i pos );

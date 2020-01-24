@@ -28,7 +28,7 @@ namespace redsquare
     , m_CurrentSpell(SpellType::BasicAttack)
     {
     }
-     //, m_ChatCom(hostname, port+1, m_ChatQueue)
+
     void Game::startThreadCom()
     {
         m_ThreadCom.start();
@@ -43,8 +43,6 @@ namespace redsquare
 
         m_ThreadCom.sendPacket(sendPacket);
     }
-
-
 
     void Game::receiveWorld()
     {
@@ -80,6 +78,16 @@ namespace redsquare
                 target.draw( sprite, states );
 
                 ++it1;
+            }
+
+            auto it5 = m_ItemHolders.begin();
+
+            // Iterate over the map using Iterator till end.
+            while (it5 != m_ItemHolders.end())
+            {
+                it5->second.render( target, states );
+
+                ++it5;
             }
 
             auto it4 = m_Props.begin();
@@ -326,6 +334,12 @@ namespace redsquare
                             m_Props.erase( packet.entityDisconnected.entityID );
                             break;
                         }
+
+                        case EntityType::ItemHolder:
+                        {
+                            m_ItemHolders.erase( packet.entityDisconnected.entityID );
+                            break;
+                        }
                     }
 
                     break;
@@ -420,6 +434,13 @@ namespace redsquare
 
                             m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&(it.first->second)), false);
                             m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(&(it.first->second)), false);
+                            break;
+                        }
+
+                        case EntityType::ItemHolder:
+                        {
+                            auto it = m_ItemHolders.insert( std::make_pair( packet.spawnEntity.entityID, ItemHolder( packet.spawnEntity.entityID, packet.spawnEntity.holdingItem, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) ) ) );
+                            assert( it.second );
                             break;
                         }
                     }

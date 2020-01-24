@@ -436,10 +436,10 @@ namespace redsquare
                 }
             }
 
-            gf::Texture &vinicityTexture = vinicityObject->getEntityTexture();
-            m_VinictyWidget.setDefaultSprite(vinicityTexture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
-            m_VinictyWidget.setDisabledSprite(vinicityTexture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
-            m_VinictyWidget.setSelectedSprite(vinicityTexture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
+            gf::Texture *vinicityTexture = vinicityObject->getEntityTexture();
+            m_VinictyWidget.setDefaultSprite(*vinicityTexture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
+            m_VinictyWidget.setDisabledSprite(*vinicityTexture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
+            m_VinictyWidget.setSelectedSprite(*vinicityTexture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
         }
 
         m_VinicityEntity = vinicityObject;
@@ -467,10 +467,10 @@ namespace redsquare
         
         if (message && message->player)
         {
-            gf::Texture &playerTexture = message->player->getEntityTexture();
-            m_PlayerWidget.setDefaultSprite(playerTexture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
-            m_PlayerWidget.setDisabledSprite(playerTexture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
-            m_PlayerWidget.setSelectedSprite(playerTexture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
+            gf::Texture *playerTexture = message->player->getEntityTexture();
+            m_PlayerWidget.setDefaultSprite(*playerTexture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
+            m_PlayerWidget.setDisabledSprite(*playerTexture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
+            m_PlayerWidget.setSelectedSprite(*playerTexture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
 
             m_PlayerEntity = message->player;
 

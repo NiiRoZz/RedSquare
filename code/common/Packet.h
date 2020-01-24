@@ -19,10 +19,12 @@ namespace redsquare
         Player,
         Monster,
         Prop,
+        ItemHolder,
     };
 
     enum class EntitySubType: uint8_t
     {
+        Unknow,
         /* CLASSES */
         Magus,
         Warrior,
@@ -40,10 +42,6 @@ namespace redsquare
         SkeletonMagus,
         Spirit,
         /* MONSTER */
-
-
-        //Class count for random
-        EntityClassCount,
 
         /* SMALL PROP */
         BrokenPots,
@@ -385,6 +383,7 @@ namespace redsquare
         EntitySubType typeOfEntity;
         int posX;
         int posY;
+        ItemType holdingItem;
     };
 
     struct PassTurn
@@ -516,6 +515,7 @@ namespace redsquare
                 ar | packet.spawnEntity.typeOfEntity;
                 ar | packet.spawnEntity.posX;
                 ar | packet.spawnEntity.posY;
+                ar | packet.spawnEntity.holdingItem;
                 break;
             }
             case PacketType::EntityCar:
