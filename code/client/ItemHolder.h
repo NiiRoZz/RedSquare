@@ -9,6 +9,8 @@ namespace redsquare
     {
     public:
         ItemHolder( gf::Id entityID, ItemType itemHoldingType, gf::Vector2i pos );
+
+        virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
     };
 }
 
