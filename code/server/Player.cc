@@ -5,6 +5,7 @@
 #define POTRATIO1 0.25
 #define POTRATIO2 0.2
 #define POTRATIO3 0.5
+
 #define BOOSTRATIO1 0.1
 #define BOOSTRATIO2 0.15
 #define BOOSTRATIO3 0.20
@@ -1265,6 +1266,57 @@ namespace redsquare
         case ItemType::EnergyPot3:
             EnergyPot(POTRATIO3);
             break;
+
+        case ItemType::BoostAttack1:
+            BoostAttack(BOOSTRATIO1);
+            break;
+        case ItemType::BoostAttack2:
+            BoostAttack(BOOSTRATIO2);
+            break;
+        case ItemType::BoostAttack3:
+            BoostAttack(BOOSTRATIO3);
+            break;
+
+        case ItemType::BoostDefense1:
+            BoostDefense(BOOSTRATIO1);
+            break;
+        case ItemType::BoostDefense2:
+            BoostDefense(BOOSTRATIO2);
+            break;
+        case ItemType::BoostDefense3:
+            BoostDefense(BOOSTRATIO3);
+            break;
+
+        case ItemType::BoostHP1:
+            BoostHealth(BOOSTRATIO1);
+            break;
+        case ItemType::BoostHP2:
+            BoostHealth(BOOSTRATIO2);
+            break;
+        case ItemType::BoostHP3:
+            BoostHealth(BOOSTRATIO3);
+            break;
+
+        case ItemType::BoostMana1:
+            BoostMana(BOOSTRATIO1);
+            break;
+        case ItemType::BoostMana2:
+            BoostMana(BOOSTRATIO2);
+            break;
+        case ItemType::BoostMana3:
+            BoostMana(BOOSTRATIO3);
+            break;
+
+        case ItemType::BoostXP1:
+            BoostXP(BOOSTRATIO1);
+            break;
+        case ItemType::BoostXP2:
+            BoostXP(BOOSTRATIO2);
+            break;
+        case ItemType::BoostXP3:
+            BoostXP(BOOSTRATIO3);
+            break;
+
         default:
             break;
         }
@@ -1272,7 +1324,7 @@ namespace redsquare
 
 
     void Player::ManaPot(int ratio){
-        int mana = Variance( -((m_MaxManaPoint*ratio)/10));
+        int mana = (m_MaxManaPoint*ratio)/10 + Variance( -((m_MaxManaPoint*ratio)/10));
         if(m_ManaPoint + mana > m_MaxManaPoint){
             m_ManaPoint = m_MaxManaPoint;
         }else{
@@ -1280,7 +1332,7 @@ namespace redsquare
         }
     }
     void Player::HealthPot(int ratio){
-        int health = Variance( -((m_MaxLifePoint*ratio)/10));
+        int health = (m_MaxLifePoint*ratio)/10 + Variance( -((m_MaxLifePoint*ratio)/10));
         if(m_LifePoint + health > m_MaxLifePoint){
             m_LifePoint = m_MaxLifePoint;
         }else{
@@ -1291,26 +1343,31 @@ namespace redsquare
         ManaPot(ratio);
         HealthPot(ratio);
     }
-    void Player::BoostAttack(int ratio){
-        ManaPot(ratio);
-        HealthPot(ratio);
-    }
     void Player::BoostDefense(int ratio){
-        int defense = Variance( -((m_MaxDefensePoint*ratio)/10));
-        if(m_DefensePoint + defense > m_MaxDefensePoint){
-            m_DefensePoint = m_MaxDefensePoint;
-        }else{
-            m_DefensePoint += defense;
-        }
+        int defense = (m_MaxDefensePoint*ratio)/10 + Variance( -((m_MaxDefensePoint*ratio)/10));
+        m_DefensePoint += defense;
+        m_MaxDefensePoint += defense; 
     }
     void Player::BoostAttack(int ratio){
-        int attack = Variance( -((m_MaxAttackPoint*ratio)/10));
-        if(m_AttackPoint + attack > m_MaxAttackPoint){
-            m_AttackPoint = m_MaxAttackPoint;
-        }else{
-            m_AttackPoint += defense;
-        }
+        int attack = (m_MaxAttackPoint*ratio)/10 + Variance( -((m_MaxAttackPoint*ratio)/10));
+        m_AttackPoint += attack;
+        m_MaxAttackPoint += attack;
     }
     void Player::BoostXP(int ratio){
+        int XP = (m_MaxXP*ratio)/10 + Variance( -((m_MaxXP*ratio)/10));
+        m_XP += XP;
+        if(m_XP > m_MaxXP){
+            levelUp();
+        }
+    }
+    void Player::BoostMana(int ratio){
+        int mana = (m_MaxManaPoint*ratio)/10 + Variance( -((m_MaxManaPoint*ratio)/10));
+        m_ManaPoint += mana;
+        m_MaxManaPoint += mana; 
+    }
+    void Player::BoostHealth(int ratio){
+        int health = (m_MaxLifePoint*ratio)/10 + Variance( -((m_MaxLifePoint*ratio)/10));
+        m_LifePoint += health;
+        m_MaxLifePoint += health; 
     }
 }

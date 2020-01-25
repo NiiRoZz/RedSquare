@@ -254,12 +254,35 @@ namespace redsquare
         ManaPot1,
         ManaPot2,
         ManaPot3,
+
         HealthPot1,
         HealthPot2,
         HealthPot3,
+
         EnergyPot1,
         EnergyPot2,
         EnergyPot3,
+        
+        BoostAttack1,
+        BoostAttack2,
+        BoostAttack3,
+        
+        BoostDefense1,
+        BoostDefense2,
+        BoostDefense3,
+        
+        BoostHP1,
+        BoostHP2,
+        BoostHP3,
+        
+        BoostMana1,
+        BoostMana2,
+        BoostMana3,
+        
+        BoostXP1,
+        BoostXP2,
+        BoostXP3,
+
         Fish,
         Candy,
         // CONSUMABLES

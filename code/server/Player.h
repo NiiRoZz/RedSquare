@@ -88,6 +88,8 @@ namespace redsquare
         void EnergyPot(int ratio);
         void BoostAttack(int ratio);
         void BoostDefense(int ratio);
+        void BoostMana(int ratio);
+        void BoostHealth(int ratio);
         void BoostXP(int ratio);
 
         SocketTcp m_Socket;
