@@ -2,7 +2,9 @@
 #include <iostream>
 #include "Game.h"
 
-#define POTRATIO 0.4
+#define POTRATIO1 0.25
+#define POTRATIO2 0.2
+#define POTRATIO3 1
 #define ENERGYPOTRATION 0.3
 
 namespace redsquare
@@ -1224,20 +1226,50 @@ namespace redsquare
     void Player::UseItem(ItemType type){
         switch (type)
         {
-        case ItemType::HealthPot:
-            if(m_LifePoint + (m_MaxLifePoint*POTRATIO) > m_MaxLifePoint){
+        case ItemType::HealthPot1:
+            if(m_LifePoint + (m_MaxLifePoint*POTRATIO1) > m_MaxLifePoint){
                 m_LifePoint = m_MaxLifePoint;
             }else{
-                m_LifePoint += (m_MaxLifePoint*POTRATIO);
+                m_LifePoint += (m_MaxLifePoint*POTRATIO1);
             }
             break;
-        case ItemType::ManaPot:
-            if(m_ManaPoint + (m_MaxManaPoint*POTRATIO) > m_MaxManaPoint){
+        case ItemType::HealthPot2:
+            if(m_LifePoint + (m_MaxLifePoint*POTRATIO2) > m_MaxLifePoint){
+                m_LifePoint = m_MaxLifePoint;
+            }else{
+                m_LifePoint += (m_MaxLifePoint*POTRATIO2);
+            }
+            break;
+        case ItemType::HealthPot3:
+            if(m_LifePoint + (m_MaxLifePoint*POTRATIO3) > m_MaxLifePoint){
+                m_LifePoint = m_MaxLifePoint;
+            }else{
+                m_LifePoint += (m_MaxLifePoint*POTRATIO3);
+            }
+            break;
+        case ItemType::ManaPot1:
+            if(m_ManaPoint + (m_MaxManaPoint*POTRATIO1) > m_MaxManaPoint){
                 m_ManaPoint = m_MaxManaPoint;
             }else{
-                m_ManaPoint += (m_MaxManaPoint*POTRATIO);
+                m_ManaPoint += (m_MaxManaPoint*POTRATIO1);
             }
             break;
+        case ItemType::ManaPot2:
+            if(m_ManaPoint + (m_MaxManaPoint*POTRATIO2) > m_MaxManaPoint){
+                m_ManaPoint = m_MaxManaPoint;
+            }else{
+                m_ManaPoint += (m_MaxManaPoint*POTRATIO2);
+            }
+            break;
+        case ItemType::ManaPot3:
+            if(m_ManaPoint + (m_MaxManaPoint*POTRATIO3) > m_MaxManaPoint){
+                m_ManaPoint = m_MaxManaPoint;
+            }else{
+                m_ManaPoint += (m_MaxManaPoint*POTRATIO3);
+            }
+            break;
+
+            
         case ItemType::EnergyPot:
             if(m_ManaPoint + (m_MaxManaPoint*ENERGYPOTRATION) > m_MaxManaPoint){
                 m_ManaPoint = m_MaxManaPoint;

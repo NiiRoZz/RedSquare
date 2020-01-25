@@ -253,8 +253,12 @@ namespace redsquare
         // ARMOR
 
         // CONSUMABLES
-        ManaPot,
-        HealthPot,
+        ManaPot1,
+        ManaPot2,
+        ManaPot3,
+        HealthPot1,
+        HealthPot2,
+        HealthPot3,
         EnergyPot,
         Fish,
         Candy,
