@@ -13,6 +13,7 @@
 #include "Monster.h"
 #include "Player.h"
 #include "Prop.h"
+#include "ItemHolder.h"
 #include "ThreadCom.h"
 #include "../common/Packet.h"
 #include "World.h"
@@ -29,9 +30,10 @@ namespace redsquare
         std::map<gf::Id, Player> m_Players;
         //All monsters
         std::map<gf::Id, Monster> m_Monsters;
-
         //All props
         std::map<gf::Id, Prop> m_Props;
+        //All itemHolders
+        std::map<gf::Id, ItemHolder> m_ItemHolders;
 
         //Value if it's his turn and he can play
         bool m_CanPlay;

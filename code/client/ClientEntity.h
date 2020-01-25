@@ -15,14 +15,14 @@ namespace redsquare
 
         Inventory& getInventory();
 
-        gf::Texture& getEntityTexture() const;
+        gf::Texture* getEntityTexture() const;
 
     protected:
         Inventory m_Inventory;
-        gf::Texture& m_EntityTexture;
+        gf::Texture* m_EntityTexture;
 
     private:
-        gf::Texture& loadTexture() const;
+        gf::Texture* loadTexture() const;
     };
 }
 

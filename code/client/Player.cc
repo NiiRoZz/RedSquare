@@ -34,7 +34,7 @@ namespace redsquare
 
         sprite.setPosition( m_Pos * World::TileSize );
         sprite.setScale( 1 );
-        sprite.setTexture( m_EntityTexture );
+        sprite.setTexture( *m_EntityTexture );
         target.draw(sprite, states);
         
         gf::Color4f color(255,0,0,174);
