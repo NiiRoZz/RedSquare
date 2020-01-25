@@ -4,8 +4,10 @@
 
 #define POTRATIO1 0.25
 #define POTRATIO2 0.2
-#define POTRATIO3 1
-#define ENERGYPOTRATION 0.3
+#define POTRATIO3 0.5
+#define BOOSTRATIO1 0.1
+#define BOOSTRATIO2 0.15
+#define BOOSTRATIO3 0.20
 
 namespace redsquare
 {
@@ -685,10 +687,12 @@ namespace redsquare
             attack = m_AttackPoint / 5;
             attack += Variance(-(m_AttackPoint / 15));
             m_AttackPoint += attack;
+            m_MaxAttackPoint += attack;
         }else{
             attack = m_AttackPoint / 10;
             attack += Variance(-(m_AttackPoint / 15));
             m_AttackPoint += attack;
+            m_MaxAttackPoint += attack;
         }
 
         m_ManaPoint -= 5;
@@ -993,11 +997,15 @@ namespace redsquare
         int critical = rand() % 100;
         if(critical > 90){
             m_AttackPoint += 7;
+            m_MaxAttackPoint += 7;
             m_DefensePoint += 7;
+            m_MaxDefensePoint += 7;
             std::cout << "+7 attack and defense point" <<  std::endl;
         }else{
             m_AttackPoint += 5;
+            m_MaxAttackPoint += 5;
             m_DefensePoint += 5;
+            m_MaxDefensePoint += 5;
             std::cout << "+5 attack and defense point" <<  std::endl;
         }
 
@@ -1045,10 +1053,12 @@ namespace redsquare
             damage *= 2;
             damage += Variance(-(damage / 10));
             m_AttackPoint += m_MaxAttackPoint / 10;
+            m_MaxAttackPoint += m_MaxAttackPoint / 10;
         }else{  
             damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
             damage += Variance(-(damage / 10));
             m_AttackPoint += m_MaxAttackPoint / 5;
+            m_MaxAttackPoint += m_MaxAttackPoint / 5;
         }
 
         if(target->m_LifePoint - damage < 0){
@@ -1227,63 +1237,80 @@ namespace redsquare
         switch (type)
         {
         case ItemType::HealthPot1:
-            if(m_LifePoint + (m_MaxLifePoint*POTRATIO1) > m_MaxLifePoint){
-                m_LifePoint = m_MaxLifePoint;
-            }else{
-                m_LifePoint += (m_MaxLifePoint*POTRATIO1);
-            }
+            HealthPot(POTRATIO1);
             break;
         case ItemType::HealthPot2:
-            if(m_LifePoint + (m_MaxLifePoint*POTRATIO2) > m_MaxLifePoint){
-                m_LifePoint = m_MaxLifePoint;
-            }else{
-                m_LifePoint += (m_MaxLifePoint*POTRATIO2);
-            }
+            HealthPot(POTRATIO1);
             break;
         case ItemType::HealthPot3:
-            if(m_LifePoint + (m_MaxLifePoint*POTRATIO3) > m_MaxLifePoint){
-                m_LifePoint = m_MaxLifePoint;
-            }else{
-                m_LifePoint += (m_MaxLifePoint*POTRATIO3);
-            }
-            break;
-        case ItemType::ManaPot1:
-            if(m_ManaPoint + (m_MaxManaPoint*POTRATIO1) > m_MaxManaPoint){
-                m_ManaPoint = m_MaxManaPoint;
-            }else{
-                m_ManaPoint += (m_MaxManaPoint*POTRATIO1);
-            }
-            break;
-        case ItemType::ManaPot2:
-            if(m_ManaPoint + (m_MaxManaPoint*POTRATIO2) > m_MaxManaPoint){
-                m_ManaPoint = m_MaxManaPoint;
-            }else{
-                m_ManaPoint += (m_MaxManaPoint*POTRATIO2);
-            }
-            break;
-        case ItemType::ManaPot3:
-            if(m_ManaPoint + (m_MaxManaPoint*POTRATIO3) > m_MaxManaPoint){
-                m_ManaPoint = m_MaxManaPoint;
-            }else{
-                m_ManaPoint += (m_MaxManaPoint*POTRATIO3);
-            }
+            HealthPot(POTRATIO1);
             break;
 
-            
-        case ItemType::EnergyPot:
-            if(m_ManaPoint + (m_MaxManaPoint*ENERGYPOTRATION) > m_MaxManaPoint){
-                m_ManaPoint = m_MaxManaPoint;
-            }else{
-                m_ManaPoint += (m_MaxManaPoint*ENERGYPOTRATION);
-            }
-            if(m_LifePoint + (m_MaxLifePoint*ENERGYPOTRATION) > m_MaxLifePoint){
-                m_LifePoint = m_MaxLifePoint;
-            }else{
-                m_LifePoint += (m_MaxLifePoint*ENERGYPOTRATION);
-            }
+        case ItemType::ManaPot1:
+            ManaPot(POTRATIO1);
+            break;
+        case ItemType::ManaPot2:
+            ManaPot(POTRATIO2);
+            break;
+        case ItemType::ManaPot3:
+            ManaPot(POTRATIO3);
+            break;
+
+        case ItemType::EnergyPot1:
+            EnergyPot(POTRATIO1);
+            break;
+        case ItemType::EnergyPot2:
+            EnergyPot(POTRATIO2);
+            break;
+        case ItemType::EnergyPot3:
+            EnergyPot(POTRATIO3);
             break;
         default:
             break;
         }
+    }
+
+
+    void Player::ManaPot(int ratio){
+        int mana = Variance( -((m_MaxManaPoint*ratio)/10));
+        if(m_ManaPoint + mana > m_MaxManaPoint){
+            m_ManaPoint = m_MaxManaPoint;
+        }else{
+            m_ManaPoint += mana;
+        }
+    }
+    void Player::HealthPot(int ratio){
+        int health = Variance( -((m_MaxLifePoint*ratio)/10));
+        if(m_LifePoint + health > m_MaxLifePoint){
+            m_LifePoint = m_MaxLifePoint;
+        }else{
+            m_LifePoint += health;
+        }
+    }
+    void Player::EnergyPot(int ratio){
+        ManaPot(ratio);
+        HealthPot(ratio);
+    }
+    void Player::BoostAttack(int ratio){
+        ManaPot(ratio);
+        HealthPot(ratio);
+    }
+    void Player::BoostDefense(int ratio){
+        int defense = Variance( -((m_MaxDefensePoint*ratio)/10));
+        if(m_DefensePoint + defense > m_MaxDefensePoint){
+            m_DefensePoint = m_MaxDefensePoint;
+        }else{
+            m_DefensePoint += defense;
+        }
+    }
+    void Player::BoostAttack(int ratio){
+        int attack = Variance( -((m_MaxAttackPoint*ratio)/10));
+        if(m_AttackPoint + attack > m_MaxAttackPoint){
+            m_AttackPoint = m_MaxAttackPoint;
+        }else{
+            m_AttackPoint += defense;
+        }
+    }
+    void Player::BoostXP(int ratio){
     }
 }

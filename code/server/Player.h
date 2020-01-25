@@ -83,6 +83,12 @@ namespace redsquare
         std::vector<Monster*> Reaper(ServerEntity *target,std::map<gf::Id, Monster> &monsters); // DONE
         std::vector<Monster*> LightningStrike(ServerEntity *target,std::map<gf::Id, Monster> &monsters); // need to fix smthg
         int Variance(int range); // DONE
+        void ManaPot(int ratio);
+        void HealthPot(int ratio);
+        void EnergyPot(int ratio);
+        void BoostAttack(int ratio);
+        void BoostDefense(int ratio);
+        void BoostXP(int ratio);
 
         SocketTcp m_Socket;
     };

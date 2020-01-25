@@ -257,7 +257,9 @@ namespace redsquare
         HealthPot1,
         HealthPot2,
         HealthPot3,
-        EnergyPot,
+        EnergyPot1,
+        EnergyPot2,
+        EnergyPot3,
         Fish,
         Candy,
         // CONSUMABLES

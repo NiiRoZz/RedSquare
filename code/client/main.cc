@@ -44,7 +44,7 @@ int main( int argc, char **argv )
     if ( argc != 5 || atoi(argv[4]) > NBTYPEPLAYER || atoi(argv[4]) < 0)
     {
         std::cerr << "Usage : ./RedSquare ip port playerName typePlayer" << std::endl;
-        std::cerr << "typePlayer: " << std::endl << "0 for Magus" << std::endl << "1 for Warrior" << std::endl << "2 for Rogue" <<  "3 for Ranger" <<  std::endl;
+        std::cerr << "typePlayer: " << std::endl << "0 for Magus" << std::endl << "1 for Warrior" << std::endl << "2 for Rogue" << std::endl << "3 for Ranger" <<  std::endl;
         return 1;
     }
 
