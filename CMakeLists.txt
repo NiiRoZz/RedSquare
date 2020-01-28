@@ -32,6 +32,12 @@ add_executable(RedSquare
   code/common/Entity.cc
   code/common/Singletons.cc
   code/common/Item.cc
+
+  vendor/gf-imgui/imgui/imgui.cpp
+  vendor/gf-imgui/imgui/imgui_demo.cpp
+  vendor/gf-imgui/imgui/imgui_draw.cpp
+  vendor/gf-imgui/imgui/imgui_widgets.cpp
+  vendor/gf-imgui/imgui_impl_gf.cc
 )
 
 target_link_libraries(RedSquare
@@ -43,6 +49,8 @@ target_include_directories(RedSquare
   PRIVATE
     ${Boost_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/gf-imgui
+    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/gf-imgui/imgui
 )
 
 install(
