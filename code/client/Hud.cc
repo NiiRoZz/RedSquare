@@ -25,9 +25,12 @@ namespace redsquare
     , m_View(view)
     , m_SpellWidgetHover(nullptr)
     , m_ShowMap(false)
-    , m_HideChat(false)
+    , m_ShowChat(true)
     , m_ShowHelp(false)
+    , m_ShowInventory(false)
     , m_PlayerDead(false)
+    , m_ForcedHideChat(false)
+    , m_OldChatShow(false)
     {
         gMessageManager().registerHandler<SpellUpdateMessage>(&Hud::onSpellUpdate, this);
         gMessageManager().registerHandler<MyPlayerDeadMessage>(&Hud::onPlayerDeadUpdate, this);
@@ -194,9 +197,7 @@ namespace redsquare
                 target.draw(m_UI);
             }
 
-            m_InventoryUI.render(target, states);
-
-            if (!m_HideChat)
+            if (m_ShowChat)
             {
                 m_Chat.render(target, states);
             }
@@ -226,29 +227,42 @@ namespace redsquare
                 }
                 target.draw(m_UI);
             }
+
+            if (m_ShowInventory)
+            {
+                m_InventoryUI.render(target, states);
+            }
         }
         m_MainMenu.render(target,states);
     }
 
     void Hud::update(gf::Time time)
     {
-        if (!m_HideChat)
+        if (m_ShowChat)
         {
             m_Chat.update(time);
         }
 
-        m_InventoryUI.update(time);
+        if (m_ShowInventory)
+        {
+            m_InventoryUI.update(time);
+        }
+
         m_MainMenu.update(time);
     }
 
     void Hud::processEvent(const gf::Event &event)
     {
-        if (!m_HideChat)
+        if (m_ShowChat)
         {
             m_Chat.processEvent(event);
         }
 
-        m_InventoryUI.processEvent(event);
+        if (m_ShowInventory)
+        {
+            m_InventoryUI.processEvent(event);
+        }
+
         m_MainMenu.processEvent(event);
 
         if (event.type == gf::EventType::MouseMoved)
@@ -276,6 +290,11 @@ namespace redsquare
     bool Hud::hoveringChat()
     {
         return m_Chat.m_HoveringChat;
+    }
+
+    bool Hud::shownInventory()
+    {
+        return m_ShowInventory;
     }
 
     gf::MessageStatus Hud::onSpellUpdate(gf::Id id, gf::Message *msg)
@@ -315,14 +334,42 @@ namespace redsquare
         m_ShowMap = !m_ShowMap;
     }
 
-    void Hud::hideChat()
+    void Hud::showChat()
     {
-        m_HideChat = !m_HideChat;
+        if (!m_ShowInventory)
+        {
+            m_ShowChat = !m_ShowChat;
+        }
     }
 
     void Hud::showHelp()
     {
         m_ShowHelp = !m_ShowHelp;
+    }
+
+    void Hud::showInventory(bool force, bool value)
+    {
+        if (force)
+        {
+            m_ShowInventory = value;
+        }
+        else
+        {
+            m_ShowInventory = !m_ShowInventory;
+        }
+
+        if (m_ShowInventory)
+        {
+            m_OldChatShow = m_ShowChat;
+            m_ForcedHideChat = true;
+
+            m_ShowChat = false;
+        }
+        else if (m_ForcedHideChat)
+        {
+            m_ShowChat = m_OldChatShow;
+            m_ForcedHideChat = false;
+        }
     }
 
     InventoryUI& Hud::getInventoryUI()

@@ -17,11 +17,6 @@ namespace redsquare
         static const gf::Id type = "SpellUpdate"_id;
         std::array<SpellType, MAX_SPELL_PER_PLAYER> spells;
     };
-
-    struct InventoryShowUpdateMessage : public gf::Message
-    {
-        static const gf::Id type = "InventoryShowUpdate"_id;
-    };
     
     struct ItemUpdateUIMessage : public gf::Message
     {

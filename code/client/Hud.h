@@ -28,10 +28,12 @@ namespace redsquare
         void processEvent(const gf::Event &event);
 
         bool hoveringChat();
+        bool shownInventory();
 
         void showMap();
-        void hideChat();
+        void showChat();
         void showHelp();
+        void showInventory(bool force = false, bool value = false);
 
         InventoryUI& getInventoryUI();
 
@@ -54,9 +56,14 @@ namespace redsquare
         gf::Vector2f m_MouseHoverPostionOnSpell;
 
         bool m_ShowMap;
-        bool m_HideChat;
+        bool m_ShowChat;
         bool m_ShowHelp;
+        bool m_ShowInventory;
         bool m_PlayerDead;
+
+        //Store old chat value when forced hide chat with Inventory key
+        bool m_ForcedHideChat;
+        bool m_OldChatShow;
     };
 
 }

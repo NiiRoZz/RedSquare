@@ -77,7 +77,6 @@ int main( int argc, char **argv )
     // initialization redsquare
     gf::Font &fontChat(gResourceManager().getFont("font/arial.ttf"));
 
-    bool inventoryVisible = false;
     bool MainMenuVisible = false;
     
     // views
@@ -266,7 +265,7 @@ int main( int argc, char **argv )
                 {
                     case gf::EventType::MouseButtonPressed:
                     {
-                        if (!hud.hoveringChat() && !(io.WantCaptureKeyboard) && !inventoryVisible)
+                        if (!hud.hoveringChat() && !(io.WantCaptureKeyboard) && !hud.shownInventory())
                         {
                             end = std::chrono::system_clock::now();
                             int elapsed_seconds = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count();
@@ -293,10 +292,8 @@ int main( int argc, char **argv )
                                         if (entity)
                                         {
                                             hud.getInventoryUI().setVinicityObject(entity);
-                                            InventoryShowUpdateMessage message;
-                                            gMessageManager().sendMessage(&message);
-
-                                            inventoryVisible = !inventoryVisible;
+                                            
+                                            hud.showInventory(true, true);
                                         }
                                     }
                                 }
@@ -307,7 +304,7 @@ int main( int argc, char **argv )
 
                     case gf::EventType::MouseMoved:
                     {
-                        if (!hud.hoveringChat() && !(io.WantCaptureKeyboard) && !inventoryVisible)
+                        if (!hud.hoveringChat() && !(io.WantCaptureKeyboard) && !hud.shownInventory())
                         {
                             gf::Vector2i pos = renderer.mapPixelToCoords(event.mouseCursor.coords,mainView) / World::TileSize;
 
@@ -364,33 +361,30 @@ int main( int argc, char **argv )
             {
                 window.toggleFullscreen();
             }
-            if (rightAction.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard) && !inventoryVisible)
+            if (rightAction.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard) && !hud.shownInventory())
             {
                 game.movePlayer( 1, 0 );
             }
-            else if (leftAction.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard) && !inventoryVisible)
+            else if (leftAction.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard) && !hud.shownInventory())
             {
                 game.movePlayer( -1, 0 );
             }
-            else if (upAction.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard) && !inventoryVisible)
+            else if (upAction.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard) && !hud.shownInventory())
             {
                 game.movePlayer( 0, -1 );
             }
-            else if (downAction.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard) && !inventoryVisible)
+            else if (downAction.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard) && !hud.shownInventory())
             {
                 game.movePlayer( 0, 1 );
             }
 
-            if (passTurn.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard) && !inventoryVisible)
+            if (passTurn.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard) && !hud.shownInventory())
             {
                 game.passTurn();
             }
             if (inventoryAction.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard))
             {
-                InventoryShowUpdateMessage message;
-                gMessageManager().sendMessage(&message);
-
-                inventoryVisible = !inventoryVisible;
+                hud.showInventory();
             }
             if (mapAction.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard))
             {
@@ -398,7 +392,7 @@ int main( int argc, char **argv )
             }
             if (chatAction.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard))
             {
-                hud.hideChat();
+                hud.showChat();
             }
             if (MainMenuAction.isActive())
             {
@@ -442,9 +436,9 @@ int main( int argc, char **argv )
             }
         }
 
-        if (closeWindowAction.isActive())
+        if (closeWindowAction.isActive() && hud.shownInventory())
         {
-            window.close();
+            hud.showInventory();
         }
 
         // 2. update
