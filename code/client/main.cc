@@ -462,9 +462,6 @@ int main( int argc, char **argv )
         renderer.setView(hudView);
         hudEntities.render(renderer);
 
-        ImGui::Render();
-        ImGui_ImplGF_RenderDrawData(ImGui::GetDrawData());
-
         renderer.display();
 
         actions.reset();

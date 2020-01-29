@@ -44,7 +44,7 @@ namespace redsquare
         ImGui::SetNextWindowSize(ImVec2(ChatWindowSize[0], ChatWindowSize[1]));
         ImGui::SetNextWindowPos(ImVec2(ChatWindowPos[0], ChatWindowPos[1]), 0, ImVec2(0.5f, 0.5f));
 
-        if (ImGui::Begin("Chat", nullptr, DefaultWindowFlags | ImGuiWindowFlags_NoScrollbar))
+        if (ImGui::Begin("Chat", nullptr, DefaultWindowFlags | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoScrollWithMouse))
         {
             m_HoveringChat = ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow);
 
@@ -97,6 +97,9 @@ namespace redsquare
         }
 
         ImGui::End();
+
+        ImGui::Render();
+        ImGui_ImplGF_RenderDrawData(ImGui::GetDrawData());
     }
 
     void Chat::processEvent(const gf::Event &event)
