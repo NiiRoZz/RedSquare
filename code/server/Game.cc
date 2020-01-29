@@ -882,7 +882,7 @@ namespace redsquare
                         int level = player->m_Level;
                         Packet sendPacket;
 
-                        if( packet.requestAttack.spellType == SpellType::Reaper ){ // TODO fix the bug where you use 2 time this attack and it only deal the damage once
+                        if( packet.requestAttack.spellType == SpellType::Reaper ){
                             std::vector<Monster*> allPacket = player->attack(packet.requestAttack.spellType, targetServerEntity, m_Monsters);
                             for(auto currentMonster : allPacket){
                                 if( currentMonster->m_LifePoint <= 0 ){
@@ -898,20 +898,14 @@ namespace redsquare
                                 sendPacketToAllPlayers( sendPacket);
                             }
 
-                            if(player->m_Level != level){
-                                player->createCarPacket(sendPacket);
-                                sendPacketToAllPlayers( sendPacket );
-                            }else{
-                                player->createCarPacket(sendPacket);
-                                sendPacketToAllPlayers( sendPacket );
-                            }
+                            player->createCarPacket(sendPacket);
+                            sendPacketToAllPlayers( sendPacket );
+                            
                         }else{
                             player->attack(packet.requestAttack.spellType, targetServerEntity);
                             Packet sendPacket;
-                            Packet sendPacket2;
                             if ( targetMonster->m_LifePoint > 0 ){
                                 targetMonster->createCarPacket(sendPacket);
-                                player->createCarPacket(sendPacket2);
                             }else{   
                                 sendPacket.type = PacketType::EntityDisconnected;
                                 sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
@@ -923,13 +917,10 @@ namespace redsquare
                                 m_Monsters.erase(targetMonster->getEntityID());
                             }
 
-                            sendPacketToAllPlayers( sendPacket );
-                            sendPacketToAllPlayers( sendPacket2 );
+                            sendPacketToAllPlayers( sendPacket ); // monster packet
 
-                            if(player->m_Level != level){
-                                player->createCarPacket(sendPacket);
-                                sendPacketToAllPlayers( sendPacket );
-                            }
+                            player->createCarPacket(sendPacket); // player packet
+                            sendPacketToAllPlayers( sendPacket );
                         }
 
                     }else if(targetProp != nullptr){
