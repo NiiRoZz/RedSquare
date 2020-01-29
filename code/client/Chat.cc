@@ -48,10 +48,9 @@ namespace redsquare
         {
             m_HoveringChat = ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow);
 
-            ImGui::Columns(1);
             ImGui::BeginGroup();
 
-            ImVec2 size(0.0f, 10 * ImGui::GetTextLineHeightWithSpacing());
+            ImVec2 size(0.0f, ChatWindowSize[1] - 3.5f * ImGui::GetTextLineHeightWithSpacing());
 
             if (ImGui::BeginChild("Messages", size, false))
             {
@@ -75,6 +74,7 @@ namespace redsquare
             ImGui::EndChild();
 
             ImGui::Spacing();
+            ImGui::SetNextItemWidth(ImGui::GetWindowWidth());
 
             if (ImGui::InputText("###chat", m_LineBuffer.getData(), m_LineBuffer.getSize(), ImGuiInputTextFlags_EnterReturnsTrue) && m_LineBuffer[0] != '\0')
             {

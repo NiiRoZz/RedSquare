@@ -25,7 +25,7 @@ namespace redsquare
     , m_View(view)
     , m_SpellWidgetHover(nullptr)
     , m_ShowMap(false)
-    , m_HideChat(true)
+    , m_HideChat(false)
     , m_ShowHelp(false)
     , m_PlayerDead(false)
     {
@@ -194,10 +194,11 @@ namespace redsquare
                 target.draw(m_UI);
             }
 
-            if (m_HideChat)
+            if (!m_HideChat)
             {
                 m_Chat.render(target, states);
             }
+
             if (m_ShowHelp) 
             {
                 
@@ -231,7 +232,7 @@ namespace redsquare
 
     void Hud::update(gf::Time time)
     {
-        if (m_HideChat)
+        if (!m_HideChat)
         {
             m_Chat.update(time);
         }
@@ -242,7 +243,7 @@ namespace redsquare
 
     void Hud::processEvent(const gf::Event &event)
     {
-        if (m_HideChat)
+        if (!m_HideChat)
         {
             m_Chat.processEvent(event);
         }
