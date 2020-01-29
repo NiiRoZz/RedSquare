@@ -12,101 +12,91 @@ namespace redsquare
 {
     Chat::Chat(gf::Font &font, char *port, char *hostname,const char* name)
     : m_HoveringChat(false)
-    , m_TypingInChat(false)
     , m_UI(font)
     , m_Name(name)
     , m_ChatCom(hostname, port, m_ChatQueue)
+    , m_AutoScroll(false)
     {
         m_ChatCom.start();
+        m_LineBuffer.clear();
     }
 
-    
     void Chat::update(gf::Time time)
     {
         Message packet;
         while(m_ChatQueue.poll(packet))
         {
-            std::string from = packet.from;
-            std::string message = packet.message;
-            std::string text = from + " : "+ message;
-            gf::UICharBuffer box(512);
-            box.append(text);
-            m_tabCharBuffer.push_back(std::move(box));
+            m_ChatMessageBuffer.push_back(std::move(packet));
+            m_AutoScroll = true;
         }
     }
 
     void Chat::render(gf::RenderTarget& target, const gf::RenderStates& states)
-    {
-                    
+    {   
         gf::Coordinates coordinates(target);
-        gf::Vector2f ChatWindowSize=coordinates.getRelativeSize({ 0.22f,0.40f });
-        gf::Vector2f sizeInterChat=ChatWindowSize*gf::Vector2f(0.700,0.954);
-        gf::Vector2f sizeMessageReceiveChat=ChatWindowSize*gf::Vector2f(0.136,0.840);
-        gf::Vector2f sizeMessageBackground=ChatWindowSize*gf::Vector2f(0.200,0.954);
-        gf::Vector2f sizeMessageToSend=ChatWindowSize*gf::Vector2f(0.100,0.113);
-        
-        static gf::UICharBuffer box(512);
-        static gf::UICharBuffer text(64);
 
-        m_HoveringChat = false;
-        m_TypingInChat = false;
+        gf::Vector2f ChatWindowSize = coordinates.getRelativeSize({ 0.22f,0.40f });
+        gf::Vector2f ChatWindowPos = coordinates.getRelativePoint({ 0.12f,0.80f });
+        auto position = coordinates.getCenter();
 
-        m_UI.setCharacterSize(12);
-        m_UI.setPredefinedStyle(gf::UIPredefinedStyle::Dark);
+        // UI
+        ImGui::NewFrame();
+        ImGui::SetNextWindowSize(ImVec2(ChatWindowSize[0], ChatWindowSize[1]));
+        ImGui::SetNextWindowPos(ImVec2(ChatWindowPos[0], ChatWindowPos[1]), 0, ImVec2(0.5f, 0.5f));
 
-        if( m_UI.begin("Chat", gf::RectF::fromPositionSize( coordinates.getRelativePoint({ 0.00f,0.595f }),ChatWindowSize),gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
+        if (ImGui::Begin("Chat", nullptr, DefaultWindowFlags | ImGuiWindowFlags_NoScrollbar))
         {
-            m_HoveringChat = m_UI.isWindowHovered();
-            
-            m_UI.layoutRowStatic(sizeInterChat[0], sizeInterChat[1], 1);
-            if (m_UI.groupBegin("MessageReceive",gf::UIWindow::ScrollAutoHide))
+            m_HoveringChat = ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow);
+
+            ImGui::Columns(1);
+            ImGui::BeginGroup();
+
+            ImVec2 size(0.0f, 10 * ImGui::GetTextLineHeightWithSpacing());
+
+            if (ImGui::BeginChild("Messages", size, false))
             {
-                for(gf::UICharBuffer &curr : m_tabCharBuffer)
+                for (auto& message : m_ChatMessageBuffer)
                 {
-                    m_UI.layoutRowStatic(sizeMessageReceiveChat[0],sizeMessageReceiveChat[1], 1);
-                    m_UI.edit(gf::UIEditType::Box | gf::UIEdit::ReadOnly, curr);
+                    std::string strFrom = message.from;
+                    strFrom.insert(strFrom.length(), std::string(" :"));
+
+                    ImGui::TextColored(ImVec4(1,0,0,1), strFrom.c_str());
+                    ImGui::SameLine();
+                    ImGui::TextWrapped(message.message);
                 }
             }
-            m_UI.groupEnd();
 
-            m_UI.layoutRowStatic(sizeMessageBackground[0], sizeMessageBackground[1], 1);
-
-            if (m_UI.groupBegin("MessageToSend", gf::UIWindow::Border|gf::UIWindow::NoScrollbar ))
+            if (m_AutoScroll)
             {
-                m_UI.layoutRowBegin(gf::UILayout::Dynamic, sizeMessageToSend[0], 2);
-                m_UI.layoutRowPush(0.7f);
-                
-                gf::UIEditEventFlags flags = m_UI.edit(gf::UIEditType::Field | gf::UIEdit::SigEnter, text, gf::UIEditFilter::Ascii);
+                ImGui::SetScrollHereY(1.0f); // bottom
+                m_AutoScroll = false;
+            }
 
-                //Detect if we are typing in the chat
-                m_TypingInChat = (flags & gf::UIEditEvent::Active);
+            ImGui::EndChild();
 
-                m_UI.layoutRowPush(0.30f);
-                
-                if ( m_UI.buttonLabel("Submit") || flags.test(gf::UIEditEvent::Commited) )
-                {
-                    Message sendPacket;
+            ImGui::Spacing();
 
-                    std::size_t length = m_Name.copy(sendPacket.from, m_Name.length());
-                    sendPacket.from[length]='\0';
+            if (ImGui::InputText("###chat", m_LineBuffer.getData(), m_LineBuffer.getSize(), ImGuiInputTextFlags_EnterReturnsTrue) && m_LineBuffer[0] != '\0')
+            {
+                Message sendPacket;
 
-                    std::string message = text.asString();
-                    length = message.copy(sendPacket.message, message.length());
-                    sendPacket.message[length]='\0';
+                std::size_t length = m_Name.copy(sendPacket.from, m_Name.length());
+                sendPacket.from[length]='\0';
 
-                    m_ChatCom.sendPacket(sendPacket);
+                std::string message = m_LineBuffer.getData();
+                length = message.copy(sendPacket.message, message.length());
+                sendPacket.message[length]='\0';
 
-                    text.clear();
-                }
-                m_UI.layoutRowEnd();
-            } 
-            m_UI.groupEnd();
+                m_ChatCom.sendPacket(sendPacket);
 
-            m_UI.end();
+                m_LineBuffer.clear();
+                ImGui::SetKeyboardFocusHere(-1);
+            }
+
+            ImGui::EndGroup();
         }
 
-        gf::RenderStates localChatStates = states;
-        target.draw(m_UI, localChatStates);
+        ImGui::End();
     }
 
     void Chat::processEvent(const gf::Event &event)

@@ -28,7 +28,6 @@ namespace redsquare
         void processEvent(const gf::Event &event);
 
         bool hoveringChat();
-        bool typingInChat();
 
         void showMap();
         void hideChat();

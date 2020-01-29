@@ -25,6 +25,9 @@
 #include <gf/Font.h>
 #include <gf/TileLayer.h>
 
+#include <imgui.h>
+#include <imgui_impl_gf.h>
+
 #include "World.h"
 #include "Game.h"
 #include "Chat.h"
@@ -57,6 +60,13 @@ int main( int argc, char **argv )
     window.setVerticalSyncEnabled(true);
     window.setFramerateLimit(60);
     gf::RenderWindow renderer(window);
+
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    // config
+    io.ConfigFlags = ImGuiConfigFlags_NavEnableKeyboard;
+    io.IniFilename = nullptr;
+    ImGui_ImplGF_Init(window, renderer);
 
     gf::SingletonStorage<gf::MessageManager> storageForMessageManager(redsquare::gMessageManager);
     gf::SingletonStorage<gf::ResourceManager> storageForResourceManager(redsquare::gResourceManager);
@@ -250,12 +260,13 @@ int main( int argc, char **argv )
                 actions.processEvent(event);
                 views.processEvent(event);
                 hud.processEvent(event);
+                ImGui_ImplGF_ProcessEvent(event);
 
                 switch (event.type)
                 {
                     case gf::EventType::MouseButtonPressed:
                     {
-                        if (!hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
+                        if (!hud.hoveringChat() && !(io.WantCaptureKeyboard) && !inventoryVisible)
                         {
                             end = std::chrono::system_clock::now();
                             int elapsed_seconds = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count();
@@ -296,7 +307,7 @@ int main( int argc, char **argv )
 
                     case gf::EventType::MouseMoved:
                     {
-                        if (!hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
+                        if (!hud.hoveringChat() && !(io.WantCaptureKeyboard) && !inventoryVisible)
                         {
                             gf::Vector2i pos = renderer.mapPixelToCoords(event.mouseCursor.coords,mainView) / World::TileSize;
 
@@ -349,43 +360,43 @@ int main( int argc, char **argv )
                 }
             }
 
-            if (fullscreenAction.isActive() && !hud.hoveringChat() && !hud.typingInChat())
+            if (fullscreenAction.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard))
             {
                 window.toggleFullscreen();
             }
-            if (rightAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
+            if (rightAction.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard) && !inventoryVisible)
             {
                 game.movePlayer( 1, 0 );
             }
-            else if (leftAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
+            else if (leftAction.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard) && !inventoryVisible)
             {
                 game.movePlayer( -1, 0 );
             }
-            else if (upAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
+            else if (upAction.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard) && !inventoryVisible)
             {
                 game.movePlayer( 0, -1 );
             }
-            else if (downAction.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
+            else if (downAction.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard) && !inventoryVisible)
             {
                 game.movePlayer( 0, 1 );
             }
 
-            if (passTurn.isActive() && !hud.hoveringChat() && !hud.typingInChat() && !inventoryVisible)
+            if (passTurn.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard) && !inventoryVisible)
             {
                 game.passTurn();
             }
-            if (inventoryAction.isActive() && !hud.hoveringChat() && !hud.typingInChat())
+            if (inventoryAction.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard))
             {
                 InventoryShowUpdateMessage message;
                 gMessageManager().sendMessage(&message);
 
                 inventoryVisible = !inventoryVisible;
             }
-            if (mapAction.isActive() && !hud.hoveringChat() && !hud.typingInChat())
+            if (mapAction.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard))
             {
                 hud.showMap();
             }
-            if (chatAction.isActive() && !hud.hoveringChat() && !hud.typingInChat())
+            if (chatAction.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard))
             {
                 hud.hideChat();
             }
@@ -393,39 +404,39 @@ int main( int argc, char **argv )
             {
                 hud.m_MainMenu.m_ShowMainMenu = !hud.m_MainMenu.m_ShowMainMenu;
             }
-            if (HelpMenuAction.isActive() && !hud.hoveringChat() && !hud.typingInChat())
+            if (HelpMenuAction.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard))
             {
                 hud.showHelp();
             }
-            if( changeSpell1.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 2)
+            if( changeSpell1.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard) && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 2)
             {
                 game.changeSpell(1);
             }
-            if( changeSpell2.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 2)
+            if( changeSpell2.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard) && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 2)
             {
                 game.changeSpell(2);
             }
-            if( changeSpell3.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 3 )
+            if( changeSpell3.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard) && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 3 )
             {
                 game.changeSpell(3);
             }
-            if( changeSpell4.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 4 )
+            if( changeSpell4.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard) && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 4 )
             {
                 game.changeSpell(4);
             }
-            if( changeSpell5.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 5 )
+            if( changeSpell5.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard) && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 5 )
             {
                 game.changeSpell(5);
             }
-            if( changeSpell6.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 6 )
+            if( changeSpell6.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard) && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 6 )
             {
                 game.changeSpell(6);
             }
-            if( changeSpell7.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 7 )
+            if( changeSpell7.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard) && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 7 )
             {
                 game.changeSpell(7);
             }
-            if( changeSpell8.isActive() && !hud.hoveringChat() && !hud.typingInChat() && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 8 )
+            if( changeSpell8.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard) && game.getMyPlayer() != nullptr && game.getMyPlayer()->m_Level >= 8 )
             {
                 game.changeSpell(8);
             }
@@ -440,14 +451,22 @@ int main( int argc, char **argv )
         gf::Time time = clock.restart();
         mainEntities.update(time);
         hudEntities.update(time);
+        ImGui_ImplGF_Update(time);
 
         // 3. draw
         renderer.clear();
+
         renderer.setView(mainView);
         mainEntities.render(renderer);
+
         renderer.setView(hudView);
         hudEntities.render(renderer);
+
+        ImGui::Render();
+        ImGui_ImplGF_RenderDrawData(ImGui::GetDrawData());
+
         renderer.display();
+
         actions.reset();
 	}
 

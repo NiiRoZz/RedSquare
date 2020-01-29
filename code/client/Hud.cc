@@ -277,11 +277,6 @@ namespace redsquare
         return m_Chat.m_HoveringChat;
     }
 
-    bool Hud::typingInChat()
-    {
-        return m_Chat.m_TypingInChat;
-    }
-
     gf::MessageStatus Hud::onSpellUpdate(gf::Id id, gf::Message *msg)
     {
         assert(id == SpellUpdateMessage::type);
