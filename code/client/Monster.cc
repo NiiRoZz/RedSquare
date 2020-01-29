@@ -8,53 +8,15 @@
 #include <gf/Color.h>
 #include <gf/Text.h>
 
-#define NBMONSTER 5;
+#define NBMONSTER 5
 
 namespace redsquare
 {
-    Monster::Monster( gf::Id entityID )
-    : m_Font(gResourceManager().getFont("font/arial.ttf"))
-    {
-        m_Pos = gf::Vector2i( 0, 0 );
-        loadTexture();
-    }
-
-    Monster::Monster( gf::Id entityID, EntitySubType type, gf::Vector2i pos )
-    : redsquare::Entity(entityID,type)
+    Monster::Monster( gf::Id entityID, EntitySubType entitySubType, gf::Vector2i pos )
+    : ClientEntity(entityID, EntityType::Monster, entitySubType)
     , m_Font(gResourceManager().getFont("font/arial.ttf"))
     {
         m_Pos = pos;
-        loadTexture(type);
-    }
-
-    void Monster::loadTexture( const EntitySubType type )
-    {
-        switch (type)
-        {
-            case EntitySubType::Bat:
-                monsterTexture = &gResourceManager().getTexture("img/Monster/Bat.png");
-                break;
-
-            case EntitySubType::SkeletonKnife:
-                monsterTexture = &gResourceManager().getTexture("img/Monster/SkeletonKnife.png");
-                break;
-
-            case EntitySubType::SkeletonMagus:
-                monsterTexture = &gResourceManager().getTexture("img/Monster/SkeletonMagus.png");
-                break;
-    
-            case EntitySubType::Slime:
-                monsterTexture = &gResourceManager().getTexture("img/Monster/Slime.png");
-                break;
-
-            case EntitySubType::Spirit:
-                monsterTexture = &gResourceManager().getTexture("img/Monster/Spirit.png");
-                break;
-
-            default:
-                monsterTexture = &gResourceManager().getTexture("img/Monster/Slime.png");
-                break;
-        }
     }
 
     void Monster::render(gf::RenderTarget& target, const gf::RenderStates& states)
@@ -67,7 +29,7 @@ namespace redsquare
 
         sprite.setPosition( m_Pos * World::TileSize );
         sprite.setScale( 1 );
-        sprite.setTexture( *monsterTexture );
+        sprite.setTexture( *m_EntityTexture );
         target.draw(sprite, states);
 
         gf::Color4f color(255,0,0,174);

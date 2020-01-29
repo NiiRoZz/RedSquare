@@ -46,7 +46,7 @@ namespace redsquare
         packet.type = PacketType::SpawnEntity;
         packet.spawnEntity.entityID = id;
         packet.spawnEntity.typeEntity = EntityType::Player;
-        packet.spawnEntity.typeOfEntity = itNewPlayer->second.m_TypeOfEntity;
+        packet.spawnEntity.typeOfEntity = itNewPlayer->second.m_EntitySubType;
         packet.spawnEntity.posX = itNewPlayer->second.m_Pos[0];
         packet.spawnEntity.posY = itNewPlayer->second.m_Pos[1];
         sendPacketToAllPlayers( packet );
@@ -64,7 +64,7 @@ namespace redsquare
                 packet.type = PacketType::SpawnEntity;
                 packet.spawnEntity.entityID = it->first;
                 packet.spawnEntity.typeEntity = EntityType::Player;
-                packet.spawnEntity.typeOfEntity = it->second.m_TypeOfEntity;
+                packet.spawnEntity.typeOfEntity = it->second.m_EntitySubType;
                 packet.spawnEntity.posX = it->second.m_Pos[0];
                 packet.spawnEntity.posY = it->second.m_Pos[1];
                 itNewPlayer->second.sendPacket( packet );
@@ -84,7 +84,7 @@ namespace redsquare
             packet.type = PacketType::SpawnEntity;
             packet.spawnEntity.entityID = it2->first;
             packet.spawnEntity.typeEntity = EntityType::Monster;
-            packet.spawnEntity.typeOfEntity = it2->second.m_TypeOfEntity;
+            packet.spawnEntity.typeOfEntity = it2->second.m_EntitySubType;
             packet.spawnEntity.posX = it2->second.m_Pos[0];
             packet.spawnEntity.posY = it2->second.m_Pos[1];
             itNewPlayer->second.sendPacket( packet );
@@ -103,7 +103,7 @@ namespace redsquare
             packet.type = PacketType::SpawnEntity;
             packet.spawnEntity.entityID = it3->first;
             packet.spawnEntity.typeEntity = EntityType::Prop;
-            packet.spawnEntity.typeOfEntity = it3->second.m_TypeOfEntity;
+            packet.spawnEntity.typeOfEntity = it3->second.m_EntitySubType;
             packet.spawnEntity.posX = it3->second.m_Pos[0];
             packet.spawnEntity.posY = it3->second.m_Pos[1];
             itNewPlayer->second.sendPacket( packet );
@@ -756,7 +756,7 @@ namespace redsquare
                                     packet.type = PacketType::SpawnEntity;
                                     packet.spawnEntity.entityID = itMonster->first;
                                     packet.spawnEntity.typeEntity = EntityType::Monster;
-                                    packet.spawnEntity.typeOfEntity = itMonster->second.m_TypeOfEntity;
+                                    packet.spawnEntity.typeOfEntity = itMonster->second.m_EntitySubType;
                                     packet.spawnEntity.posX = itMonster->second.m_Pos[0];
                                     packet.spawnEntity.posY = itMonster->second.m_Pos[1];
                                     it3->second.sendPacket( packet );
@@ -775,7 +775,7 @@ namespace redsquare
                                     packet.type = PacketType::SpawnEntity;
                                     packet.spawnEntity.entityID = itProp->first;
                                     packet.spawnEntity.typeEntity = EntityType::Prop;
-                                    packet.spawnEntity.typeOfEntity = itProp->second.m_TypeOfEntity;
+                                    packet.spawnEntity.typeOfEntity = itProp->second.m_EntitySubType;
                                     packet.spawnEntity.posX = itProp->second.m_Pos[0];
                                     packet.spawnEntity.posY = itProp->second.m_Pos[1];
                                     it3->second.sendPacket( packet );
@@ -802,8 +802,25 @@ namespace redsquare
                             sendPacket.receiveMove.typeEntity = EntityType::Player;
                             sendPacket.receiveMove.posX = player->m_Pos[0];
                             sendPacket.receiveMove.posY = player->m_Pos[1];
-
                             sendPacketToAllPlayers( sendPacket );
+
+                            //Detect if the player walked on an item holder
+                            ItemHolder *itemHolder = getItemHolder(player->m_Pos);
+                            if ( itemHolder != nullptr )
+                            {
+                                ServerItem item(itemHolder->getItemTypeHolding());
+                                ssize_t pos = player->getInventory().addItem(InventorySlotType::Cargo, std::move(item));
+                                if (pos != -1)
+                                {
+                                    sendPacket.type = PacketType::EntityDisconnected;
+                                    sendPacket.entityDisconnected.typeEntity = EntityType::ItemHolder;
+                                    sendPacket.entityDisconnected.entityID = itemHolder->getEntityID();
+                                    sendPacketToAllPlayers( sendPacket );
+
+                                    sendPacket = player->createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                                    sendPacketToAllPlayers( sendPacket );
+                                }
+                            }
                         }
                     }
                 }
@@ -895,7 +912,6 @@ namespace redsquare
                             if ( targetMonster->m_LifePoint > 0 ){
                                 targetMonster->createCarPacket(sendPacket);
                                 player->createCarPacket(sendPacket2);
-                                std::cout<< "packet " << std::endl;
                             }else{   
                                 sendPacket.type = PacketType::EntityDisconnected;
                                 sendPacket.entityDisconnected.typeEntity = EntityType::Monster;
@@ -946,18 +962,92 @@ namespace redsquare
 
             case PacketType::MoveItem:
             {
-                Player *player = getPlayer( packet.moveItem.playerID );
-                if ( player != nullptr )
+                ServerEntity *oldEntity = nullptr;
+                ServerEntity *newEntity = nullptr;
+
+                switch (packet.moveItem.oldEntityType)
                 {
-                    if ( player->getInventory().moveItem(packet.moveItem) )
+                    case EntityType::Player:
                     {
-                        player->sendPacket(packet);
+                        oldEntity = getPlayer( packet.moveItem.oldEntityID );
+                        break;
+                    }
+
+                    case EntityType::Monster:
+                    {
+                        oldEntity = getMonster( packet.moveItem.oldEntityID );
+                        break;
+                    }
+
+                    case EntityType::Prop:
+                    {
+                        oldEntity = getProp( packet.moveItem.oldEntityID );
+                        break;
                     }
                 }
+                assert(oldEntity != nullptr);
+
+                switch (packet.moveItem.newEntityType)
+                {
+                    case EntityType::Player:
+                    {
+                        newEntity = getPlayer( packet.moveItem.newEntityID );
+                        break;
+                    }
+
+                    case EntityType::Monster:
+                    {
+                        newEntity = getMonster( packet.moveItem.newEntityID );
+                        break;
+                    }
+
+                    case EntityType::Prop:
+                    {
+                        newEntity = getProp( packet.moveItem.newEntityID );
+                        break;
+                    }
+                }
+                assert(newEntity != nullptr);
+
+                if (oldEntity == newEntity)
+                {
+                    if ( newEntity->getInventory().moveItem(packet.moveItem) )
+                    {
+                        sendPacketToAllPlayers(packet);
+                    }
+                }
+                else
+                {
+                    ServerItem oldItem = oldEntity->getInventory().removeItem(packet.moveItem.oldSlotType, packet.moveItem.oldPos);
+                    Packet updatePacket = oldEntity->createUpdateItemPacket(packet.moveItem.oldSlotType, true, packet.moveItem.oldPos);
+                    sendPacketToAllPlayers(updatePacket);
+
+                    if (oldItem.getType() != ItemType::Unknow)
+                    {
+                        newEntity->getInventory().addItem(packet.moveItem.newSlotType, std::move(oldItem), packet.moveItem.newPos);
+                        updatePacket = newEntity->createUpdateItemPacket(packet.moveItem.newSlotType, false, packet.moveItem.newPos);
+                        sendPacketToAllPlayers(updatePacket);
+                    }
+                }
+
+                break;
             }
 
             case PacketType::UpdateSpells:
                 break;
+
+            case PacketType::RequestUse:
+            {
+                Player *player = getPlayer( packet.requestUse.playerID );
+                Inventory inventory  = player->getInventory();
+                player->UseItem( packet.requestUse.type);
+                inventory.removeItem(InventorySlotType::Cargo,packet.requestUse.pos);
+                Packet updatePacket;
+                player->createCarPacket(updatePacket);
+                sendPacketToAllPlayers(updatePacket);
+                break;
+            }
+
 
             default :
                 break;
@@ -1012,6 +1102,18 @@ namespace redsquare
         return nullptr;
     }
 
+    Monster* Game::getMonster( gf::Id monsterID )
+    {
+        auto monster = m_Monsters.find( monsterID );
+
+        if ( monster != m_Monsters.end() )
+        {
+            return &monster->second;
+        }
+
+        return nullptr;
+    }
+
     Monster* Game::getMonster( gf::Vector2i pos )
     {
         auto it = m_Monsters.begin();
@@ -1030,12 +1132,54 @@ namespace redsquare
         return nullptr;
     }
 
+    Prop* Game::getProp( gf::Id propID )
+    {
+        auto prop = m_Props.find( propID );
+
+        if ( prop != m_Props.end() )
+        {
+            return &prop->second;
+        }
+
+        return nullptr;
+    }
+
     Prop* Game::getProp( gf::Vector2i pos )
     {
         auto it = m_Props.begin();
  
         // Iterate over the map using Iterator till end.
         while ( it != m_Props.end() )
+        {
+            if (it->second.isInsideMe(pos))
+            {
+                return &it->second;
+            }
+
+            ++it;
+        }
+
+        return nullptr;
+    }
+
+    ItemHolder* Game::getItemHolder( gf::Id itemHolderID )
+    {
+        auto itemHolder = m_ItemHolders.find( itemHolderID );
+
+        if ( itemHolder != m_ItemHolders.end() )
+        {
+            return &itemHolder->second;
+        }
+
+        return nullptr;
+    }
+
+    ItemHolder* Game::getItemHolder( gf::Vector2i pos )
+    {
+        auto it = m_ItemHolders.begin();
+ 
+        // Iterate over the map using Iterator till end.
+        while ( it != m_ItemHolders.end() )
         {
             if (it->second.isInsideMe(pos))
             {

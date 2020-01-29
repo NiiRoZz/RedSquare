@@ -24,13 +24,16 @@ namespace redsquare
 
         bool isUseable() const;
 
-    protected:
         uint8_t m_SlotMask;
+
+    protected:
+        
 
     private:
 
         void defaultCompatibleSlot();
-        void defaultData();
+        void defaultData(int floor);
+        int Variance(int range);
 
         ItemType m_Type;
 

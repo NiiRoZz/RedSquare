@@ -4,8 +4,8 @@
 #include "Chat.h"
 #include "Game.h"
 #include "MainMenu.h"
-#include "Inventory.h"
-#include "../common/Message.h"
+#include "InventoryUI.h"
+#include "Message.h"
 #include "SpellWidget.h"
 
 #include <gf/Font.h>
@@ -28,11 +28,14 @@ namespace redsquare
         void processEvent(const gf::Event &event);
 
         bool hoveringChat();
-        bool typingInChat();
+        bool shownInventory();
 
         void showMap();
-        void hideChat();
+        void showChat();
         void showHelp();
+        void showInventory(bool force = false, bool value = false);
+
+        InventoryUI& getInventoryUI();
 
         MainMenu m_MainMenu;
         
@@ -42,7 +45,7 @@ namespace redsquare
 
         Game &m_Game;
         Chat m_Chat;
-        Inventory m_Inventory;
+        InventoryUI m_InventoryUI;
        
         gf::Font &m_Font;
         gf::UI m_UI;
@@ -53,9 +56,14 @@ namespace redsquare
         gf::Vector2f m_MouseHoverPostionOnSpell;
 
         bool m_ShowMap;
-        bool m_HideChat;
+        bool m_ShowChat;
         bool m_ShowHelp;
+        bool m_ShowInventory;
         bool m_PlayerDead;
+
+        //Store old chat value when forced hide chat with Inventory key
+        bool m_ForcedHideChat;
+        bool m_OldChatShow;
     };
 
 }

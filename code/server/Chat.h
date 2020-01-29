@@ -1,7 +1,6 @@
 #ifndef REDSQUARE_SERVER_CHAT_H
 #define REDSQUARE_SERVER_CHAT_H
 
-
 #include <gf/UI.h>
 #include <gf/Window.h>
 #include <gf/Font.h>
@@ -9,7 +8,6 @@
 #include <gf/Id.h>
 #include <thread>
 #include "Player.h"
-
 
 namespace redsquare
 {

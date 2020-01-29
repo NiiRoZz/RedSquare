@@ -1,14 +1,14 @@
 #ifndef REDSQUARE_SERVER_PROP_H
 #define REDSQUARE_SERVER_PROP_H
 
-#include "../common/Entity.h"
+#include "ServerEntity.h"
 
 namespace redsquare
 {
-    class Prop: public Entity
+    class Prop: public ServerEntity
     {
     public: 
-        Prop(gf::Id entityID, EntitySubType type);
+        Prop(gf::Id entityID, EntitySubType entitySubType);
     };
 }
 

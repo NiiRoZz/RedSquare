@@ -1,57 +1,17 @@
 #include "Entity.h"
 #include <gf/VectorOps.h>
 
-#define NBMONSTER 5;
-
 namespace redsquare
 {
-    Entity::Entity()
-    : m_TypeOfEntity(EntitySubType::Magus)
-    , m_EntityID(0)
-    , m_Size({1,1})
+
+    Entity::Entity(gf::Id entityID, const EntityType entityType, const EntitySubType entitySubType)
+    : m_EntitySubType(entitySubType)
+    , m_RowCargoSlotNmb(6)
+    , m_ColumnCargoSlotNmb(10)
+    , m_EntityID(entityID)
+    , m_EntityType(entityType)
     {
-        m_Level = 0;
-    }
-
-    Entity::Entity(gf::Id entityID)
-    : m_EntityID(entityID)
-    , m_Size({1,1})
-    {
-        m_Level = 0;
-
-        EntitySubType typeOfEntity;
-        int randomMonster = rand() % NBMONSTER;
-
-        switch (randomMonster)
-        {
-        case 0:
-            m_TypeOfEntity = EntitySubType::Bat;
-            break;
-        case 1:
-            m_TypeOfEntity = EntitySubType::SkeletonKnife;
-            break;
-        case 2:
-            m_TypeOfEntity = EntitySubType::SkeletonMagus;
-            break;
-        case 3:
-            m_TypeOfEntity = EntitySubType::Slime;
-            break;
-        case 4:
-            m_TypeOfEntity = EntitySubType::Spirit;
-            break;
-        default:
-            m_TypeOfEntity = EntitySubType::Bat;
-            break;
-        }
-    }
-
-    Entity::Entity(gf::Id entityID, const EntitySubType typeOfEntity)
-    : m_EntityID(entityID)
-    , m_TypeOfEntity(typeOfEntity)
-    {
-        m_Level = 0;
-
-        switch (typeOfEntity)
+        switch (m_EntitySubType)
         {
             case EntitySubType::BlankShelf : 
                 m_Size = {2,1};
@@ -160,5 +120,10 @@ namespace redsquare
     gf::Id Entity::getEntityID() const
     {
         return m_EntityID;
+    }
+
+    EntityType Entity::getEntityType() const
+    {
+        return m_EntityType;
     }
 }

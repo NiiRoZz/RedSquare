@@ -8,6 +8,7 @@ namespace redsquare
     class ServerItem: public redsquare::Item
     {
     public:
+        ServerItem();
         ServerItem(ItemType type);
 
         uint8_t getSlotMask() const;

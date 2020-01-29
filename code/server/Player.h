@@ -36,7 +36,7 @@ namespace redsquare
 
         virtual void createCarPacket(Packet &packet) override;
         
-        Player(SocketTcp socket, gf::Id playerID, const EntitySubType type);
+        Player(SocketTcp socket, gf::Id playerID, const EntitySubType entitySubType);
 
         void sendPacket(Packet &packet);
         void receivePacket(Packet &packet);
@@ -57,12 +57,8 @@ namespace redsquare
 
         void sendUpdateOfSpells();
 
-        Inventory& getInventory();
-
-        //Send update of the inventory to client.  pos is used only if slotType == Cargo
-        void sendUpdateItem(InventorySlotType slotType, bool remove, uint pos = 0u);
-
-        void defaultInventoryStuff();
+        virtual void defaultInventoryStuff() override;
+        void UseItem(ItemType type);
 
     private:
         void BasicAttack(ServerEntity *target); // DONE
@@ -79,7 +75,6 @@ namespace redsquare
         void Incinerate(ServerEntity *target); // DONE
         void Devastate(ServerEntity *target, int zone);
         void Massacre(ServerEntity *target); // DONE
-        void Impact(ServerEntity *target,gf::SquareMap m_SquareWorld);
         void Scorch(ServerEntity *target); // DONE
         void Berserk(); // DONE
         void Shoot(ServerEntity *target); // DONE
@@ -88,9 +83,16 @@ namespace redsquare
         std::vector<Monster*> Reaper(ServerEntity *target,std::map<gf::Id, Monster> &monsters); // DONE
         std::vector<Monster*> LightningStrike(ServerEntity *target,std::map<gf::Id, Monster> &monsters); // need to fix smthg
         int Variance(int range); // DONE
+        void ManaPot(int ratio);
+        void HealthPot(int ratio);
+        void EnergyPot(int ratio);
+        void BoostAttack(int ratio);
+        void BoostDefense(int ratio);
+        void BoostMana(int ratio);
+        void BoostHealth(int ratio);
+        void BoostXP(int ratio);
 
         SocketTcp m_Socket;
-        Inventory m_Inventory;
     };
 }
 

@@ -1,7 +1,7 @@
 #ifndef REDSQUARE_CLIENT_PROP_H
 #define REDSQUARE_CLIENT_PROP_H
 
-#include "../common/Entity.h"
+#include "ClientEntity.h"
 
 #include <gf/Entity.h>
 #include <gf/Texture.h>
@@ -9,16 +9,16 @@
 
 namespace redsquare
 {
-    class Prop: public gf::Entity, public redsquare::Entity
+    class Prop: public ClientEntity
     {
     public:
-        Prop( gf::Id entityID, EntitySubType type, gf::Vector2i pos );
-
-        void loadTexture(const EntitySubType type);
+        Prop( gf::Id entityID, EntitySubType entitySubType, gf::Vector2i pos );
 
         virtual void update(gf::Time time) override;
 
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
+
+        bool haveInventory() const;
 
     private:
         gf::Texture *propTexture;

@@ -2,98 +2,98 @@
 #include <iostream>
 #include "Game.h"
 
-#define RATIO 1.3
+#define POTRATIO1 0.25
+#define POTRATIO2 0.2
+#define POTRATIO3 0.5
+
+#define BOOSTRATIO1 0.1
+#define BOOSTRATIO2 0.15
+#define BOOSTRATIO3 0.20
 
 namespace redsquare
 {
-    Player::Player(SocketTcp socket, gf::Id playerID, const EntitySubType type)
-    : ServerEntity(playerID,type)
+    Player::Player(SocketTcp socket, gf::Id playerID, const EntitySubType entitySubType)
+    : ServerEntity(playerID, EntityType::Player, entitySubType)
     , m_Socket(std::move(socket))
     {
-        switch (m_TypeOfEntity){
+        switch (m_EntitySubType){
         case EntitySubType::Magus : // ------------------- Magus -------------------
             m_Class = EntitySubType::Magus;
-            m_LifePoint = 100;
+            m_LifePoint = 200;
             m_ManaPoint = 30;
 
-            m_MaxLifePoint = 100;
+            m_MaxLifePoint = 200;
             m_MaxManaPoint = 30;
 
-            m_AttackPoint = 30;
-            m_DefensePoint = 0;
+            m_AttackPoint = 60;
+            m_DefensePoint = 10;
 
-            m_MaxAttackPoint = 30;
-            m_MaxDefensePoint = 0;
+            m_MaxAttackPoint = 60;
+            m_MaxDefensePoint = 10;
 
             m_Range = 2;
-
-            m_SpellTab.push_back(SpellType::BasicAttack);
             break;
 
         case EntitySubType::Warrior : // ------------------- Warrior -------------------
             m_Class = EntitySubType::Warrior;
-            m_LifePoint = 150;
+            m_LifePoint = 300;
             m_ManaPoint = 20;
 
-            m_MaxLifePoint = 150;
+            m_MaxLifePoint = 300;
             m_MaxManaPoint = 20;
 
-            m_AttackPoint = 20;
-            m_DefensePoint = 0;
+            m_AttackPoint = 40;
+            m_DefensePoint = 20;
 
-            m_MaxAttackPoint = 20;
-            m_MaxDefensePoint = 0;
+            m_MaxAttackPoint = 40;
+            m_MaxDefensePoint = 20;
 
             m_Range = 1;
-
-            m_SpellTab.push_back(SpellType::BasicAttack);
             break;
 
         case EntitySubType::Rogue : // ------------------- Rogue -------------------
             m_Class = EntitySubType::Rogue;
-            m_LifePoint = 125;
+            m_LifePoint = 250;
             m_ManaPoint = 25;
 
-            m_MaxLifePoint = 125;
+            m_MaxLifePoint = 250;
             m_MaxManaPoint = 25;
 
-            m_AttackPoint = 25;
-            m_DefensePoint = 0;
+            m_AttackPoint = 50;
+            m_DefensePoint = 15;
 
-            m_MaxAttackPoint = 25;
-            m_MaxDefensePoint = 0;
+            m_MaxAttackPoint = 50;
+            m_MaxDefensePoint = 15;
 
             m_Range = 1;
-
-            m_SpellTab.push_back(SpellType::BasicAttack);
             break;
 
         case EntitySubType::Ranger : // ------------------- Rogue -------------------
             m_Class = EntitySubType::Ranger;
-            m_LifePoint = 80;
+            m_LifePoint = 160;
             m_ManaPoint = 20;
 
-            m_MaxLifePoint = 80;
+            m_MaxLifePoint = 160;
             m_MaxManaPoint = 20;
 
-            m_AttackPoint = 12;
-            m_DefensePoint = 0;
+            m_AttackPoint = 24;
+            m_DefensePoint = 5;
 
-            m_MaxAttackPoint = 12;
-            m_MaxDefensePoint = 0;
+            m_MaxAttackPoint = 24;
+            m_MaxDefensePoint = 5;
 
             m_Range = 3;
-            m_SpellTab.push_back(SpellType::BasicAttack);
             break;
         
         default:
             break;
         }
         m_XP = 0;
-        m_MaxXP = 10;
+        m_MaxXP = 15;
 
         m_Level = 1;
         m_MovedInRound = false;
+        m_SpellTab.push_back(SpellType::BasicAttack);
     }
 
     void Player::sendPacket(Packet &packet)
@@ -141,42 +141,19 @@ namespace redsquare
     {
         return (m_Socket.getState() == SocketState::Disconnected);
     }
-
-    Inventory& Player::getInventory()
-    {
-        return m_Inventory;
-    }
-
-    void Player::sendUpdateItem(InventorySlotType slotType, bool remove, uint pos)
-    {
-        Packet packet;
-        packet.type = PacketType::UpdateItem;
-        packet.updateItem.slotType = slotType;
-        packet.updateItem.pos = pos;
-        packet.updateItem.removeItem = remove;
-
-        ServerItem* item = m_Inventory.getItem(slotType, pos);
-        if (item != nullptr)
-        {
-            packet.updateItem.typeItem = item->getType();
-            packet.updateItem.slotMask = item->getSlotMask();
-        }
-
-        sendPacket(packet);
-    }
     
     void Player::defaultInventoryStuff()
     {
-        switch (m_TypeOfEntity)
+        switch (m_EntitySubType)
         {
             case EntitySubType::Magus:{
                 //Example how to spawn item in weapon slot
                 ServerItem item1(ItemType::Staff1);
-                std::cout <<" azeaez" << std::endl;
                 ssize_t pos = m_Inventory.addItem(InventorySlotType::Weapon, std::move(item1));
                 if (pos != -1)
                 {
-                    sendUpdateItem(InventorySlotType::Weapon, false, pos);
+                    Packet packet = createUpdateItemPacket(InventorySlotType::Weapon, false, pos);
+                    sendPacket(packet);
                 }
 
                /* //Example how to spawn item in cargo slot
@@ -193,7 +170,8 @@ namespace redsquare
                 ssize_t pos = m_Inventory.addItem(InventorySlotType::Weapon, std::move(item1));
                 if (pos != -1)
                 {
-                    sendUpdateItem(InventorySlotType::Weapon, false, pos);
+                    Packet packet = createUpdateItemPacket(InventorySlotType::Weapon, false, pos);
+                    sendPacket(packet);
                 }
                 break;
             }
@@ -202,7 +180,8 @@ namespace redsquare
                 ssize_t pos = m_Inventory.addItem(InventorySlotType::Weapon, std::move(item1));
                 if (pos != -1)
                 {
-                    sendUpdateItem(InventorySlotType::Weapon, false, pos);
+                    Packet packet = createUpdateItemPacket(InventorySlotType::Weapon, false, pos);
+                    sendPacket(packet);
                 }
                 break;
             }
@@ -211,7 +190,8 @@ namespace redsquare
                 ssize_t pos = m_Inventory.addItem(InventorySlotType::Weapon, std::move(item1));
                 if (pos != -1)
                 {
-                    sendUpdateItem(InventorySlotType::Weapon, false, pos);
+                    Packet packet = createUpdateItemPacket(InventorySlotType::Weapon, false, pos);
+                    sendPacket(packet);
                 }
                 break;
             }
@@ -232,7 +212,7 @@ namespace redsquare
         m_DefensePoint += 2;
 
         m_XP = 0;
-        m_MaxXP += 20;
+        m_MaxXP += 30;
 
         m_Level++;
 
@@ -506,7 +486,6 @@ namespace redsquare
 
     void Player::BasicAttack(ServerEntity *target){ // DONE
 
-        std::cout << target->m_Level << std::endl;
         int damage;
         int critical = rand() % 100;
         if(critical > 95){ // critical hit
@@ -521,6 +500,7 @@ namespace redsquare
         
         if(target->m_LifePoint - damage <= 0){
             target->m_LifePoint = 0;
+            std::cout << " BasicAttack dealed : " << damage << std::endl;
             std::cout << " The target is dead" << std::endl;
             return;
         }else{
@@ -530,7 +510,7 @@ namespace redsquare
         std::cout << " BasicAttack dealed : " << damage << std::endl;
     }
 
-    void Player::Fireball(ServerEntity *target){ // TODO : burning status
+    void Player::Fireball(ServerEntity *target){
 
         if(m_ManaPoint < 5){
             std::cout << "NOT ENOUGH MANA" << std::endl;
@@ -541,12 +521,11 @@ namespace redsquare
         int critical = rand() % 100;
         
         if(critical > 90){
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) * RATIO;
+            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
             damage *= 2; // double the damage 
             std::cout << " CRITICAL !!! " << std::endl;
-            //target is burned
         }else{
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) * RATIO;
+            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
         }
 
         damage += Variance(-(damage/10)); // -10% to +10% dmg 
@@ -560,12 +539,6 @@ namespace redsquare
             return;
         }else{
             target->m_LifePoint -= damage;
-        }
-
-        critical = rand() % 100;
-        if(critical > 70){
-            // target burned
-            std::cout << " The target is burned !!!" << std::endl;
         }
     }
 
@@ -715,10 +688,12 @@ namespace redsquare
             attack = m_AttackPoint / 5;
             attack += Variance(-(m_AttackPoint / 15));
             m_AttackPoint += attack;
+            m_MaxAttackPoint += attack;
         }else{
             attack = m_AttackPoint / 10;
             attack += Variance(-(m_AttackPoint / 15));
             m_AttackPoint += attack;
+            m_MaxAttackPoint += attack;
         }
 
         m_ManaPoint -= 5;
@@ -757,10 +732,10 @@ namespace redsquare
 
         int critical = rand() % 100;
         int damage;
-        int missingHealth = m_LifePoint * 100 / m_MaxLifePoint;
-        std::cout << "missingHealth " << missingHealth << std::endl;
+        int missingHealth = (m_LifePoint*2)/ m_MaxLifePoint;
+        //std::cout << "missingHealth " << missingHealth << std::endl;
         if(critical > 90){
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) * (100 - (missingHealth));
+            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) * missingHealth;
             damage *= 2;
             damage += Variance(-(damage / 10));
         }else{ 
@@ -882,20 +857,6 @@ namespace redsquare
         m_ManaPoint -= 5;
 
         std::cout << "Massacre dealed " << damage << " and healed you for " << health << std::endl;
-    }
-
-
-    void Player::Impact(ServerEntity *target,gf::SquareMap m_SquareWorld){ // WARRIOR
-        // dash attack
-        gf::Vector2i start = m_Pos;
-        gf::Vector2i end = target->m_Pos;
-
-        target->m_LifePoint -= (m_AttackPoint*(RATIO) - target->m_DefensePoint);
-        std::vector<gf::Vector2i> dash = m_SquareWorld.computeRoute(start, end, 0.0); // first set of tile for the corridor
-
-        if(dash.size() > 1){ // techniccaly we have already check if the field of vision is clear from the source to target so there won't be anyone on the path 
-            m_Pos = dash[1]; // TODO check if correct
-        }
     }
 
     std::vector<Monster*> Player::LightningStrike(ServerEntity *target,std::map<gf::Id, Monster> &monsters){
@@ -1037,11 +998,15 @@ namespace redsquare
         int critical = rand() % 100;
         if(critical > 90){
             m_AttackPoint += 7;
+            m_MaxAttackPoint += 7;
             m_DefensePoint += 7;
+            m_MaxDefensePoint += 7;
             std::cout << "+7 attack and defense point" <<  std::endl;
         }else{
             m_AttackPoint += 5;
+            m_MaxAttackPoint += 5;
             m_DefensePoint += 5;
+            m_MaxDefensePoint += 5;
             std::cout << "+5 attack and defense point" <<  std::endl;
         }
 
@@ -1089,10 +1054,12 @@ namespace redsquare
             damage *= 2;
             damage += Variance(-(damage / 10));
             m_AttackPoint += m_MaxAttackPoint / 10;
+            m_MaxAttackPoint += m_MaxAttackPoint / 10;
         }else{  
             damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
             damage += Variance(-(damage / 10));
             m_AttackPoint += m_MaxAttackPoint / 5;
+            m_MaxAttackPoint += m_MaxAttackPoint / 5;
         }
 
         if(target->m_LifePoint - damage < 0){
@@ -1265,5 +1232,142 @@ namespace redsquare
         m_ManaPoint -= 7;
 
         return allPacket;
+    }
+
+    void Player::UseItem(ItemType type){
+        switch (type)
+        {
+        case ItemType::HealthPot1:
+            HealthPot(POTRATIO1);
+            break;
+        case ItemType::HealthPot2:
+            HealthPot(POTRATIO1);
+            break;
+        case ItemType::HealthPot3:
+            HealthPot(POTRATIO1);
+            break;
+
+        case ItemType::ManaPot1:
+            ManaPot(POTRATIO1);
+            break;
+        case ItemType::ManaPot2:
+            ManaPot(POTRATIO2);
+            break;
+        case ItemType::ManaPot3:
+            ManaPot(POTRATIO3);
+            break;
+
+        case ItemType::EnergyPot1:
+            EnergyPot(POTRATIO1);
+            break;
+        case ItemType::EnergyPot2:
+            EnergyPot(POTRATIO2);
+            break;
+        case ItemType::EnergyPot3:
+            EnergyPot(POTRATIO3);
+            break;
+
+        case ItemType::BoostAttack1:
+            BoostAttack(BOOSTRATIO1);
+            break;
+        case ItemType::BoostAttack2:
+            BoostAttack(BOOSTRATIO2);
+            break;
+        case ItemType::BoostAttack3:
+            BoostAttack(BOOSTRATIO3);
+            break;
+
+        case ItemType::BoostDefense1:
+            BoostDefense(BOOSTRATIO1);
+            break;
+        case ItemType::BoostDefense2:
+            BoostDefense(BOOSTRATIO2);
+            break;
+        case ItemType::BoostDefense3:
+            BoostDefense(BOOSTRATIO3);
+            break;
+
+        case ItemType::BoostHP1:
+            BoostHealth(BOOSTRATIO1);
+            break;
+        case ItemType::BoostHP2:
+            BoostHealth(BOOSTRATIO2);
+            break;
+        case ItemType::BoostHP3:
+            BoostHealth(BOOSTRATIO3);
+            break;
+
+        case ItemType::BoostMana1:
+            BoostMana(BOOSTRATIO1);
+            break;
+        case ItemType::BoostMana2:
+            BoostMana(BOOSTRATIO2);
+            break;
+        case ItemType::BoostMana3:
+            BoostMana(BOOSTRATIO3);
+            break;
+
+        case ItemType::BoostXP1:
+            BoostXP(BOOSTRATIO1);
+            break;
+        case ItemType::BoostXP2:
+            BoostXP(BOOSTRATIO2);
+            break;
+        case ItemType::BoostXP3:
+            BoostXP(BOOSTRATIO3);
+            break;
+
+        default:
+            break;
+        }
+    }
+
+
+    void Player::ManaPot(int ratio){
+        int mana = (m_MaxManaPoint*ratio)/10 + Variance( -((m_MaxManaPoint*ratio)/10));
+        if(m_ManaPoint + mana > m_MaxManaPoint){
+            m_ManaPoint = m_MaxManaPoint;
+        }else{
+            m_ManaPoint += mana;
+        }
+    }
+    void Player::HealthPot(int ratio){
+        int health = (m_MaxLifePoint*ratio)/10 + Variance( -((m_MaxLifePoint*ratio)/10));
+        if(m_LifePoint + health > m_MaxLifePoint){
+            m_LifePoint = m_MaxLifePoint;
+        }else{
+            m_LifePoint += health;
+        }
+    }
+    void Player::EnergyPot(int ratio){
+        ManaPot(ratio);
+        HealthPot(ratio);
+    }
+    void Player::BoostDefense(int ratio){
+        int defense = (m_MaxDefensePoint*ratio)/10 + Variance( -((m_MaxDefensePoint*ratio)/10));
+        m_DefensePoint += defense;
+        m_MaxDefensePoint += defense; 
+    }
+    void Player::BoostAttack(int ratio){
+        int attack = (m_MaxAttackPoint*ratio)/10 + Variance( -((m_MaxAttackPoint*ratio)/10));
+        m_AttackPoint += attack;
+        m_MaxAttackPoint += attack;
+    }
+    void Player::BoostXP(int ratio){
+        int XP = (m_MaxXP*ratio)/10 + Variance( -((m_MaxXP*ratio)/10));
+        m_XP += XP;
+        if(m_XP > m_MaxXP){
+            levelUp();
+        }
+    }
+    void Player::BoostMana(int ratio){
+        int mana = (m_MaxManaPoint*ratio)/10 + Variance( -((m_MaxManaPoint*ratio)/10));
+        m_ManaPoint += mana;
+        m_MaxManaPoint += mana; 
+    }
+    void Player::BoostHealth(int ratio){
+        int health = (m_MaxLifePoint*ratio)/10 + Variance( -((m_MaxLifePoint*ratio)/10));
+        m_LifePoint += health;
+        m_MaxLifePoint += health; 
     }
 }

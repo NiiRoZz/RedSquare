@@ -1,28 +1,23 @@
 #ifndef REDSQUARE_CLIENT_MONSTER_H
 #define REDSQUARE_CLIENT_MONSTER_H
 
-#include "../common/Entity.h"
+#include "ClientEntity.h"
 
-#include <gf/Entity.h>
 #include <gf/Texture.h>
 #include <gf/Font.h>
 
 namespace redsquare
 {
-    class Monster: public gf::Entity, public redsquare::Entity
+    class Monster: public ClientEntity
     {
     public:
-        Monster( gf::Id entityID );
-        Monster( gf::Id entityID, EntitySubType type, gf::Vector2i pos );
-
-        void loadTexture(const EntitySubType type = EntitySubType::Magus);
+        Monster( gf::Id entityID, EntitySubType entitySubType, gf::Vector2i pos );
 
         virtual void update(gf::Time time) override;
 
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
     private:
-        gf::Texture *monsterTexture;
         gf::Font &m_Font;
     };
 }

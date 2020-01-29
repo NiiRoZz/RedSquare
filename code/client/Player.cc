@@ -12,50 +12,9 @@
 
 namespace redsquare
 {
-    gf::Texture* Player::getTexture( const EntitySubType type )
-    {
-        switch (type)
-        {
-            case EntitySubType::Magus:
-                return &gResourceManager().getTexture("img/Character/Magus.png");
-                break;
-
-            case EntitySubType::Warrior:
-                return &gResourceManager().getTexture("img/Character/Warrior.png");
-                break;
-
-            case EntitySubType::Rogue:
-                return &gResourceManager().getTexture("img/Character/Rogue.png");
-                break;
-
-            case EntitySubType::Ranger:
-                return &gResourceManager().getTexture("img/Character/Ranger.png");
-                break;
-            
-            case EntitySubType::Healer:
-                return &gResourceManager().getTexture("img/Character/Magus.png");
-                break;
-                
-            default:
-                break;
-        }
-
-        return &gResourceManager().getTexture("img/Character/Magus.png");
-    }
-
-    Player::Player( gf::Id entityID )
-    : redsquare::Entity(entityID,static_cast<EntitySubType>(rand() % static_cast<int>(EntitySubType::EntityClassCount)))
+    Player::Player( gf::Id entityID, EntitySubType entitySubType, gf::Vector2i pos )
+    : ClientEntity(entityID, EntityType::Player, entitySubType)
     , m_Font(gResourceManager().getFont("font/arial.ttf"))
-    , m_PlayerTexture(Player::getTexture(EntitySubType::Magus))
-    {
-        m_Pos = gf::Vector2i( 0, 0 );
-        m_Max_XP = 0;
-    }
-
-    Player::Player( gf::Id entityID, EntitySubType type, gf::Vector2i pos )
-    : redsquare::Entity(entityID,type)
-    , m_Font(gResourceManager().getFont("font/arial.ttf"))
-    , m_PlayerTexture(Player::getTexture(type))
     {
         m_Pos = pos;
         m_Max_XP = 0;
@@ -75,7 +34,7 @@ namespace redsquare
 
         sprite.setPosition( m_Pos * World::TileSize );
         sprite.setScale( 1 );
-        sprite.setTexture( *m_PlayerTexture );
+        sprite.setTexture( *m_EntityTexture );
         target.draw(sprite, states);
         
         gf::Color4f color(255,0,0,174);
@@ -222,7 +181,7 @@ namespace redsquare
  
         while ( it2 != game.m_Props.end() )
         {
-            if ( it2->second.isInsideMe( targetPos ) )
+            if ( it2->second.isInsideMe( targetPos ) && !(it2->second.haveInventory()) )
             {
                 return true;
             }
@@ -277,5 +236,36 @@ namespace redsquare
         }
 
         return map.isWalkable( targetPos );
+    }
+
+    bool Player::canOpenTargetInventory(gf::Vector2i targetPos, Game &game)
+    {
+        gf::Distance2<int> distFn = gf::manhattanDistance<int, 2>;
+
+        float distance = distFn(m_Pos, targetPos);
+
+        if ( distance > m_Range )
+        {
+            return false;
+        }
+
+        if ( isInsideMe(targetPos) )
+        {
+            return false;
+        }
+
+        auto it = game.m_Props.begin();
+ 
+        while ( it != game.m_Props.end() )
+        {
+            if ( it->second.isInsideMe( targetPos ) && it->second.haveInventory() )
+            {
+                return true;
+            }
+
+            ++it;
+        }
+
+        return false;
     }
 }

@@ -1,0 +1,3 @@
+[submodule "vendor/gf-imgui"]
+	path = vendor/gf-imgui
+	url = https://github.com/GamedevFramework/gf-imgui.git

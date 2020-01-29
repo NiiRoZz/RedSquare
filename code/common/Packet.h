@@ -19,10 +19,12 @@ namespace redsquare
         Player,
         Monster,
         Prop,
+        ItemHolder,
     };
 
     enum class EntitySubType: uint8_t
     {
+        Unknow,
         /* CLASSES */
         Magus,
         Warrior,
@@ -40,10 +42,6 @@ namespace redsquare
         SkeletonMagus,
         Spirit,
         /* MONSTER */
-
-
-        //Class count for random
-        EntityClassCount,
 
         /* SMALL PROP */
         BrokenPots,
@@ -137,7 +135,9 @@ namespace redsquare
 
     enum class ItemType: uint16_t
     {
-
+        //Should be the first one
+        Unknow,
+        
         Sword1,
         Sword2,
         Sword3,
@@ -251,9 +251,38 @@ namespace redsquare
         // ARMOR
 
         // CONSUMABLES
-        ManaPot,
-        HealthPot,
-        EnergyPot,
+        ManaPot1,
+        ManaPot2,
+        ManaPot3,
+
+        HealthPot1,
+        HealthPot2,
+        HealthPot3,
+
+        EnergyPot1,
+        EnergyPot2,
+        EnergyPot3,
+        
+        BoostAttack1,
+        BoostAttack2,
+        BoostAttack3,
+        
+        BoostDefense1,
+        BoostDefense2,
+        BoostDefense3,
+        
+        BoostHP1,
+        BoostHP2,
+        BoostHP3,
+        
+        BoostMana1,
+        BoostMana2,
+        BoostMana3,
+        
+        BoostXP1,
+        BoostXP2,
+        BoostXP3,
+
         Fish,
         Candy,
         // CONSUMABLES
@@ -265,6 +294,7 @@ namespace redsquare
         RequestMove,
         ReceiveMove,
         RequestAttack,
+        RequestUse,
         PassTurn,
         EntityDisconnected,
         EntityCar,
@@ -357,6 +387,13 @@ namespace redsquare
         int posX;
         int posY;
     };
+    
+    struct RequestUse
+    {
+        gf::Id playerID;
+        ItemType type;
+        uint pos;
+    };
 
     struct EntityDisconnected
     {
@@ -376,6 +413,7 @@ namespace redsquare
         EntitySubType typeOfEntity;
         int posX;
         int posY;
+        ItemType holdingItem;
     };
 
     struct PassTurn
@@ -390,6 +428,8 @@ namespace redsquare
 
     struct UpdateItem
     {
+        gf::Id entityID;
+        EntityType entityType;
         InventorySlotType slotType;
         uint pos;
         ItemType typeItem;
@@ -399,9 +439,12 @@ namespace redsquare
 
     struct MoveItem
     {
-        gf::Id playerID;
+        gf::Id oldEntityID;
+        EntityType oldEntityType;
         InventorySlotType oldSlotType;
         uint oldPos;
+        gf::Id newEntityID;
+        EntityType newEntityType;
         InventorySlotType newSlotType;
         uint newPos;
     };
@@ -416,6 +459,7 @@ namespace redsquare
             RequestMove requestMove;
             ReceiveMove receiveMove;
             RequestAttack requestAttack;
+            RequestUse requestUse;
             PassTurn passTurn;
             EntityDisconnected entityDisconnected;
             PlayerTurn playerTurn;
@@ -467,6 +511,14 @@ namespace redsquare
                 break;
             }
 
+            case PacketType::RequestUse:
+            {
+                ar | packet.requestUse.playerID;
+                ar | packet.requestUse.type;
+                ar | packet.requestUse.pos;
+                break;
+            }
+
             case PacketType::PassTurn:
             {
                 ar | packet.passTurn.playerID;
@@ -493,6 +545,7 @@ namespace redsquare
                 ar | packet.spawnEntity.typeOfEntity;
                 ar | packet.spawnEntity.posX;
                 ar | packet.spawnEntity.posY;
+                ar | packet.spawnEntity.holdingItem;
                 break;
             }
             case PacketType::EntityCar:
@@ -527,6 +580,8 @@ namespace redsquare
 
             case PacketType::UpdateItem:
             {
+                ar | packet.updateItem.entityID;
+                ar | packet.updateItem.entityType;
                 ar | packet.updateItem.slotType;
                 ar | packet.updateItem.pos;
                 ar | packet.updateItem.typeItem;
@@ -537,9 +592,12 @@ namespace redsquare
 
             case PacketType::MoveItem:
             {
-                ar | packet.moveItem.playerID;
+                ar | packet.moveItem.oldEntityID;
+                ar | packet.moveItem.oldEntityType;
                 ar | packet.moveItem.oldSlotType;
                 ar | packet.moveItem.oldPos;
+                ar | packet.moveItem.newEntityID;
+                ar | packet.moveItem.newEntityType;
                 ar | packet.moveItem.newSlotType;
                 ar | packet.moveItem.newPos;
                 break;

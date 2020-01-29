@@ -1,6 +1,6 @@
 #include "Game.h"
 #include "../common/Singletons.h"
-#include "../common/Message.h"
+#include "Message.h"
 
 #include <iostream>
 #include <utility>
@@ -43,8 +43,6 @@ namespace redsquare
         m_ThreadCom.sendPacket(sendPacket);
     }
 
-
-
     void Game::receiveWorld()
     {
         NewPlayer newPlayerData;
@@ -79,6 +77,16 @@ namespace redsquare
                 target.draw( sprite, states );
 
                 ++it1;
+            }
+
+            auto it5 = m_ItemHolders.begin();
+
+            // Iterate over the map using Iterator till end.
+            while (it5 != m_ItemHolders.end())
+            {
+                it5->second.render( target, states );
+
+                ++it5;
             }
 
             auto it4 = m_Props.begin();
@@ -325,6 +333,12 @@ namespace redsquare
                             m_Props.erase( packet.entityDisconnected.entityID );
                             break;
                         }
+
+                        case EntityType::ItemHolder:
+                        {
+                            m_ItemHolders.erase( packet.entityDisconnected.entityID );
+                            break;
+                        }
                     }
 
                     break;
@@ -392,7 +406,7 @@ namespace redsquare
                             if (packet.spawnEntity.entityID == m_PlayerID)
                             {
                                 MyPlayerReceivedTypeMessage message;
-                                message.entityType = packet.spawnEntity.typeOfEntity;
+                                message.player = static_cast<ClientEntity*>(&(it.first->second));
 
                                 gMessageManager().sendMessage(&message);
                             }
@@ -419,6 +433,13 @@ namespace redsquare
 
                             m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&(it.first->second)), false);
                             m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(&(it.first->second)), false);
+                            break;
+                        }
+
+                        case EntityType::ItemHolder:
+                        {
+                            auto it = m_ItemHolders.insert( std::make_pair( packet.spawnEntity.entityID, ItemHolder( packet.spawnEntity.entityID, packet.spawnEntity.holdingItem, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) ) ) );
+                            assert( it.second );
                             break;
                         }
                     }
@@ -512,20 +533,96 @@ namespace redsquare
 
                 case PacketType::UpdateItem:
                 {
-                    ItemUpdateMessage message;
-                    message.itemMessage = packet.updateItem;
+                    ClientEntity *entity = nullptr;
 
-                    gMessageManager().sendMessage(&message);
+                    switch (packet.updateItem.entityType)
+                    {
+                        case EntityType::Player:
+                        {
+                            entity = getPlayer(packet.updateItem.entityID);
+                            break;
+                        }
+
+                        case EntityType::Monster:
+                        {
+                            entity = getMonster(packet.updateItem.entityID);
+                            break;
+                        }
+
+                        case EntityType::Prop:
+                        {
+                            entity = getProp(packet.updateItem.entityID);
+                            break;
+                        }
+                    }
+                    assert(entity != nullptr);
+
+                    if (packet.updateItem.removeItem)
+                    {
+                        entity->getInventory().removeItem(packet.updateItem.slotType, packet.updateItem.pos);
+                    }
+                    else
+                    {
+                        ClientItem item( packet.updateItem.typeItem, packet.updateItem.slotMask );
+                        entity->getInventory().addItem(packet.updateItem.slotType, std::move(item), packet.updateItem.pos);
+                    }
 
                     break;
                 }
 
                 case PacketType::MoveItem:
                 {
-                    ItemMoveMessage message;
-                    message.itemMessage = packet.moveItem;
+                    ClientEntity *oldEntity = nullptr;
+                    ClientEntity *newEntity = nullptr;
 
-                    gMessageManager().sendMessage(&message);
+                    switch (packet.moveItem.oldEntityType)
+                    {
+                        case EntityType::Player:
+                        {
+                            oldEntity = getPlayer(packet.moveItem.oldEntityID);
+                            break;
+                        }
+
+                        case EntityType::Monster:
+                        {
+                            oldEntity = getMonster(packet.moveItem.oldEntityID);
+                            break;
+                        }
+
+                        case EntityType::Prop:
+                        {
+                            oldEntity = getProp(packet.moveItem.oldEntityID);
+                            break;
+                        }
+                    }
+                    assert(oldEntity != nullptr);
+
+                    switch (packet.moveItem.newEntityType)
+                    {
+                        case EntityType::Player:
+                        {
+                            newEntity = getPlayer(packet.moveItem.newEntityID);
+                            break;
+                        }
+
+                        case EntityType::Monster:
+                        {
+                            newEntity = getMonster(packet.moveItem.newEntityID);
+                            break;
+                        }
+
+                        case EntityType::Prop:
+                        {
+                            newEntity = getProp(packet.moveItem.newEntityID);
+                            break;
+                        }
+                    }
+                    assert(newEntity != nullptr);
+
+                    if (oldEntity == newEntity)
+                    {
+                        assert(newEntity->getInventory().moveItem(packet.moveItem));
+                    }
 
                     break;
                 }
@@ -644,6 +741,24 @@ namespace redsquare
         if ( prop != m_Props.end() )
         {
             return &prop->second;
+        }
+
+        return nullptr;
+    }
+
+    Prop* Game::getProp( gf::Vector2i pos )
+    {
+        auto it = m_Props.begin();
+
+        // Iterate over the map using Iterator till end.
+        while ( it != m_Props.end() )
+        {
+            if ( it->second.isInsideMe(pos) )
+            {
+                return &it->second;
+            }
+
+            ++it;
         }
 
         return nullptr;

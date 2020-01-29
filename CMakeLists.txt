@@ -19,16 +19,25 @@ add_executable(RedSquare
   code/client/Chat.cc
   code/client/Prop.cc
   code/client/Hud.cc
-  code/client/Inventory.cc
+  code/client/InventoryUI.cc
   code/client/InventoryWidget.cc
   code/client/InventorySlot.cc
   code/client/MainMenu.cc
   code/client/ClientItem.cc
   code/client/SpellWidget.cc
+  code/client/ClientEntity.cc
+  code/client/Inventory.cc
+  code/client/ItemHolder.cc
   code/common/Sockets.cc
   code/common/Entity.cc
   code/common/Singletons.cc
   code/common/Item.cc
+
+  vendor/gf-imgui/imgui/imgui.cpp
+  vendor/gf-imgui/imgui/imgui_demo.cpp
+  vendor/gf-imgui/imgui/imgui_draw.cpp
+  vendor/gf-imgui/imgui/imgui_widgets.cpp
+  vendor/gf-imgui/imgui_impl_gf.cc
 )
 
 target_link_libraries(RedSquare
@@ -40,6 +49,8 @@ target_include_directories(RedSquare
   PRIVATE
     ${Boost_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/gf-imgui
+    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/gf-imgui/imgui
 )
 
 install(
@@ -58,6 +69,7 @@ add_executable(RedSquare-Server
   code/server/Prop.cc
   code/server/Inventory.cc
   code/server/ServerItem.cc
+  code/server/ItemHolder.cc
   code/common/Sockets.cc
   code/common/Singletons.cc
   code/common/Entity.cc

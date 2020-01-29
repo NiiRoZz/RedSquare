@@ -5,11 +5,17 @@
 #include <gf/Window.h>
 #include <gf/Font.h>
 #include <gf/RenderWindow.h>
+#include <gf/StaticString.h>
+#include <imgui.h>
+#include <imgui_impl_gf.h>
+
 #include "ThreadCom.h"
 
 
 namespace redsquare
 {
+    constexpr ImGuiWindowFlags DefaultWindowFlags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings;
+
     class Chat
     {
     public:
@@ -21,7 +27,6 @@ namespace redsquare
         void processEvent(const gf::Event &event);
 
         bool m_HoveringChat;
-        bool m_TypingInChat;
 
     private:
         gf::UI m_UI;
@@ -33,7 +38,10 @@ namespace redsquare
         //queue of message
         ThreadCom<Message> m_ChatCom;
 
-        std::vector<gf::UICharBuffer> m_tabCharBuffer;
+        std::vector<Message> m_ChatMessageBuffer;
+
+        gf::StaticString<MAX_SIZE_MESSAGE_CHAT> m_LineBuffer;
+        bool m_AutoScroll;
     };
 }
 
