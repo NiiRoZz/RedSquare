@@ -466,7 +466,7 @@ namespace redsquare
                 {
                     if (m_HoveringSlot != nullptr)
                     {
-                        if (m_HoveringSlot->contains(event.mouseCursor.coords) && m_HoveringSlot->haveItem())
+                        if (m_HoveringSlot->contains(event.mouseCursor.coords) && m_HoveringSlot->haveItem() && !(m_HoveringSlot->hasMoveItemRequest()))
                         {
                             m_NameWidget.setPosition(event.mouseCursor.coords);
                         }
@@ -482,7 +482,7 @@ namespace redsquare
 
                         for( auto &x: m_PlayerSpecialSlots)
                         {
-                            if (x.second.contains(event.mouseCursor.coords) && x.second.haveItem())
+                            if (x.second.contains(event.mouseCursor.coords) && x.second.haveItem() && !(x.second.hasMoveItemRequest()))
                             {
                                 m_HoveringSlot = &(x.second);
 
@@ -499,7 +499,7 @@ namespace redsquare
                         {
                             for( auto &x: m_PlayerCargoSlots)
                             {
-                                if (x.second.contains(event.mouseCursor.coords) && x.second.haveItem())
+                                if (x.second.contains(event.mouseCursor.coords) && x.second.haveItem() && !(x.second.hasMoveItemRequest()))
                                 {
                                     m_HoveringSlot = &(x.second);
 
@@ -516,7 +516,7 @@ namespace redsquare
                             {
                                 for( auto &x: m_VinicityCargoSlots)
                                 {
-                                    if (x.second.contains(event.mouseCursor.coords) && x.second.haveItem())
+                                    if (x.second.contains(event.mouseCursor.coords) && x.second.haveItem() && !(x.second.hasMoveItemRequest()))
                                     {
                                         m_HoveringSlot = &(x.second);
 

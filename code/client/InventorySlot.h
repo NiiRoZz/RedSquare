@@ -35,6 +35,8 @@ namespace redsquare
 
         void setMoveItemRequest();
 
+        bool hasMoveItemRequest() const;
+
     private:
         void resetMoveItemRequest();
 

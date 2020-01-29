@@ -122,4 +122,9 @@ namespace redsquare
         m_MoveItemRequested = false;
         m_TimeSinceMoveItemRequest = gf::Time::Zero;
     }
+
+    bool InventorySlot::hasMoveItemRequest() const
+    {
+        return m_MoveItemRequested;
+    }
 }
