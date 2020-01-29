@@ -91,8 +91,11 @@ int main( int argc, char **argv )
     gf::ActionContainer actions;
     gf::Action closeWindowAction("Close window");
     closeWindowAction.addCloseControl();
-    closeWindowAction.addKeycodeKeyControl(gf::Keycode::Escape);
     actions.addAction(closeWindowAction);
+
+    gf::Action closeInventoryAction("Close inventory");
+    closeInventoryAction.addKeycodeKeyControl(gf::Keycode::Escape);
+    actions.addAction(closeInventoryAction);
 
     gf::Action fullscreenAction("Fullscreen");
     fullscreenAction.addKeycodeKeyControl(gf::Keycode::F);
@@ -230,15 +233,18 @@ int main( int argc, char **argv )
 
     // game loop
     renderer.clear(gf::Color::Black);
+
     gf::Clock clock;
     std::chrono::time_point<std::chrono::system_clock> start, end;
 	start = std::chrono::system_clock::now();
+
     while (window.isOpen())
     {
+        // 1. input
+        gf::Event event;
+
         if (game.m_PlayerDead)
         {
-            gf::Event event;
-
             while (window.pollEvent(event))
             {
                 actions.processEvent(event);
@@ -251,9 +257,6 @@ int main( int argc, char **argv )
         }
         else
         {
-            // 1. input
-            gf::Event event;
-
             while (window.pollEvent(event))
             {
                 actions.processEvent(event);
@@ -436,7 +439,12 @@ int main( int argc, char **argv )
             }
         }
 
-        if (closeWindowAction.isActive() && hud.shownInventory())
+        if (closeWindowAction.isActive())
+        {
+            window.close();
+        }
+
+        if (closeInventoryAction.isActive() && hud.shownInventory())
         {
             hud.showInventory();
         }
