@@ -194,6 +194,8 @@ namespace redsquare
                 target.draw(m_UI);
             }
 
+            m_InventoryUI.render(target, states);
+
             if (!m_HideChat)
             {
                 m_Chat.render(target, states);
@@ -225,8 +227,6 @@ namespace redsquare
                 target.draw(m_UI);
             }
         }
-
-        m_InventoryUI.render(target, states);
         m_MainMenu.render(target,states);
     }
 
