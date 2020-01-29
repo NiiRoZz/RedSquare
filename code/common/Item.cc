@@ -79,6 +79,7 @@ namespace redsquare
         {
             case ItemType::Sword1: case ItemType::Staff1: case ItemType::SpellBook1: case ItemType::Bow1:
                 m_GiveAttackPoint = 2*floor;
+                m_Name = "Test Name";
                 m_Description = "Basic weapon of the class";
                 break;
             case ItemType::Sword2: case ItemType::Staff2: case ItemType::SpellBook2: case ItemType::Bow2:
@@ -157,5 +158,15 @@ namespace redsquare
     bool Item::isUseable() const
     {
         return m_Useable;
+    }
+
+    const std::string& Item::getName() const
+    {
+        return m_Name;
+    }
+
+    const std::string& Item::getDescription() const
+    {
+        return m_Description;
     }
 }

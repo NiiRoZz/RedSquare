@@ -24,10 +24,11 @@ namespace redsquare
 
         bool isUseable() const;
 
-        uint8_t m_SlotMask;
+        const std::string& getName() const;
+        const std::string& getDescription() const;
 
     protected:
-        
+        uint8_t m_SlotMask;
 
     private:
 
