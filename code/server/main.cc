@@ -65,7 +65,8 @@ int main( int argc, char **argv )
 		SocketTcp wrapperChat(std::move(socketChat));
 
 		gf::Id idPlayer = game.addNewPlayer(std::move(wrapper));
-		myChat.addPlayer(idPlayer,std::move(wrapperChat));
+		std::string namePlayer ="test";
+		myChat.addPlayer(idPlayer,namePlayer,std::move(wrapperChat));
 	}
 
 	myChat.startChat();

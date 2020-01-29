@@ -9,13 +9,21 @@ namespace redsquare
     void Chat::sendMessageToAll(Message& packet)
     {
         auto it = m_PlayersSocket.begin();
- 
         // Iterate over the map using Iterator till end.
-        while ( it != m_PlayersSocket.end() )
-        {
-            it->second.send(packet);
-            ++it;
+        if(packet.to!= ""){
+            while ( it != m_PlayersSocket.end() )
+            {
+                it->second.send(packet);
+                ++it;
+            }
+        }else{
+            while ( it != m_PlayersSocket.end() )
+            {
+                it->second.send(packet);
+                ++it;
+            }
         }
+        
     }
 
 
@@ -49,9 +57,10 @@ namespace redsquare
         std::thread(&Chat::chatThread, this).detach();
     }
     
-    void Chat::addPlayer(gf::Id idPlayer, SocketTcp socket)
+    void Chat::addPlayer(gf::Id idPlayer, std::string namePlayer , SocketTcp socket)
     {
         m_PlayersSocket.insert(std::make_pair(idPlayer, std::move(socket)));
+        m_PlayersName.insert(std::make_pair(idPlayer,namePlayer));// /!\ nom attendu, modifier la socket
         std::thread(&Chat::receiveMessagePacket, this, std::ref(m_PlayersSocket[idPlayer])).detach();
     }
 

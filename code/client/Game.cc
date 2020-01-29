@@ -28,7 +28,6 @@ namespace redsquare
     , m_CurrentSpell(SpellType::BasicAttack)
     {
     }
-     //, m_ChatCom(hostname, port+1, m_ChatQueue)
     void Game::startThreadCom()
     {
         m_ThreadCom.start();

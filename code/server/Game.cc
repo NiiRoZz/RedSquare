@@ -32,6 +32,8 @@ namespace redsquare
 
         //Receive info of client, freeze until we receive them
         socket.receive(packet);
+        char name[30];
+        strcpy(name, packet.playerInfoConnection.name);
     
         // Create a new player
         std::tie(itNewPlayer, std::ignore) = m_Players.emplace(id, Player(std::move(socket), id, packet.playerInfoConnection.entitySubType));

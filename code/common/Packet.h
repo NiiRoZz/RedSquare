@@ -300,6 +300,7 @@ namespace redsquare
     {
         char from[MAX_SIZE_FROM_CHAT];
         char message[MAX_SIZE_MESSAGE_CHAT];
+        char to[MAX_SIZE_FROM_CHAT];
     };
 
     struct PlayerInfoConnection
@@ -562,6 +563,7 @@ namespace redsquare
     {
         ar | packet.from;
         ar | packet.message;
+        ar | packet.to;
         return ar;
     }
 
