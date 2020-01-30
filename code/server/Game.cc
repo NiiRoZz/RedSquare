@@ -20,9 +20,9 @@ namespace redsquare
         m_World.generateWorld(); // generate map
         placeProps(); // place props
         addNewMonsters(10); // place monsters TODO: make the number of monsters depends on the floor
-        m_World.putStair(m_Props); // put stair on map
+        m_World.putStair(*this); // put stair on map
         m_World.prettyPrint();  // print the map in server console
-        m_World.getSpawnPoint(m_Props,m_Monsters); // place the spawn of player
+        m_World.getSpawnPoint(*this); // place the spawn of player
 
         m_World.prettyPrint();
     }
@@ -133,7 +133,7 @@ namespace redsquare
 
             // Create a new monster
             std::tie(itNewMonster, std::ignore) = m_Monsters.emplace(id, Monster(id));
-            m_World.monsterSpawn(itNewMonster->second,m_Monsters,m_Floor);
+            m_World.monsterSpawn(itNewMonster->second, m_Floor);
         }
     }
     

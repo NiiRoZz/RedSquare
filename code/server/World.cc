@@ -260,70 +260,43 @@ namespace redsquare
         }
     }
 
-    void World::getSpawnPoint(std::map<gf::Id,Prop> &m_Props,std::map<gf::Id,Monster> &m_Monster){ // set a spawn point and check if all tile around him is a room or a corrdior to make player spawnable on these tile
-        
-        int x;
-        int y;
+    void World::getSpawnPoint(Game &game) // set a spawn point and check if all tile around him is a room or a corrdior to make player spawnable on these tile
+    {
+        int newPosX;
+        int newPosY;
 
-        do{
-            x = rand() % MapSize;
-            y = rand() % MapSize;
-            gf::Vector2i spawn({x,y});
-            m_Spawn = spawn;
-        }while(m_World( { (uint)x,(uint) y } ) != Tile::Room); // only putting stair on an empty randon room's tile 
+        do
+        {
+            newPosX = rand() % MapSize;
+            newPosY = rand() % MapSize;
+        } while( m_World( { (uint)newPosX,(uint) newPosX } ) != Tile::Room ); // only putting stair on an empty randon room's tile 
 
-       /* auto it = m_Props.begin();
-        while ( it != m_Props.end() ){
-            if (it->second.isInsideMe(m_Spawn)){
-                getSpawnPoint(m_Props,m_Monster);
-                return;
-            }
-            ++it;
-        }
+        m_Spawn = std::move(gf::Vector2i(newPosX, newPosY));
 
-        auto it2 = m_Monster.begin();
-        while ( it2 != m_Monster.end() ){
-            if (it2->second.isInsideMe(m_Spawn)){
-                getSpawnPoint(m_Props,m_Monster);
-                return;
-            }
-            ++it2;
-        }*/
-
-        for(uint i = 0; i < 3 ; ++i){ // check if all the tile around are either a corridor's tile or a room's tile
-            for(uint j = 0; j < 3; ++j){
-                if(!m_SquareWorld.isWalkable({(int)((m_Spawn[0])-1+i),(int) ((m_Spawn[1])-1+j)})){
-                    getSpawnPoint(m_Props,m_Monster); // called the method again
-                    return;
-                }
-                if( m_World( { (uint)((m_Spawn[0])-1+i),(uint) ((m_Spawn[1])-1+j) } ) != Tile::Room && m_World( { (uint)((m_Spawn[0])-1+i),(uint) ((m_Spawn[1])-1+j) } ) != Tile::Corridor ){
-                    getSpawnPoint(m_Props,m_Monster); // called the method again
+        for(int i = -1; i < 2 ; ++i) // check if all the tile around are either a corridor's tile or a room's tile and there is no monster or props on the position
+        {
+            for(int j = -1; j < 2; ++j)
+            {
+                if (!m_SquareWorld.isWalkable({m_Spawn[0] + i, m_Spawn[1] + j}))
+                {
+                    getSpawnPoint(game); // call the method again
                     return;
                 }
             }
         } 
     }
 
-    void World::putStair(std::map<gf::Id,Prop> &m_Props){ // put a stair somewhere on the map
-        int x;
-        int y;
+    void World::putStair(Game &game) // put a stair somewhere on the map
+    {
+        int newPosX, newPosY;
 
         do{
-            x = rand() % MapSize;
-            y = rand() % MapSize;
-        }while(!m_SquareWorld.isWalkable({x,y}) || m_World({(uint)x,(uint) y}) != Tile::Room); // only putting stair on a  randon room's tile
+            newPosX = rand() % MapSize;
+            newPosY = rand() % MapSize;
+        }while(!m_SquareWorld.isWalkable({newPosX,newPosY}) || m_World({(uint)newPosX,(uint)newPosY}) != Tile::Room); // only putting stair on a  randon room's tile
 
-        auto it = m_Props.begin();
-        while ( it != m_Props.end() ){
-            if (it->second.m_Pos[0] == x && it->second.m_Pos[1] ==y){
-                putStair(m_Props);
-                return;
-            }
-            ++it;
-        }
-
-        m_World( { (uint)x, (uint)y } ) = Tile::Stair; // 1 stair for a floor   
-        m_StairPosition = {x,y};    
+        m_World( { (uint)newPosX, (uint)newPosY } ) = Tile::Stair; // 1 stair for a floor   
+        m_StairPosition = {newPosX, newPosY};    
     }
 
     void World::spawnProps(Prop &prop, Game &game, gf::Vector4u currentRoom)
@@ -334,7 +307,7 @@ namespace redsquare
         do
         {
             free = true;
-            if(numberOfTry == 10)
+            if( numberOfTry == 10 )
             {
                 game.m_Props.erase(prop.getEntityID());
                 return;
@@ -354,6 +327,7 @@ namespace redsquare
                         break;
                     }
                 }
+
                 if (!free)
                 {
                     break;
@@ -362,50 +336,26 @@ namespace redsquare
         }while(!free);
 
         prop.m_Pos = std::move(gf::Vector2i(newPosX, newPosY));
-
-        auto it = game.m_Props.begin();
-        while ( it != game.m_Props.end() )
-        {
-            if (it->first != prop.getEntityID() && it->second.isInsideMe(prop))
-            {
-                game.m_Props.erase(prop.getEntityID());
-                return;
-            }
-
-            it++;
-        }
         
         setWalkableFromEntity(&prop, false);
         setTransparentFromEntity(&prop, false);
     }
 
-    void World::monsterSpawn(Monster &monster, std::map<gf::Id,Monster> &m_Monsters, uint m_Floor){ // set to a monster a spawn
+    void World::monsterSpawn(Monster &monster, uint floor) // set to a monster a spawn
+    {
+        monster.levelUp(floor);
 
-        monster.levelUp(m_Floor);
-        int x;
-        int y;
-
-        do{
-            x = rand() % MapSize;
-            y = rand() % MapSize;
-            gf::Vector2i spawn({x,y});
-            monster.m_Pos = spawn;
-        }while( !m_SquareWorld.isWalkable({x,y}) ); 
-
-        auto it = m_Monsters.begin();
-
-        while ( it != m_Monsters.end() )
+        int newPosX, newPosY;
+        do
         {
-            if( it->first != monster.getEntityID() )
-            {
-                if (it->second.isInsideMe(monster))
-                {
-                    monsterSpawn(monster,m_Monsters,m_Floor);
-                    return;
-                }
-            }
-            ++it;
-        }
+            newPosX = rand() % MapSize;
+            newPosY = rand() % MapSize;
+        } while( !m_SquareWorld.isWalkable({newPosX, newPosY}) );
+
+        monster.m_Pos = std::move(gf::Vector2i(newPosX, newPosY));
+
+        setWalkableFromEntity(&monster, false);
+        setTransparentFromEntity(&monster, false);
         
         drawRoutine(monster);
     }
