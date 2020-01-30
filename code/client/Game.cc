@@ -563,7 +563,7 @@ namespace redsquare
                     }
                     else
                     {
-                        ClientItem item( packet.updateItem.typeItem, packet.updateItem.slotMask );
+                        ClientItem item( packet.updateItem.typeItem, packet.updateItem.slotMask, packet.updateItem.baseFloorItem );
                         entity->getInventory().addItem(packet.updateItem.slotType, std::move(item), packet.updateItem.pos);
                     }
 

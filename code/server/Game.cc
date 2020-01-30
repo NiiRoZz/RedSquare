@@ -807,7 +807,7 @@ namespace redsquare
                             ItemHolder *itemHolder = getItemHolder(player->m_Pos);
                             if ( itemHolder != nullptr )
                             {
-                                ServerItem item(itemHolder->getItemTypeHolding());
+                                ServerItem item(itemHolder->getItemTypeHolding(), itemHolder->getItemHoldingBaseFloor());
                                 ssize_t pos = player->getInventory().addItem(InventorySlotType::Cargo, std::move(item));
                                 if (pos != -1)
                                 {
@@ -1105,7 +1105,7 @@ namespace redsquare
                 {
                     // Generate a new ID and Create a new itemHolder
                     gf::Id id = generateId();
-                    m_ItemHolders.emplace(id, ItemHolder(id, item->getType(), player->m_Pos));
+                    m_ItemHolders.emplace(id, ItemHolder(id, item->getType(), item->getBaseFloor(), player->m_Pos));
 
                     Packet packetSpawnEntity;
                     packetSpawnEntity.type = PacketType::SpawnEntity;

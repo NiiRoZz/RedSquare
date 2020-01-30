@@ -477,6 +477,7 @@ namespace redsquare
         InventorySlotType slotType;
         uint pos;
         ItemType typeItem;
+        uint baseFloorItem;
         bool removeItem;
         uint8_t slotMask;
     };
@@ -642,6 +643,7 @@ namespace redsquare
                 ar | packet.updateItem.slotType;
                 ar | packet.updateItem.pos;
                 ar | packet.updateItem.typeItem;
+                ar | packet.updateItem.baseFloorItem;
                 ar | packet.updateItem.removeItem;
                 ar | packet.updateItem.slotMask;
                 break;

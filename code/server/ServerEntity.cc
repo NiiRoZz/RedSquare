@@ -28,6 +28,7 @@ namespace redsquare
         {
             packet.updateItem.typeItem = item->getType();
             packet.updateItem.slotMask = item->getSlotMask();
+            packet.updateItem.baseFloorItem = item->getBaseFloor();
         }
 
         return std::move(packet);
