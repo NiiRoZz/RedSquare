@@ -73,10 +73,10 @@ int main( int argc, char **argv )
 
 	//Start the game and play until all players has disconnected
 	while ( game.m_Players.size() > 0 )
-	{	
-		
-		for (auto it = game.m_Players.begin(); it != game.m_Players.end(); ++it)
+	{
+		for (auto it = game.m_Players.begin(); it != game.m_Players.end();)
 		{
+			bool disconnected = false;
 			//1: send to the player it's his turn
 			it->second.m_PointInRound = 2;
 			it->second.m_MovedInRound = false;
@@ -94,7 +94,7 @@ int main( int argc, char **argv )
 				{
 					gf::Id disconnectedID = it->first;
 
-					game.m_Players.erase(it++);
+					it = game.m_Players.erase(it);
 
 					Packet sendPacket;
 					sendPacket.type = PacketType::EntityDisconnected;
@@ -103,6 +103,7 @@ int main( int argc, char **argv )
 
 					game.sendPacketToAllPlayers( sendPacket );
 
+					disconnected = true;
 					break;
 				}
 
@@ -114,7 +115,7 @@ int main( int argc, char **argv )
 				{
 					gf::Id disconnectedID = it->first;
 
-					game.m_Players.erase(it++);
+					it = game.m_Players.erase(it);
 
 					Packet sendPacket;
 					sendPacket.type = PacketType::EntityDisconnected;
@@ -123,10 +124,16 @@ int main( int argc, char **argv )
 
 					game.sendPacketToAllPlayers( sendPacket );
 
+					disconnected = true;
 					break;
 				}
 
 				game.processPackets( packet );
+			}
+
+			if (!disconnected)
+			{
+				it++;
 			}
 		}
 
