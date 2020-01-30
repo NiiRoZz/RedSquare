@@ -7,6 +7,7 @@
 #include <gf/Vector.h>
 #include <gf/Map.h>
 
+#include "Game.h"
 
 #define MINSIZE 6
 
@@ -325,44 +326,56 @@ namespace redsquare
         m_StairPosition = {x,y};    
     }
 
-    void World::spawnProps(Prop &prop,std::map<gf::Id,Prop> &m_Props,gf::Vector4u currentRoom){
-        uint posX, posY;
+    void World::spawnProps(Prop &prop, Game &game, gf::Vector4u currentRoom)
+    {
+        int newPosX, newPosY;
         int numberOfTry = 0; // will stop the while loop if we can't place the props in 10 try
         bool free;
-        do{
+        do
+        {
             free = true;
-            if(numberOfTry == 10){
-                m_Props.erase(prop.getEntityID());
+            if(numberOfTry == 10)
+            {
+                game.m_Props.erase(prop.getEntityID());
                 return;
             }
-            numberOfTry++;
-            posX = rand() % currentRoom[2]; // length of the room
-            posY = rand() % currentRoom[3]; // width of the room
 
-            for(uint size1 = 0 ; size1 < prop.m_Size[0]; ++size1){
-                for(uint size2 = 0 ; size2 < prop.m_Size[1]; ++size2){
-                    if(!m_SquareWorld.isWalkable({(int)(posX+size1),(int)(posY+size2)})){
+            numberOfTry++;
+            newPosX = currentRoom[0] + (rand() % currentRoom[2]); // length of the room
+            newPosY = currentRoom[1] + (rand() % currentRoom[3]); // width of the room
+
+            for(int size1 = 0 ; size1 < prop.m_Size[0]; ++size1)
+            {
+                for(int size2 = 0 ; size2 < prop.m_Size[1]; ++size2)
+                {
+                    if(!m_SquareWorld.isWalkable({newPosX + size1, newPosY + size2}))
+                    {
                         free = false;
+                        break;
                     }
+                }
+                if (!free)
+                {
+                    break;
                 }
             }
         }while(!free);
 
-        prop.m_Pos = {((int)currentRoom[0]+((int)posX)),((int)currentRoom[1]+((int)posY))};
+        prop.m_Pos = std::move(gf::Vector2i(newPosX, newPosY));
 
-        auto it = m_Props.begin();
-        while ( it != m_Props.end() )
+        auto it = game.m_Props.begin();
+        while ( it != game.m_Props.end() )
         {
-            if (it->first != prop.getEntityID() && ( it->second.isInsideMe(prop) && it->second.isInsideMe({(int)posX,(int)posY}) ))
+            if (it->first != prop.getEntityID() && it->second.isInsideMe(prop))
             {
-                m_Props.erase(prop.getEntityID());
+                game.m_Props.erase(prop.getEntityID());
                 return;
             }
+
             it++;
         }
         
         setWalkableFromEntity(&prop, false);
-        setWalkableFromEntity(prop.m_Pos,prop.m_Size,false);
         setTransparentFromEntity(&prop, false);
     }
 
