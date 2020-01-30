@@ -51,7 +51,7 @@ int main( int argc, char **argv )
         return 1;
     }
 
-    std::cout << "Test : " << sizeof(struct Packet) << std::endl;
+    std::cout << "sizeof(struct Packet) : " << sizeof(struct Packet) << std::endl;
 
     static constexpr gf::Vector2f ViewSize(300.0f, 300.0f); // dummy values
     static constexpr gf::Vector2f ViewCenter(0.0f, 0.0f); // dummy values

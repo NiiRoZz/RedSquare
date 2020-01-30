@@ -82,6 +82,13 @@ namespace redsquare
         gf::RectangleShape m_NameBackgroundShape;
         gf::TextWidget m_DescriptionWidget;
         gf::RectangleShape m_DescriptionBackgroundShape;
+
+        //For right click
+        InventorySlot *m_RightClickedSlot;
+        ClientEntity *m_RightClickedFromEntity;
+        gf::TextButtonWidget m_DropButton;
+        gf::TextButtonWidget m_UseButton;
+        gf::RectangleShape m_RightClickedBackground;
     };
 }
 

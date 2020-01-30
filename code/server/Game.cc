@@ -1028,13 +1028,100 @@ namespace redsquare
 
             case PacketType::RequestUse:
             {
+                ServerEntity *entity = nullptr;
+
+                switch (packet.requestUse.entityType)
+                {
+                    case EntityType::Player:
+                    {
+                        entity = getPlayer( packet.requestUse.entityID );
+                        break;
+                    }
+
+                    case EntityType::Monster:
+                    {
+                        entity = getMonster( packet.requestUse.entityID );
+                        break;
+                    }
+
+                    case EntityType::Prop:
+                    {
+                        entity = getProp( packet.requestUse.entityID );
+                        break;
+                    }
+                }
+                assert(entity != nullptr);
+
                 Player *player = getPlayer( packet.requestUse.playerID );
-                Inventory inventory  = player->getInventory();
-                player->UseItem( packet.requestUse.type);
-                inventory.removeItem(InventorySlotType::Cargo,packet.requestUse.pos);
-                Packet updatePacket;
-                player->createCarPacket(updatePacket);
-                sendPacketToAllPlayers(updatePacket);
+                assert(player != nullptr);
+
+                ServerItem *item = entity->getInventory().getItem(packet.requestUse.slotType, packet.requestUse.pos);
+                if (item != nullptr && item->isUseable())
+                {
+                    player->UseItem(item->getType());
+
+                    entity->getInventory().removeItem(packet.requestUse.slotType, packet.requestUse.pos);
+                    Packet updatePacket = entity->createUpdateItemPacket(packet.requestUse.slotType, true, packet.requestUse.pos);
+                    sendPacketToAllPlayers(updatePacket);
+
+                    Packet updateCarPacket;
+                    player->createCarPacket(updateCarPacket);
+                    sendPacketToAllPlayers(updateCarPacket);
+                }
+                break;
+            }
+
+            case PacketType::RequestDrop:
+            {
+                ServerEntity *entity = nullptr;
+
+                switch (packet.requestDrop.entityType)
+                {
+                    case EntityType::Player:
+                    {
+                        entity = getPlayer( packet.requestDrop.entityID );
+                        break;
+                    }
+
+                    case EntityType::Monster:
+                    {
+                        entity = getMonster( packet.requestDrop.entityID );
+                        break;
+                    }
+
+                    case EntityType::Prop:
+                    {
+                        entity = getProp( packet.requestDrop.entityID );
+                        break;
+                    }
+                }
+                assert(entity != nullptr);
+
+                Player *player = getPlayer( packet.requestDrop.playerID );
+                assert(player != nullptr);
+
+                ServerItem *item = entity->getInventory().getItem(packet.requestDrop.slotType, packet.requestDrop.pos);
+                if (item != nullptr && getItemHolder(player->m_Pos) == nullptr)
+                {
+                    // Generate a new ID and Create a new itemHolder
+                    gf::Id id = generateId();
+                    m_ItemHolders.emplace(id, ItemHolder(id, item->getType(), player->m_Pos));
+
+                    Packet packetSpawnEntity;
+                    packetSpawnEntity.type = PacketType::SpawnEntity;
+                    packetSpawnEntity.spawnEntity.entityID = id;
+                    packetSpawnEntity.spawnEntity.typeEntity = EntityType::ItemHolder;
+                    packetSpawnEntity.spawnEntity.holdingItem = item->getType();
+                    packetSpawnEntity.spawnEntity.posX = player->m_Pos[0];
+                    packetSpawnEntity.spawnEntity.posY = player->m_Pos[1];
+                    sendPacketToAllPlayers(packetSpawnEntity);
+
+                    InventorySlotType slotType = packet.requestDrop.slotType;
+
+                    entity->getInventory().removeItem(packet.requestDrop.slotType, packet.requestDrop.pos);
+                    Packet updatePacket = entity->createUpdateItemPacket(packet.requestDrop.slotType, true, packet.requestDrop.pos);
+                    sendPacketToAllPlayers(updatePacket);
+                }
                 break;
             }
 

@@ -28,6 +28,10 @@ namespace redsquare
     , m_HoveringSlot(nullptr)
     , m_NameWidget("", font, 12)
     , m_DescriptionWidget("", font, 12)
+    , m_RightClickedSlot(nullptr)
+    , m_RightClickedFromEntity(nullptr)
+    , m_DropButton("Drop", font, 12)
+    , m_UseButton("Use", font, 12)
     {
         gMessageManager().registerHandler<ItemUpdateUIMessage>(&InventoryUI::onItemUpdateUI, this);
         gMessageManager().registerHandler<MyPlayerReceivedTypeMessage>(&InventoryUI::onMyPlayerReceived, this);
@@ -40,12 +44,16 @@ namespace redsquare
         m_PlayerSpecialSlots.insert(std::make_pair(InventorySlotType::Shield, std::move(InventorySlot(InventorySlotType::Shield))));
 
         m_NameWidget.setAlignment(gf::Alignment::Center);
-
         m_DescriptionWidget.setAlignment(gf::Alignment::Left);
-
         m_NameBackgroundShape.setColor(gf::Color4f(1,1,1,0.5));
-
         m_DescriptionBackgroundShape.setColor(gf::Color4f(1,0,0,0.5));
+        m_RightClickedBackground.setColor(gf::Color4f(0.25,0.25,0.25,0.80));
+
+        m_DropButton.setDefaultBackgroundColor(gf::Color4f(0.25,0.25,0.25,0.80));
+        m_DropButton.setAnchor(gf::Anchor::TopLeft);
+
+        m_UseButton.setDefaultBackgroundColor(gf::Color4f(0.25,0.25,0.25,0.80));
+        m_UseButton.setAnchor(gf::Anchor::TopLeft);
     }
 
     void InventoryUI::update(gf::Time time)
@@ -277,6 +285,42 @@ namespace redsquare
                 target.draw( m_DescriptionBackgroundShape, states );
                 target.draw( m_DescriptionWidget, states );
             }
+
+            //Draw use/drop buttons and his background
+            if (m_RightClickedSlot != nullptr)
+            {
+                if (m_RightClickedSlot->haveItem())
+                {
+                    unsigned int characterSize = coordinates.getRelativeCharacterSize(0.035f);
+
+                    m_DropButton.setCharacterSize(characterSize);
+                    m_UseButton.setCharacterSize(characterSize);
+
+                    m_RightClickedBackground.setPosition(m_RightClickedSlot->getBackgroundWidget()->getPosition());
+                    gf::Vector2f rightClickedBackgroundSize = coordinates.getRelativeSize({ 0.11f, 0.05f });
+                    m_RightClickedBackground.setSize(rightClickedBackgroundSize);
+
+                    target.draw( m_RightClickedBackground, states );
+
+                    m_DropButton.setPosition(m_RightClickedBackground.getPosition() + rightClickedBackgroundSize * gf::Vector2f(0.1f, 0.5f));
+                    m_UseButton.setPosition(m_RightClickedBackground.getPosition() + rightClickedBackgroundSize * gf::Vector2f(0.6f, 0.5f));
+
+                    //TODO: remove this, when gf fix the issue
+                    m_DropButton.setState(gf::WidgetState::Default);
+                    m_UseButton.setState(gf::WidgetState::Default);
+
+                    target.draw( m_DropButton, states );
+
+                    if (m_RightClickedSlot->getItem()->isUseable())
+                    {
+                        target.draw( m_UseButton, states );
+                    }
+                }
+                else
+                {
+                    m_RightClickedSlot = nullptr;
+                }
+            }
         }
     }
 
@@ -292,6 +336,53 @@ namespace redsquare
                 {
                     case gf::MouseButton::Left:
                     {
+                        //Remove right clicked widget if left clicked outside of button
+                        if (m_RightClickedSlot != nullptr && !m_UseButton.contains(event.mouseButton.coords) && !m_DropButton.contains(event.mouseButton.coords))
+                        {
+                            m_RightClickedSlot = nullptr;
+                            m_RightClickedFromEntity = nullptr;
+                        }
+                        else if (m_RightClickedSlot != nullptr)
+                        {
+                            if (m_UseButton.contains(event.mouseButton.coords))
+                            {
+                                if (m_RightClickedSlot != nullptr && m_RightClickedSlot->haveItem() && m_RightClickedSlot->getItem()->isUseable())
+                                {
+                                    Packet packet;
+                                    packet.type = PacketType::RequestUse;
+                                    packet.requestUse.entityID = m_RightClickedFromEntity->getEntityID();
+                                    packet.requestUse.entityType = m_RightClickedFromEntity->getEntityType();
+                                    packet.requestUse.playerID = m_PlayerEntity->getEntityID();
+                                    packet.requestUse.slotType = m_RightClickedSlot->getSlotType();
+                                    packet.requestUse.pos = m_RightClickedSlot->getSlotPos();
+
+                                    m_Game.sendPacket(packet);
+                                }
+
+                                m_RightClickedSlot = nullptr;
+                                m_RightClickedFromEntity = nullptr;
+                            }
+                            else if (m_DropButton.contains(event.mouseButton.coords))
+                            {
+                                if (m_RightClickedSlot != nullptr && m_RightClickedSlot->haveItem())
+                                {
+                                    Packet packet;
+                                    packet.type = PacketType::RequestDrop;
+                                    packet.requestDrop.entityID = m_RightClickedFromEntity->getEntityID();
+                                    packet.requestDrop.entityType = m_RightClickedFromEntity->getEntityType();
+                                    packet.requestDrop.playerID = m_PlayerEntity->getEntityID();
+                                    packet.requestDrop.slotType = m_RightClickedSlot->getSlotType();
+                                    packet.requestDrop.pos = m_RightClickedSlot->getSlotPos();
+
+                                    m_Game.sendPacket(packet);
+                                }
+
+                                m_RightClickedSlot = nullptr;
+                                m_RightClickedFromEntity = nullptr;
+                            }
+                        }
+
+                        //Detect the drag
                         bool found = false;
 
                         for( auto &x: m_PlayerSpecialSlots)
@@ -352,6 +443,46 @@ namespace redsquare
 
                     case gf::MouseButton::Right:
                     {
+                        bool found = false;
+
+                        for( auto &x: m_PlayerSpecialSlots)
+                        {
+                            if (x.second.contains(event.mouseButton.coords) && x.second.haveItem())
+                            {
+                                m_RightClickedSlot = &(x.second);
+                                m_RightClickedFromEntity = m_PlayerEntity;
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (!found)
+                        {
+                            for( auto &x: m_PlayerCargoSlots)
+                            {
+                                if (x.second.contains(event.mouseButton.coords) && x.second.haveItem())
+                                {
+                                    m_RightClickedSlot = &(x.second);
+                                    m_RightClickedFromEntity = m_PlayerEntity;
+                                    found = true;
+                                    break;
+                                }
+                            }
+
+                            if (!found && m_VinicityEntity != nullptr)
+                            {
+                                for( auto &x: m_VinicityCargoSlots)
+                                {
+                                    if (x.second.contains(event.mouseButton.coords) && x.second.haveItem())
+                                    {
+                                        m_RightClickedSlot = &(x.second);
+                                        m_RightClickedFromEntity = m_VinicityEntity;
+                                        found = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
                         break;
                     }
                 }
@@ -459,6 +590,7 @@ namespace redsquare
                 if (m_CurrMovingWidget != nullptr)
                 {
                     if (m_HoveringSlot != nullptr) m_HoveringSlot = nullptr;
+                    if (m_RightClickedSlot != nullptr) m_RightClickedSlot = nullptr;
 
                     m_CurrMovingWidget->setPosition(event.mouseCursor.coords - m_OffsetDrag);
                 }
@@ -466,7 +598,7 @@ namespace redsquare
                 {
                     if (m_HoveringSlot != nullptr)
                     {
-                        if (m_HoveringSlot->contains(event.mouseCursor.coords) && m_HoveringSlot->haveItem() && !(m_HoveringSlot->hasMoveItemRequest()))
+                        if (m_HoveringSlot->contains(event.mouseCursor.coords) && m_HoveringSlot->haveItem() && !(m_HoveringSlot->hasMoveItemRequest()) && m_RightClickedSlot == nullptr)
                         {
                             m_NameWidget.setPosition(event.mouseCursor.coords);
                         }
@@ -475,7 +607,7 @@ namespace redsquare
                             m_HoveringSlot = nullptr;
                         }
                     }
-                    else
+                    else if (m_RightClickedSlot == nullptr)
                     {
                         m_HoveringSlot = nullptr;
                         bool findWidget = false;

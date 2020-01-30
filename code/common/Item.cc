@@ -138,6 +138,10 @@ namespace redsquare
                 m_GiveLifePoint = 10*floor;
                 break;
 
+            case ItemType::HealthPot1:
+                m_Useable = true;
+                break;
+
             default:
                 m_GiveLifePoint = 0;
                 m_GiveAttackPoint = 0;

@@ -8,7 +8,7 @@ namespace redsquare
     class ItemHolder: public ServerEntity
     {
     public :
-        ItemHolder(gf::Id entityID, ItemType itemTypeHolding);
+        ItemHolder(gf::Id entityID, ItemType itemTypeHolding, gf::Vector2i pos);
 
         ItemType getItemTypeHolding() const;
 

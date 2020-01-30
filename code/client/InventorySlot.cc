@@ -59,6 +59,11 @@ namespace redsquare
         }
     }
 
+    InventoryWidget* InventorySlot::getBackgroundWidget()
+    {
+        return &m_BackgroundWidget;
+    }
+
     InventoryWidget* InventorySlot::getItemWidget(gf::Vector2f coords)
     {
         if (m_Item != nullptr && m_ItemWidget.contains(coords))

@@ -156,13 +156,14 @@ namespace redsquare
                     sendPacket(packet);
                 }
 
-               /* //Example how to spawn item in cargo slot
-                ServerItem item2(ItemType::Sword1);
+                //Example how to spawn item in cargo slot
+                ServerItem item2(ItemType::HealthPot1);
                 pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item2));
                 if (pos != -1)
                 {
-                    sendUpdateItem(InventorySlotType::Cargo, false, pos);
-                }*/
+                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                    sendPacket(packet);
+                }
                 break;
             }
             case EntitySubType::Warrior:  case EntitySubType::Rogue:{

@@ -22,6 +22,7 @@ namespace redsquare
 
         bool contains(gf::Vector2f coords);
 
+        InventoryWidget* getBackgroundWidget();
         InventoryWidget* getItemWidget(gf::Vector2f coords);
 
         InventorySlotType getSlotType() const;
