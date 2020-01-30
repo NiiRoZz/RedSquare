@@ -138,11 +138,11 @@ namespace redsquare
     }
     
     void Game::placeProps()
-    {    
-        int randChest = rand()%10; // rand if the room must contains a chest 
-        for(gf::Vector4u currentRoom : m_World.TabRoom){ // for every room
-
-            int roomType = rand()%13;
+    {
+        for(gf::Vector4u currentRoom : m_World.TabRoom) // for every room
+        { 
+            int randChest = rand() % 10; // rand if the room must contains a chest 
+            int roomType = rand() % 13;
 
             gf::Id id; // if of the props
             std::map<gf::Id, Prop>::iterator itNewProp; // map of props
