@@ -12,9 +12,14 @@ namespace redsquare
     : m_PlayerSpawned(0)
     , m_Floor(0)
     {
+        generateGame();
+    }
+
+    void Game::generateGame()
+    {
         m_World.generateWorld(); // generate map
         placeProps(); // place props
-        addNewMonsters(10); // place monsters
+        addNewMonsters(10); // place monsters TODO: make the number of monsters depends on the floor
         m_World.putStair(m_Props); // put stair on map
         m_World.prettyPrint();  // print the map in server console
         m_World.getSpawnPoint(m_Props,m_Monsters); // place the spawn of player
@@ -732,14 +737,8 @@ namespace redsquare
                             sendPacketToAllPlayers( sendPacket );
 
                             m_Floor++;
-                            m_World.generateWorld();
-                            placeProps();
-                            addNewMonsters(10);
-                            m_World.putStair(m_Props);
-                            m_World.prettyPrint();  
-                            m_World.getSpawnPoint(m_Props,m_Monsters);
+                            generateGame();
                             m_PlayerSpawned = 0;
-                            
 
                             for (auto it3 = m_Players.begin(); it3 != m_Players.end(); ++it3)
                             {
