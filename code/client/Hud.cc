@@ -357,6 +357,11 @@ namespace redsquare
     void Hud::showInventory()
     {
         m_ShowInventory = !m_ShowInventory;
+
+        if (!m_ShowInventory)
+        {
+            m_InventoryUI.setVinicityObject(nullptr);
+        }
     }
 
     InventoryUI& Hud::getInventoryUI()
