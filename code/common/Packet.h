@@ -365,6 +365,11 @@ namespace redsquare
         char to[MAX_SIZE_FROM_CHAT];
     };
 
+    struct SendNameIdToChat
+    {
+        char from[MAX_SIZE_FROM_CHAT];
+    };
+
     struct PlayerInfoConnection
     {
         EntitySubType entitySubType;
@@ -654,6 +659,14 @@ namespace redsquare
         ar | packet.from;
         ar | packet.message;
         ar | packet.to;
+        return ar;
+    }
+
+
+    template<class Archive>
+    Archive& operator|(Archive& ar, SendNameIdToChat& packet)
+    {
+        ar | packet.from;
         return ar;
     }
 

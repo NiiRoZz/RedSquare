@@ -8,18 +8,26 @@ namespace redsquare
 {
     void Chat::sendMessageToAll(Message& packet)
     {
-        auto it = m_PlayersSocket.begin();
+        auto it = m_PlayersName.begin();
         // Iterate over the map using Iterator till end.
-        if(packet.to!= ""){
-            while ( it != m_PlayersSocket.end() )
+        std::string to = packet.to;
+        std::cout << "Message reçu : "<<packet.message<<std::endl<<"from : "<<packet.from<<std::endl<<"to : "<<packet.to<<std::endl;
+        if(to != "system"){
+            std::cout<<"It's a private message"<<std::endl;
+            while ( it != m_PlayersName.end() )
             {
-                it->second.send(packet);
+                std::cout << "Message privé from : "<<packet.from<<"; to : "<<packet.to<<std::endl;
+                if(it->second == packet.to || it->second == packet.from  ){
+                    std::cout<<it->first<<std::endl;
+                    m_PlayersSocket.at(it->first).send(packet);
+                }
                 ++it;
             }
         }else{
-            while ( it != m_PlayersSocket.end() )
+            std::cout<<"It's  not a private message"<<std::endl;
+            while ( it != m_PlayersName.end() )
             {
-                it->second.send(packet);
+                m_PlayersSocket.at(it->first).send(packet);
                 ++it;
             }
         }
@@ -57,10 +65,13 @@ namespace redsquare
         std::thread(&Chat::chatThread, this).detach();
     }
     
-    void Chat::addPlayer(gf::Id idPlayer, std::string namePlayer , SocketTcp socket)
+    void Chat::addPlayer(gf::Id idPlayer,  SocketTcp socket)
     {
+        SendNameIdToChat packet;
+        socket.receive(packet);
         m_PlayersSocket.insert(std::make_pair(idPlayer, std::move(socket)));
-        m_PlayersName.insert(std::make_pair(idPlayer,namePlayer));// /!\ nom attendu, modifier la socket
+        m_PlayersName.insert(std::make_pair(idPlayer,std::move(std::string(packet.from))));
+
         std::thread(&Chat::receiveMessagePacket, this, std::ref(m_PlayersSocket[idPlayer])).detach();
     }
 
