@@ -1339,6 +1339,8 @@ namespace redsquare
         }else{
             m_LifePoint += health;
         }
+
+        std::cout << " LIFEPOINT  : " << health << std::endl;
     }
     void Player::EnergyPot(int ratio){
         ManaPot(ratio);

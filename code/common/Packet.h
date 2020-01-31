@@ -41,6 +41,18 @@ namespace redsquare
         SkeletonKnife,
         SkeletonMagus,
         Spirit,
+        Demon,
+        Goblin,
+        Imp,
+        LilGob,
+        LilZombie,
+        Lizard,
+        Mask,
+        Mud,
+        Orc,
+        Shaman,
+        Swamp,
+        Zombie,
         /* MONSTER */
 
         /* SMALL PROP */

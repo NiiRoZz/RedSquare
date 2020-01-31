@@ -78,6 +78,66 @@ namespace redsquare
                 return &gResourceManager().getTexture("img/Monster/Spirit.png");
                 break;
             }
+            case EntitySubType::Mud:
+            {
+                return &gResourceManager().getTexture("img/Monster/Mud.png");
+                break;
+            }
+            case EntitySubType::Demon:
+            {
+                return &gResourceManager().getTexture("img/Monster/Demon.png");
+                break;
+            }
+            case EntitySubType::Imp:
+            {
+                return &gResourceManager().getTexture("img/Monster/Imp.png");
+                break;
+            }
+            case EntitySubType::Goblin:
+            {
+                return &gResourceManager().getTexture("img/Monster/Goblin.png");
+                break;
+            }
+            case EntitySubType::LilGob:
+            {
+                return &gResourceManager().getTexture("img/Monster/LilGob.png");
+                break;
+            }
+            case EntitySubType::LilZombie:
+            {
+                return &gResourceManager().getTexture("img/Monster/LilZombie.png");
+                break;
+            }
+            case EntitySubType::Lizard:
+            {
+                return &gResourceManager().getTexture("img/Monster/Lizard.png");
+                break;
+            }
+            case EntitySubType::Mask:
+            {
+                return &gResourceManager().getTexture("img/Monster/Mask.png");
+                break;
+            }
+            case EntitySubType::Orc:
+            {
+                return &gResourceManager().getTexture("img/Monster/Orc.png");
+                break;
+            }
+            case EntitySubType::Shaman:
+            {
+                return &gResourceManager().getTexture("img/Monster/Shaman.png");
+                break;
+            }
+            case EntitySubType::Swamp:
+            {
+                return &gResourceManager().getTexture("img/Monster/Swamp.png");
+                break;
+            }
+            case EntitySubType::Zombie:
+            {
+                return &gResourceManager().getTexture("img/Monster/Zombie.png");
+                break;
+            }
 
             //Prop textures
             case EntitySubType::BrokenPots:
