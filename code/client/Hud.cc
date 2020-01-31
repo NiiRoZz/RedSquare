@@ -29,8 +29,6 @@ namespace redsquare
     , m_ShowHelp(false)
     , m_ShowInventory(false)
     , m_PlayerDead(false)
-    , m_ForcedHideChat(false)
-    , m_OldChatShow(false)
     {
         gMessageManager().registerHandler<SpellUpdateMessage>(&Hud::onSpellUpdate, this);
         gMessageManager().registerHandler<MyPlayerDeadMessage>(&Hud::onPlayerDeadUpdate, this);
@@ -356,29 +354,9 @@ namespace redsquare
         m_ShowHelp = !m_ShowHelp;
     }
 
-    void Hud::showInventory(bool force, bool value)
+    void Hud::showInventory()
     {
-        if (force)
-        {
-            m_ShowInventory = value;
-        }
-        else
-        {
-            m_ShowInventory = !m_ShowInventory;
-        }
-
-        if (m_ShowInventory)
-        {
-            m_OldChatShow = m_ShowChat;
-            m_ForcedHideChat = true;
-
-            m_ShowChat = false;
-        }
-        else if (m_ForcedHideChat)
-        {
-            m_ShowChat = m_OldChatShow;
-            m_ForcedHideChat = false;
-        }
+        m_ShowInventory = !m_ShowInventory;
     }
 
     InventoryUI& Hud::getInventoryUI()

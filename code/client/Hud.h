@@ -33,7 +33,7 @@ namespace redsquare
         void showMap();
         void showChat();
         void showHelp();
-        void showInventory(bool force = false, bool value = false);
+        void showInventory();
 
         InventoryUI& getInventoryUI();
 
@@ -60,10 +60,6 @@ namespace redsquare
         bool m_ShowHelp;
         bool m_ShowInventory;
         bool m_PlayerDead;
-
-        //Store old chat value when forced hide chat with Inventory key
-        bool m_ForcedHideChat;
-        bool m_OldChatShow;
     };
 
 }

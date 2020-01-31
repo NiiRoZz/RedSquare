@@ -307,7 +307,7 @@ int main( int argc, char **argv )
                                         {
                                             hud.getInventoryUI().setVinicityObject(entity);
                                             
-                                            hud.showInventory(true, true);
+                                            hud.showInventory();
                                         }
                                     }
                                 }
