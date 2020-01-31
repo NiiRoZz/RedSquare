@@ -129,50 +129,14 @@ namespace redsquare
                     ImGui::Text("This is the Avocado tab!\nblah blah blah blah blah");
                     ImGui::EndTabItem();
                 }
-            
+                
                 ImGui::EndTabBar();
             }
 
-            if (m_AutoScroll)
-            {
-                ImGui::SetScrollHereY(1.0f); // bottom
-                m_AutoScroll = false;
-            }
-
-            ImGui::EndChild();
-
-            ImGui::Spacing();
-            ImGui::SetNextItemWidth(ImGui::GetWindowWidth());
-
-            if (ImGui::InputText("###chat", m_LineBuffer.getData(), m_LineBuffer.getSize(), ImGuiInputTextFlags_EnterReturnsTrue) && m_LineBuffer[0] != '\0')
-            {
-                Message sendPacket;
-
-                std::size_t length = m_Name.copy(sendPacket.from, m_Name.length());
-                sendPacket.from[length]='\0';
-
-                std::string message = m_LineBuffer.getData();
-                std::string to = grepPrivateMessage(message);
-                if(to!="system"){
-                    message = eraseWord(message);
-                }
-                
-                length = message.copy(sendPacket.message, message.length());
-                sendPacket.message[length]='\0';
-
-                
-                length = to.copy(sendPacket.to, to.length());
-                sendPacket.to[length] ='\0'; 
-
-                
-                m_ChatCom.sendPacket(sendPacket);
-
-                m_LineBuffer.clear();
-                ImGui::SetKeyboardFocusHere(-1);
-            }
             ImGui::Separator();
             ImGui::EndGroup();
         }
+            
 
         ImGui::End();
 
