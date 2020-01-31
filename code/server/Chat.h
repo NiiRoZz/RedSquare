@@ -14,7 +14,7 @@ namespace redsquare
     class Chat
     {
         public :
-            void addPlayer(gf::Id idPlayer,std::string namePlayer, SocketTcp socket);
+            void addPlayer(gf::Id idPlayer,SocketTcp socket);
             void sendMessageToAll(Message& packet);
             void startChat();
             void chatThread();

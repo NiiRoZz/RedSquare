@@ -366,6 +366,11 @@ namespace redsquare
         char to[MAX_SIZE_FROM_CHAT];
     };
 
+    struct SendNameIdToChat
+    {
+        char from[MAX_SIZE_FROM_CHAT];
+    };
+
     struct PlayerInfoConnection
     {
         EntitySubType entitySubType;
@@ -477,6 +482,7 @@ namespace redsquare
         InventorySlotType slotType;
         uint pos;
         ItemType typeItem;
+        uint baseFloorItem;
         bool removeItem;
         uint8_t slotMask;
     };
@@ -642,6 +648,7 @@ namespace redsquare
                 ar | packet.updateItem.slotType;
                 ar | packet.updateItem.pos;
                 ar | packet.updateItem.typeItem;
+                ar | packet.updateItem.baseFloorItem;
                 ar | packet.updateItem.removeItem;
                 ar | packet.updateItem.slotMask;
                 break;
@@ -679,6 +686,14 @@ namespace redsquare
         ar | packet.from;
         ar | packet.message;
         ar | packet.to;
+        return ar;
+    }
+
+
+    template<class Archive>
+    Archive& operator|(Archive& ar, SendNameIdToChat& packet)
+    {
+        ar | packet.from;
         return ar;
     }
 

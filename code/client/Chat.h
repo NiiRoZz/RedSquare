@@ -25,13 +25,14 @@ namespace redsquare
         void chatThread();
         void render(gf::RenderTarget& target, const gf::RenderStates& states);
         void processEvent(const gf::Event &event);
+        std::string grepPrivateMessage(std::string str);
+        std::string eraseWord(std::string str);
 
         bool m_HoveringChat;
 
     private:
         gf::UI m_UI;
         std::string m_Name;
-
         //Thread chat communication
         gf::Queue<Message> m_ChatQueue;
 

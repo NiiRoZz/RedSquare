@@ -19,6 +19,10 @@ namespace redsquare
     {
         m_ChatCom.start();
         m_LineBuffer.clear();
+        SendNameIdToChat packet;
+        std::size_t length = m_Name.copy(packet.from, m_Name.length());
+        packet.from[length]='\0';
+        m_ChatCom.sendPacket(packet);
     }
 
     void Chat::update(gf::Time time)
@@ -88,8 +92,13 @@ namespace redsquare
                         sendPacket.from[length]='\0';
 
                         std::string message = m_LineBuffer.getData();
+                        std::string to = grepPrivateMessage(message);
+                        message = eraseWord(message);
                         length = message.copy(sendPacket.message, message.length());
                         sendPacket.message[length]='\0';
+
+                        length = to.copy(sendPacket.to,to.length());
+                        sendPacket.to[length]='\0';
 
                         m_ChatCom.sendPacket(sendPacket);
 
@@ -125,18 +134,55 @@ namespace redsquare
                     ImGui::Text("This is the Avocado tab!\nblah blah blah blah blah");
                     ImGui::EndTabItem();
                 }
-            
+                
                 ImGui::EndTabBar();
             }
-            
+
             ImGui::Separator();
             ImGui::EndGroup();
         }
+            
 
         ImGui::End();
 
         ImGui::Render();
         ImGui_ImplGF_RenderDrawData(ImGui::GetDrawData());
+    }
+
+    std::string Chat::grepPrivateMessage(std::string str){
+        std::string str_to;
+        const char* data = str.data();
+        if(data[0]!='@'){
+            str_to = "system";
+            return str_to;
+        }else{
+            int indice=0;
+            bool again = true; 
+            for(int i =0; i < str.size();i++){
+                if((data[i]=='\n'|data[i]=='\t'|data[i]==' ')&& again){
+                    indice = i-1;
+                    again = false;
+                }
+            }
+            str_to= str.substr(1,indice);
+        }
+        std::cout <<str_to<<std::endl;
+        return str_to;
+    }
+
+    std::string Chat::eraseWord(std::string str){
+        std::string newMessage;
+        const char* data = str.data(); 
+        int indice=0;
+        bool again = true; 
+        for(int i =0; i < str.size();i++){
+            if((data[i]=='\n'|data[i]=='\t'|data[i]==' ')&& again){
+                indice = i;
+                again = false;
+            }
+        }
+        newMessage= str.substr(indice,str.size());
+        return newMessage;
     }
 
     void Chat::processEvent(const gf::Event &event)

@@ -53,6 +53,11 @@ target_include_directories(RedSquare
     ${CMAKE_CURRENT_SOURCE_DIR}/vendor/gf-imgui/imgui
 )
 
+target_compile_features(RedSquare
+  PUBLIC
+    cxx_std_17
+)
+
 install(
   TARGETS RedSquare
   RUNTIME DESTINATION games
@@ -86,6 +91,11 @@ target_include_directories(RedSquare-Server
   PRIVATE
     ${Boost_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}
+)
+
+target_compile_features(RedSquare-Server
+  PUBLIC
+    cxx_std_17
 )
 
 install(

@@ -510,8 +510,8 @@ namespace redsquare
         return gResourceManager().getTexture("img/attackCursor.png");
     }
 
-    ClientItem::ClientItem(ItemType type, uint8_t slotMask)
-    : Item(type, slotMask)
+    ClientItem::ClientItem(ItemType type, uint8_t slotMask, uint baseFloor)
+    : Item(type, slotMask, baseFloor)
     , m_Icon(ClientItem::getTexture(type))
     {
         

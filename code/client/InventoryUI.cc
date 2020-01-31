@@ -45,14 +45,16 @@ namespace redsquare
 
         m_NameWidget.setAlignment(gf::Alignment::Center);
         m_DescriptionWidget.setAlignment(gf::Alignment::Left);
-        m_NameBackgroundShape.setColor(gf::Color4f(1,1,1,0.5));
-        m_DescriptionBackgroundShape.setColor(gf::Color4f(1,0,0,0.5));
+        m_NameBackgroundShape.setColor(gf::Color4f(0.25,0.25,0.25,0.80));
+        m_DescriptionBackgroundShape.setColor(gf::Color4f(0.25,0.25,0.25,0.80));
         m_RightClickedBackground.setColor(gf::Color4f(0.25,0.25,0.25,0.80));
 
         m_DropButton.setDefaultBackgroundColor(gf::Color4f(0.25,0.25,0.25,0.80));
+        m_DropButton.setState(gf::WidgetState::Default);
         m_DropButton.setAnchor(gf::Anchor::TopLeft);
 
         m_UseButton.setDefaultBackgroundColor(gf::Color4f(0.25,0.25,0.25,0.80));
+        m_UseButton.setState(gf::WidgetState::Default);
         m_UseButton.setAnchor(gf::Anchor::TopLeft);
     }
 
@@ -304,10 +306,6 @@ namespace redsquare
 
                     m_DropButton.setPosition(m_RightClickedBackground.getPosition() + rightClickedBackgroundSize * gf::Vector2f(0.1f, 0.5f));
                     m_UseButton.setPosition(m_RightClickedBackground.getPosition() + rightClickedBackgroundSize * gf::Vector2f(0.6f, 0.5f));
-
-                    //TODO: remove this, when gf fix the issue
-                    m_DropButton.setState(gf::WidgetState::Default);
-                    m_UseButton.setState(gf::WidgetState::Default);
 
                     target.draw( m_DropButton, states );
 
