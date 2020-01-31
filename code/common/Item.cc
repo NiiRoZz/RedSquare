@@ -142,15 +142,75 @@ namespace redsquare
 
             case ItemType::HealthPot1:
                 m_Useable = true;
-                m_Description = "Basic potion of health";
+                m_Description = "Basic potion of health, give : 25% of max lifepoint";
                 break;
             case ItemType::HealthPot2:
                 m_Useable = true;
-                m_Description = "Medium potion of health";
+                m_Description = "Medium potion of health, give : 50% of max lifepoint";
                 break;
             case ItemType::HealthPot3:
                 m_Useable = true;
-                m_Description = "Big potion of health";
+                m_Description = "Strong potion of health, give : 70% of max lifepoint";
+                break;
+            case ItemType::ManaPot1:
+                m_Useable = true;
+                m_Description = "Basic potion of mana, give : 25% of max manapoint";
+                break;
+            case ItemType::ManaPot2:
+                m_Useable = true;
+                m_Description = "Medium potion of mana, give : 50% of max lifepoint";
+                break;
+            case ItemType::ManaPot3:
+                m_Useable = true;
+                m_Description = "Strong potion of mana, give : 70% of max lifepoint";
+                break;
+            case ItemType::BoostAttack1:
+                m_Useable = true;
+                m_Description = "Basic boost of attack, add 10% to your attackpoint";
+                break;
+            case ItemType::BoostAttack2:
+                m_Useable = true;
+                m_Description = "Medium boost of attack, add 15% to your attackpoint";
+                break;
+            case ItemType::BoostAttack3:
+                m_Useable = true;
+                m_Description = "Strong boost of attack, add 20% to your attackpoint";
+                break;
+            case ItemType::BoostDefense1:
+                m_Useable = true;
+                m_Description = "Basic boost of defense, add 10% to your attackpoint";
+                break;
+            case ItemType::BoostDefense2:
+                m_Useable = true;
+                m_Description = "Medium boost of defense, add 15% to your attackpoint";
+                break;
+            case ItemType::BoostDefense3:
+                m_Useable = true;
+                m_Description = "Strong boost of defense, add 20% to your attackpoint";
+                break;
+            case ItemType::BoostHP1:
+                m_Useable = true;
+                m_Description = "Basic boost of health, add 10% to your attackpoint";
+                break;
+            case ItemType::BoostHP2:
+                m_Useable = true;
+                m_Description = "Medium boost of health, add 15% to your attackpoint";
+                break;
+            case ItemType::BoostHP3:
+                m_Useable = true;
+                m_Description = "Strong boost of health, add 20% to your attackpoint";
+                break;
+            case ItemType::BoostXP1:
+                m_Useable = true;
+                m_Description = "Basic boost of XP, add 10% to your attackpoint";
+                break;
+            case ItemType::BoostXP2:
+                m_Useable = true;
+                m_Description = "Medium boost of XP, add 15% to your attackpoint";
+                break;
+            case ItemType::BoostXP3:
+                m_Useable = true;
+                m_Description = "Strong boost of XP, add 20% to your attackpoint";
                 break;
 
 
