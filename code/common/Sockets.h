@@ -95,6 +95,12 @@ namespace redsquare {
         boost::asio::ip::tcp::socket m_Socket;
         SocketState m_State;
     };
+
+    template<>
+    void SocketTcp::send(NewPlayer &packet);
+
+    template<>
+    void SocketTcp::receive<NewPlayer>(NewPlayer &packet);
 }
 
 
