@@ -53,7 +53,16 @@ namespace redsquare
             text.setCharacterSize(coordinates.getRelativeCharacterSize(0.2f));
             text.setString("YOU DIED");
             text.setAnchor(gf::Anchor::TopLeft);
-            text.setPosition(coordinates.getRelativePoint({ 0.29f, 0.45f }));
+            text.setPosition(coordinates.getRelativePoint({ 0.25f, 0.45f }));
+            target.draw(text, states);
+
+            text.setColor(gf::Color::Red);
+            text.setOutlineColor(gf::Color::Black);
+            text.setOutlineThickness(coordinates.getRelativeSize({ 1.0f, 0.002f }).height);
+            text.setCharacterSize(coordinates.getRelativeCharacterSize(0.045f));
+            text.setString("Etage : " + std::to_string(m_Game.m_Floor));
+            text.setAnchor(gf::Anchor::TopLeft);
+            text.setPosition(coordinates.getRelativePoint({ 0.03f, 0.05f }));
             target.draw(text, states);
         }
         else
@@ -262,7 +271,7 @@ namespace redsquare
         {
             m_InventoryUI.processEvent(event);
         }
-
+        
         m_MainMenu.processEvent(event);
 
         if (event.type == gf::EventType::MouseMoved)

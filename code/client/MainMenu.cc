@@ -22,70 +22,85 @@ namespace redsquare
 
     void MainMenu::render(gf::RenderTarget& target, const gf::RenderStates& states)
     {
-        /*
-        gf::Coordinates coordinates(target);
-        gf::Vector2f MainMenuWindowSize=coordinates.getRelativeSize({ 1.0f,1.0f });
-        gf::Vector2f sizeNamePlayer=MainMenuWindowSize*gf::Vector2f(0.050,0.7);
-        gf::Vector2f sizeEspace=MainMenuWindowSize*gf::Vector2f(0.010,0.7);
-        gf::Vector2f sizeEspace2=MainMenuWindowSize*gf::Vector2f(0.030,0.7);
         if(m_ShowMainMenu)
         {
+            gf::Coordinates coordinates(target);
+
+            gf::Vector2f MainMenuWindowSize = coordinates.getRelativeSize({1.0f,1.0f });
+            gf::Vector2f MainMenuWindowPos = coordinates.getRelativePoint({ 0.2f,0.2f });
+            auto position = coordinates.getCenter();
+
+            // UI
+            ImGui::NewFrame();
+            ImGui::SetNextWindowSize(ImVec2(MainMenuWindowSize[0], MainMenuWindowSize[1]));
+            ImGui::SetNextWindowPos(ImVec2(MainMenuWindowPos[0], MainMenuWindowPos[1]), 0, ImVec2(0.2f, 0.2f));
+            ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_FittingPolicyMask_;
             
-            if( m_UI.begin("", gf::RectF::fromPositionSize(coordinates.getRelativePoint({ 0.0f,0.0f }),MainMenuWindowSize), gf::UIWindow::NoScrollbar))
-            {
-                m_UI.layoutRowDynamic(sizeEspace[0], 3);
-                m_UI.layoutRowDynamic(sizeNamePlayer[0], 3);
-                if (m_UI.groupBegin(""))
+            if (ImGui::Begin("MainMenu", nullptr, DefaultWindowFlagsTest ))
+            {   
+                ImGui::NewLine();
+                ImGui::NewLine();
+                ImGui::Columns(2);
+
+                if (ImGui::InputTextWithHint("Name", "enter your speudo here", m_LineBuffer.getData(), m_LineBuffer.getSize(), ImGuiInputTextFlags_EnterReturnsTrue) && m_LineBuffer[0] != '\0')
                 {
 
-                    m_UI.groupEnd();
-                } 
-                if (m_UI.groupBegin("",gf::UIWindow::Border))
-                {
-
-                    m_UI.groupEnd();
-                } 
-                if (m_UI.groupBegin(""))
-                {
-
-                    m_UI.groupEnd();
-                } 
-                m_UI.layoutRowDynamic(sizeEspace2[0], 3);
-                m_UI.layoutRowDynamic(sizeNamePlayer[0], 3);
-                if (m_UI.groupBegin(""))
-                {
-
-                    m_UI.groupEnd();
                 }
-                if (m_UI.groupBegin("",gf::UIWindow::Border))
+
+                ImGui::NextColumn();
+
+                if (ImGui::InputTextWithHint("Join game", "enter ip adress here", m_LineBuffer.getData(), m_LineBuffer.getSize(), ImGuiInputTextFlags_EnterReturnsTrue) && m_LineBuffer[0] != '\0')
                 {
 
-                    m_UI.groupEnd();
-                } 
-                if (m_UI.groupBegin(""))
-                {
-
-                    m_UI.groupEnd();
                 }
-                m_UI.layoutRowDynamic(sizeEspace2[0], 3);
-                float ratioTwo[] = { 0.2f, 0.6f, 0.2f };
-                float widthTwo[] = { 100.0f, 200.0f, 50.0f };
-
-                m_UI.layoutRowDynamic(30, 1);
-                m_UI.label("Dynamic array-based custom column layout with generated position and custom size:");
-                m_UI.layoutRow(gf::UILayout::Dynamic, 100, ratioTwo);
-                m_UI.buttonLabel("button");
-                m_UI.buttonLabel("button");
-                m_UI.buttonLabel("button");
-                    
                 
-                m_UI.end();
+                ImGui::Columns(3);
+                ImGui::NewLine();
+                ImGui::NewLine();
+                ImGui::NewLine();
+                ImGui::NewLine();
+
+                static float wrap_width = 200.0f;
+
+                ImGui::BulletText("Test paragraph 1:");
+                ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + wrap_width);
+                ImGui::Text("The lazy dog is a good dog. This paragraph is made to fit within %.0f pixels. Testing a 1 character word. The quick brown fox jumps over the lazy dog.", wrap_width);
+                ImGui::GetWindowDrawList()->AddRect(ImGui::GetItemRectMin(), ImGui::GetItemRectMax(), IM_COL32(255,255,0,255));
+
+                static float wrap_width2 = 200.0f;
+                ImGui::NextColumn();
+                ImGui::NewLine();
+                ImGui::NewLine();
+                ImGui::NewLine();
+                ImGui::NewLine();
+
+                ImGui::Button("<--"); ImGui::SameLine();
+                ImGui::BulletText("Character");ImGui::SameLine();
+                ImGui::Button("-->"); ImGui::SameLine();
+                ImGui::NewLine();
+                ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + wrap_width2);
+                ImGui::Text("The lazy dog is a good dog. This paragraph is made to fit within %.0f pixels. Testing a 1 character word. The quick brown fox jumps over the lazy dog.", wrap_width2);
+                ImGui::GetWindowDrawList()->AddRect(ImGui::GetItemRectMin(), ImGui::GetItemRectMax(), IM_COL32(255,255,0,255));
+                static float wrap_width3 = 200.0f;
+                ImGui::NextColumn();
+                ImGui::NewLine();
+                ImGui::NewLine();
+                ImGui::NewLine();
+                ImGui::NewLine();
+
+                ImGui::BulletText("Test paragraph 2:");
+                ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + wrap_width3);
+                ImGui::Text("The lazy dog is a good dog. This paragraph is made to fit within %.0f pixels. Testing a 1 character word. The quick brown fox jumps over the lazy dog.", wrap_width3);
+                ImGui::GetWindowDrawList()->AddRect(ImGui::GetItemRectMin(), ImGui::GetItemRectMax(), IM_COL32(255,255,0,255));
+                
+                
             }
-        
-            target.draw(m_UI);
-            
+
+            ImGui::End();
+
+            ImGui::Render();
+            ImGui_ImplGF_RenderDrawData(ImGui::GetDrawData());
         }
-        */
     }
 
 

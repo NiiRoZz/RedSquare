@@ -256,6 +256,15 @@ int main( int argc, char **argv )
 
             game.m_TempMove.clear();
             window.setMouseCursor(defaultCursor);
+
+            if ((fullscreenAction.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard)))
+            {
+                window.toggleFullscreen();
+            }
+            if (closeWindowAction.isActive())
+            {
+                window.close();
+            }
         }
         else
         {
@@ -362,7 +371,7 @@ int main( int argc, char **argv )
                 }
             }
 
-            if (fullscreenAction.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard))
+            if ((fullscreenAction.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard)))
             {
                 window.toggleFullscreen();
             }
