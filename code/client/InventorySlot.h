@@ -22,6 +22,7 @@ namespace redsquare
 
         bool contains(gf::Vector2f coords);
 
+        InventoryWidget* getBackgroundWidget();
         InventoryWidget* getItemWidget(gf::Vector2f coords);
 
         InventorySlotType getSlotType() const;
@@ -34,6 +35,8 @@ namespace redsquare
         void setItem(ClientItem *item);
 
         void setMoveItemRequest();
+
+        bool hasMoveItemRequest() const;
 
     private:
         void resetMoveItemRequest();

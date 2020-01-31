@@ -12,6 +12,9 @@
 
 namespace redsquare
 {
+    //Forward classes
+    class Game;
+
     class World
     {
     public:
@@ -26,11 +29,12 @@ namespace redsquare
 
         gf::Vector2i m_Spawn; // position of player's spawn
         gf::Vector2i m_StairPosition; // position of the stair in the floor
-        void getSpawnPoint(std::map<gf::Id,Prop> &m_Props,std::map<gf::Id,Monster> &m_Monster); // point of player spawn 
-        void putStair(std::map<gf::Id,Prop> &m_Props); // put stair on map
+
+        void getSpawnPoint(Game &game); // point of player spawn 
+        void putStair(Game &game); // put stair on map
         void drawRoutine(Monster &monster); // draw path of player
-        void monsterSpawn(Monster &monster, std::map<gf::Id,Monster> &m_Monsters, uint m_Floor); // spawn of a monster
-        void spawnProps(Prop &prop,std::map<gf::Id,Prop> &m_Props,gf::Vector4u currentRoom); // spawn of props
+        void monsterSpawn(Monster &monster, uint floor); // spawn of a monster
+        void spawnProps(Prop &prop, Game &game, gf::Vector4u currentRoom); // spawn of props
 
         void setWalkableFromEntity(redsquare::Entity *entity, bool walkable);
         void setWalkableFromEntity(gf::Vector2i Pos, gf::Vector2i size, bool walkable);

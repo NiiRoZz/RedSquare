@@ -59,6 +59,11 @@ namespace redsquare
         }
     }
 
+    InventoryWidget* InventorySlot::getBackgroundWidget()
+    {
+        return &m_BackgroundWidget;
+    }
+
     InventoryWidget* InventorySlot::getItemWidget(gf::Vector2f coords)
     {
         if (m_Item != nullptr && m_ItemWidget.contains(coords))
@@ -121,5 +126,10 @@ namespace redsquare
     {
         m_MoveItemRequested = false;
         m_TimeSinceMoveItemRequest = gf::Time::Zero;
+    }
+
+    bool InventorySlot::hasMoveItemRequest() const
+    {
+        return m_MoveItemRequested;
     }
 }

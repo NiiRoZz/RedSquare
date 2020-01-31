@@ -9,7 +9,7 @@ namespace redsquare
     {
     public:
         ServerItem();
-        ServerItem(ItemType type);
+        ServerItem(ItemType type, uint baseFloor);
 
         uint8_t getSlotMask() const;
     };

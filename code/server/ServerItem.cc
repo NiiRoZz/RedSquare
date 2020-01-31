@@ -3,12 +3,12 @@
 namespace redsquare
 {
     ServerItem::ServerItem()
-    : Item(ItemType::Unknow)
+    : Item(ItemType::Unknow, 1u)
     {
 
     }
-    ServerItem::ServerItem(ItemType type)
-    : Item(type)
+    ServerItem::ServerItem(ItemType type, uint baseFloor)
+    : Item(type, baseFloor)
     {
         
     }

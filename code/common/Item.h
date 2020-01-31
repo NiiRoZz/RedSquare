@@ -9,8 +9,8 @@ namespace redsquare
     {
     public:
         //Per default, item will only be able to be placed to cargo slot
-        Item(ItemType type);
-        Item(ItemType type, uint8_t slotMask);
+        Item(ItemType type, uint baseFloor);
+        Item(ItemType type, uint8_t slotMask, uint baseFloor);
 
         ItemType getType() const;
 
@@ -24,15 +24,17 @@ namespace redsquare
 
         bool isUseable() const;
 
-        uint8_t m_SlotMask;
+        const std::string& getName() const;
+        const std::string& getDescription() const;
+
+        uint getBaseFloor() const;
 
     protected:
-        
+        uint8_t m_SlotMask;
 
     private:
-
         void defaultCompatibleSlot();
-        void defaultData(int floor);
+        void defaultData();
         int Variance(int range);
 
         ItemType m_Type;
@@ -41,6 +43,8 @@ namespace redsquare
 
         std::string m_Name;
         std::string m_Description;
+
+        uint m_BaseFloor;
     };
 }
 

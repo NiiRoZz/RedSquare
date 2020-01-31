@@ -74,7 +74,21 @@ namespace redsquare
         InventoryWidget *m_CurrMovingWidget;
         ClientItem *m_CurrMovingItem;
         gf::Vector2f m_OffsetDrag;
-        ClientEntity *m_OldEntity;
+        ClientEntity *m_DraggingFromEntity;
+
+        //For display Information
+        InventorySlot *m_HoveringSlot;
+        gf::TextWidget m_NameWidget;
+        gf::RectangleShape m_NameBackgroundShape;
+        gf::TextWidget m_DescriptionWidget;
+        gf::RectangleShape m_DescriptionBackgroundShape;
+
+        //For right click
+        InventorySlot *m_RightClickedSlot;
+        ClientEntity *m_RightClickedFromEntity;
+        gf::TextButtonWidget m_DropButton;
+        gf::TextButtonWidget m_UseButton;
+        gf::RectangleShape m_RightClickedBackground;
     };
 }
 

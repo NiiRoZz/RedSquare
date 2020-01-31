@@ -47,26 +47,90 @@ namespace redsquare
         ImGui::NewFrame();
         ImGui::SetNextWindowSize(ImVec2(ChatWindowSize[0], ChatWindowSize[1]));
         ImGui::SetNextWindowPos(ImVec2(ChatWindowPos[0], ChatWindowPos[1]), 0, ImVec2(0.5f, 0.5f));
+        ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_FittingPolicyMask_;
+    
+        if (ImGui::Begin("Chat", nullptr, DefaultWindowFlags | ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoScrollWithMouse))
+        {   
+            if (ImGui::BeginTabBar("MyTabBar", tab_bar_flags))
+            {   
+                m_HoveringChat = ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow);
+        
+                ImGui::BeginGroup();
 
-        if (ImGui::Begin("Chat", nullptr, DefaultWindowFlags | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoScrollWithMouse))
-        {
-            m_HoveringChat = ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow);
-
-            ImGui::BeginGroup();
-
-            ImVec2 size(0.0f, ChatWindowSize[1] - 3.5f * ImGui::GetTextLineHeightWithSpacing());
-
-            if (ImGui::BeginChild("Messages", size, false))
-            {
-                for (auto& message : m_ChatMessageBuffer)
+                ImVec2 size(0.0f, ChatWindowSize[1] - 5.5f * ImGui::GetTextLineHeightWithSpacing());
+                if (ImGui::BeginTabItem("Global chat"))
                 {
-                    std::string strFrom = message.from;
-                    strFrom.insert(strFrom.length(), std::string(" :"));
+                    if (ImGui::BeginChild("Messages", size, false))
+                    {
+                        for (auto& message : m_ChatMessageBuffer)
+                        {
+                            std::string strFrom = message.from;
+                            strFrom.insert(strFrom.length(), std::string(" :"));
 
-                    ImGui::TextColored(ImVec4(1,0,0,1), strFrom.c_str());
-                    ImGui::SameLine();
-                    ImGui::TextWrapped(message.message);
+                            ImGui::TextColored(ImVec4(1,0,0,1), strFrom.c_str());
+                            ImGui::SameLine();
+                            ImGui::TextWrapped(message.message);
+                        }
+                    }
+
+                    if (m_AutoScroll)
+                    {
+                        ImGui::SetScrollHereY(1.0f); // bottom
+                        m_AutoScroll = false;
+                    }
+
+                    ImGui::EndChild();
+
+                    ImGui::Spacing();
+                    ImGui::SetNextItemWidth(ImGui::GetWindowWidth());
+
+                    if (ImGui::InputText("###chat", m_LineBuffer.getData(), m_LineBuffer.getSize(), ImGuiInputTextFlags_EnterReturnsTrue) && m_LineBuffer[0] != '\0')
+                    {
+                        Message sendPacket;
+
+                        std::size_t length = m_Name.copy(sendPacket.from, m_Name.length());
+                        sendPacket.from[length]='\0';
+
+                        std::string message = m_LineBuffer.getData();
+                        length = message.copy(sendPacket.message, message.length());
+                        sendPacket.message[length]='\0';
+
+                        m_ChatCom.sendPacket(sendPacket);
+
+                        m_LineBuffer.clear();
+                        ImGui::SetKeyboardFocusHere(-1);
+                    }
+                    
+                    ImGui::EndTabItem();
+                
                 }
+                if (ImGui::BeginTabItem("ami1"))
+                {
+                    ImGui::Text("This is the Avocado tab!\nblah blah blah blah blah");
+                    ImGui::EndTabItem();
+                }
+                if (ImGui::BeginTabItem("ami1ee"))
+                {
+                    ImGui::Text("This is the Avocado tab!\nblah blah blah blah blah");
+                    ImGui::EndTabItem();
+                }
+                if (ImGui::BeginTabItem("ami1ff"))
+                {
+                    ImGui::Text("This is the Avocado tab!\nblah blah blah blah blah");
+                    ImGui::EndTabItem();
+                }
+                if (ImGui::BeginTabItem("amifff1"))
+                {
+                    ImGui::Text("This is the Avocado tab!\nblah blah blah blah blah");
+                    ImGui::EndTabItem();
+                }
+                if (ImGui::BeginTabItem("amicccc1"))
+                {
+                    ImGui::Text("This is the Avocado tab!\nblah blah blah blah blah");
+                    ImGui::EndTabItem();
+                }
+            
+                ImGui::EndTabBar();
             }
 
             if (m_AutoScroll)
@@ -106,7 +170,7 @@ namespace redsquare
                 m_LineBuffer.clear();
                 ImGui::SetKeyboardFocusHere(-1);
             }
-
+            ImGui::Separator();
             ImGui::EndGroup();
         }
 

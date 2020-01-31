@@ -148,7 +148,7 @@ namespace redsquare
         {
             case EntitySubType::Magus:{
                 //Example how to spawn item in weapon slot
-                ServerItem item1(ItemType::Staff1);
+                ServerItem item1(ItemType::Staff1, 1u);
                 ssize_t pos = m_Inventory.addItem(InventorySlotType::Weapon, std::move(item1));
                 if (pos != -1)
                 {
@@ -156,17 +156,18 @@ namespace redsquare
                     sendPacket(packet);
                 }
 
-               /* //Example how to spawn item in cargo slot
-                ServerItem item2(ItemType::Sword1);
+                //Example how to spawn item in cargo slot
+                ServerItem item2(ItemType::HealthPot1, 1u);
                 pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item2));
                 if (pos != -1)
                 {
-                    sendUpdateItem(InventorySlotType::Cargo, false, pos);
-                }*/
+                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                    sendPacket(packet);
+                }
                 break;
             }
             case EntitySubType::Warrior:  case EntitySubType::Rogue:{
-                ServerItem item1(ItemType::Sword1);
+                ServerItem item1(ItemType::Sword1, 1u);
                 ssize_t pos = m_Inventory.addItem(InventorySlotType::Weapon, std::move(item1));
                 if (pos != -1)
                 {
@@ -176,7 +177,7 @@ namespace redsquare
                 break;
             }
             case EntitySubType::Ranger:{
-                ServerItem item1(ItemType::Bow1);
+                ServerItem item1(ItemType::Bow1, 1u);
                 ssize_t pos = m_Inventory.addItem(InventorySlotType::Weapon, std::move(item1));
                 if (pos != -1)
                 {
@@ -186,7 +187,7 @@ namespace redsquare
                 break;
             }
             case EntitySubType::Healer:{
-                ServerItem item1(ItemType::SpellBook1);
+                ServerItem item1(ItemType::SpellBook1, 1u);
                 ssize_t pos = m_Inventory.addItem(InventorySlotType::Weapon, std::move(item1));
                 if (pos != -1)
                 {
