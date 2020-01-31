@@ -142,7 +142,17 @@ namespace redsquare
 
             case ItemType::HealthPot1:
                 m_Useable = true;
+                m_Description = "Basic potion of health";
                 break;
+            case ItemType::HealthPot2:
+                m_Useable = true;
+                m_Description = "Medium potion of health";
+                break;
+            case ItemType::HealthPot3:
+                m_Useable = true;
+                m_Description = "Big potion of health";
+                break;
+
 
             default:
                 m_GiveLifePoint = 0;
