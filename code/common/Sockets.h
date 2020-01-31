@@ -73,7 +73,7 @@ namespace redsquare {
         uint8_t data[MaxLength];
 
         boost::system::error_code error;
-        size_t length = m_Socket.read_some(boost::asio::buffer(data), error);
+        size_t length = boost::asio::read(m_Socket, boost::asio::buffer(data), error);
 
         if (error == boost::asio::error::eof)
         {
