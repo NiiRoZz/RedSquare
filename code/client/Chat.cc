@@ -92,8 +92,13 @@ namespace redsquare
                         sendPacket.from[length]='\0';
 
                         std::string message = m_LineBuffer.getData();
+                        std::string to = grepPrivateMessage(message);
+                        message = eraseWord(message);
                         length = message.copy(sendPacket.message, message.length());
                         sendPacket.message[length]='\0';
+
+                        length = to.copy(sendPacket.to,to.length());
+                        sendPacket.to[length]='\0';
 
                         m_ChatCom.sendPacket(sendPacket);
 
