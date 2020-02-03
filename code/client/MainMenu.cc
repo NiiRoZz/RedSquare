@@ -42,7 +42,7 @@ namespace redsquare
                 ImGui::NewLine();
                 ImGui::Columns(2);
 
-                if (ImGui::InputTextWithHint("Name", "enter your speudo here", m_LineBuffer.getData(), m_LineBuffer.getSize(), ImGuiInputTextFlags_EnterReturnsTrue) && m_LineBuffer[0] != '\0')
+                if (ImGui::InputTextWithHint("Name", "enter your pseudo here (1-15)", m_LineBufferName.getData(), m_LineBufferName.getSize(), ImGuiInputTextFlags_EnterReturnsTrue) && m_LineBufferName[0] != '\0')
                 {
 
                 }
@@ -50,7 +50,7 @@ namespace redsquare
                 ImGui::NextColumn();
 
                 ImGui::Button("Join game"); ImGui::SameLine();
-                if (ImGui::InputTextWithHint("", "enter ip adress here", m_LineBuffer.getData(), m_LineBuffer.getSize(), ImGuiInputTextFlags_EnterReturnsTrue) && m_LineBuffer[0] != '\0')
+                if (ImGui::InputTextWithHint("", "enter ip adress here", m_LineBufferIp.getData(), m_LineBufferIp.getSize(), ImGuiInputTextFlags_EnterReturnsTrue) && m_LineBufferIp[0] != '\0')
                 {
                     
                 }
@@ -64,7 +64,7 @@ namespace redsquare
 
                 static float wrap_width = 200.0f;
 
-                ImGui::BulletText("Test paragraph 1:");
+                ImGui::BulletText("Description");
                 ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + wrap_width);
                 ImGui::Text("The lazy dog is a good dog. This paragraph is made to fit within %.0f pixels. Testing a 1 character word. The quick brown fox jumps over the lazy dog.", wrap_width);
                 ImGui::GetWindowDrawList()->AddRect(ImGui::GetItemRectMin(), ImGui::GetItemRectMax(), IM_COL32(255,255,255,255));
@@ -92,7 +92,7 @@ namespace redsquare
                 ImGui::NewLine();
                 ImGui::NewLine();
 
-                ImGui::BulletText("Test paragraph 2:");
+                ImGui::BulletText("Characteristic");
                 ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + wrap_width3);
                 ImGui::Text("The lazy dog is a good dog. This paragraph is made to fit within %.0f pixels. Testing a 1 character word. The quick brown fox jumps over the lazy dog.", wrap_width3);
                 ImGui::GetWindowDrawList()->AddRect(ImGui::GetItemRectMin(), ImGui::GetItemRectMax(), IM_COL32(255,255,255,255));       

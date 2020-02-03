@@ -58,7 +58,7 @@ namespace redsquare
             text.setOutlineColor(gf::Color::Black);
             text.setOutlineThickness(coordinates.getRelativeSize({ 1.0f, 0.002f }).height);
             text.setCharacterSize(coordinates.getRelativeCharacterSize(0.045f));
-            text.setString("Etage : " + std::to_string(m_Game.m_Floor));
+            text.setString("Floor : " + std::to_string(m_Game.m_Floor));
             text.setAnchor(gf::Anchor::TopLeft);
             text.setPosition(coordinates.getRelativePoint({ 0.03f, 0.05f }));
             target.draw(text, states);
@@ -127,7 +127,7 @@ namespace redsquare
             text.setOutlineColor(gf::Color::White);
             text.setOutlineThickness(coordinates.getRelativeSize({ 1.0f, 0.002f }).height);
             text.setCharacterSize(coordinates.getRelativeCharacterSize(0.045f));
-            text.setString("Etage : " + std::to_string(m_Game.m_Floor));
+            text.setString("Floor : " + std::to_string(m_Game.m_Floor));
             text.setAnchor(gf::Anchor::TopLeft);
             text.setPosition(coordinates.getRelativePoint({ 0.03f, 0.05f }));
             target.draw(text, states);

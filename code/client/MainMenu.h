@@ -31,7 +31,8 @@ namespace redsquare
     private:
         gf::UI m_UI;
 
-        gf::StaticString<100> m_LineBuffer;
+        gf::StaticString<15> m_LineBufferName;
+        gf::StaticString<20> m_LineBufferIp;
         gf::Image m_Test;
 
     };
