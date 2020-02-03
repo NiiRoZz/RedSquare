@@ -11,6 +11,7 @@ namespace redsquare
     MainMenu::MainMenu(gf::Font &font)
     : m_UI(font) 
     , m_ShowMainMenu(false)
+    , m_Test(gf::Vector2i(64,64),gf::Color::Red)
     {
 
     }
@@ -49,10 +50,12 @@ namespace redsquare
 
                 ImGui::NextColumn();
 
-                if (ImGui::InputTextWithHint("Join game", "enter ip adress here", m_LineBuffer.getData(), m_LineBuffer.getSize(), ImGuiInputTextFlags_EnterReturnsTrue) && m_LineBuffer[0] != '\0')
+                ImGui::Button("Join game"); ImGui::SameLine();
+                if (ImGui::InputTextWithHint("", "enter ip adress here", m_LineBuffer.getData(), m_LineBuffer.getSize(), ImGuiInputTextFlags_EnterReturnsTrue) && m_LineBuffer[0] != '\0')
                 {
-
+                    
                 }
+                
                 
                 ImGui::Columns(3);
                 ImGui::NewLine();
@@ -65,7 +68,7 @@ namespace redsquare
                 ImGui::BulletText("Test paragraph 1:");
                 ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + wrap_width);
                 ImGui::Text("The lazy dog is a good dog. This paragraph is made to fit within %.0f pixels. Testing a 1 character word. The quick brown fox jumps over the lazy dog.", wrap_width);
-                ImGui::GetWindowDrawList()->AddRect(ImGui::GetItemRectMin(), ImGui::GetItemRectMax(), IM_COL32(255,255,0,255));
+                ImGui::GetWindowDrawList()->AddRect(ImGui::GetItemRectMin(), ImGui::GetItemRectMax(), IM_COL32(255,255,255,255));
 
                 static float wrap_width2 = 200.0f;
                 ImGui::NextColumn();
@@ -77,10 +80,12 @@ namespace redsquare
                 ImGui::Button("<--"); ImGui::SameLine();
                 ImGui::BulletText("Character");ImGui::SameLine();
                 ImGui::Button("-->"); ImGui::SameLine();
+                ImGui::BulletText("mage");ImGui::SameLine();
                 ImGui::NewLine();
-                ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + wrap_width2);
-                ImGui::Text("The lazy dog is a good dog. This paragraph is made to fit within %.0f pixels. Testing a 1 character word. The quick brown fox jumps over the lazy dog.", wrap_width2);
-                ImGui::GetWindowDrawList()->AddRect(ImGui::GetItemRectMin(), ImGui::GetItemRectMax(), IM_COL32(255,255,0,255));
+                /*
+                ImGuiIO& io = ImGui::GetIO();
+                ImGui::Image((void*)(m_Test.getPixelsPtr()), ImVec2(64, 64));
+                */
                 static float wrap_width3 = 200.0f;
                 ImGui::NextColumn();
                 ImGui::NewLine();
@@ -91,15 +96,10 @@ namespace redsquare
                 ImGui::BulletText("Test paragraph 2:");
                 ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + wrap_width3);
                 ImGui::Text("The lazy dog is a good dog. This paragraph is made to fit within %.0f pixels. Testing a 1 character word. The quick brown fox jumps over the lazy dog.", wrap_width3);
-                ImGui::GetWindowDrawList()->AddRect(ImGui::GetItemRectMin(), ImGui::GetItemRectMax(), IM_COL32(255,255,0,255));
-                
-                
+                ImGui::GetWindowDrawList()->AddRect(ImGui::GetItemRectMin(), ImGui::GetItemRectMax(), IM_COL32(255,255,255,255));       
             }
 
             ImGui::End();
-
-            ImGui::Render();
-            ImGui_ImplGF_RenderDrawData(ImGui::GetDrawData());
         }
     }
 
@@ -108,4 +108,6 @@ namespace redsquare
     {
         m_UI.processEvent(event);
     }
+
+    
 }

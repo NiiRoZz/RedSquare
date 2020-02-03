@@ -32,6 +32,7 @@ namespace redsquare
         gf::UI m_UI;
 
         gf::StaticString<100> m_LineBuffer;
+        gf::Image m_Test;
 
     };
 }
