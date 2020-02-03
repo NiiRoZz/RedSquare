@@ -44,7 +44,6 @@ namespace redsquare
         auto position = coordinates.getCenter();
 
         // UI
-        ImGui::NewFrame();
         ImGui::SetNextWindowSize(ImVec2(ChatWindowSize[0], ChatWindowSize[1]));
         ImGui::SetNextWindowPos(ImVec2(ChatWindowPos[0], ChatWindowPos[1]), 0, ImVec2(0.5f, 0.5f));
         ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_FittingPolicyMask_;
@@ -144,9 +143,6 @@ namespace redsquare
             
 
         ImGui::End();
-
-        ImGui::Render();
-        ImGui_ImplGF_RenderDrawData(ImGui::GetDrawData());
     }
 
     std::string Chat::grepPrivateMessage(std::string str){

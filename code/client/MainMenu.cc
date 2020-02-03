@@ -32,7 +32,6 @@ namespace redsquare
             auto position = coordinates.getCenter();
 
             // UI
-            ImGui::NewFrame();
             ImGui::SetNextWindowSize(ImVec2(MainMenuWindowSize[0], MainMenuWindowSize[1]));
             ImGui::SetNextWindowPos(ImVec2(MainMenuWindowPos[0], MainMenuWindowPos[1]), 0, ImVec2(0.2f, 0.2f));
             ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_FittingPolicyMask_;
