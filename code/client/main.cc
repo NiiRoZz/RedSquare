@@ -466,6 +466,8 @@ int main( int argc, char **argv )
         hudEntities.update(time);
         ImGui_ImplGF_Update(time);
 
+        ImGui::NewFrame();
+
         // 3. draw
         renderer.clear();
 
@@ -474,6 +476,9 @@ int main( int argc, char **argv )
 
         renderer.setView(hudView);
         hudEntities.render(renderer);
+
+        ImGui::Render();
+        ImGui_ImplGF_RenderDrawData(ImGui::GetDrawData());
 
         renderer.display();
 
