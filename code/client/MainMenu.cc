@@ -9,8 +9,7 @@
 namespace redsquare
 {
     MainMenu::MainMenu(gf::Font &font)
-    : m_UI(font) 
-    , m_ShowMainMenu(false)
+    : m_ShowMainMenu(false)
     , m_Test(gf::Vector2i(64,64),gf::Color::Red)
     {
 
@@ -105,7 +104,7 @@ namespace redsquare
 
     void MainMenu::processEvent(const gf::Event &event)
     {
-        m_UI.processEvent(event);
+        
     }
 
     
