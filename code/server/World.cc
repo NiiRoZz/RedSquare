@@ -10,6 +10,30 @@
 #include "Game.h"
 
 #define MINSIZE 6
+#define BOSSROOM 20
+
+static const char *BossRoom[BOSSROOM] = {
+    "###################",
+    "#   C    S    C   #",
+    "#                 #",
+    "#                 #",
+    "#                 #",
+    "#                 #",
+    "#                 #",
+    "#                 #",
+    "#    X       X    #",
+    "#     X     X     #",
+    "#                 #",
+    "#                 #",
+    "#                 #",
+    "#                 #",
+    "#                 #",
+    "#                 #",
+    "#        O        #",
+    "#                 #",
+    "#                 #",
+    "###################",
+};
 
 namespace redsquare
 {
@@ -20,25 +44,79 @@ namespace redsquare
     {
     }
 
-    void World::generateWorld()
+    void World::generateWorld(bool bossRoom, Game& game)
     {
-        uint SizeGrind = 20; // sizegrind must divide MapSize to be usefull
-        uint numberRoom = 10; // number of room, must be < TabRoom.size()
+        if(!bossRoom){
 
-        m_SquareWorld.reset(gf::Flags<gf::CellProperty>());
-        std::fill(m_World.begin(),m_World.end(),Tile::Void);
-        TabRoom.clear();
-        
-        /**** GENERATE ****/
-        std::vector<gf::Vector4u> TabGrid = grid(SizeGrind); // build grind
-        generateFloorV2(numberRoom,SizeGrind,TabGrid); // generate the room
-        buildWall(TabRoom); // build wall around room
-        destroyGrid(); // destroy the grid
+            uint SizeGrind = 20; // sizegrind must divide MapSize to be usefull
+            uint numberRoom = 10;
 
-        road(TabRoom); // build the road
-        buildWallCorridor(); // build the wall of corridor
-        setWalkable(); // Set walkable the tile that should be
-        /**** GENERATE ****/
+            m_SquareWorld.reset(gf::Flags<gf::CellProperty>());
+            std::fill(m_World.begin(),m_World.end(),Tile::Void);
+            TabRoom.clear();
+            
+            /**** GENERATE ****/
+            std::vector<gf::Vector4u> TabGrid = grid(SizeGrind); // build grind
+            generateFloorV2(numberRoom,SizeGrind,TabGrid); // generate the room
+            buildWall(TabRoom); // build wall around room
+            destroyGrid(); // destroy the grid
+
+            road(TabRoom); // build the road
+            buildWallCorridor(); // build the wall of corridor
+            setWalkable(); // Set walkable the tile that should be
+            /**** GENERATE ****/
+        }else{
+
+            m_SquareWorld.reset(gf::Flags<gf::CellProperty>());
+            std::fill(m_World.begin(),m_World.end(),Tile::Void);
+            TabRoom.clear();
+
+            for(uint row = 0 ; row < BOSSROOM; ++row){
+                for(uint column = 0 ; column < BOSSROOM; ++column){
+                    gf::Vector2u pos = {row,column};
+                    if (BossRoom[column][row] == ' ') { // room
+
+                        m_SquareWorld.setEmpty(pos);
+                        m_World( pos ) = Tile::Room;
+
+                    }else if (BossRoom[column][row] == '#') { // wall
+
+                        m_World( pos ) = Tile::Wall;
+
+                    }else if (BossRoom[column][row] == 'X') { // spawn of ennemy
+
+                        m_World( pos ) = Tile::Room;
+                        gf::Id id = game.generateId();
+                        std::map<gf::Id, Monster>::iterator itNewMonster;
+
+                        // Create a new monster
+                        std::tie(itNewMonster, std::ignore) = game.m_Monsters.emplace(id, Monster(id));
+
+                        itNewMonster->second.m_Pos = {pos};
+                        setWalkableFromEntity(&(itNewMonster->second),false);
+                        setTransparentFromEntity(&(itNewMonster->second),false);
+                        drawRoutine(itNewMonster->second);
+
+                    }else if (BossRoom[column][row] == 'O') { // spawn of player
+
+                        m_World( pos ) = Tile::Room;
+                        m_Spawn = pos;
+                    }else if (BossRoom[column][row] == 'S'){ // spawn of stair
+
+                        m_World( pos ) = Tile::Stair;
+                        m_StairPosition = pos; 
+                    }else if (BossRoom[column][row] == 'C'){ // spanwn of chest
+
+                        m_World( pos ) = Tile::Room;
+                        std::map<gf::Id, Prop>::iterator itNewProp; 
+                        gf::Id id = game.generateId();
+                        std::tie(itNewProp, std::ignore) = game.m_Props.emplace(id, Prop(id, EntitySubType::Chest));
+                        itNewProp->second.m_Pos = pos;
+                    }
+                }
+            }
+            setWalkable(); // Set walkable the tile that should be
+        }
 
     }
 
@@ -83,8 +161,6 @@ namespace redsquare
     }
 
     void World::generateFloorV2(uint nbRoom,uint sizeGrind,std::vector<gf::Vector4u> MapGrind){
-
-        //std::cout << "generateFloorV2 STARTED\n";
         
         uint numberCell = MapGrind.size(); // number of cell in the grind
 
@@ -105,10 +181,10 @@ namespace redsquare
             posY = MapGrind[randNumCase][2]+1; // room always at x=1 in the cell's grind
 
             do{
+                std::cout << "test" << std::endl;
                 length = rand() % sizeGrind +MINSIZE;
                 width = rand() % sizeGrind +MINSIZE;
             }while(posX+length > (MapGrind[randNumCase][1]+sizeGrind)-2|| posY+width > (MapGrind[randNumCase][2]+sizeGrind)-2 ||  posY+width == MapSize);
-
 
             gf::Vector4u Room({posX,posY,length,width});
             TabRoom.push_back(Room);
@@ -122,38 +198,32 @@ namespace redsquare
                     m_SquareWorld.setEmpty({(int) (room[0]+length), (int) (room[1]+width)} );  
                 }
             }
-            //std::cout << "X :"  << room[0] << " Y : " << room[1] << " Taille : " << room[2] << "x" << room[3] << "\n" ;
         }
-        //std::cout << "generateFloorV2 ENDED\n";
     }
 
 
      std::vector<gf::Vector4u> World::buildWall(std::vector<gf::Vector4u> TabRoom){ // TODO 
-        //std::cout << "buildWall STARTED\n";
+
         uint length , width;
         std::vector<gf::Vector4u> fullRoom;
 
         for(gf::Vector4u room : TabRoom){
             length = room[2] + 2; // length of the room + 2 to put wall on both side
             width = room[3] + 2; // width of the room + 2 to put wall on both side
-            //std::cout << "length: " << length << " width : " << width << "\n";
             for(uint i = 0; i < length; ++i){
                 for(uint j = 0; j < width; ++j){
                     if(i == 0 || j == 0 || i == length-1 || j == width-1){
                         m_World({(room[0] -1)+i,(room[1]-1)+j}) = Tile::Wall; // set tile to wall
-                        //std::cout << "SET WALL\n";
                     }
                 }
             }
             gf::Vector4u wall({(room[0]-1),(room[1]-1),length,width});
             fullRoom.push_back(wall);
         }
-        //std::cout << "buildWall ENDED\n";
         return fullRoom;
      }
 
     void World::destroyGrid(){ // destroy the grid 
-        //std::cout << "destroyGrid STARTED\n";
         for(uint i = 0; i < MapSize; ++i){
             for(uint j = 0; j < MapSize; ++j){
                 if(m_World({i,j}) == Tile::Grid){
@@ -161,7 +231,6 @@ namespace redsquare
                 }
             }
         }
-        //std::cout << "destroyGrid ENDED\n";
     }
 
     gf::Vector2u World::MiddleRoom(std::vector<gf::Vector4u> TabRoom , uint random){ // take the tile in the miidle of the room
@@ -187,6 +256,8 @@ namespace redsquare
 
             gf::Vector2i start = MiddleRoom(TabRoom,random); // center of the first room
             do{
+
+                std::cout << "test2" << std::endl;
                 random = rand()%TabRoom.size();
             }while(tmp == random);
             gf::Vector2i end = MiddleRoom(TabRoom,random); // center of the second room
@@ -269,6 +340,7 @@ namespace redsquare
         {
             newPosX = rand() % MapSize;
             newPosY = rand() % MapSize;
+
         } while( m_World( { (uint)newPosX,(uint) newPosX } ) != Tile::Room ); // only putting stair on an empty randon room's tile 
 
         m_Spawn = std::move(gf::Vector2i(newPosX, newPosY));
@@ -377,7 +449,7 @@ namespace redsquare
         for(uint i = 0; i < MapSize; ++i){
             for (uint j = 0; j < MapSize; ++j){     
                 if (m_World( { j, i } ) == Tile::Room) {
-                    std::cout << "R";
+                    std::cout << " ";
                 }else if( m_World( { j, i } ) == Tile::Wall){
                     std::cout << "W";
                 }else if( m_World( { j, i } ) == Tile::Void){

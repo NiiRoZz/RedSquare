@@ -50,11 +50,12 @@ namespace redsquare
         void placeProps();
         void getSpawnPoint();
         void putStair();
-
-    private:
+        
         gf::Id generateId() const;
+        
+    private:
 
-        void generateGame();
+        void generateGame(bool boss,Game &game);
 
         gf::Queue<Packet> m_ComQueue;
 

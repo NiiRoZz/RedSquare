@@ -12,17 +12,19 @@ namespace redsquare
     : m_PlayerSpawned(0)
     , m_Floor(0)
     {
-        generateGame();
+        generateGame(false,*this);
     }
 
-    void Game::generateGame()
+    void Game::generateGame(bool boss,Game& game)
     {
-        m_World.generateWorld(); // generate map
-        placeProps(); // place props
-        addNewMonsters(10); // place monsters TODO: make the number of monsters depends on the floor
-        m_World.putStair(*this); // put stair on map
+        m_World.generateWorld(boss,*this); // generate map
+        if(!boss){
+            placeProps(); // place props
+            addNewMonsters(10); // place monsters TODO: make the number of monsters depends on the floor
+            m_World.putStair(*this); // put stair on map
+            m_World.getSpawnPoint(*this); // place the spawn of player
+        }
         m_World.prettyPrint();  // print the map in server console
-        m_World.getSpawnPoint(*this); // place the spawn of player
 
         m_World.prettyPrint();
     }
@@ -738,7 +740,11 @@ namespace redsquare
                             sendPacketToAllPlayers( sendPacket );
 
                             m_Floor++;
-                            generateGame();
+                            if(m_Floor%4 == 0){ // boss room every 4 floors ?
+                                generateGame(true,*this);
+                            }else{
+                                generateGame(false,*this);
+                            }
                             m_PlayerSpawned = 0;
 
                             for (auto it3 = m_Players.begin(); it3 != m_Players.end(); ++it3)

@@ -42,10 +42,10 @@ namespace redsquare
             m_MaxLifePoint = 300;
             m_MaxManaPoint = 20;
 
-            m_AttackPoint = 40;
+            m_AttackPoint = 70;
             m_DefensePoint = 20;
 
-            m_MaxAttackPoint = 40;
+            m_MaxAttackPoint = 70;
             m_MaxDefensePoint = 20;
 
             m_Range = 1;
@@ -59,10 +59,10 @@ namespace redsquare
             m_MaxLifePoint = 250;
             m_MaxManaPoint = 25;
 
-            m_AttackPoint = 50;
+            m_AttackPoint = 80;
             m_DefensePoint = 15;
 
-            m_MaxAttackPoint = 50;
+            m_MaxAttackPoint = 80;
             m_MaxDefensePoint = 15;
 
             m_Range = 1;
@@ -70,17 +70,17 @@ namespace redsquare
 
         case EntitySubType::Ranger : // ------------------- Rogue -------------------
             m_Class = EntitySubType::Ranger;
-            m_LifePoint = 160;
+            m_LifePoint = 190;
             m_ManaPoint = 20;
 
-            m_MaxLifePoint = 160;
+            m_MaxLifePoint = 190;
             m_MaxManaPoint = 20;
 
-            m_AttackPoint = 24;
-            m_DefensePoint = 5;
+            m_AttackPoint = 45;
+            m_DefensePoint = 10;
 
-            m_MaxAttackPoint = 24;
-            m_MaxDefensePoint = 5;
+            m_MaxAttackPoint = 45;
+            m_MaxDefensePoint = 10;
 
             m_Range = 3;
             break;
@@ -541,6 +541,8 @@ namespace redsquare
                 return LightningStrike(target,monsters);
                 break;
         }
+        std::vector<Monster*> empty;
+        return empty;
     }
 
     int Player::Variance(int range){ // adding some rng to the damage of a spell [range;+range] added to the base damage of the spell

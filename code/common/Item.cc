@@ -81,7 +81,7 @@ namespace redsquare
         {
             case ItemType::Sword1: case ItemType::Staff1: case ItemType::SpellBook1: case ItemType::Bow1:
                 m_GiveAttackPoint = 2*m_BaseFloor;
-                m_Name = "Test Name";
+                m_Name = "Basic Weapon";
                 m_Description = "Basic weapon of the class " + std::to_string(m_GiveAttackPoint);
                 break;
             case ItemType::Sword2: case ItemType::Staff2: case ItemType::SpellBook2: case ItemType::Bow2:
@@ -225,10 +225,6 @@ namespace redsquare
         m_GiveLifePoint += Variance(-(m_GiveLifePoint/10));
         m_GiveAttackPoint += Variance(-(m_GiveAttackPoint/10));
         m_GiveDefensePoint += Variance(-(m_GiveDefensePoint/10));
-
-        /*std::cout << m_GiveLifePoint << std::endl;
-        std::cout << m_GiveAttackPoint << std::endl;
-        std::cout << m_GiveDefensePoint << std::endl;*/
     }
 
     bool Item::isUseable() const
