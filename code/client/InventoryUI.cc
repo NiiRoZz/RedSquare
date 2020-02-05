@@ -20,7 +20,6 @@ namespace redsquare
     , m_UI(font)
     , m_PlayerEntity(nullptr)
     , m_VinicityEntity(nullptr)
-    , m_PlayerWidget(gResourceManager().getTexture("img/goblin.png"))
     , m_OldSlot(nullptr)
     , m_CurrMovingWidget(nullptr)
     , m_CurrMovingItem(nullptr)

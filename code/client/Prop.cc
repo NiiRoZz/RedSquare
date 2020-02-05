@@ -18,7 +18,7 @@ namespace redsquare
         if (m_EntitySubType == EntitySubType::Torch)
         {
             m_Animated = true;
-            loadAnimation("img/TileSet3.png", 18, 0, 4, 0.1f);
+            loadAnimation("img/TileSet/TileSet3.png", 18, 0, 4, 0.1f);
         }
     }
 

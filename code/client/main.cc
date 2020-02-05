@@ -87,7 +87,7 @@ int main( int argc, char **argv )
     views.addView( mainView );
     gf::ScreenView hudView;
     views.addView( hudView );
-    views.setInitialScreenSize( screenSize );
+    views.setInitialFramebufferSize( screenSize );
 
     // actions
     gf::ActionContainer actions;
