@@ -21,6 +21,7 @@ namespace redsquare
         int m_GiveLifePoint;
         int m_GiveAttackPoint;
         int m_GiveDefensePoint;
+        int m_GiveManaPoint;
 
         bool isUseable() const;
 

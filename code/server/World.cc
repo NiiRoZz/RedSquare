@@ -12,28 +12,78 @@
 #define MINSIZE 6
 #define BOSSROOM 20
 
-static const char *BossRoom[BOSSROOM] = {
+
+static const char *BossRoom1[BOSSROOM] = {
     "###################",
-    "#   C    S    C   #",
+    "#  AC    S    CA  #",
+    "#       T T       #",
+    "# PA           AP #",
     "#                 #",
     "#                 #",
     "#                 #",
-    "#                 #",
-    "#                 #",
-    "#                 #",
+    "# P             P #",
     "#    X       X    #",
     "#     X     X     #",
     "#                 #",
+    "# P             P #",
     "#                 #",
     "#                 #",
     "#                 #",
-    "#                 #",
-    "#                 #",
+    "# PA           AP #",
     "#        O        #",
     "#                 #",
     "#                 #",
     "###################",
 };
+
+static const char *BossRoom2[BOSSROOM] = {
+    "###################",
+    "#X       S       X#",
+    "#                 #",
+    "#                 #",
+    "#     P     P     #",
+    "#                X#",
+    "#     P     P     #",
+    "#                 #",
+    "#     P     P     #",
+    "#C       O       C#",
+    "#     P     P     #",
+    "#                 #",
+    "#     P     P     #",
+    "#X                #",
+    "#     P     P     #",
+    "#                 #",
+    "#     P     P     #",
+    "#                 #",
+    "#X               X#",
+    "###################",
+};
+
+static const char *BossRoom3[BOSSROOM] = {
+    "###################",
+    "#                 #",
+    "#V               V#",
+    "#                 #",
+    "#V               V#",
+    "#                 #",
+    "#V               V#",
+    "#                 #",
+    "#V      ###      V#",
+    "#       ###       #",
+    "#V      CSC      V#",
+    "#   X   X X   X   #",
+    "#V               V#",
+    "#                 #",
+    "#V               V#",
+    "#        O        #",
+    "#V               V#",
+    "#                 #",
+    "#V               V#",
+    "###################",
+};
+
+static const std::vector<const char**> BossRoomTab = {BossRoom1,BossRoom2,BossRoom3};
+
 
 namespace redsquare
 {
@@ -70,6 +120,10 @@ namespace redsquare
             m_SquareWorld.reset(gf::Flags<gf::CellProperty>());
             std::fill(m_World.begin(),m_World.end(),Tile::Void);
             TabRoom.clear();
+            std::map<gf::Id, Prop>::iterator itNewProp; // map of props
+
+            int randomBoss = rand() % BossRoomTab.size();
+            const char** BossRoom =  BossRoomTab[randomBoss];
 
             for(uint row = 0 ; row < BOSSROOM; ++row){
                 for(uint column = 0 ; column < BOSSROOM; ++column){
@@ -78,14 +132,17 @@ namespace redsquare
 
                         m_SquareWorld.setEmpty(pos);
                         m_World( pos ) = Tile::Room;
+                        m_SquareWorld.setWalkable(pos, true);
 
                     }else if (BossRoom[column][row] == '#') { // wall
 
                         m_World( pos ) = Tile::Wall;
+                        m_SquareWorld.setWalkable(pos, false);
 
                     }else if (BossRoom[column][row] == 'X') { // spawn of ennemy
 
                         m_World( pos ) = Tile::Room;
+                        m_SquareWorld.setWalkable(pos, true);
                         gf::Id id = game.generateId();
                         std::map<gf::Id, Monster>::iterator itNewMonster;
 
@@ -101,28 +158,64 @@ namespace redsquare
 
                         m_World( pos ) = Tile::Room;
                         m_Spawn = pos;
+                        m_SquareWorld.setWalkable(pos, true);
+
                     }else if (BossRoom[column][row] == 'S'){ // spawn of stair
 
                         m_World( pos ) = Tile::Stair;
                         m_StairPosition = pos; 
-                    }else if (BossRoom[column][row] == 'C'){ // spanwn of chest
+                        m_SquareWorld.setWalkable(pos, true);
+
+                    }else if (BossRoom[column][row] == 'C'){ // spawn of chest
 
                         m_World( pos ) = Tile::Room;
-                        std::map<gf::Id, Prop>::iterator itNewProp; 
                         gf::Id id = game.generateId();
                         std::tie(itNewProp, std::ignore) = game.m_Props.emplace(id, Prop(id, EntitySubType::Chest));
                         itNewProp->second.m_Pos = pos;
+
+                        m_SquareWorld.setWalkable(pos, false);
+
+                    }else if (BossRoom[column][row] == 'P'){ // spawn pillar props
+
+                        m_World( pos ) = Tile::Room;
+                        gf::Id id = game.generateId();
+                        std::tie(itNewProp, std::ignore) = game.m_Props.emplace(id, Prop(id, EntitySubType::GreyPillar1));
+                        itNewProp->second.m_Pos = pos;
+
+                        m_SquareWorld.setWalkable(pos, false);
+                    }else if (BossRoom[column][row] == 'A'){ // spawn torch
+
+                        m_World( pos ) = Tile::Room;
+                        gf::Id id = game.generateId();
+                        std::tie(itNewProp, std::ignore) = game.m_Props.emplace(id, Prop(id, EntitySubType::Torch));
+                        itNewProp->second.m_Pos = pos;
+
+                        m_SquareWorld.setWalkable(pos, false);
+                    }else if (BossRoom[column][row] == 'T'){ // spawn throne
+
+                        m_World( pos ) = Tile::Room;
+                        gf::Id id = game.generateId();
+                        std::tie(itNewProp, std::ignore) = game.m_Props.emplace(id, Prop(id, EntitySubType::Throne));
+                        itNewProp->second.m_Pos = pos;
+
+                        m_SquareWorld.setWalkable(pos, false);
+                    }else if (BossRoom[column][row] == 'V'){ // spawn vase
+
+                        m_World( pos ) = Tile::Room;
+                        gf::Id id = game.generateId();
+                        std::tie(itNewProp, std::ignore) = game.m_Props.emplace(id, Prop(id, EntitySubType::Pot));
+                        itNewProp->second.m_Pos = pos;
+
+                        m_SquareWorld.setWalkable(pos, false);
                     }
                 }
             }
-            setWalkable(); // Set walkable the tile that should be
         }
 
     }
 
     std::vector<gf::Vector4u> World::grid(uint sizeGrind){ // sizegrind must divide MapSize to be usefull
 
-        //std::cout << "grid STARTED\n";
         uint gridX = 0;
         uint gridY = 0;
 
@@ -152,11 +245,9 @@ namespace redsquare
         for(uint i = 0; i < MapSize ; i += sizeGrind){
             for(uint j = 0; j < MapSize ; j += sizeGrind){
                 TabCell.push_back({number,i,j,false});
-                //std::cout << "number :" << number <<" coordonnée : " << i << "," << j << '\n' ;
                 number++;
             }
         }
-        //std::cout << "grid ENDED\n";
         return TabCell;
     }
 
@@ -181,7 +272,6 @@ namespace redsquare
             posY = MapGrind[randNumCase][2]+1; // room always at x=1 in the cell's grind
 
             do{
-                std::cout << "test" << std::endl;
                 length = rand() % sizeGrind +MINSIZE;
                 width = rand() % sizeGrind +MINSIZE;
             }while(posX+length > (MapGrind[randNumCase][1]+sizeGrind)-2|| posY+width > (MapGrind[randNumCase][2]+sizeGrind)-2 ||  posY+width == MapSize);
@@ -256,8 +346,6 @@ namespace redsquare
 
             gf::Vector2i start = MiddleRoom(TabRoom,random); // center of the first room
             do{
-
-                std::cout << "test2" << std::endl;
                 random = rand()%TabRoom.size();
             }while(tmp == random);
             gf::Vector2i end = MiddleRoom(TabRoom,random); // center of the second room

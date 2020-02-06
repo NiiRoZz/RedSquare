@@ -740,7 +740,7 @@ namespace redsquare
                             sendPacketToAllPlayers( sendPacket );
 
                             m_Floor++;
-                            if(m_Floor%4 == 0){ // boss room every 4 floors ?
+                            if(m_Floor%4 == 0){ // boss room every 4 floors 
                                 generateGame(true,*this);
                             }else{
                                 generateGame(false,*this);
