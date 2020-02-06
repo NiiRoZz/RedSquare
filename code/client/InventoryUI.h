@@ -11,6 +11,7 @@
 #include <gf/RenderWindow.h>
 #include <gf/Window.h>
 #include <gf/Entity.h>
+#include <gf/Text.h>
 #include <iostream>
 
 namespace redsquare
@@ -89,6 +90,11 @@ namespace redsquare
         gf::TextButtonWidget m_DropButton;
         gf::TextButtonWidget m_UseButton;
         gf::RectangleShape m_RightClickedBackground;
+
+        //For display Information of life
+        gf::TextWidget m_life;
+        
+        
     };
 }
 

@@ -195,7 +195,7 @@ namespace redsquare
                 {   
                     m_UI.setCharacterSize(coordinates.getRelativeCharacterSize(0.03f));
                     m_UI.layoutRowDynamic(coordinates.getRelativeCharacterSize(0.03f), 1);
-                    m_UI.label("Spell need to be selected before using it");
+                    m_UI.label("! Spell need to be selected before using it !");
                     m_UI.layoutRowDynamic(coordinates.getRelativeCharacterSize(0.04f), 1);
                     
                     m_UI.label(desc);

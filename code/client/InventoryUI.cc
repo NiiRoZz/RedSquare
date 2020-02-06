@@ -11,6 +11,7 @@
 #include <gf/Vector.h>
 #include <gf/WidgetContainer.h>
 #include <gf/VectorOps.h>
+#include <gf/Text.h>
 
 
 namespace redsquare
@@ -26,6 +27,7 @@ namespace redsquare
     , m_DraggingFromEntity(nullptr)
     , m_HoveringSlot(nullptr)
     , m_NameWidget("", font, 12)
+    , m_life("", font, 12)
     , m_DescriptionWidget("", font, 12)
     , m_RightClickedSlot(nullptr)
     , m_RightClickedFromEntity(nullptr)
@@ -318,10 +320,50 @@ namespace redsquare
                     m_RightClickedSlot = nullptr;
                 }
             }
+            if (m_PlayerEntity != nullptr)
+            {
+                float characterSize=coordinates.getRelativeCharacterSize(0.022f);
+
+                m_life.setCharacterSize(characterSize);
+                m_life.setDefaultTextColor(gf::Color4f(0.0, 0.0, 0.0, 0.0));
+                m_life.setString( "Level: " + std::to_string(m_PlayerEntity->m_Level));
+                m_life.setPosition(coordinates.getRelativePoint({0.84f,0.18f}));
+                m_life.setTextOutlineThickness(characterSize * 0.04);
+                target.draw(m_life, states);
+                
+                m_life.setCharacterSize(characterSize);
+                m_life.setDefaultTextColor(gf::Color4f(0.0, 1.0, 0.0, 0.75));
+                m_life.setString( "Life Point: " + std::to_string(m_PlayerEntity->m_LifePoint)+"/"+std::to_string(m_PlayerEntity->m_MaxLifePoint));
+                m_life.setPosition(coordinates.getRelativePoint({0.84f,0.22f}));
+                m_life.setTextOutlineThickness(0.5);
+                target.draw(m_life, states);
+
+                m_life.setCharacterSize(characterSize);
+                m_life.setDefaultTextColor(gf::Color4f(0.0, 0.0, 0.0, 0.0));
+                m_life.setString( "Attack: " + std::to_string(m_PlayerEntity->m_AttackPoint));
+                m_life.setPosition(coordinates.getRelativePoint({0.84f,0.28f}));
+                m_life.setTextOutlineThickness(characterSize * 0.04);
+                target.draw(m_life, states);
+
+                m_life.setCharacterSize(characterSize);
+                m_life.setDefaultTextColor(gf::Color4f(0.0, 0.0, 0.0, 0.0));
+                m_life.setString( "Defense: " + std::to_string(m_PlayerEntity->m_DefensePoint));
+                m_life.setPosition(coordinates.getRelativePoint({0.84f,0.30f}));
+                m_life.setTextOutlineThickness(characterSize * 0.04);
+                target.draw(m_life, states);
+
+                m_life.setCharacterSize(characterSize);
+                m_life.setDefaultTextColor(gf::Color4f(0.0, 0.0, 0.0, 0.0));
+                m_life.setString( "Range: " + std::to_string(m_PlayerEntity->m_Range));
+                m_life.setPosition(coordinates.getRelativePoint({0.84f,0.32f}));
+                m_life.setTextOutlineThickness(characterSize * 0.04);
+                target.draw(m_life, states);
+
+            }
         }
     }
 
-    void InventoryUI::processEvent(const gf::Event &event)
+    void InventoryUI::processEvent(const gf::Event &event) 
     {
         m_UI.processEvent(event);
 
