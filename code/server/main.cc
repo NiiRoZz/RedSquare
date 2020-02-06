@@ -40,6 +40,7 @@ int main( int argc, char **argv )
 
 	// Init singleton
   	gf::SingletonStorage<gf::Random> storageForRandom(gRandom);
+	gf::SingletonStorage<gf::MessageManager> storageForMessageManager(redsquare::gMessageManager);
 
     Game game;
 	Chat myChat;

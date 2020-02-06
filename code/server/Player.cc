@@ -459,6 +459,8 @@ namespace redsquare
         default: // cant manage more than 9 player
             break;
         }
+
+        m_Inventory.setOwner(this);
     }
 
     void Player::attack(SpellType spellType, ServerEntity *target){

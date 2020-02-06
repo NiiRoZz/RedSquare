@@ -4,6 +4,7 @@
 #include "../common/Entity.h"
 #include "../common/Packet.h"
 #include "Inventory.h"
+#include "ServerItem.h"
 
 namespace redsquare
 {
@@ -20,6 +21,8 @@ namespace redsquare
         Packet&& createUpdateItemPacket(InventorySlotType slotType, bool remove, uint pos = 0u);
 
         virtual void defaultInventoryStuff();
+
+        virtual void onMovedItem(ServerItem &item, bool remove);
 
     protected:
         Inventory m_Inventory;
