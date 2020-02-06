@@ -406,7 +406,7 @@ namespace redsquare
                             if (packet.spawnEntity.entityID == m_PlayerID)
                             {
                                 MyPlayerReceivedTypeMessage message;
-                                message.player = static_cast<ClientEntity*>(&(it.first->second));
+                                message.player = &(it.first->second);
 
                                 gMessageManager().sendMessage(&message);
                             }
