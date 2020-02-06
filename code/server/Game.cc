@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "../common/Singletons.h"
+#include "Message.h"
 
 #include <gf/Random.h>
 #include <gf/VectorOps.h>
@@ -12,10 +13,12 @@ namespace redsquare
     : m_PlayerSpawned(0)
     , m_Floor(0)
     {
-        generateGame(false,*this);
+        gMessageManager().registerHandler<UpdateEntityCharacteristic>(&Game::onUpdateEntityCharacteristic, this);
+
+        generateGame(false);
     }
 
-    void Game::generateGame(bool boss,Game& game)
+    void Game::generateGame(bool boss)
     {
         m_World.generateWorld(boss,*this); // generate map
         if(!boss){
@@ -39,9 +42,6 @@ namespace redsquare
 
         //Receive info of client, freeze until we receive them
         socket.receive(packet);
-        char name[30];
-        strcpy(name, packet.playerInfoConnection.name);
-
     
         // Create a new player
         std::tie(itNewPlayer, std::ignore) = m_Players.emplace(id, Player(std::move(socket), id, packet.playerInfoConnection.entitySubType));
@@ -741,9 +741,9 @@ namespace redsquare
 
                             m_Floor++;
                             if(m_Floor%4 == 0){ // boss room every 4 floors ?
-                                generateGame(true,*this);
+                                generateGame(true);
                             }else{
-                                generateGame(false,*this);
+                                generateGame(false);
                             }
                             m_PlayerSpawned = 0;
 
@@ -1305,5 +1305,21 @@ namespace redsquare
         }
 
         return false;
+    }
+
+    gf::MessageStatus Game::onUpdateEntityCharacteristic(gf::Id id, gf::Message *msg)
+    {
+        assert(id == UpdateEntityCharacteristic::type);
+        
+        UpdateEntityCharacteristic *message = static_cast<UpdateEntityCharacteristic*>(msg);
+
+        if (message && message->entity)
+        {
+            Packet packet;
+            message->entity->createCarPacket(packet);
+            sendPacketToAllPlayers(packet);
+        }
+
+        return gf::MessageStatus::Keep;
     }
 }

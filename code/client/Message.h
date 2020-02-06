@@ -1,5 +1,5 @@
-#ifndef REDSQUARE_COMMON_MESSAGE_H
-#define REDSQUARE_COMMON_MESSAGE_H
+#ifndef REDSQUARE_CLIENT_MESSAGE_H
+#define REDSQUARE_CLIENT_MESSAGE_H
 
 #include "../common/Packet.h"
 #include "../common/Entity.h"
@@ -40,4 +40,4 @@ namespace redsquare
     };
 }
 
-#endif // REDSQUARE_COMMON_MESSAGE_H
+#endif // REDSQUARE_CLIENT_MESSAGE_H

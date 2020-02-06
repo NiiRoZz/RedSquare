@@ -334,6 +334,8 @@ namespace redsquare
         assert(id == MyPlayerDeadMessage::type);
 
         m_PlayerDead = true;
+
+        return gf::MessageStatus::Keep;
     }
 
     void Hud::showMap()
