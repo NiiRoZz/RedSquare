@@ -4,6 +4,7 @@
 #include "../common/Packet.h"
 #include "../common/Entity.h"
 #include "ClientEntity.h"
+#include "Player.h"
 
 #include <gf/Message.h>
 #include <gf/Id.h>
@@ -31,7 +32,7 @@ namespace redsquare
     struct MyPlayerReceivedTypeMessage : public gf::Message
     {
         static const gf::Id type = "MyPlayerReceived"_id;
-        ClientEntity *player;
+        Player *player;
     };
 
     struct MyPlayerDeadMessage : public gf::Message

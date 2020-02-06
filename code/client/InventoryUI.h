@@ -40,7 +40,7 @@ namespace redsquare
         Game &m_Game;
         gf::UI m_UI;
 
-        ClientEntity *m_PlayerEntity;
+        Player *m_PlayerEntity;
         ClientEntity *m_VinicityEntity;
 
         const float IconSize = 16.f;
@@ -79,9 +79,9 @@ namespace redsquare
 
         //For display Information
         InventorySlot *m_HoveringSlot;
-        gf::TextWidget m_NameWidget;
+        gf::Text m_NameText;
         gf::RectangleShape m_NameBackgroundShape;
-        gf::TextWidget m_DescriptionWidget;
+        gf::Text m_DescriptionText;
         gf::RectangleShape m_DescriptionBackgroundShape;
 
         //For right click

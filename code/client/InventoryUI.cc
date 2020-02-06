@@ -26,9 +26,9 @@ namespace redsquare
     , m_CurrMovingItem(nullptr)
     , m_DraggingFromEntity(nullptr)
     , m_HoveringSlot(nullptr)
-    , m_NameWidget("", font, 12)
     , m_life("", font, 12)
-    , m_DescriptionWidget("", font, 12)
+    , m_NameText("", font, 12)
+    , m_DescriptionText("", font, 12)
     , m_RightClickedSlot(nullptr)
     , m_RightClickedFromEntity(nullptr)
     , m_DropButton("Drop", font, 12)
@@ -44,17 +44,27 @@ namespace redsquare
         m_PlayerSpecialSlots.insert(std::make_pair(InventorySlotType::Weapon, std::move(InventorySlot(InventorySlotType::Weapon))));
         m_PlayerSpecialSlots.insert(std::make_pair(InventorySlotType::Shield, std::move(InventorySlot(InventorySlotType::Shield))));
 
-        m_NameWidget.setAlignment(gf::Alignment::Center);
-        m_DescriptionWidget.setAlignment(gf::Alignment::Left);
-        m_NameBackgroundShape.setColor(gf::Color4f(0.25,0.25,0.25,0.80));
-        m_DescriptionBackgroundShape.setColor(gf::Color4f(0.25,0.25,0.25,0.80));
-        m_RightClickedBackground.setColor(gf::Color4f(0.25,0.25,0.25,0.80));
+        m_NameText.setAlignment(gf::Alignment::Center);
+        m_NameText.setColor(gf::Color::White);
 
-        m_DropButton.setDefaultBackgroundColor(gf::Color4f(0.25,0.25,0.25,0.80));
+        m_DescriptionText.setAlignment(gf::Alignment::Left);
+        m_DescriptionText.setColor(gf::Color::White);
+
+        m_NameBackgroundShape.setColor(gf::Color4f(0.f,0.f,0.f,1.f));
+        m_DescriptionBackgroundShape.setColor(gf::Color4f(0.f,0.f,0.f,1.f));
+        m_RightClickedBackground.setColor(gf::Color4f(0.f,0.f,0.f,1.f));
+
+        m_DropButton.setDefaultBackgroundColor(gf::Color4f(0.f,0.f,0.f,1.f));
+        m_DropButton.setSelectedBackgroundColor(gf::Color4f(0.f,0.f,0.f,1.f));
+        m_DropButton.setDefaultTextColor(gf::Color::White);
+        m_DropButton.setSelectedTextColor(gf::Color::Gray(0.5f));
         m_DropButton.setState(gf::WidgetState::Default);
         m_DropButton.setAnchor(gf::Anchor::TopLeft);
 
-        m_UseButton.setDefaultBackgroundColor(gf::Color4f(0.25,0.25,0.25,0.80));
+        m_UseButton.setDefaultBackgroundColor(gf::Color4f(0.f,0.f,0.f,1.f));
+        m_UseButton.setSelectedBackgroundColor(gf::Color4f(0.f,0.f,0.f,1.f));
+        m_UseButton.setDefaultTextColor(gf::Color::White);
+        m_UseButton.setSelectedTextColor(gf::Color::Gray(0.5f));
         m_UseButton.setState(gf::WidgetState::Default);
         m_UseButton.setAnchor(gf::Anchor::TopLeft);
     }
@@ -235,7 +245,61 @@ namespace redsquare
             {
                 x.second.render( target, states );
             }
+            
+            if (m_PlayerEntity != nullptr)
+            {
+                float characterSize=coordinates.getRelativeCharacterSize(0.022f);
 
+                m_life.setCharacterSize(characterSize);
+                m_life.setDefaultTextColor(gf::Color4f(0.0, 0.0, 0.0, 0.0));
+                m_life.setString( "Level: " + std::to_string(m_PlayerEntity->m_Level));
+                m_life.setPosition(coordinates.getRelativePoint({0.84f,0.16f}));
+                m_life.setTextOutlineThickness(characterSize * 0.04);
+                target.draw(m_life, states);
+
+                m_life.setCharacterSize(characterSize);
+                m_life.setDefaultTextColor(gf::Color4f(0.0, 0.0, 0.0, 0.0));
+                m_life.setString( "Xp: " + std::to_string(m_PlayerEntity->m_XP)+"/"+std::to_string(m_PlayerEntity->m_Max_XP));
+                m_life.setPosition(coordinates.getRelativePoint({0.84f,0.18f}));
+                m_life.setTextOutlineThickness(characterSize * 0.04);
+                target.draw(m_life, states);
+                
+                m_life.setCharacterSize(characterSize);
+                m_life.setDefaultTextColor(gf::Color4f(0.0, 1.0, 0.0, 0.75));
+                m_life.setString( "Life Point: " + std::to_string(m_PlayerEntity->m_LifePoint)+"/"+std::to_string(m_PlayerEntity->m_MaxLifePoint));
+                m_life.setPosition(coordinates.getRelativePoint({0.84f,0.22f}));
+                m_life.setTextOutlineThickness(characterSize * 0.04);
+                target.draw(m_life, states);
+
+                m_life.setCharacterSize(characterSize);
+                m_life.setDefaultTextColor(gf::Color::Blue);
+                m_life.setString( "Mana Point: " + std::to_string(m_PlayerEntity->m_ManaPoint)+"/"+std::to_string(m_PlayerEntity->m_MaxManaPoint));
+                m_life.setPosition(coordinates.getRelativePoint({0.84f,0.24f}));
+                m_life.setTextOutlineThickness(characterSize * 0.03);
+                target.draw(m_life, states);
+
+                m_life.setCharacterSize(characterSize);
+                m_life.setDefaultTextColor(gf::Color4f(0.0, 0.0, 0.0, 0.0));
+                m_life.setString( "Attack: " + std::to_string(m_PlayerEntity->m_AttackPoint));
+                m_life.setPosition(coordinates.getRelativePoint({0.84f,0.28f}));
+                m_life.setTextOutlineThickness(characterSize * 0.04);
+                target.draw(m_life, states);
+
+                m_life.setCharacterSize(characterSize);
+                m_life.setDefaultTextColor(gf::Color4f(0.0, 0.0, 0.0, 0.0));
+                m_life.setString( "Defense: " + std::to_string(m_PlayerEntity->m_DefensePoint));
+                m_life.setPosition(coordinates.getRelativePoint({0.84f,0.30f}));
+                m_life.setTextOutlineThickness(characterSize * 0.04);
+                target.draw(m_life, states);
+
+                m_life.setCharacterSize(characterSize);
+                m_life.setDefaultTextColor(gf::Color4f(0.0, 0.0, 0.0, 0.0));
+                m_life.setString( "Range: " + std::to_string(m_PlayerEntity->m_Range));
+                m_life.setPosition(coordinates.getRelativePoint({0.84f,0.32f}));
+                m_life.setTextOutlineThickness(characterSize * 0.04);
+                target.draw(m_life, states);
+
+            }
             //Draw the current moving widget, so he can be over any slot case
             if (m_CurrMovingWidget != nullptr)
             {
@@ -246,47 +310,58 @@ namespace redsquare
             if (m_HoveringSlot != nullptr)
             {
                 //Calculate correctly the size of the text
-                float paragraphWidth = coordinates.getRelativeSize({ 0.11f, 1.f })[0];
-                unsigned int characterSize = coordinates.getRelativeCharacterSize(0.025f);
+                float paragraphWidth = coordinates.getRelativeSize({ 0.15f, 1.f })[0];
+                unsigned int characterSize = coordinates.getRelativeCharacterSize(0.03f);
 
-                m_NameWidget.setParagraphWidth(paragraphWidth);
-                m_NameWidget.setCharacterSize(characterSize);
+                m_NameText.setParagraphWidth(paragraphWidth);
+                m_NameText.setCharacterSize(characterSize);
 
-                m_DescriptionWidget.setParagraphWidth(paragraphWidth);
-                m_DescriptionWidget.setCharacterSize(characterSize);
+                m_DescriptionText.setParagraphWidth(paragraphWidth);
+                m_DescriptionText.setCharacterSize(characterSize);
 
-                //Calculate correctly the backgroundShape for m_NameWidget
-                gf::RectF bounds = m_NameWidget.getLocalBounds();
+                gf::Anchor anchorText = gf::Anchor::TopLeft;
+                gf::RectF bounds = m_NameText.getLocalBounds();
+
+                //Detect if the text go outside of the screen, if so, set anchor to top right
+                if ((m_NameText.getPosition().x + bounds.getSize().width) > (coordinates.getRelativePoint({0.f,0.f}).x + coordinates.getRelativeSize({1.f,0.f}).width))
+                {
+                    anchorText = gf::Anchor::TopRight;
+                }
+
+                m_NameText.setAnchor(anchorText);
+                m_DescriptionText.setAnchor(anchorText);
+
+                //Calculate correctly the backgroundShape for m_NameText
                 m_NameBackgroundShape.setSize(bounds.getSize());
-                m_NameBackgroundShape.setOrigin(m_NameWidget.getOrigin());
+                m_NameBackgroundShape.setOrigin(m_NameText.getOrigin());
 
-                gf::Vector2f position = m_NameWidget.getPosition();
-                gf::Matrix3f matrix = gf::rotation(m_NameWidget.getRotation(), position) * gf::scaling(m_NameWidget.getScale(), position);
+                gf::Vector2f position = m_NameText.getPosition();
+                gf::Matrix3f matrix = gf::rotation(m_NameText.getRotation(), position) * gf::scaling(m_NameText.getScale(), position);
 
                 m_NameBackgroundShape.setPosition(gf::transform(matrix, position + bounds.getPosition()));
-                m_NameBackgroundShape.setRotation(m_NameWidget.getRotation());
-                m_NameBackgroundShape.setScale(m_NameWidget.getScale());
+                m_NameBackgroundShape.setRotation(m_NameText.getRotation());
+                m_NameBackgroundShape.setScale(m_NameText.getScale());
 
                 target.draw( m_NameBackgroundShape, states );
-                target.draw( m_NameWidget, states );
+                target.draw( m_NameText, states );
 
-                //Set correctly the position of m_DescriptionWidget
-                m_DescriptionWidget.setPosition(m_NameBackgroundShape.getPosition() + gf::Vector2f(0 , m_NameBackgroundShape.getSize()[1] * 2));
+                //Set correctly the position of m_DescriptionText
+                m_DescriptionText.setPosition(m_NameText.getPosition() + gf::Vector2f(0 , m_NameText.getLocalBounds().getSize().height));
 
-                //Calculate correctly the backgroundShape for m_DescriptionWidget
-                bounds = m_DescriptionWidget.getLocalBounds();
+                //Calculate correctly the backgroundShape for m_DescriptionText
+                bounds = m_DescriptionText.getLocalBounds();
                 m_DescriptionBackgroundShape.setSize(bounds.getSize());
-                m_DescriptionBackgroundShape.setOrigin(m_DescriptionWidget.getOrigin());
+                m_DescriptionBackgroundShape.setOrigin(m_DescriptionText.getOrigin());
 
-                position = m_DescriptionWidget.getPosition();
-                matrix = gf::rotation(m_DescriptionWidget.getRotation(), position) * gf::scaling(m_DescriptionWidget.getScale(), position);
+                position = m_DescriptionText.getPosition();
+                matrix = gf::rotation(m_DescriptionText.getRotation(), position) * gf::scaling(m_DescriptionText.getScale(), position);
 
                 m_DescriptionBackgroundShape.setPosition(gf::transform(matrix, position + bounds.getPosition()));
-                m_DescriptionBackgroundShape.setRotation(m_DescriptionWidget.getRotation());
-                m_DescriptionBackgroundShape.setScale(m_DescriptionWidget.getScale());
+                m_DescriptionBackgroundShape.setRotation(m_DescriptionText.getRotation());
+                m_DescriptionBackgroundShape.setScale(m_DescriptionText.getScale());
 
                 target.draw( m_DescriptionBackgroundShape, states );
-                target.draw( m_DescriptionWidget, states );
+                target.draw( m_DescriptionText, states );
             }
 
             //Draw use/drop buttons and his background
@@ -319,46 +394,6 @@ namespace redsquare
                 {
                     m_RightClickedSlot = nullptr;
                 }
-            }
-            if (m_PlayerEntity != nullptr)
-            {
-                float characterSize=coordinates.getRelativeCharacterSize(0.022f);
-
-                m_life.setCharacterSize(characterSize);
-                m_life.setDefaultTextColor(gf::Color4f(0.0, 0.0, 0.0, 0.0));
-                m_life.setString( "Level: " + std::to_string(m_PlayerEntity->m_Level));
-                m_life.setPosition(coordinates.getRelativePoint({0.84f,0.18f}));
-                m_life.setTextOutlineThickness(characterSize * 0.04);
-                target.draw(m_life, states);
-                
-                m_life.setCharacterSize(characterSize);
-                m_life.setDefaultTextColor(gf::Color4f(0.0, 1.0, 0.0, 0.75));
-                m_life.setString( "Life Point: " + std::to_string(m_PlayerEntity->m_LifePoint)+"/"+std::to_string(m_PlayerEntity->m_MaxLifePoint));
-                m_life.setPosition(coordinates.getRelativePoint({0.84f,0.22f}));
-                m_life.setTextOutlineThickness(0.5);
-                target.draw(m_life, states);
-
-                m_life.setCharacterSize(characterSize);
-                m_life.setDefaultTextColor(gf::Color4f(0.0, 0.0, 0.0, 0.0));
-                m_life.setString( "Attack: " + std::to_string(m_PlayerEntity->m_AttackPoint));
-                m_life.setPosition(coordinates.getRelativePoint({0.84f,0.28f}));
-                m_life.setTextOutlineThickness(characterSize * 0.04);
-                target.draw(m_life, states);
-
-                m_life.setCharacterSize(characterSize);
-                m_life.setDefaultTextColor(gf::Color4f(0.0, 0.0, 0.0, 0.0));
-                m_life.setString( "Defense: " + std::to_string(m_PlayerEntity->m_DefensePoint));
-                m_life.setPosition(coordinates.getRelativePoint({0.84f,0.30f}));
-                m_life.setTextOutlineThickness(characterSize * 0.04);
-                target.draw(m_life, states);
-
-                m_life.setCharacterSize(characterSize);
-                m_life.setDefaultTextColor(gf::Color4f(0.0, 0.0, 0.0, 0.0));
-                m_life.setString( "Range: " + std::to_string(m_PlayerEntity->m_Range));
-                m_life.setPosition(coordinates.getRelativePoint({0.84f,0.32f}));
-                m_life.setTextOutlineThickness(characterSize * 0.04);
-                target.draw(m_life, states);
-
             }
         }
     }
@@ -626,6 +661,24 @@ namespace redsquare
 
             case gf::EventType::MouseMoved:
             {
+                if (m_UseButton.contains(event.mouseCursor.coords))
+                {
+                    m_UseButton.setState(gf::WidgetState::Selected);
+                }
+                else
+                {
+                    m_UseButton.setState(gf::WidgetState::Default);
+                }
+
+                if (m_DropButton.contains(event.mouseCursor.coords))
+                {
+                    m_DropButton.setState(gf::WidgetState::Selected);
+                }
+                else
+                {
+                    m_DropButton.setState(gf::WidgetState::Default);
+                }
+
                 if (m_CurrMovingWidget != nullptr)
                 {
                     if (m_HoveringSlot != nullptr) m_HoveringSlot = nullptr;
@@ -639,7 +692,7 @@ namespace redsquare
                     {
                         if (m_HoveringSlot->contains(event.mouseCursor.coords) && m_HoveringSlot->haveItem() && !(m_HoveringSlot->hasMoveItemRequest()) && m_RightClickedSlot == nullptr)
                         {
-                            m_NameWidget.setPosition(event.mouseCursor.coords);
+                            m_NameText.setPosition(event.mouseCursor.coords);
                         }
                         else
                         {
@@ -657,9 +710,9 @@ namespace redsquare
                             {
                                 m_HoveringSlot = &(x.second);
 
-                                m_NameWidget.setString( x.second.getItem()->getName() );
-                                m_NameWidget.setPosition(event.mouseCursor.coords);
-                                m_DescriptionWidget.setString( x.second.getItem()->getDescription() );
+                                m_NameText.setString( x.second.getItem()->getName() );
+                                m_NameText.setPosition(event.mouseCursor.coords);
+                                m_DescriptionText.setString( x.second.getItem()->getDescription() );
 
                                 findWidget = true;
                                 break;
@@ -674,9 +727,9 @@ namespace redsquare
                                 {
                                     m_HoveringSlot = &(x.second);
 
-                                    m_NameWidget.setString( x.second.getItem()->getName() );
-                                    m_NameWidget.setPosition(event.mouseCursor.coords);
-                                    m_DescriptionWidget.setString( x.second.getItem()->getDescription() );
+                                    m_NameText.setString( x.second.getItem()->getName() );
+                                    m_NameText.setPosition(event.mouseCursor.coords);
+                                    m_DescriptionText.setString( x.second.getItem()->getDescription() );
 
                                     findWidget = true;
                                     break;
@@ -691,9 +744,9 @@ namespace redsquare
                                     {
                                         m_HoveringSlot = &(x.second);
 
-                                        m_NameWidget.setString( x.second.getItem()->getName() );
-                                        m_NameWidget.setPosition(event.mouseCursor.coords);
-                                        m_DescriptionWidget.setString( x.second.getItem()->getDescription() );
+                                        m_NameText.setString( x.second.getItem()->getName() );
+                                        m_NameText.setPosition(event.mouseCursor.coords);
+                                        m_DescriptionText.setString( x.second.getItem()->getDescription() );
 
                                         findWidget = true;
                                         break;
