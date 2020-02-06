@@ -741,7 +741,7 @@ namespace redsquare
 
                             m_Floor++;
                             if(m_Floor%4 == 0){ // boss room every 4 floors 
-                                generateGame(true,*this);
+                                generateGame(true);
                             }else{
                                 generateGame(false);
                             }
