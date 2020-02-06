@@ -92,9 +92,7 @@ namespace redsquare
         gf::RectangleShape m_RightClickedBackground;
 
         //For display Information of life
-        gf::TextWidget m_life;
-        
-        
+        gf::Text m_CharacteristicText;
     };
 }
 

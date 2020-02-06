@@ -26,13 +26,13 @@ namespace redsquare
     , m_CurrMovingItem(nullptr)
     , m_DraggingFromEntity(nullptr)
     , m_HoveringSlot(nullptr)
-    , m_life("", font, 12)
-    , m_NameText("", font, 12)
-    , m_DescriptionText("", font, 12)
+    , m_NameText("", font)
+    , m_DescriptionText("", font)
     , m_RightClickedSlot(nullptr)
     , m_RightClickedFromEntity(nullptr)
-    , m_DropButton("Drop", font, 12)
-    , m_UseButton("Use", font, 12)
+    , m_DropButton("Drop", font)
+    , m_UseButton("Use", font)
+    , m_CharacteristicText("", font)
     {
         gMessageManager().registerHandler<ItemUpdateUIMessage>(&InventoryUI::onItemUpdateUI, this);
         gMessageManager().registerHandler<MyPlayerReceivedTypeMessage>(&InventoryUI::onMyPlayerReceived, this);
@@ -248,58 +248,58 @@ namespace redsquare
             
             if (m_PlayerEntity != nullptr)
             {
-                float characterSize=coordinates.getRelativeCharacterSize(0.022f);
+                float characterSize = coordinates.getRelativeCharacterSize(0.022f);
 
-                m_life.setCharacterSize(characterSize);
-                m_life.setDefaultTextColor(gf::Color4f(0.0, 0.0, 0.0, 0.0));
-                m_life.setString( "Level: " + std::to_string(m_PlayerEntity->m_Level));
-                m_life.setPosition(coordinates.getRelativePoint({0.84f,0.16f}));
-                m_life.setTextOutlineThickness(characterSize * 0.04);
-                target.draw(m_life, states);
+                m_CharacteristicText.setCharacterSize(characterSize);
+                m_CharacteristicText.setColor(gf::Color::White);
+                m_CharacteristicText.setString( "Level: " + std::to_string(m_PlayerEntity->m_Level));
+                m_CharacteristicText.setPosition(coordinates.getRelativePoint({0.84f,0.16f}));
+                m_CharacteristicText.setOutlineThickness(characterSize * 0.04f);
+                target.draw(m_CharacteristicText, states);
 
-                m_life.setCharacterSize(characterSize);
-                m_life.setDefaultTextColor(gf::Color4f(0.0, 0.0, 0.0, 0.0));
-                m_life.setString( "Xp: " + std::to_string(m_PlayerEntity->m_XP)+"/"+std::to_string(m_PlayerEntity->m_Max_XP));
-                m_life.setPosition(coordinates.getRelativePoint({0.84f,0.18f}));
-                m_life.setTextOutlineThickness(characterSize * 0.04);
-                target.draw(m_life, states);
+                m_CharacteristicText.setCharacterSize(characterSize);
+                m_CharacteristicText.setColor(gf::Color::White);
+                m_CharacteristicText.setString( "Xp: " + std::to_string(m_PlayerEntity->m_XP)+"/"+std::to_string(m_PlayerEntity->m_Max_XP));
+                m_CharacteristicText.setPosition(coordinates.getRelativePoint({0.84f,0.18f}));
+                m_CharacteristicText.setOutlineThickness(characterSize * 0.04f);
+                target.draw(m_CharacteristicText, states);
                 
-                m_life.setCharacterSize(characterSize);
-                m_life.setDefaultTextColor(gf::Color4f(0.0, 1.0, 0.0, 0.75));
-                m_life.setString( "Life Point: " + std::to_string(m_PlayerEntity->m_LifePoint)+"/"+std::to_string(m_PlayerEntity->m_MaxLifePoint));
-                m_life.setPosition(coordinates.getRelativePoint({0.84f,0.22f}));
-                m_life.setTextOutlineThickness(characterSize * 0.04);
-                target.draw(m_life, states);
+                m_CharacteristicText.setCharacterSize(characterSize);
+                m_CharacteristicText.setColor(gf::Color4f(0.0f, 1.0f, 0.0f, 0.75f));
+                m_CharacteristicText.setString( "Life Point: " + std::to_string(m_PlayerEntity->m_LifePoint)+"/"+std::to_string(m_PlayerEntity->m_MaxLifePoint));
+                m_CharacteristicText.setPosition(coordinates.getRelativePoint({0.84f,0.22f}));
+                m_CharacteristicText.setOutlineThickness(characterSize * 0.04f);
+                target.draw(m_CharacteristicText, states);
 
-                m_life.setCharacterSize(characterSize);
-                m_life.setDefaultTextColor(gf::Color::Blue);
-                m_life.setString( "Mana Point: " + std::to_string(m_PlayerEntity->m_ManaPoint)+"/"+std::to_string(m_PlayerEntity->m_MaxManaPoint));
-                m_life.setPosition(coordinates.getRelativePoint({0.84f,0.24f}));
-                m_life.setTextOutlineThickness(characterSize * 0.03);
-                target.draw(m_life, states);
+                m_CharacteristicText.setCharacterSize(characterSize);
+                m_CharacteristicText.setColor(gf::Color::Blue);
+                m_CharacteristicText.setString( "Mana Point: " + std::to_string(m_PlayerEntity->m_ManaPoint)+"/"+std::to_string(m_PlayerEntity->m_MaxManaPoint));
+                m_CharacteristicText.setPosition(coordinates.getRelativePoint({0.84f,0.24f}));
+                m_CharacteristicText.setOutlineThickness(characterSize * 0.03f);
+                target.draw(m_CharacteristicText, states);
 
-                m_life.setCharacterSize(characterSize);
-                m_life.setDefaultTextColor(gf::Color4f(0.0, 0.0, 0.0, 0.0));
-                m_life.setString( "Attack: " + std::to_string(m_PlayerEntity->m_AttackPoint));
-                m_life.setPosition(coordinates.getRelativePoint({0.84f,0.28f}));
-                m_life.setTextOutlineThickness(characterSize * 0.04);
-                target.draw(m_life, states);
+                m_CharacteristicText.setCharacterSize(characterSize);
+                m_CharacteristicText.setColor(gf::Color::White);
+                m_CharacteristicText.setString( "Attack: " + std::to_string(m_PlayerEntity->m_AttackPoint));
+                m_CharacteristicText.setPosition(coordinates.getRelativePoint({0.84f,0.28f}));
+                m_CharacteristicText.setOutlineThickness(characterSize * 0.04f);
+                target.draw(m_CharacteristicText, states);
 
-                m_life.setCharacterSize(characterSize);
-                m_life.setDefaultTextColor(gf::Color4f(0.0, 0.0, 0.0, 0.0));
-                m_life.setString( "Defense: " + std::to_string(m_PlayerEntity->m_DefensePoint));
-                m_life.setPosition(coordinates.getRelativePoint({0.84f,0.30f}));
-                m_life.setTextOutlineThickness(characterSize * 0.04);
-                target.draw(m_life, states);
+                m_CharacteristicText.setCharacterSize(characterSize);
+                m_CharacteristicText.setColor(gf::Color::White);
+                m_CharacteristicText.setString( "Defense: " + std::to_string(m_PlayerEntity->m_DefensePoint));
+                m_CharacteristicText.setPosition(coordinates.getRelativePoint({0.84f,0.30f}));
+                m_CharacteristicText.setOutlineThickness(characterSize * 0.04f);
+                target.draw(m_CharacteristicText, states);
 
-                m_life.setCharacterSize(characterSize);
-                m_life.setDefaultTextColor(gf::Color4f(0.0, 0.0, 0.0, 0.0));
-                m_life.setString( "Range: " + std::to_string(m_PlayerEntity->m_Range));
-                m_life.setPosition(coordinates.getRelativePoint({0.84f,0.32f}));
-                m_life.setTextOutlineThickness(characterSize * 0.04);
-                target.draw(m_life, states);
-
+                m_CharacteristicText.setCharacterSize(characterSize);
+                m_CharacteristicText.setColor(gf::Color::White);
+                m_CharacteristicText.setString( "Range: " + std::to_string(m_PlayerEntity->m_Range));
+                m_CharacteristicText.setPosition(coordinates.getRelativePoint({0.84f,0.32f}));
+                m_CharacteristicText.setOutlineThickness(characterSize * 0.04f);
+                target.draw(m_CharacteristicText, states);
             }
+
             //Draw the current moving widget, so he can be over any slot case
             if (m_CurrMovingWidget != nullptr)
             {
