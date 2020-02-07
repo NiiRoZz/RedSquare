@@ -8,9 +8,7 @@
 #include <gf/Array2D.h>
 #include <string>
 
-#define MAX_SPELL_PER_PLAYER 8
-#define MAX_SIZE_MESSAGE_CHAT 512
-#define MAX_SIZE_FROM_CHAT 30
+#include "../common/Constants.h"
 
 namespace redsquare
 {

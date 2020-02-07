@@ -1,6 +1,5 @@
 #include "Monster.h"
 
-#define NBMONSTER 17
 
 namespace redsquare
 {

@@ -36,9 +36,9 @@
 #include "Hud.h"
 #include "../common/Singletons.h"
 #include "../common/Packet.h"
+#include "../common/Constants.h"
 #include "config.h"
 
-#define NBTYPEPLAYER 4
 
 using namespace redsquare;
 

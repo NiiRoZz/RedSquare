@@ -9,9 +9,10 @@
 
 #include "Game.h"
 
-#define MINSIZE 6
-#define BOSSROOM 20
+#include "../common/Constants.h"
 
+
+constexpr int BOSSROOM = 20;
 
 static const char *BossRoom1[BOSSROOM] = {
     "###################",

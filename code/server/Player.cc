@@ -2,13 +2,7 @@
 #include <iostream>
 #include "Game.h"
 
-#define POTRATIO1 0.25
-#define POTRATIO2 0.50
-#define POTRATIO3 0.70
-
-#define BOOSTRATIO1 0.10
-#define BOOSTRATIO2 0.15
-#define BOOSTRATIO3 0.20
+#include "../common/Constants.h"
 
 namespace redsquare
 {
