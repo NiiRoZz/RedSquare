@@ -14,6 +14,7 @@ namespace redsquare
 
         SpellType m_SpellType;
         std::string m_Description;
+        std::string m_ManaCost;
     };
 }
 

@@ -8,6 +8,7 @@
 #include <gf/StaticString.h>
 #include <imgui.h>
 #include <imgui_impl_gf.h>
+#include <gf/Text.h>
 
 namespace redsquare
 {
@@ -32,6 +33,7 @@ namespace redsquare
         gf::StaticString<15> m_LineBufferName;
         gf::StaticString<20> m_LineBufferIp;
         gf::Image m_Test;
+        gf::Text m_DescriptionText;
 
     };
 }
