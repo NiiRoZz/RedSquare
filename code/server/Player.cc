@@ -555,12 +555,12 @@ namespace redsquare
 
         int damage;
         int critical = rand() % 100;
-        if(critical > 0){ // critical hit
+        if(critical > 95){ // critical hit
             damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
             damage *= 2; // double the damage 
             //unique
             std::cout << " CRITICAL !!! " << std::endl;
-            createSystemMessage(" CRITICAL !!! ","system");
+            createSystemMessage(" CRITICAL !!! ",m_Name);
 
             
 
@@ -574,13 +574,16 @@ namespace redsquare
             target->m_LifePoint = 0;
             //multiple
             std::cout << " BasicAttack dealed : " << damage << std::endl;
+            createSystemMessage(" BasicAttack dealed : ","system");
             std::cout << " The target is dead" << std::endl;
+            createSystemMessage( " The target is dead","system");
             return;
         }else{
             target->m_LifePoint -= damage;
         }
         //multiple
         std::cout << " BasicAttack dealed : " << damage << std::endl;
+        createSystemMessage(  "BasicAttack dealed : ","system");
     }
 
     void Player::Fireball(ServerEntity *target){
