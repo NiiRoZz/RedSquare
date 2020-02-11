@@ -14,70 +14,87 @@ namespace redsquare
         case SpellType::FireBall :
             texturePath = "img/SpellIcon/Named/Fireball1.png";
             m_Description = "Throw a fireball";
+            m_ManaCost= "5";
             break;
         case SpellType::Lacerate :
             texturePath = "img/SpellIcon/Named/Lacerate1.png";
             m_Description = "Deal damage the more target has of life";
+            m_ManaCost= "5";
             break;
         case SpellType::ArmorUp :
             texturePath = "img/SpellIcon/Named/ArmorUP1.png";
             m_Description = "Gain a bonus of ArmorPoint";
+            m_ManaCost= "5";
             break;
         case SpellType::Heal :
             texturePath = "img/SpellIcon/Named/Heal1.png";
             m_Description = "Heal an ally or self";
+            m_ManaCost= "5";
             break;
         case SpellType::Berserk :
             texturePath = "img/SpellIcon/Named/Berserk1.png";
             m_Description = "Gain Attack and Defense points";
+            m_ManaCost= "7";
             break;
         case SpellType::DamageUp :
             texturePath = "img/SpellIcon/Named/DamageUP1.png";
             m_Description = "Gain AttackPoint";
+            m_ManaCost= "5";
             break;
         case SpellType::Revenge :
             texturePath = "img/SpellIcon/Named/Revenge1.png";
             m_Description = "Deal damage based on missing health";
+            m_ManaCost= "5";
             break;
         case SpellType::Incinerate :
             texturePath = "img/SpellIcon/Named/Incinerate1.png";
             m_Description = "Deal damage the more target has of life";
+            m_ManaCost= "5";
             break;
         case SpellType::Scorch :
             texturePath = "img/SpellIcon/Named/Scorch1.png";
             m_Description = "Deal damage";
+            m_ManaCost= "5";
             break;
         case SpellType::Shoot :
             texturePath = "img/SpellIcon/Named/Shoot1.png";
             m_Description = "Deal damage from distance";
+            m_ManaCost= "5";
             break;
         case SpellType::Torpedo :
             texturePath = "img/SpellIcon/Named/Torpedo1.png";
             m_Description = "Deal damage based on missing health";
+            m_ManaCost= "5";
             break;
         case SpellType::Massacre :
             texturePath = "img/SpellIcon/Named/Massacre1.png";
             m_Description = "Life steal attack";
+            m_ManaCost= "5";
             break;
         case SpellType::DoubleStrike :
             texturePath = "img/SpellIcon/Named/DoubleStrike1.png";
             m_Description = "Hit the target twice";
+            m_ManaCost= "5";
             break;
         case SpellType::Protection :
             texturePath = "img/SpellIcon/Named/Protection1.png";
             m_Description = "Give ally ArmorPoint";
+            m_ManaCost= "5";
             break;
         case SpellType::LightningStrike :
             texturePath = "img/SpellIcon/Named/LightningStrike1.png";
             m_Description = "Deal damage around you";
+            m_ManaCost= "7";
             break;
         case SpellType::Reaper :
             texturePath = "img/SpellIcon/Named/Reaper1.png";
             m_Description = "Deal damage in front of you";
+            m_ManaCost= "7";
             break;
         case SpellType::BasicAttack :
             texturePath = "img/SpellIcon/Named/Basic1.png";
             m_Description = "Basic Attack";
+            m_ManaCost= "5";
             break;
         default:
             texturePath = "img/SpellIcon/Named/Basic1.png";
