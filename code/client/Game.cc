@@ -22,7 +22,7 @@ namespace redsquare
     , m_PassTurn(false)
     , m_TempMoveTarget(false)
     , m_PlayerDead(false)
-    , m_NextPosTexture(gResourceManager().getTexture("img/case_selected.png"))
+    , m_NextPosTexture(gResourceManager().getTexture("img/Cursor/case_selected.png"))
     , m_Name(name)
     , m_Floor(0)
     , m_CurrentSpell(SpellType::BasicAttack)
@@ -406,7 +406,7 @@ namespace redsquare
                             if (packet.spawnEntity.entityID == m_PlayerID)
                             {
                                 MyPlayerReceivedTypeMessage message;
-                                message.player = static_cast<ClientEntity*>(&(it.first->second));
+                                message.player = &(it.first->second);
 
                                 gMessageManager().sendMessage(&message);
                             }

@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "../common/Singletons.h"
+#include "Message.h"
 
 #include <gf/Random.h>
 #include <gf/VectorOps.h>
@@ -12,17 +13,21 @@ namespace redsquare
     : m_PlayerSpawned(0)
     , m_Floor(0)
     {
-        generateGame();
+        gMessageManager().registerHandler<UpdateEntityCharacteristic>(&Game::onUpdateEntityCharacteristic, this);
+
+        generateGame(false);
     }
 
-    void Game::generateGame()
+    void Game::generateGame(bool boss)
     {
-        m_World.generateWorld(); // generate map
-        placeProps(); // place props
-        addNewMonsters(10); // place monsters TODO: make the number of monsters depends on the floor
-        m_World.putStair(*this); // put stair on map
+        m_World.generateWorld(boss,*this); // generate map
+        if(!boss){
+            placeProps(); // place props
+            addNewMonsters(10); // place monsters TODO: make the number of monsters depends on the floor
+            m_World.putStair(*this); // put stair on map
+            m_World.getSpawnPoint(*this); // place the spawn of player
+        }
         m_World.prettyPrint();  // print the map in server console
-        m_World.getSpawnPoint(*this); // place the spawn of player
 
         m_World.prettyPrint();
     }
@@ -121,6 +126,37 @@ namespace redsquare
         return id;
     }
 
+    void Game::fillChest()
+    {
+        for(auto &prop: m_Props)
+        {
+            if (prop.second.m_EntitySubType == EntitySubType::Chest)
+            {
+                int random = rand() % 10;
+                switch (random){
+                    case 1: case 2: case 3: case 4:{
+                        ServerItem item2(ItemType::HealthPot1, m_Floor);
+                        ssize_t pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                        if (pos != -1){
+                            Packet packet = prop.second.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                            sendPacketToAllPlayers(packet);
+                        }
+                        break;
+                    }
+                    
+                    default:{
+                        ServerItem item2(ItemType::ManaPot1, m_Floor);
+                        ssize_t pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                        if (pos != -1){
+                            Packet packet = prop.second.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                            sendPacketToAllPlayers(packet);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    }
     void Game::addNewMonsters(int nbMonster)
     {
         for(int i = 0; i < nbMonster ; ++i)
@@ -139,26 +175,21 @@ namespace redsquare
     {
         for(gf::Vector4u currentRoom : m_World.TabRoom) // for every room
         { 
-            int randChest = rand() % 10; // rand if the room must contains a chest 
+            int randChest = rand() % 5; // rand if the room must contains a chest 
             int roomType = rand() % 13;
 
             gf::Id id; // if of the props
             std::map<gf::Id, Prop>::iterator itNewProp; // map of props
 
-            if(randChest == 0){ // true chest
+            if(randChest != 6){ // true chest
                 id = generateId();
                 std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Chest));
-                m_World.spawnProps(itNewProp->second,*this,currentRoom);
-            }else if(randChest == 1 || randChest == 2){ // opened chest
-                id = generateId();
-                std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::OpenedChest));
                 m_World.spawnProps(itNewProp->second,*this,currentRoom);
             }
 
             switch (roomType)
                 {
                 case 0 : // SHELF ROOM 
-
 
                     id = generateId();
                     std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::BookShelf));
@@ -735,8 +766,14 @@ namespace redsquare
                             sendPacketToAllPlayers( sendPacket );
 
                             m_Floor++;
-                            generateGame();
+                            if(m_Floor%4 == 0){ // boss room every 4 floors 
+                                generateGame(true);
+                            }else{
+                                generateGame(false);
+                            }
                             m_PlayerSpawned = 0;
+
+                            fillChest();
 
                             for (auto it3 = m_Players.begin(); it3 != m_Players.end(); ++it3)
                             {
@@ -1296,5 +1333,21 @@ namespace redsquare
         }
 
         return false;
+    }
+
+    gf::MessageStatus Game::onUpdateEntityCharacteristic(gf::Id id, gf::Message *msg)
+    {
+        assert(id == UpdateEntityCharacteristic::type);
+        
+        UpdateEntityCharacteristic *message = static_cast<UpdateEntityCharacteristic*>(msg);
+
+        if (message && message->entity)
+        {
+            Packet packet;
+            message->entity->createCarPacket(packet);
+            sendPacketToAllPlayers(packet);
+        }
+
+        return gf::MessageStatus::Keep;
     }
 }

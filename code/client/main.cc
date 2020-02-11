@@ -36,9 +36,9 @@
 #include "Hud.h"
 #include "../common/Singletons.h"
 #include "../common/Packet.h"
+#include "../common/Constants.h"
 #include "config.h"
 
-#define NBTYPEPLAYER 4
 
 using namespace redsquare;
 
@@ -87,7 +87,7 @@ int main( int argc, char **argv )
     views.addView( mainView );
     gf::ScreenView hudView;
     views.addView( hudView );
-    views.setInitialScreenSize( screenSize );
+    views.setInitialFramebufferSize( screenSize );
 
     // actions
     gf::ActionContainer actions;
@@ -256,6 +256,15 @@ int main( int argc, char **argv )
 
             game.m_TempMove.clear();
             window.setMouseCursor(defaultCursor);
+
+            if ((fullscreenAction.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard)))
+            {
+                window.toggleFullscreen();
+            }
+            if (closeWindowAction.isActive())
+            {
+                window.close();
+            }
         }
         else
         {
@@ -298,7 +307,7 @@ int main( int argc, char **argv )
                                         {
                                             hud.getInventoryUI().setVinicityObject(entity);
                                             
-                                            hud.showInventory(true, true);
+                                            hud.showInventory();
                                         }
                                     }
                                 }
@@ -362,7 +371,7 @@ int main( int argc, char **argv )
                 }
             }
 
-            if (fullscreenAction.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard))
+            if ((fullscreenAction.isActive() && !hud.hoveringChat() && !(io.WantCaptureKeyboard)))
             {
                 window.toggleFullscreen();
             }
@@ -457,6 +466,8 @@ int main( int argc, char **argv )
         hudEntities.update(time);
         ImGui_ImplGF_Update(time);
 
+        ImGui::NewFrame();
+
         // 3. draw
         renderer.clear();
 
@@ -465,6 +476,9 @@ int main( int argc, char **argv )
 
         renderer.setView(hudView);
         hudEntities.render(renderer);
+
+        ImGui::Render();
+        ImGui_ImplGF_RenderDrawData(ImGui::GetDrawData());
 
         renderer.display();
 

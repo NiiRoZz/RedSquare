@@ -83,7 +83,6 @@ namespace redsquare
         m_lvl.setPosition(m_Pos * World::TileSize-BarOffsetXp);
         m_lvl.setAnchor(gf::Anchor::CenterRight);
         target.draw(m_lvl, states);
-
     }
 
     void Player::update(gf::Time time)

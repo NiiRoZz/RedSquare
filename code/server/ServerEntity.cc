@@ -1,4 +1,6 @@
 #include "ServerEntity.h"
+#include "Message.h"
+#include "../common/Singletons.h"
 
 namespace redsquare
 {
@@ -42,5 +44,31 @@ namespace redsquare
     void ServerEntity::defaultInventoryStuff()
     {
 
+    }
+
+    void ServerEntity::onMovedItem(ServerItem &item, bool remove)
+    {
+        if (remove)
+        {
+            m_MaxAttackPoint -= item.m_GiveAttackPoint;
+            m_AttackPoint -= item.m_GiveAttackPoint;
+            m_MaxDefensePoint -= item.m_GiveDefensePoint;
+            m_DefensePoint -= item.m_GiveDefensePoint; 
+            m_MaxLifePoint -= item.m_GiveLifePoint;
+            m_LifePoint -= item.m_GiveLifePoint;
+        }
+        else
+        {
+            m_MaxAttackPoint += item.m_GiveAttackPoint;
+            m_AttackPoint += item.m_GiveAttackPoint;
+            m_MaxDefensePoint += item.m_GiveDefensePoint;
+            m_DefensePoint += item.m_GiveDefensePoint; 
+            m_MaxLifePoint += item.m_GiveLifePoint;
+            m_LifePoint += item.m_GiveLifePoint;
+        }
+
+        UpdateEntityCharacteristic message;
+        message.entity = this;
+        gMessageManager().sendMessage(&message);
     }
 }

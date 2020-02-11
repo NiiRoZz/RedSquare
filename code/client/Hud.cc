@@ -29,8 +29,6 @@ namespace redsquare
     , m_ShowHelp(false)
     , m_ShowInventory(false)
     , m_PlayerDead(false)
-    , m_ForcedHideChat(false)
-    , m_OldChatShow(false)
     {
         gMessageManager().registerHandler<SpellUpdateMessage>(&Hud::onSpellUpdate, this);
         gMessageManager().registerHandler<MyPlayerDeadMessage>(&Hud::onPlayerDeadUpdate, this);
@@ -50,10 +48,19 @@ namespace redsquare
             text.setColor(gf::Color::Red);
             text.setOutlineColor(gf::Color::Black);
             text.setOutlineThickness(coordinates.getRelativeSize({ 1.0f, 0.002f }).height);
-            text.setCharacterSize(coordinates.getRelativeCharacterSize(0.2f));
+            text.setCharacterSize(coordinates.getRelativeCharacterSize(0.18f));
             text.setString("YOU DIED");
             text.setAnchor(gf::Anchor::TopLeft);
-            text.setPosition(coordinates.getRelativePoint({ 0.29f, 0.45f }));
+            text.setPosition(coordinates.getRelativePoint({ 0.24f, 0.46f }));
+            target.draw(text, states);
+
+            text.setColor(gf::Color::Red);
+            text.setOutlineColor(gf::Color::Black);
+            text.setOutlineThickness(coordinates.getRelativeSize({ 1.0f, 0.002f }).height);
+            text.setCharacterSize(coordinates.getRelativeCharacterSize(0.045f));
+            text.setString("Floor : " + std::to_string(m_Game.m_Floor));
+            text.setAnchor(gf::Anchor::TopLeft);
+            text.setPosition(coordinates.getRelativePoint({ 0.03f, 0.05f }));
             target.draw(text, states);
         }
         else
@@ -120,7 +127,7 @@ namespace redsquare
             text.setOutlineColor(gf::Color::White);
             text.setOutlineThickness(coordinates.getRelativeSize({ 1.0f, 0.002f }).height);
             text.setCharacterSize(coordinates.getRelativeCharacterSize(0.045f));
-            text.setString("Etage : " + std::to_string(m_Game.m_Floor));
+            text.setString("Floor : " + std::to_string(m_Game.m_Floor));
             text.setAnchor(gf::Anchor::TopLeft);
             text.setPosition(coordinates.getRelativePoint({ 0.03f, 0.05f }));
             target.draw(text, states);
@@ -183,14 +190,15 @@ namespace redsquare
                 gf::Vector2f DescriptionWindowSize=coordinates.getRelativeSize({ 0.4f,0.2f });
 
                 std::string desc = m_SpellWidgetHover->m_Description;
+                std::string cost = m_SpellWidgetHover->m_ManaCost;
 
                 if( m_UI.begin("Description", gf::RectF::fromPositionSize(coordinates.getRelativePoint({ 0.40f,0.55f }),DescriptionWindowSize), gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
                 {   
-                    m_UI.setCharacterSize(coordinates.getRelativeCharacterSize(0.03f));
+                    m_UI.setCharacterSize(coordinates.getRelativeCharacterSize(0.025f));
                     m_UI.layoutRowDynamic(coordinates.getRelativeCharacterSize(0.03f), 1);
-                    m_UI.label("Spell need to be selected before using it");
+                    m_UI.label("! Spell need to be selected before using it !");
                     m_UI.layoutRowDynamic(coordinates.getRelativeCharacterSize(0.04f), 1);
-                    
+                    m_UI.label("Mana cost: " + cost);
                     m_UI.label(desc);
                     m_UI.end();
                 }
@@ -262,7 +270,7 @@ namespace redsquare
         {
             m_InventoryUI.processEvent(event);
         }
-
+        
         m_MainMenu.processEvent(event);
 
         if (event.type == gf::EventType::MouseMoved)
@@ -327,6 +335,8 @@ namespace redsquare
         assert(id == MyPlayerDeadMessage::type);
 
         m_PlayerDead = true;
+
+        return gf::MessageStatus::Keep;
     }
 
     void Hud::showMap()
@@ -347,28 +357,13 @@ namespace redsquare
         m_ShowHelp = !m_ShowHelp;
     }
 
-    void Hud::showInventory(bool force, bool value)
+    void Hud::showInventory()
     {
-        if (force)
-        {
-            m_ShowInventory = value;
-        }
-        else
-        {
-            m_ShowInventory = !m_ShowInventory;
-        }
+        m_ShowInventory = !m_ShowInventory;
 
-        if (m_ShowInventory)
+        if (!m_ShowInventory)
         {
-            m_OldChatShow = m_ShowChat;
-            m_ForcedHideChat = true;
-
-            m_ShowChat = false;
-        }
-        else if (m_ForcedHideChat)
-        {
-            m_ShowChat = m_OldChatShow;
-            m_ForcedHideChat = false;
+            m_InventoryUI.setVinicityObject(nullptr);
         }
     }
 

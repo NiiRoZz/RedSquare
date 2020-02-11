@@ -40,6 +40,7 @@ int main( int argc, char **argv )
 
 	// Init singleton
   	gf::SingletonStorage<gf::Random> storageForRandom(gRandom);
+	gf::SingletonStorage<gf::MessageManager> storageForMessageManager(redsquare::gMessageManager);
 
     Game game;
 
@@ -70,6 +71,8 @@ int main( int argc, char **argv )
 	}
 
 	Chat::getInstance().startChat();
+
+	game.fillChest();
 
 	//Start the game and play until all players has disconnected
 	while ( game.m_Players.size() > 0 )

@@ -1,10 +1,15 @@
 #include "Inventory.h"
+#include "ServerEntity.h"
 
 namespace redsquare
 {
     Inventory::Inventory()
     {
+    }
 
+    void Inventory::setOwner(ServerEntity *owner)
+    {
+        m_Owner = owner;
     }
 
     ssize_t Inventory::addItem(InventorySlotType slotType, ServerItem &&item)
@@ -27,6 +32,7 @@ namespace redsquare
         {
             if (m_SpecialItems.find(slotType) == m_SpecialItems.end() && item.canBeInSlot(slotType))
             {
+                if (m_Owner) m_Owner->onMovedItem(item, false);
                 m_SpecialItems.insert(std::make_pair(slotType, std::move(item)));
                 return 0;
             }
@@ -51,6 +57,7 @@ namespace redsquare
             auto it = m_SpecialItems.find(slotType);
             if (it == m_SpecialItems.end() && item.canBeInSlot(slotType))
             {
+                if (m_Owner) m_Owner->onMovedItem(item, false);
                 m_SpecialItems.insert(std::make_pair(slotType, std::move(item)));
                 return true;
             }
@@ -77,6 +84,7 @@ namespace redsquare
             if (it != m_SpecialItems.end())
             {
                 ServerItem item = it->second;
+                if (m_Owner) m_Owner->onMovedItem(item, true);
                 m_SpecialItems.erase(it);
                 return item;
             }
@@ -129,8 +137,10 @@ namespace redsquare
             if (oldIt != m_SpecialItems.end())
             {
                 ServerItem item = std::move(oldIt->second);
+                if (m_Owner) m_Owner->onMovedItem(item, true);
                 m_SpecialItems.erase(oldIt);
 
+                if (m_Owner && moveItem.newSlotType != InventorySlotType::Cargo) m_Owner->onMovedItem(item, false);
                 if ( addItem(moveItem.newSlotType, std::move(item), moveItem.newPos) )
                 {
                     return true;

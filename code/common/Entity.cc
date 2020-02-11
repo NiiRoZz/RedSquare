@@ -42,34 +42,7 @@ namespace redsquare
                 break; 
             case EntitySubType::GreyDualRock : 
                 m_Size = {2,1};
-                break;  
-            case EntitySubType::RightChain : 
-                m_Size = {1,2};
-                break; 
-            case EntitySubType::LeftChain : 
-                m_Size = {1,2};
-                break;   
-            case EntitySubType::Throne : 
-                m_Size = {1,2};
-                break;   
-            case EntitySubType::BrownPillar1 : 
-                m_Size = {1,2};
-                break; 
-            case EntitySubType::BrownPillar2 : 
-                m_Size = {1,2};
-                break; 
-            case EntitySubType::GreyPillar1 : 
-                m_Size = {1,2};
-                break;  
-            case EntitySubType::GreyPillar2 : 
-                m_Size = {1,2};
-                break;   
-            case EntitySubType::Box1 : 
-                m_Size = {1,2};
-                break; 
-            case EntitySubType::Box2 : 
-                m_Size = {1,2};
-                break;      
+                break;
             case EntitySubType::GreyQuadRock :
                 m_Size = {2,2};
                 break; 

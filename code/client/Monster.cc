@@ -1,14 +1,13 @@
 #include "Monster.h"
 #include "World.h"
 #include "../common/Singletons.h"
+#include "../common/Constants.h"
 
 #include <gf/Shapes.h>
 #include <gf/Sprite.h>
 #include <gf/RenderTarget.h>
 #include <gf/Color.h>
 #include <gf/Text.h>
-
-#define NBMONSTER 5
 
 namespace redsquare
 {

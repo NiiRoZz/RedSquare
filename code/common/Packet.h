@@ -8,9 +8,7 @@
 #include <gf/Array2D.h>
 #include <string>
 
-#define MAX_SPELL_PER_PLAYER 8
-#define MAX_SIZE_MESSAGE_CHAT 1024
-#define MAX_SIZE_FROM_CHAT 30
+#include "../common/Constants.h"
 
 namespace redsquare
 {
@@ -41,6 +39,18 @@ namespace redsquare
         SkeletonKnife,
         SkeletonMagus,
         Spirit,
+        Demon,
+        Goblin,
+        Imp,
+        LilGob,
+        LilZombie,
+        Lizard,
+        Mask,
+        Mud,
+        Orc,
+        Shaman,
+        Swamp,
+        Zombie,
         /* MONSTER */
 
         /* SMALL PROP */

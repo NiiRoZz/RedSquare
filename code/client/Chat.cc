@@ -46,11 +46,10 @@ namespace redsquare
         auto position = coordinates.getCenter();
 
         // UI
-        ImGui::NewFrame();
         ImGui::SetNextWindowSize(ImVec2(ChatWindowSize[0], ChatWindowSize[1]));
         ImGui::SetNextWindowPos(ImVec2(ChatWindowPos[0], ChatWindowPos[1]), 0, ImVec2(0.5f, 0.5f));
         ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_FittingPolicyMask_;
-    
+        
         if (ImGui::Begin("Chat", nullptr, DefaultWindowFlags | ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoScrollWithMouse))
         {   
             if (ImGui::BeginTabBar("MyTabBar", tab_bar_flags))
@@ -60,7 +59,7 @@ namespace redsquare
                 ImGui::BeginGroup();
 
                 ImVec2 size(0.0f, ChatWindowSize[1] - 5.5f * ImGui::GetTextLineHeightWithSpacing());
-                if (ImGui::BeginTabItem("Global chat"))
+                if (ImGui::BeginTabItem("Global"))
                 {
                     if (ImGui::BeginChild("Messages", size, false))
                     {
@@ -131,9 +130,6 @@ namespace redsquare
             
 
         ImGui::End();
-
-        ImGui::Render();
-        ImGui_ImplGF_RenderDrawData(ImGui::GetDrawData());
     }
 
     std::string Chat::grepPrivateMessage(std::string str){

@@ -5,9 +5,15 @@
 #include <gf/Window.h>
 #include <gf/Font.h>
 #include <gf/RenderWindow.h>
+#include <gf/StaticString.h>
+#include <imgui.h>
+#include <imgui_impl_gf.h>
+#include <gf/Text.h>
 
 namespace redsquare
 {
+    constexpr ImGuiWindowFlags DefaultWindowFlagsTest = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings;
+
     class MainMenu
     {
     public:
@@ -21,8 +27,13 @@ namespace redsquare
 
         bool m_ShowMainMenu;
 
+        
+
     private:
-        gf::UI m_UI;
+        gf::StaticString<15> m_LineBufferName;
+        gf::StaticString<20> m_LineBufferIp;
+        gf::Image m_Test;
+        gf::Text m_DescriptionText;
 
     };
 }

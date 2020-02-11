@@ -10,6 +10,7 @@
 #include "World.h"
 
 #include <gf/Queue.h>
+#include <gf/Message.h>
 
 namespace redsquare
 {
@@ -50,11 +51,15 @@ namespace redsquare
         void placeProps();
         void getSpawnPoint();
         void putStair();
-
-    private:
+        void fillChest();
+        
         gf::Id generateId() const;
+        
+    private:
 
-        void generateGame();
+        void generateGame(bool boss);
+
+        gf::MessageStatus onUpdateEntityCharacteristic(gf::Id id, gf::Message *msg);
 
         gf::Queue<Packet> m_ComQueue;
 

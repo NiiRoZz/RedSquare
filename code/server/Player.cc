@@ -3,13 +3,7 @@
 #include "Game.h"
 #include "Chat.h"
 
-#define POTRATIO1 0.25
-#define POTRATIO2 0.2
-#define POTRATIO3 0.5
-
-#define BOOSTRATIO1 0.1
-#define BOOSTRATIO2 0.15
-#define BOOSTRATIO3 0.20
+#include "../common/Constants.h"
 
 namespace redsquare
 {
@@ -44,10 +38,10 @@ namespace redsquare
             m_MaxLifePoint = 300;
             m_MaxManaPoint = 20;
 
-            m_AttackPoint = 40;
+            m_AttackPoint = 70;
             m_DefensePoint = 20;
 
-            m_MaxAttackPoint = 40;
+            m_MaxAttackPoint = 70;
             m_MaxDefensePoint = 20;
 
             m_Range = 1;
@@ -61,10 +55,10 @@ namespace redsquare
             m_MaxLifePoint = 250;
             m_MaxManaPoint = 25;
 
-            m_AttackPoint = 50;
+            m_AttackPoint = 80;
             m_DefensePoint = 15;
 
-            m_MaxAttackPoint = 50;
+            m_MaxAttackPoint = 80;
             m_MaxDefensePoint = 15;
 
             m_Range = 1;
@@ -72,17 +66,17 @@ namespace redsquare
 
         case EntitySubType::Ranger : // ------------------- Rogue -------------------
             m_Class = EntitySubType::Ranger;
-            m_LifePoint = 160;
+            m_LifePoint = 190;
             m_ManaPoint = 20;
 
-            m_MaxLifePoint = 160;
+            m_MaxLifePoint = 190;
             m_MaxManaPoint = 20;
 
-            m_AttackPoint = 24;
-            m_DefensePoint = 5;
+            m_AttackPoint = 45;
+            m_DefensePoint = 10;
 
-            m_MaxAttackPoint = 24;
-            m_MaxDefensePoint = 5;
+            m_MaxAttackPoint = 45;
+            m_MaxDefensePoint = 10;
 
             m_Range = 3;
             break;
@@ -161,6 +155,72 @@ namespace redsquare
                 //Example how to spawn item in cargo slot
                 ServerItem item2(ItemType::HealthPot1, 1u);
                 pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item2));
+                if (pos != -1)
+                {
+                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                    sendPacket(packet);
+                }
+                //Example how to spawn item in cargo slot
+                ServerItem item3(ItemType::HealthPot2, 1u);
+                pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item3));
+                if (pos != -1)
+                {
+                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                    sendPacket(packet);
+                }
+
+                //Example how to spawn item in cargo slot
+                ServerItem item4(ItemType::HealthPot3, 1u);
+                pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item4));
+                if (pos != -1)
+                {
+                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                    sendPacket(packet);
+                }
+
+                //Example how to spawn item in cargo slot
+                ServerItem item5(ItemType::ManaPot1, 1u);
+                pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item5));
+                if (pos != -1)
+                {
+                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                    sendPacket(packet);
+                }
+                //Example how to spawn item in cargo slot
+                ServerItem item6(ItemType::ManaPot2, 1u);
+                pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item6));
+                if (pos != -1)
+                {
+                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                    sendPacket(packet);
+                }
+
+                //Example how to spawn item in cargo slot
+                ServerItem item7(ItemType::ManaPot3, 1u);
+                pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item7));
+                if (pos != -1)
+                {
+                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                    sendPacket(packet);
+                }
+                
+                //Example how to spawn item in cargo slot
+                ServerItem item8(ItemType::BoostDefense1, 1u);
+                pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item8));
+                if (pos != -1)
+                {
+                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                    sendPacket(packet);
+                }
+                ServerItem item9(ItemType::BoostDefense2, 1u);
+                pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item9));
+                if (pos != -1)
+                {
+                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                    sendPacket(packet);
+                }
+                ServerItem item10(ItemType::BoostDefense3, 1u);
+                pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item10));
                 if (pos != -1)
                 {
                     Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
@@ -395,6 +455,8 @@ namespace redsquare
         default: // cant manage more than 9 player
             break;
         }
+
+        m_Inventory.setOwner(this);
     }
 
     void Player::attack(SpellType spellType, ServerEntity *target){
@@ -477,6 +539,8 @@ namespace redsquare
                 return LightningStrike(target,monsters);
                 break;
         }
+        std::vector<Monster*> empty;
+        return empty;
     }
 
     int Player::Variance(int range){ // adding some rng to the damage of a spell [range;+range] added to the base damage of the spell
@@ -1256,10 +1320,10 @@ namespace redsquare
             HealthPot(POTRATIO1);
             break;
         case ItemType::HealthPot2:
-            HealthPot(POTRATIO1);
+            HealthPot(POTRATIO2);
             break;
         case ItemType::HealthPot3:
-            HealthPot(POTRATIO1);
+            HealthPot(POTRATIO3);
             break;
 
         case ItemType::ManaPot1:
@@ -1338,52 +1402,59 @@ namespace redsquare
     }
 
 
-    void Player::ManaPot(int ratio){
-        int mana = (m_MaxManaPoint*ratio)/10 + Variance( -((m_MaxManaPoint*ratio)/10));
+    void Player::ManaPot(float ratio){
+        int mana = (m_MaxManaPoint*ratio);
         if(m_ManaPoint + mana > m_MaxManaPoint){
             m_ManaPoint = m_MaxManaPoint;
         }else{
             m_ManaPoint += mana;
         }
+        std::cout << " m_ManaPoint +" << mana << std::endl;
     }
-    void Player::HealthPot(int ratio){
-        int health = (m_MaxLifePoint*ratio)/10 + Variance( -((m_MaxLifePoint*ratio)/10));
+    void Player::HealthPot(float ratio){
+        int health = (m_MaxLifePoint*ratio);
         if(m_LifePoint + health > m_MaxLifePoint){
             m_LifePoint = m_MaxLifePoint;
         }else{
             m_LifePoint += health;
         }
+        std::cout << " m_LifePoint +" << health << std::endl;
     }
-    void Player::EnergyPot(int ratio){
+    void Player::EnergyPot(float ratio){
         ManaPot(ratio);
         HealthPot(ratio);
     }
-    void Player::BoostDefense(int ratio){
-        int defense = (m_MaxDefensePoint*ratio)/10 + Variance( -((m_MaxDefensePoint*ratio)/10));
-        m_DefensePoint += defense;
+    void Player::BoostDefense(float ratio){
+        int defense = (m_MaxDefensePoint*ratio);
         m_MaxDefensePoint += defense; 
+        m_DefensePoint = m_MaxDefensePoint;
+        std::cout << " m_MaxDefensePoint +" << defense << std::endl;
     }
-    void Player::BoostAttack(int ratio){
-        int attack = (m_MaxAttackPoint*ratio)/10 + Variance( -((m_MaxAttackPoint*ratio)/10));
-        m_AttackPoint += attack;
+    void Player::BoostAttack(float ratio){
+        int attack = (m_MaxAttackPoint*ratio);
         m_MaxAttackPoint += attack;
+        m_AttackPoint = m_MaxAttackPoint;
+        std::cout << " m_MaxAttackPoint +" << attack << std::endl;
     }
-    void Player::BoostXP(int ratio){
-        int XP = (m_MaxXP*ratio)/10 + Variance( -((m_MaxXP*ratio)/10));
+    void Player::BoostXP(float ratio){
+        int XP = (m_MaxXP*ratio);
         m_XP += XP;
         if(m_XP > m_MaxXP){
             levelUp();
         }
+        std::cout << " m_XP +" << XP << std::endl;
     }
-    void Player::BoostMana(int ratio){
-        int mana = (m_MaxManaPoint*ratio)/10 + Variance( -((m_MaxManaPoint*ratio)/10));
-        m_ManaPoint += mana;
+    void Player::BoostMana(float ratio){
+        int mana = (m_MaxManaPoint*ratio);
         m_MaxManaPoint += mana; 
+        m_ManaPoint = m_MaxManaPoint;
+        std::cout << " m_MaxManaPoint +" << mana << std::endl;
     }
-    void Player::BoostHealth(int ratio){
-        int health = (m_MaxLifePoint*ratio)/10 + Variance( -((m_MaxLifePoint*ratio)/10));
-        m_LifePoint += health;
+    void Player::BoostHealth(float ratio){
+        int health = (m_MaxLifePoint*ratio);
         m_MaxLifePoint += health; 
+        m_LifePoint = m_MaxLifePoint;
+        std::cout << " m_MaxLifePoint +" << health << std::endl;
     }
 
     void Player::sendMessageToChat(std::string str){
