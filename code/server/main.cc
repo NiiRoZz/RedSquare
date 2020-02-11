@@ -71,6 +71,8 @@ int main( int argc, char **argv )
 
 	myChat.startChat();
 
+	game.fillChest();
+
 	//Start the game and play until all players has disconnected
 	while ( game.m_Players.size() > 0 )
 	{

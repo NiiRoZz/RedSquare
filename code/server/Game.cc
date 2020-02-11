@@ -116,10 +116,6 @@ namespace redsquare
             packet.spawnEntity.posY = it3->second.m_Pos[1];
             itNewPlayer->second.sendPacket( packet );
 
-            if(it3->second.m_EntitySubType == EntitySubType::Chest){
-                fillChest(it3->second);
-            }
-
             ++it3;
         }
 
@@ -130,32 +126,36 @@ namespace redsquare
         return id;
     }
 
-    void Game::fillChest(ServerEntity entity){
-    
-        int random = rand() % 10;
-        switch (random){
-            case 1: case 2: case 3: case 4:{
-                ServerItem item2(ItemType::HealthPot1, m_Floor);
-                ssize_t pos = entity.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
-                if (pos != -1){
-                    Packet packet = entity.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                    sendPacketToAllPlayers(packet);
+    void Game::fillChest()
+    {
+        for(auto &prop: m_Props)
+        {
+            if (prop.second.m_EntitySubType == EntitySubType::Chest)
+            {
+                int random = rand() % 10;
+                switch (random){
+                    case 1: case 2: case 3: case 4:{
+                        ServerItem item2(ItemType::HealthPot1, m_Floor);
+                        ssize_t pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                        if (pos != -1){
+                            Packet packet = prop.second.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                            sendPacketToAllPlayers(packet);
+                        }
+                        break;
+                    }
+                    
+                    default:{
+                        ServerItem item2(ItemType::ManaPot1, m_Floor);
+                        ssize_t pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                        if (pos != -1){
+                            Packet packet = prop.second.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                            sendPacketToAllPlayers(packet);
+                        }
+                        break;
+                    }
                 }
-                break;
-            }
-            
-            default:{
-                ServerItem item2(ItemType::ManaPot1, m_Floor);
-                ssize_t pos = entity.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
-                if (pos != -1){
-                    Packet packet = entity.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                    sendPacketToAllPlayers(packet);
-                }
-                break;
             }
         }
-
-        return;
     }
     void Game::addNewMonsters(int nbMonster)
     {
@@ -772,6 +772,8 @@ namespace redsquare
                                 generateGame(false);
                             }
                             m_PlayerSpawned = 0;
+
+                            fillChest();
 
                             for (auto it3 = m_Players.begin(); it3 != m_Players.end(); ++it3)
                             {
