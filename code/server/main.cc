@@ -42,7 +42,8 @@ int main( int argc, char **argv )
   	gf::SingletonStorage<gf::Random> storageForRandom(gRandom);
 
     Game game;
-	Chat myChat;
+
+	Chat::getInstance();
 	
 	
 	boost::asio::io_service m_IoService;
@@ -65,10 +66,10 @@ int main( int argc, char **argv )
 		SocketTcp wrapperChat(std::move(socketChat));
 
 		gf::Id idPlayer = game.addNewPlayer(std::move(wrapper));
-		myChat.addPlayer(idPlayer,std::move(wrapperChat));
+		Chat::getInstance().addPlayer(idPlayer,std::move(wrapperChat));
 	}
 
-	myChat.startChat();
+	Chat::getInstance().startChat();
 
 	//Start the game and play until all players has disconnected
 	while ( game.m_Players.size() > 0 )
