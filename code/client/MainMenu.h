@@ -9,6 +9,7 @@
 #include <imgui.h>
 #include <imgui_impl_gf.h>
 #include <gf/Text.h>
+#include "InventoryWidget.h"
 
 namespace redsquare
 {
@@ -32,8 +33,7 @@ namespace redsquare
     private:
         gf::StaticString<15> m_LineBufferName;
         gf::StaticString<20> m_LineBufferIp;
-        gf::Image m_Test;
-        gf::Text m_DescriptionText;
+        InventoryWidget m_PlayerWidget;
 
     };
 }
