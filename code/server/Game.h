@@ -51,6 +51,7 @@ namespace redsquare
         void placeProps();
         void getSpawnPoint();
         void putStair();
+        void fillChest(ServerEntity entity);
         
         gf::Id generateId() const;
         

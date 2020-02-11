@@ -116,6 +116,10 @@ namespace redsquare
             packet.spawnEntity.posY = it3->second.m_Pos[1];
             itNewPlayer->second.sendPacket( packet );
 
+            if(it3->second.m_EntitySubType == EntitySubType::Chest){
+                fillChest(it3->second);
+            }
+
             ++it3;
         }
 
@@ -126,6 +130,33 @@ namespace redsquare
         return id;
     }
 
+    void Game::fillChest(ServerEntity entity){
+    
+        int random = rand() % 10;
+        switch (random){
+            case 1: case 2: case 3: case 4:{
+                ServerItem item2(ItemType::HealthPot1, m_Floor);
+                ssize_t pos = entity.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                if (pos != -1){
+                    Packet packet = entity.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                    sendPacketToAllPlayers(packet);
+                }
+                break;
+            }
+            
+            default:{
+                ServerItem item2(ItemType::ManaPot1, m_Floor);
+                ssize_t pos = entity.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                if (pos != -1){
+                    Packet packet = entity.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                    sendPacketToAllPlayers(packet);
+                }
+                break;
+            }
+        }
+
+        return;
+    }
     void Game::addNewMonsters(int nbMonster)
     {
         for(int i = 0; i < nbMonster ; ++i)
@@ -144,26 +175,21 @@ namespace redsquare
     {
         for(gf::Vector4u currentRoom : m_World.TabRoom) // for every room
         { 
-            int randChest = rand() % 10; // rand if the room must contains a chest 
+            int randChest = rand() % 5; // rand if the room must contains a chest 
             int roomType = rand() % 13;
 
             gf::Id id; // if of the props
             std::map<gf::Id, Prop>::iterator itNewProp; // map of props
 
-            if(randChest == 0){ // true chest
+            if(randChest != 6){ // true chest
                 id = generateId();
                 std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Chest));
-                m_World.spawnProps(itNewProp->second,*this,currentRoom);
-            }else if(randChest == 1 || randChest == 2){ // opened chest
-                id = generateId();
-                std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::OpenedChest));
                 m_World.spawnProps(itNewProp->second,*this,currentRoom);
             }
 
             switch (roomType)
                 {
                 case 0 : // SHELF ROOM 
-
 
                     id = generateId();
                     std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::BookShelf));
