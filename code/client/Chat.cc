@@ -19,10 +19,12 @@ namespace redsquare
     {
         m_ChatCom.start();
         m_LineBuffer.clear();
-        SendNameIdToChat packet;
+        SendName packet;
         std::size_t length = m_Name.copy(packet.from, m_Name.length());
         packet.from[length]='\0';
         m_ChatCom.sendPacket(packet);
+        //m_ChatCom.receivePacket(packet);
+        //vecName.push_back(packet.from);
     }
 
     void Chat::update(gf::Time time)
@@ -108,30 +110,15 @@ namespace redsquare
                     ImGui::EndTabItem();
                 
                 }
-                if (ImGui::BeginTabItem("ami1"))
-                {
-                    ImGui::Text("This is the Avocado tab!\nblah blah blah blah blah");
-                    ImGui::EndTabItem();
-                }
-                if (ImGui::BeginTabItem("ami1ee"))
-                {
-                    ImGui::Text("This is the Avocado tab!\nblah blah blah blah blah");
-                    ImGui::EndTabItem();
-                }
-                if (ImGui::BeginTabItem("ami1ff"))
-                {
-                    ImGui::Text("This is the Avocado tab!\nblah blah blah blah blah");
-                    ImGui::EndTabItem();
-                }
-                if (ImGui::BeginTabItem("amifff1"))
-                {
-                    ImGui::Text("This is the Avocado tab!\nblah blah blah blah blah");
-                    ImGui::EndTabItem();
-                }
-                if (ImGui::BeginTabItem("amicccc1"))
-                {
-                    ImGui::Text("This is the Avocado tab!\nblah blah blah blah blah");
-                    ImGui::EndTabItem();
+                for(std::string name : vecName){
+                    const char *nom = name.data();
+                    if (ImGui::BeginTabItem(nom))
+                    {
+                        //
+                        ImGui::Text("This is the Avocado tab!\nblah blah blah blah blah");
+                        ImGui::EndTabItem();
+                    }
+
                 }
                 
                 ImGui::EndTabBar();

@@ -11,6 +11,7 @@
 #include <gf/Queue.h>
 #include <gf/Id.h>
 #include <gf/Map.h>
+#include <string>
 
 namespace redsquare
 {
@@ -36,7 +37,7 @@ namespace redsquare
 
         virtual void createCarPacket(Packet &packet) override;
         
-        Player(SocketTcp socket, gf::Id playerID, const EntitySubType entitySubType);
+        Player(SocketTcp socket, gf::Id playerID, const EntitySubType entitySubType, std::string name);
 
         void sendPacket(Packet &packet);
         void receivePacket(Packet &packet);
@@ -59,6 +60,8 @@ namespace redsquare
 
         virtual void defaultInventoryStuff() override;
         void UseItem(ItemType type);
+
+        void sendMessageToChat(std::string str);
 
     private:
         void BasicAttack(ServerEntity *target); // DONE
@@ -91,7 +94,8 @@ namespace redsquare
         void BoostMana(float ratio);
         void BoostHealth(float ratio);
         void BoostXP(float ratio);
-
+        void createSystemMessage(std::string message, std::string to);
+        std::string m_Name;
         SocketTcp m_Socket;
     };
 }

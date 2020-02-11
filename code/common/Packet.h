@@ -376,10 +376,11 @@ namespace redsquare
         char to[MAX_SIZE_FROM_CHAT];
     };
 
-    struct SendNameIdToChat
+    struct SendName
     {
         char from[MAX_SIZE_FROM_CHAT];
     };
+
 
     struct PlayerInfoConnection
     {
@@ -701,7 +702,7 @@ namespace redsquare
 
 
     template<class Archive>
-    Archive& operator|(Archive& ar, SendNameIdToChat& packet)
+    Archive& operator|(Archive& ar, SendName& packet)
     {
         ar | packet.from;
         return ar;

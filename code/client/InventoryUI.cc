@@ -380,8 +380,8 @@ namespace redsquare
 
                     target.draw( m_RightClickedBackground, states );
 
-                    m_DropButton.setPosition(m_RightClickedBackground.getPosition() + rightClickedBackgroundSize * gf::Vector2f(0.1f, 0.5f));
-                    m_UseButton.setPosition(m_RightClickedBackground.getPosition() + rightClickedBackgroundSize * gf::Vector2f(0.6f, 0.5f));
+                    m_DropButton.setPosition(m_RightClickedBackground.getPosition() + rightClickedBackgroundSize * gf::Vector2f(0.1f, 0.25f));
+                    m_UseButton.setPosition(m_RightClickedBackground.getPosition() + rightClickedBackgroundSize * gf::Vector2f(0.6f, 0.25f));
 
                     target.draw( m_DropButton, states );
 

@@ -6,7 +6,12 @@
 
 namespace redsquare
 {
-    void Chat::sendMessageToAll(Message& packet)
+    Chat& Chat::getInstance(){
+        static Chat chat;
+        return chat;
+    }
+
+    void Chat::sendMessage(Message& packet)
     {
         auto it = m_PlayersName.begin();
         // Iterate over the map using Iterator till end.
@@ -42,7 +47,7 @@ namespace redsquare
             Message packet;
             while ( m_chatQueue.poll(packet))
             {
-                sendMessageToAll(packet);
+                sendMessage(packet);
             }
         }
     }
@@ -67,10 +72,16 @@ namespace redsquare
     
     void Chat::addPlayer(gf::Id idPlayer,  SocketTcp socket)
     {
-        SendNameIdToChat packet;
+        SendName packet;
         socket.receive(packet);
+        
         m_PlayersSocket.insert(std::make_pair(idPlayer, std::move(socket)));
         m_PlayersName.insert(std::make_pair(idPlayer,std::move(std::string(packet.from))));
+
+        SendName packetReturn;
+        std::string name = packet.from;
+        //packetReturn.from = name.data();
+        std::cout << "Hello" << std::endl;
 
         std::thread(&Chat::receiveMessagePacket, this, std::ref(m_PlayersSocket[idPlayer])).detach();
     }

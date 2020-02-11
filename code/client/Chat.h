@@ -43,6 +43,7 @@ namespace redsquare
 
         gf::StaticString<MAX_SIZE_MESSAGE_CHAT> m_LineBuffer;
         bool m_AutoScroll;
+        std::vector<std::string> vecName;
     };
 }
 

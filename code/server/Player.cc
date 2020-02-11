@@ -1,13 +1,15 @@
 #include "Player.h"
 #include <iostream>
 #include "Game.h"
+#include "Chat.h"
 
 #include "../common/Constants.h"
 
 namespace redsquare
 {
-    Player::Player(SocketTcp socket, gf::Id playerID, const EntitySubType entitySubType)
+    Player::Player(SocketTcp socket, gf::Id playerID, const EntitySubType entitySubType, std::string name)
     : ServerEntity(playerID, EntityType::Player, entitySubType)
+    , m_Name(name)
     , m_Socket(std::move(socket))
     {
         switch (m_EntitySubType){
@@ -556,7 +558,12 @@ namespace redsquare
         if(critical > 95){ // critical hit
             damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
             damage *= 2; // double the damage 
+            //unique
             std::cout << " CRITICAL !!! " << std::endl;
+            createSystemMessage(" CRITICAL !!! ",m_Name);
+
+            
+
         }else{
             damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
         }
@@ -565,19 +572,24 @@ namespace redsquare
         
         if(target->m_LifePoint - damage <= 0){
             target->m_LifePoint = 0;
+            //multiple
             std::cout << " BasicAttack dealed : " << damage << std::endl;
+            createSystemMessage(" BasicAttack dealed : ","system");
             std::cout << " The target is dead" << std::endl;
+            createSystemMessage( " The target is dead","system");
             return;
         }else{
             target->m_LifePoint -= damage;
         }
-
+        //multiple
         std::cout << " BasicAttack dealed : " << damage << std::endl;
+        createSystemMessage(  "BasicAttack dealed : ","system");
     }
 
     void Player::Fireball(ServerEntity *target){
 
         if(m_ManaPoint < 5){
+            //unique
             std::cout << "NOT ENOUGH MANA" << std::endl;
             return;
         }
@@ -588,6 +600,7 @@ namespace redsquare
         if(critical > 90){
             damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
             damage *= 2; // double the damage 
+            //unique
             std::cout << " CRITICAL !!! " << std::endl;
         }else{
             damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
@@ -596,10 +609,12 @@ namespace redsquare
         damage += Variance(-(damage/10)); // -10% to +10% dmg 
 
         m_ManaPoint -= 5;
+        //multiple
         std::cout << " Fireball dealed : " << damage << std::endl;
 
         if(target->m_LifePoint - damage <= 0){
             target->m_LifePoint = 0;
+            //multiple
             std::cout << " The target is dead" << std::endl;
             return;
         }else{
@@ -614,6 +629,7 @@ namespace redsquare
         }
         m_ManaPoint -= 5;
         m_Range++;
+        //unique
         std::cout << " Range boosted by 1 point" << std::endl;
     }
 
@@ -668,6 +684,7 @@ namespace redsquare
 
 
         m_ManaPoint -= 5;
+        //multiple
         std::cout << " DoubleStrike dealed " << damage1 << " then " << damage2 << std::endl;
 
         if(target->m_LifePoint - damage1 <= 0){
@@ -1441,5 +1458,30 @@ namespace redsquare
         m_MaxLifePoint += health; 
         m_LifePoint = m_MaxLifePoint;
         std::cout << " m_MaxLifePoint +" << health << std::endl;
+    }
+
+    void Player::sendMessageToChat(std::string str){
+        Message mess;
+        int length = str.copy(mess.message,str.length());
+        mess.message[length]='\0';
+        m_Socket.send(mess);
+    }
+
+    void Player::createSystemMessage(std::string message, std::string to){
+            Message packet;
+            int length=0;
+            std::string sys("system");
+            length = message.copy(packet.message, message.length());
+            packet.message[length]='\0';
+            length = sys.copy(packet.from, sys.length());
+            packet.from[length]='\0';
+            if(to != "system"){
+                length = to.copy(packet.to, to.length());
+                packet.to[length]='\0';
+            }else{
+                length = sys.copy(packet.to, sys.length());
+                packet.to[length]='\0';
+            }
+            Chat::getInstance().sendMessage(packet);  
     }
 }
