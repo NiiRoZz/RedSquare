@@ -1,4 +1,5 @@
 #include "Hud.h"
+#include "Scenes.h"
 #include "GameScene.h"
 #include "../common/Singletons.h"
 
@@ -15,8 +16,9 @@
 
 namespace redsquare
 {
-    Hud::Hud(GameScene &game, gf::Font &font)
-    : m_Game(game)
+    Hud::Hud(Scenes &scenes, GameScene &game, gf::Font &font)
+    : m_Scenes(scenes)
+    , m_Game(game)
     , m_Chat(font)
     , m_InventoryUI(font, game)
     , m_Font(font)
@@ -306,6 +308,13 @@ namespace redsquare
             else
             {
                 m_QuitWidget.setState(gf::WidgetState::Default);
+            }
+        }
+        else if (event.type == gf::EventType::MouseButtonPressed && event.mouseButton.button == gf::MouseButton::Left)
+        {
+            if (m_QuitWidget.contains(event.mouseButton.coords))
+            {
+                m_Scenes.replaceScene(m_Scenes.mainMenu, m_Scenes.glitchEffect, gf::seconds(1.0f));
             }
         }
     }

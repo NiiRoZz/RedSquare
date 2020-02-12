@@ -24,6 +24,7 @@ namespace redsquare
     , m_GaucheButton("<===", m_Font, 25)
     , m_DroiteButton("===>", m_Font, 25)
     , m_ConnectionAsked(false)
+    , m_DisplayEntitySubType(EntitySubType::Unknow)
     {
         setClearColor(gf::Color::Black);
 
@@ -31,8 +32,13 @@ namespace redsquare
         m_PortBuffer = "6000";
         m_NameBuffer = "toto";
 
+        m_GaucheButton.setCallback([this]() { displayNextSubEntityTexture(-1); });
         m_Container.addWidget(m_GaucheButton);
+
+        m_DroiteButton.setCallback([this]() { displayNextSubEntityTexture(1); });
         m_Container.addWidget(m_DroiteButton);
+
+        displayNextSubEntityTexture(1);
     }
 
     void ConnectionScene::doHandleActions(gf::Window& window)
@@ -107,7 +113,7 @@ namespace redsquare
 
             if (ImGui::Button("Connect", DefaultButtonSize))
             {
-                if (m_Scenes.game.connect(m_HostNameBuffer.getData(), m_PortBuffer.getData(), m_NameBuffer.getData()))
+                if (m_Scenes.game.connect(m_HostNameBuffer.getData(), m_PortBuffer.getData(), m_NameBuffer.getData(), m_DisplayEntitySubType))
                 {
                     m_Scenes.replaceScene(m_Scenes.game, m_Scenes.glitchEffect, gf::seconds(1.0f));
                 }
@@ -152,12 +158,8 @@ namespace redsquare
         gf::Vector2f startPlayerWidgetSize = coordinates.getRelativeSize({0.20f,0.27f });
         gf::Vector2f startPlayerWidgetPos = coordinates.getRelativePoint({ 0.40,0.67f });
         m_PlayerWidget.setPosition(startPlayerWidgetPos);
-        gf::Texture playerTexture("../data/redsquare/img/Character/Magus.png");
-        m_PlayerWidget.setDefaultSprite(playerTexture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
-        m_PlayerWidget.setDisabledSprite(playerTexture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
-        m_PlayerWidget.setSelectedSprite(playerTexture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
         m_PlayerWidget.setPosition(startPlayerWidgetPos);
-        m_PlayerWidget.setScale(startPlayerWidgetSize/playerTexture.getSize());
+        m_PlayerWidget.setScale(startPlayerWidgetSize/16.f);
         target.draw(m_PlayerWidget,states);
 
         gf::Vector2f DroitePosButton = coordinates.getRelativePoint({ 0.60,0.65f });
@@ -184,5 +186,27 @@ namespace redsquare
 
         ImGui::Render();
         ImGui_ImplGF_RenderDrawData(ImGui::GetDrawData());
+    }
+
+    void ConnectionScene::displayNextSubEntityTexture(int offset)
+    {
+        uint8_t nextIndex = static_cast<uint8_t>(m_DisplayEntitySubType);
+        nextIndex += offset;
+
+        if (nextIndex <= 0u)
+        {
+            nextIndex = 5;
+        }
+
+        if (nextIndex >= 6u)
+        {
+            nextIndex = 1;
+        }
+
+        m_DisplayEntitySubType = static_cast<EntitySubType>(nextIndex);
+        gf::Texture *texture = ClientEntity::loadTexture(m_DisplayEntitySubType);
+        m_PlayerWidget.setDefaultSprite(*texture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
+        m_PlayerWidget.setDisabledSprite(*texture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
+        m_PlayerWidget.setSelectedSprite(*texture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
     }
 }

@@ -70,7 +70,7 @@ namespace redsquare
 
         bool monsterInRange();
 
-        bool connect(const char *ip, const char *port, const char *name);
+        bool connect(const char *ip, const char *port, const char *name, const EntitySubType entitySubType);
 
         void movePlayer( int dirX, int dirY, bool mouseClic = false );
 

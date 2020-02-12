@@ -29,8 +29,6 @@ namespace redsquare
         Rogue,
         Ranger,
         Healer,
-        // Paladin,
-        // Healer,
         /* CLASSES */
 
         /* MONSTER */

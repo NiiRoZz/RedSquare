@@ -6,7 +6,7 @@ namespace redsquare
     ClientEntity::ClientEntity(gf::Id entityID, const EntityType entityType, const EntitySubType entitySubType)
     : redsquare::Entity(entityID,entityType,entitySubType)
     , m_Inventory(entityID)
-    , m_EntityTexture(loadTexture())
+    , m_EntityTexture(loadTexture(entitySubType))
     {
 
     }
@@ -21,9 +21,9 @@ namespace redsquare
         return m_EntityTexture;
     }
 
-    gf::Texture* ClientEntity::loadTexture() const
+    gf::Texture* ClientEntity::loadTexture(const EntitySubType entitySubType)
     {
-        switch (m_EntitySubType)
+        switch (entitySubType)
         {
             //Player textures
             case EntitySubType::Magus:
@@ -312,7 +312,7 @@ namespace redsquare
             }
         }
 
-        std::cout << "ClientEntity::loadTexture Error default : " << static_cast<uint8_t>(m_EntityType) * 1.0 << " " << static_cast<uint16_t>(m_EntitySubType) * 1.0 << std::endl;
+        std::cout << "ClientEntity::loadTexture Error default : " << static_cast<uint8_t>(entitySubType) * 1.0 << " " << static_cast<uint16_t>(entitySubType) * 1.0 << std::endl;
  
         return &gResourceManager().getTexture("img/Character/Magus.png");
     }

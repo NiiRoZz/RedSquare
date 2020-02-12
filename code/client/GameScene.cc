@@ -16,7 +16,7 @@ namespace redsquare
     GameScene::GameScene( Scenes &scenes )
     : gf::Scene({1024, 576})
     , m_Scenes(scenes)
-    , m_Hud(*this, scenes.resources.getFont("font/arial.ttf"))
+    , m_Hud(scenes, *this, scenes.resources.getFont("font/arial.ttf"))
     , m_ThreadCom(m_ComQueue)
     , m_CanPlay( false )
     , m_MovePlayer({0,0},false)
@@ -129,7 +129,7 @@ namespace redsquare
         addAction(m_Spell8Action);
     }
 
-    bool GameScene::connect(const char *ip, const char *port, const char *name)
+    bool GameScene::connect(const char *ip, const char *port, const char *name, const EntitySubType entitySubType)
     {
         if (m_ThreadCom.getSocket().getState() != SocketState::Disconnected)
         {
@@ -154,7 +154,7 @@ namespace redsquare
             return false;
         }
 
-        sendInfoConnection(EntitySubType::Magus, name);
+        sendInfoConnection(entitySubType, name);
 
         receiveWorld();
 

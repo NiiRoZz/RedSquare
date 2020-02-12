@@ -18,11 +18,12 @@ namespace redsquare
 {
     //Forward classes
     class GameScene;
+    struct Scenes;
 
     class Hud: public gf::Entity
     {
     public:
-        Hud(GameScene &game, gf::Font &font);
+        Hud(Scenes &scenes, GameScene &game, gf::Font &font);
 
         virtual void update(gf::Time time) override;
 
@@ -45,6 +46,7 @@ namespace redsquare
         gf::MessageStatus onSpellUpdate(gf::Id id, gf::Message *msg);
         gf::MessageStatus onPlayerDeadUpdate(gf::Id id, gf::Message *msg);
 
+        Scenes &m_Scenes;
         GameScene &m_Game;
         Chat m_Chat;
         InventoryUI m_InventoryUI;
