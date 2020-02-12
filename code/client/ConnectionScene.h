@@ -8,6 +8,8 @@
 #include <gf/WidgetContainer.h>
 #include <gf/StaticString.h>
 
+#include "../common/Packet.h"
+
 namespace redsquare
 {
     struct Scenes;
@@ -24,6 +26,8 @@ namespace redsquare
         void doUpdate(gf::Time time) override;
         void doRender(gf::RenderTarget &target, const gf::RenderStates &states) override;
 
+        void displayNextSubEntityTexture(int offset);
+
     private:
         Scenes& m_Scenes;
 
@@ -37,6 +41,8 @@ namespace redsquare
         gf::WidgetContainer m_Container;
         gf::TextWidget m_GaucheButton;
         gf::TextWidget m_DroiteButton;
+
+        EntitySubType m_DisplayEntitySubType;
 
     };
 }
