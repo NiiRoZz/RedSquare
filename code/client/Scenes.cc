@@ -16,6 +16,7 @@ namespace redsquare {
     {
         getWindow().setVerticalSyncEnabled(true);
         getWindow().setFramerateLimit(60u);
+        
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO();
 
@@ -29,8 +30,9 @@ namespace redsquare {
         ImGui_ImplGF_Init(getWindow(), getRenderer());
     }
 
-    Scenes::~Scenes() {
-    ImGui::DestroyContext();
+    Scenes::~Scenes()
+    {
+        ImGui::DestroyContext();
     }
 
 }
