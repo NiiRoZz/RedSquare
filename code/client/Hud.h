@@ -2,8 +2,6 @@
 #define REDSQUARE_CLIENT_HUD_H
 
 #include "Chat.h"
-#include "Game.h"
-#include "MainMenu.h"
 #include "InventoryUI.h"
 #include "Message.h"
 #include "SpellWidget.h"
@@ -16,10 +14,13 @@
 
 namespace redsquare
 {
+    //Forward classes
+    class GameScene;
+
     class Hud: public gf::Entity
     {
     public:
-        Hud(Game &game, gf::Font &font,char* port, char *hostname, gf::ExtendView &view,const char* name);
+        Hud(GameScene &game, gf::Font &font);
 
         virtual void update(gf::Time time) override;
 
@@ -36,21 +37,18 @@ namespace redsquare
         void showInventory();
 
         InventoryUI& getInventoryUI();
-
-        MainMenu m_MainMenu;
+        Chat& getChat();
         
     private:
         gf::MessageStatus onSpellUpdate(gf::Id id, gf::Message *msg);
         gf::MessageStatus onPlayerDeadUpdate(gf::Id id, gf::Message *msg);
 
-        Game &m_Game;
+        GameScene &m_Game;
         Chat m_Chat;
         InventoryUI m_InventoryUI;
        
         gf::Font &m_Font;
         gf::UI m_UI;
-        //View of the game
-        gf::ExtendView &m_View;
         std::vector<SpellWidget> m_SpellsWidgets;
         SpellWidget *m_SpellWidgetHover;
         gf::Vector2f m_MouseHoverPostionOnSpell;

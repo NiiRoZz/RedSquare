@@ -17,12 +17,12 @@
 namespace redsquare
 {
     //Forward classes
-    class Game;
+    class GameScene;
     
     class InventoryUI
     {
     public:
-        InventoryUI(gf::Font &font, Game &game);
+        InventoryUI(gf::Font &font, GameScene &game);
 
         void update(gf::Time time);
 
@@ -37,7 +37,7 @@ namespace redsquare
         gf::MessageStatus onItemUpdateUI(gf::Id id, gf::Message *msg);
         gf::MessageStatus onMyPlayerReceived(gf::Id id, gf::Message *msg);
 
-        Game &m_Game;
+        GameScene &m_Game;
         gf::UI m_UI;
 
         Player *m_PlayerEntity;

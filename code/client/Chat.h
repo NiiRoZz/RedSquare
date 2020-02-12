@@ -19,7 +19,9 @@ namespace redsquare
     class Chat
     {
     public:
-        Chat(gf::Font &,char *port, char *hostname,const char* name);
+        Chat(gf::Font &font);
+
+        void connect(const char *hostname, const char *port, const char* name);
 
         void update(gf::Time time);
         void chatThread();

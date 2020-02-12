@@ -58,6 +58,12 @@ namespace redsquare
         m_State = SocketState::Connected;
     }
 
+    void SocketTcp::disconnect()
+    {
+        m_Socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
+        m_State = SocketState::Disconnected;
+    }
+
     template<>
     void SocketTcp::send<NewPlayer>(NewPlayer &packet)
     {

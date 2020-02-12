@@ -1,6 +1,6 @@
 #include "Hud.h"
+#include "GameScene.h"
 #include "../common/Singletons.h"
-#include "Game.h"
 
 #include <gf/Event.h>
 #include <gf/RenderWindow.h>
@@ -15,14 +15,12 @@
 
 namespace redsquare
 {
-    Hud::Hud(Game &game, gf::Font &font,char* port,char* hostname, gf::ExtendView &view,const char* name)
+    Hud::Hud(GameScene &game, gf::Font &font)
     : m_Game(game)
-    , m_Chat(font,port,hostname,name)
+    , m_Chat(font)
     , m_InventoryUI(font, game)
-    , m_MainMenu(font)
     , m_Font(font)
-    , m_UI(font) 
-    , m_View(view)
+    , m_UI(font)
     , m_SpellWidgetHover(nullptr)
     , m_ShowMap(false)
     , m_ShowChat(true)
@@ -241,7 +239,6 @@ namespace redsquare
                 m_InventoryUI.render(target, states);
             }
         }
-        m_MainMenu.render(target,states);
     }
 
     void Hud::update(gf::Time time)
@@ -255,8 +252,6 @@ namespace redsquare
         {
             m_InventoryUI.update(time);
         }
-
-        m_MainMenu.update(time);
     }
 
     void Hud::processEvent(const gf::Event &event)
@@ -270,8 +265,6 @@ namespace redsquare
         {
             m_InventoryUI.processEvent(event);
         }
-        
-        m_MainMenu.processEvent(event);
 
         if (event.type == gf::EventType::MouseMoved)
         {
@@ -370,5 +363,10 @@ namespace redsquare
     InventoryUI& Hud::getInventoryUI()
     {
         return m_InventoryUI;
+    }
+
+    Chat& Hud::getChat()
+    {
+        return m_Chat;
     }
 }

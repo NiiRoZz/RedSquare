@@ -10,21 +10,33 @@
 
 namespace redsquare
 {
-    Chat::Chat(gf::Font &font, char *port, char *hostname,const char* name)
+    Chat::Chat(gf::Font &font)
     : m_HoveringChat(false)
     , m_UI(font)
-    , m_Name(name)
-    , m_ChatCom(hostname, port, m_ChatQueue)
+    , m_Name("")
+    , m_ChatCom(m_ChatQueue)
     , m_AutoScroll(false)
     {
-        m_ChatCom.start();
         m_LineBuffer.clear();
+    }
+
+    void Chat::connect(const char *hostname, const char *port, const char* name)
+    {
+        if (m_ChatCom.getSocket().getState() != SocketState::Disconnected)
+        {
+            assert(false);
+            return;
+        }
+
+        m_ChatCom.getSocket().connectTo(hostname, port);
+
+        m_Name = name;
+        m_ChatCom.start();
+
         SendName packet;
         std::size_t length = m_Name.copy(packet.from, m_Name.length());
         packet.from[length]='\0';
         m_ChatCom.sendPacket(packet);
-        //m_ChatCom.receivePacket(packet);
-        //vecName.push_back(packet.from);
     }
 
     void Chat::update(gf::Time time)

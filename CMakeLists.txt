@@ -12,8 +12,9 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/code/config.h.in ${CMAKE_CURRENT_BINA
 
 add_executable(RedSquare
   code/client/main.cc
+  code/client/Scenes.cc
   code/client/Player.cc
-  code/client/Game.cc
+  code/client/GameScene.cc
   code/client/World.cc
   code/client/Monster.cc
   code/client/Chat.cc
@@ -22,12 +23,13 @@ add_executable(RedSquare
   code/client/InventoryUI.cc
   code/client/InventoryWidget.cc
   code/client/InventorySlot.cc
-  code/client/MainMenu.cc
+  code/client/MainMenuScene.cc
   code/client/ClientItem.cc
   code/client/SpellWidget.cc
   code/client/ClientEntity.cc
   code/client/Inventory.cc
   code/client/ItemHolder.cc
+  code/client/ConnectionScene.cc
   code/common/Sockets.cc
   code/common/Entity.cc
   code/common/Singletons.cc
