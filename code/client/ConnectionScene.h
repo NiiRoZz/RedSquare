@@ -33,6 +33,9 @@ namespace redsquare
         gf::StaticString<255> m_PortBuffer;
         gf::StaticString<255> m_NameBuffer;
         gf::SpriteWidget m_PlayerWidget;
+        gf::WidgetContainer m_Container;
+        gf::TextWidget m_GaucheButton;
+        gf::TextWidget m_DroiteButton;
 
     };
 }

@@ -27,6 +27,7 @@ namespace redsquare
 
         m_QuitWidget.setCallback([this]() { m_MenuChoice = MenuChoice::Quit; });
         m_Container.addWidget(m_QuitWidget);
+
     }
 
     void MainMenuScene::doHandleActions(gf::Window& window)
@@ -73,7 +74,7 @@ namespace redsquare
         gf::Coordinates coordinates(target);
         unsigned characterSize = coordinates.getRelativeCharacterSize(0.1f);
 
-        auto startPosition = coordinates.getRelativePoint({ 0.5f, 0.2f });
+        auto startPosition = coordinates.getRelativePoint({ 0.5f, 0.4f });
         m_StartWidget.setCharacterSize(characterSize);
         m_StartWidget.setAnchor(gf::Anchor::Center);
         m_StartWidget.setPosition(startPosition);
@@ -83,7 +84,7 @@ namespace redsquare
         m_StartWidget.setTextOutlineThickness(characterSize * 0.05f);
         target.draw(m_StartWidget, states);
 
-        auto quitPosition = coordinates.getRelativePoint({ 0.5f, 0.8f });
+        auto quitPosition = coordinates.getRelativePoint({ 0.5f, 0.6f });
         m_QuitWidget.setCharacterSize(characterSize);
         m_QuitWidget.setAnchor(gf::Anchor::Center);
         m_QuitWidget.setPosition(quitPosition);

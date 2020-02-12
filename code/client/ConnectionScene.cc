@@ -21,12 +21,18 @@ namespace redsquare
     : gf::Scene({1024, 576})
     , m_Scenes(scenes)
     , m_Font(scenes.resources.getFont("font/arial.ttf"))
+    ,m_GaucheButton("<===", m_Font, 25)
+    ,m_DroiteButton("===>", m_Font, 25)
+
     {
         setClearColor(gf::Color::Black);
 
         m_HostNameBuffer = "localhost";
         m_PortBuffer = "6000";
         m_NameBuffer = "toto";
+
+        m_Container.addWidget(m_GaucheButton);
+        m_Container.addWidget(m_DroiteButton);
     }
 
     void ConnectionScene::doHandleActions(gf::Window& window)
@@ -41,7 +47,19 @@ namespace redsquare
 
     void ConnectionScene::doProcessEvent(gf::Event &event)
     {
-        gf::unused(event);
+        switch (event.type) {
+        case gf::EventType::MouseMoved:
+            m_Container.pointTo(m_Scenes.getRenderer().mapPixelToCoords(event.mouseCursor.coords));
+            break;
+
+        case gf::EventType::MouseButtonPressed:
+            m_Container.pointTo(m_Scenes.getRenderer().mapPixelToCoords(event.mouseButton.coords));
+            m_Container.triggerAction();
+            break;
+
+        default:
+            break;
+        }
     }
 
     void ConnectionScene::doUpdate(gf::Time time)
@@ -56,7 +74,7 @@ namespace redsquare
         ImGui::NewFrame();
 
         auto position = coordinates.getCenter();
-        ImGui::SetNextWindowPos(ImVec2(position.x, position.y), 0, ImVec2(0.5f, 0.5f));
+        ImGui::SetNextWindowPos(ImVec2(position.x, position.y), 0, ImVec2(0.5f, 1.1f));
 
         static const ImVec2 DefaultButtonSize = { 170.0f, 40.0f };
 
@@ -105,12 +123,22 @@ namespace redsquare
         
         ImVec2 descP=ImGui::GetWindowSize();
         ImGui::TextWrapped("The logging API redirects all text output so you can easily capture the content of a window or a block. Tree nodes can be automatically expanded.");
-        ImGui::SetWindowFontScale(descP[0]/200);
+        ImGui::SetWindowFontScale(descP[0]/300);
 
         ImGui::End();
+
         
-        gf::Vector2f startPlayerWidgetSize = coordinates.getRelativeSize({0.20f,0.20f });
-        gf::Vector2f startPlayerWidgetPos = coordinates.getRelativePoint({ 0.40,0.65f });
+        gf::Vector2f GauchePosButton = coordinates.getRelativePoint({ 0.35,0.65f });
+        m_GaucheButton.setPosition({ GauchePosButton[0],GauchePosButton[1]});
+        m_GaucheButton.setTextOutlineThickness(1.0f);
+        m_GaucheButton.setAnchor(gf::Anchor::TopLeft);
+        m_GaucheButton.setDefaultTextColor(gf::Color::White);
+        m_GaucheButton.setDefaultTextOutlineColor(gf::Color::Black);
+        m_GaucheButton.setSelectedTextOutlineColor(gf::Color::Black);
+        target.draw(m_GaucheButton,states);
+        
+        gf::Vector2f startPlayerWidgetSize = coordinates.getRelativeSize({0.20f,0.27f });
+        gf::Vector2f startPlayerWidgetPos = coordinates.getRelativePoint({ 0.40,0.67f });
         m_PlayerWidget.setPosition(startPlayerWidgetPos);
         gf::Texture playerTexture("../data/redsquare/img/Character/Magus.png");
         m_PlayerWidget.setDefaultSprite(playerTexture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
@@ -119,6 +147,15 @@ namespace redsquare
         m_PlayerWidget.setPosition(startPlayerWidgetPos);
         m_PlayerWidget.setScale(startPlayerWidgetSize/playerTexture.getSize());
         target.draw(m_PlayerWidget,states);
+
+        gf::Vector2f DroitePosButton = coordinates.getRelativePoint({ 0.60,0.65f });
+        m_DroiteButton.setPosition({ DroitePosButton[0],DroitePosButton[1]});
+        m_DroiteButton.setTextOutlineThickness(1.0f);
+        m_DroiteButton.setAnchor(gf::Anchor::TopLeft);
+        m_DroiteButton.setDefaultTextColor(gf::Color::White);
+        m_DroiteButton.setDefaultTextOutlineColor(gf::Color::Black);
+        m_DroiteButton.setSelectedTextOutlineColor(gf::Color::Black);
+        target.draw(m_DroiteButton,states);
 
         gf::Vector2f MainMenuWindowSizeCharac = coordinates.getRelativeSize({0.25f,0.25f });
         gf::Vector2f MainMenuWindowPosCharac = coordinates.getRelativePoint({ 0.73,0.65f });
@@ -129,7 +166,7 @@ namespace redsquare
         
         ImVec2 charP=ImGui::GetWindowSize();
         ImGui::TextWrapped("The logging API redirects all text output so you can easily capture the content of a window or a block. Tree nodes can be automatically expanded.");
-        ImGui::SetWindowFontScale(charP[0]/200);
+        ImGui::SetWindowFontScale(charP[0]/300);
 
         ImGui::End();
 
