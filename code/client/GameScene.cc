@@ -367,17 +367,11 @@ namespace redsquare
     {
         ImGui::NewFrame();
 
+        //World entities
         renderWorldEntities(target, states);
-        renderHudEntities(target, states);
-
-        ImGui::Render();
-        ImGui_ImplGF_RenderDrawData(ImGui::GetDrawData());
-
         //Show only when the player is not dead
         if (!m_PlayerDead)
         {
-            target.setView(getWorldView());
-
             auto it1 = m_TempMove.begin();
 
             // Iterate over the map using Iterator till end.
@@ -393,47 +387,12 @@ namespace redsquare
 
                 ++it1;
             }
-
-            auto it5 = m_ItemHolders.begin();
-
-            // Iterate over the map using Iterator till end.
-            while (it5 != m_ItemHolders.end())
-            {
-                it5->second.render( target, states );
-
-                ++it5;
-            }
-
-            auto it4 = m_Props.begin();
-
-            // Iterate over the map using Iterator till end.
-            while (it4 != m_Props.end())
-            {
-                it4->second.render( target, states );
-
-                ++it4;
-            }
-
-            auto it3 = m_Monsters.begin();
-
-            // Iterate over the map using Iterator till end.
-            while (it3 != m_Monsters.end())
-            {
-                it3->second.render( target, states );
-
-                ++it3;
-            }
-
-            auto it2 = m_Players.begin();
-
-            // Iterate over the map using Iterator till end.
-            while (it2 != m_Players.end())
-            {
-                it2->second.render( target, states );
-
-                ++it2;
-            }
         }
+
+        //Hud entities
+        renderHudEntities(target, states);
+        ImGui::Render();
+        ImGui_ImplGF_RenderDrawData(ImGui::GetDrawData());
     }
 
     void GameScene::doUpdate(gf::Time time)
@@ -456,16 +415,6 @@ namespace redsquare
 
             //Do all actions stuff here
             doAction();
-        }
-
-        auto it = m_Props.begin();
-
-        // Iterate over the map using Iterator till end.
-        while (it != m_Props.end())
-        {
-            it->second.update( time );
-
-            ++it;
         }
     }
 
@@ -620,7 +569,7 @@ namespace redsquare
                             Player* player = getPlayer( packet.entityDisconnected.entityID );
                             assert( player != nullptr );
 
-                            //removeWorldEntity(player);
+                            removeWorldEntity(player);
 
                             m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(player), true);
                             m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(player), true);
@@ -634,7 +583,7 @@ namespace redsquare
                             Monster* monster = getMonster( packet.entityDisconnected.entityID );
                             assert( monster != nullptr );
 
-                            //removeWorldEntity(monster);
+                            removeWorldEntity(monster);
 
                             m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(monster), true);
                             m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(monster), true);
@@ -648,7 +597,7 @@ namespace redsquare
                             Prop* prop = getProp( packet.entityDisconnected.entityID );
                             assert( prop != nullptr );
 
-                            //removeWorldEntity(prop);
+                            removeWorldEntity(prop);
 
                             m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(prop), true);
                             m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(prop), true);
@@ -662,7 +611,7 @@ namespace redsquare
                             ItemHolder* itemHolder = getItemHolder( packet.entityDisconnected.entityID );
                             assert( itemHolder != nullptr );
 
-                            //removeWorldEntity(itemHolder);
+                            removeWorldEntity(itemHolder);
 
                             m_ItemHolders.erase( packet.entityDisconnected.entityID );
                             break;
@@ -731,7 +680,7 @@ namespace redsquare
                             auto it = m_Players.insert( std::make_pair( packet.spawnEntity.entityID, Player( packet.spawnEntity.entityID, packet.spawnEntity.typeOfEntity, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) ) ) );
                             assert( it.second );
 
-                            //addWorldEntity(it.first->second);
+                            addWorldEntity(it.first->second);
 
                             if (packet.spawnEntity.entityID == m_PlayerID)
                             {
@@ -751,7 +700,7 @@ namespace redsquare
                             auto it = m_Monsters.insert( std::make_pair( packet.spawnEntity.entityID, Monster( packet.spawnEntity.entityID, packet.spawnEntity.typeOfEntity, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) ) ) );
                             assert( it.second );
 
-                            //addWorldEntity(it.first->second);
+                            addWorldEntity(it.first->second);
 
                             m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&(it.first->second)), false);
                             m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(&(it.first->second)), false);
@@ -763,7 +712,7 @@ namespace redsquare
                             auto it = m_Props.insert( std::make_pair( packet.spawnEntity.entityID, Prop( packet.spawnEntity.entityID, packet.spawnEntity.typeOfEntity, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) ) ) );
                             assert( it.second );
 
-                            //addWorldEntity(it.first->second);
+                            addWorldEntity(it.first->second);
 
                             m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&(it.first->second)), false);
                             m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(&(it.first->second)), false);
@@ -775,7 +724,7 @@ namespace redsquare
                             auto it = m_ItemHolders.insert( std::make_pair( packet.spawnEntity.entityID, ItemHolder( packet.spawnEntity.entityID, packet.spawnEntity.holdingItem, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) ) ) );
                             assert( it.second );
 
-                            //addWorldEntity(it.first->second);
+                            addWorldEntity(it.first->second);
                             break;
                         }
                     }
