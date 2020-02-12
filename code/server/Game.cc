@@ -773,8 +773,6 @@ namespace redsquare
                             }
                             m_PlayerSpawned = 0;
 
-                            fillChest();
-
                             for (auto it3 = m_Players.begin(); it3 != m_Players.end(); ++it3)
                             {
                                 it3->second.playerSpawn(m_World,++m_PlayerSpawned);
@@ -828,6 +826,8 @@ namespace redsquare
 
                                 sendPacketToAllPlayers( sendPacket );
                             }
+                            
+                            fillChest();
                         }
                         else
                         {
