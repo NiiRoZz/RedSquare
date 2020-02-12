@@ -11,6 +11,8 @@
 #include <gf/UI.h>
 #include <gf/Window.h>
 #include <gf/Entity.h>
+#include <gf/Widgets.h>
+#include <gf/WidgetContainer.h>
 
 namespace redsquare
 {
@@ -58,6 +60,8 @@ namespace redsquare
         bool m_ShowHelp;
         bool m_ShowInventory;
         bool m_PlayerDead;
+
+        gf::TextWidget m_QuitWidget;
     };
 
 }

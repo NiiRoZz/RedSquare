@@ -27,9 +27,11 @@ namespace redsquare
     , m_ShowHelp(false)
     , m_ShowInventory(false)
     , m_PlayerDead(false)
+    , m_QuitWidget("Back", m_Font)
     {
         gMessageManager().registerHandler<SpellUpdateMessage>(&Hud::onSpellUpdate, this);
         gMessageManager().registerHandler<MyPlayerDeadMessage>(&Hud::onPlayerDeadUpdate, this);
+
     }
 
     static constexpr float HudSpellSize = 55.0f;
@@ -60,6 +62,17 @@ namespace redsquare
             text.setAnchor(gf::Anchor::TopLeft);
             text.setPosition(coordinates.getRelativePoint({ 0.03f, 0.05f }));
             target.draw(text, states);
+
+            unsigned characterSize = coordinates.getRelativeCharacterSize(0.1f);
+            auto startPosition = coordinates.getRelativePoint({ 0.5f, 0.7f });
+            m_QuitWidget.setCharacterSize(characterSize);
+            m_QuitWidget.setAnchor(gf::Anchor::Center);
+            m_QuitWidget.setPosition(startPosition);
+            m_QuitWidget.setDefaultTextColor(gf::Color::White);
+            m_QuitWidget.setDefaultTextOutlineColor(gf::Color::Black);
+            m_QuitWidget.setSelectedTextOutlineColor(gf::Color::Black);
+            m_QuitWidget.setTextOutlineThickness(characterSize * 0.05f);
+            target.draw(m_QuitWidget, states);
         }
         else
         {
@@ -284,6 +297,15 @@ namespace redsquare
             {
                 m_SpellWidgetHover = nullptr;
                 m_MouseHoverPostionOnSpell = {0,0};
+            }
+
+            if (m_QuitWidget.contains(event.mouseCursor.coords))
+            {
+                m_QuitWidget.setState(gf::WidgetState::Selected);
+            }
+            else
+            {
+                m_QuitWidget.setState(gf::WidgetState::Default);
             }
         }
     }
