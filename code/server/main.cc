@@ -43,7 +43,8 @@ int main( int argc, char **argv )
 	gf::SingletonStorage<gf::MessageManager> storageForMessageManager(redsquare::gMessageManager);
 
     Game game;
-	Chat myChat;
+
+	Chat::getInstance();
 	
 	
 	boost::asio::io_service m_IoService;
@@ -66,10 +67,10 @@ int main( int argc, char **argv )
 		SocketTcp wrapperChat(std::move(socketChat));
 
 		gf::Id idPlayer = game.addNewPlayer(std::move(wrapper));
-		myChat.addPlayer(idPlayer,std::move(wrapperChat));
+		Chat::getInstance().addPlayer(idPlayer,std::move(wrapperChat));
 	}
 
-	myChat.startChat();
+	Chat::getInstance().startChat();
 
 	game.fillChest();
 

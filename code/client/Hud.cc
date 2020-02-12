@@ -1,6 +1,7 @@
 #include "Hud.h"
+#include "Scenes.h"
+#include "GameScene.h"
 #include "../common/Singletons.h"
-#include "Game.h"
 
 #include <gf/Event.h>
 #include <gf/RenderWindow.h>
@@ -15,23 +16,24 @@
 
 namespace redsquare
 {
-    Hud::Hud(Game &game, gf::Font &font,char* port,char* hostname, gf::ExtendView &view,const char* name)
-    : m_Game(game)
-    , m_Chat(font,port,hostname,name)
+    Hud::Hud(Scenes &scenes, GameScene &game, gf::Font &font)
+    : m_Scenes(scenes)
+    , m_Game(game)
+    , m_Chat(font)
     , m_InventoryUI(font, game)
-    , m_MainMenu(font)
     , m_Font(font)
-    , m_UI(font) 
-    , m_View(view)
+    , m_UI(font)
     , m_SpellWidgetHover(nullptr)
     , m_ShowMap(false)
     , m_ShowChat(true)
     , m_ShowHelp(false)
     , m_ShowInventory(false)
     , m_PlayerDead(false)
+    , m_QuitWidget("Back", m_Font)
     {
         gMessageManager().registerHandler<SpellUpdateMessage>(&Hud::onSpellUpdate, this);
         gMessageManager().registerHandler<MyPlayerDeadMessage>(&Hud::onPlayerDeadUpdate, this);
+
     }
 
     static constexpr float HudSpellSize = 55.0f;
@@ -62,6 +64,17 @@ namespace redsquare
             text.setAnchor(gf::Anchor::TopLeft);
             text.setPosition(coordinates.getRelativePoint({ 0.03f, 0.05f }));
             target.draw(text, states);
+
+            unsigned characterSize = coordinates.getRelativeCharacterSize(0.1f);
+            auto startPosition = coordinates.getRelativePoint({ 0.5f, 0.7f });
+            m_QuitWidget.setCharacterSize(characterSize);
+            m_QuitWidget.setAnchor(gf::Anchor::Center);
+            m_QuitWidget.setPosition(startPosition);
+            m_QuitWidget.setDefaultTextColor(gf::Color::White);
+            m_QuitWidget.setDefaultTextOutlineColor(gf::Color::Black);
+            m_QuitWidget.setSelectedTextOutlineColor(gf::Color::Black);
+            m_QuitWidget.setTextOutlineThickness(characterSize * 0.05f);
+            target.draw(m_QuitWidget, states);
         }
         else
         {
@@ -241,7 +254,6 @@ namespace redsquare
                 m_InventoryUI.render(target, states);
             }
         }
-        m_MainMenu.render(target,states);
     }
 
     void Hud::update(gf::Time time)
@@ -255,8 +267,6 @@ namespace redsquare
         {
             m_InventoryUI.update(time);
         }
-
-        m_MainMenu.update(time);
     }
 
     void Hud::processEvent(const gf::Event &event)
@@ -270,8 +280,6 @@ namespace redsquare
         {
             m_InventoryUI.processEvent(event);
         }
-        
-        m_MainMenu.processEvent(event);
 
         if (event.type == gf::EventType::MouseMoved)
         {
@@ -291,6 +299,22 @@ namespace redsquare
             {
                 m_SpellWidgetHover = nullptr;
                 m_MouseHoverPostionOnSpell = {0,0};
+            }
+
+            if (m_QuitWidget.contains(event.mouseCursor.coords))
+            {
+                m_QuitWidget.setState(gf::WidgetState::Selected);
+            }
+            else
+            {
+                m_QuitWidget.setState(gf::WidgetState::Default);
+            }
+        }
+        else if (event.type == gf::EventType::MouseButtonPressed && event.mouseButton.button == gf::MouseButton::Left)
+        {
+            if (m_QuitWidget.contains(event.mouseButton.coords))
+            {
+                m_Scenes.replaceScene(m_Scenes.mainMenu, m_Scenes.glitchEffect, gf::seconds(1.0f));
             }
         }
     }
@@ -370,5 +394,10 @@ namespace redsquare
     InventoryUI& Hud::getInventoryUI()
     {
         return m_InventoryUI;
+    }
+
+    Chat& Hud::getChat()
+    {
+        return m_Chat;
     }
 }

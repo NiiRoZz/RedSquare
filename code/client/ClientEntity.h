@@ -11,6 +11,9 @@ namespace redsquare
     class ClientEntity: public gf::Entity, public redsquare::Entity
     {
     public:
+        static gf::Texture* loadTexture(const EntitySubType entitySubType);
+
+    public:
         ClientEntity( gf::Id entityID, const EntityType entityType, const EntitySubType entitySubType );
 
         Inventory& getInventory();
@@ -20,9 +23,6 @@ namespace redsquare
     protected:
         Inventory m_Inventory;
         gf::Texture* m_EntityTexture;
-
-    private:
-        gf::Texture* loadTexture() const;
     };
 }
 

@@ -1,6 +1,6 @@
 #include "InventoryUI.h"
 #include "../common/Singletons.h"
-#include "Game.h"
+#include "GameScene.h"
 
 #include <iostream>
 #include <gf/UI.h>
@@ -16,7 +16,7 @@
 
 namespace redsquare
 {
-    InventoryUI::InventoryUI(gf::Font &font, Game &game)
+    InventoryUI::InventoryUI(gf::Font &font, GameScene &game)
     : m_Game(game)
     , m_UI(font)
     , m_PlayerEntity(nullptr)

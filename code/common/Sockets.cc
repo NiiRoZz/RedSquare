@@ -54,8 +54,27 @@ namespace redsquare
     void SocketTcp::connectTo(const char* server, const char* port)
     {
         tcp::resolver resolver(m_IoService);
-        boost::asio::connect(m_Socket, resolver.resolve({ server, port }));
-        m_State = SocketState::Connected;
+        boost::system::error_code error;
+        boost::asio::connect(m_Socket, resolver.resolve({ server, port }), error);
+
+        if (error == boost::asio::error::connection_refused)
+        {
+            m_State = SocketState::Disconnected;
+            return; // Connection closed by peer
+        } else if (error)
+        {
+            throw boost::system::system_error(error);
+        }
+        else
+        {
+            m_State = SocketState::Connected;
+        }
+    }
+
+    void SocketTcp::disconnect()
+    {
+        m_Socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
+        m_State = SocketState::Disconnected;
     }
 
     template<>

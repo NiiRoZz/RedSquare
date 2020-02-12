@@ -8,7 +8,7 @@
 #include <gf/Color.h>
 #include <gf/Text.h>
 
-#include "Game.h"
+#include "GameScene.h"
 
 namespace redsquare
 {
@@ -90,7 +90,7 @@ namespace redsquare
         //Do something
     }
 
-    bool Player::canAttack(gf::Vector2i targetPos, Game &game)
+    bool Player::canAttack(gf::Vector2i targetPos, GameScene &game)
     {
         gf::Distance2<int> distFn = gf::manhattanDistance<int, 2>;
 
@@ -237,7 +237,7 @@ namespace redsquare
         return map.isWalkable( targetPos );
     }
 
-    bool Player::canOpenTargetInventory(gf::Vector2i targetPos, Game &game)
+    bool Player::canOpenTargetInventory(gf::Vector2i targetPos, GameScene &game)
     {
         gf::Distance2<int> distFn = gf::manhattanDistance<int, 2>;
 

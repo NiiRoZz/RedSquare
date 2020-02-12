@@ -19,7 +19,10 @@ namespace redsquare
     class Chat
     {
     public:
-        Chat(gf::Font &,char *port, char *hostname,const char* name);
+        Chat(gf::Font &font);
+
+        void connect(const char *hostname, const char *port, const char* name);
+        ThreadCom<Message>& getChatCom();
 
         void update(gf::Time time);
         void chatThread();
@@ -43,6 +46,7 @@ namespace redsquare
 
         gf::StaticString<MAX_SIZE_MESSAGE_CHAT> m_LineBuffer;
         bool m_AutoScroll;
+        std::vector<std::string> vecName;
     };
 }
 

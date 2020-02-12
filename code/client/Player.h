@@ -14,7 +14,7 @@
 namespace redsquare
 {
     // forward class
-    class Game;
+    class GameScene;
 
     class Player: public ClientEntity
     {
@@ -34,9 +34,9 @@ namespace redsquare
 
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
-        bool canAttack( gf::Vector2i targetPos, Game &game);
+        bool canAttack( gf::Vector2i targetPos, GameScene &game);
         bool canMove( gf::Vector2i targetPos, std::map<gf::Id, Player> &players, std::map<gf::Id, Monster> &monsters, std::map<gf::Id, Prop> &props, gf::SquareMap &map );
-        bool canOpenTargetInventory( gf::Vector2i targetPos, Game &game);
+        bool canOpenTargetInventory( gf::Vector2i targetPos, GameScene &game);
 
     private:
         gf::Font &m_Font;

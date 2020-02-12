@@ -10,19 +10,38 @@
 
 namespace redsquare
 {
-    Chat::Chat(gf::Font &font, char *port, char *hostname,const char* name)
+    Chat::Chat(gf::Font &font)
     : m_HoveringChat(false)
     , m_UI(font)
-    , m_Name(name)
-    , m_ChatCom(hostname, port, m_ChatQueue)
+    , m_Name("")
+    , m_ChatCom(m_ChatQueue)
     , m_AutoScroll(false)
     {
-        m_ChatCom.start();
         m_LineBuffer.clear();
-        SendNameIdToChat packet;
+    }
+
+    void Chat::connect(const char *hostname, const char *port, const char* name)
+    {
+        if (m_ChatCom.getSocket().getState() != SocketState::Disconnected)
+        {
+            assert(false);
+            return;
+        }
+
+        m_ChatCom.getSocket().connectTo(hostname, port);
+
+        m_Name = name;
+        m_ChatCom.start();
+
+        SendName packet;
         std::size_t length = m_Name.copy(packet.from, m_Name.length());
         packet.from[length]='\0';
         m_ChatCom.sendPacket(packet);
+    }
+
+    ThreadCom<Message>& Chat::getChatCom()
+    {
+        return m_ChatCom;
     }
 
     void Chat::update(gf::Time time)
@@ -108,30 +127,15 @@ namespace redsquare
                     ImGui::EndTabItem();
                 
                 }
-                if (ImGui::BeginTabItem("ami1"))
-                {
-                    ImGui::Text("This is the Avocado tab!\nblah blah blah blah blah");
-                    ImGui::EndTabItem();
-                }
-                if (ImGui::BeginTabItem("ami1ee"))
-                {
-                    ImGui::Text("This is the Avocado tab!\nblah blah blah blah blah");
-                    ImGui::EndTabItem();
-                }
-                if (ImGui::BeginTabItem("ami1ff"))
-                {
-                    ImGui::Text("This is the Avocado tab!\nblah blah blah blah blah");
-                    ImGui::EndTabItem();
-                }
-                if (ImGui::BeginTabItem("amifff1"))
-                {
-                    ImGui::Text("This is the Avocado tab!\nblah blah blah blah blah");
-                    ImGui::EndTabItem();
-                }
-                if (ImGui::BeginTabItem("amicccc1"))
-                {
-                    ImGui::Text("This is the Avocado tab!\nblah blah blah blah blah");
-                    ImGui::EndTabItem();
+                for(std::string name : vecName){
+                    const char *nom = name.data();
+                    if (ImGui::BeginTabItem(nom))
+                    {
+                        //
+                        ImGui::Text("This is the Avocado tab!\nblah blah blah blah blah");
+                        ImGui::EndTabItem();
+                    }
+
                 }
                 
                 ImGui::EndTabBar();

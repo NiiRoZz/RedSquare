@@ -45,7 +45,7 @@ namespace redsquare
         socket.receive(packet);
     
         // Create a new player
-        std::tie(itNewPlayer, std::ignore) = m_Players.emplace(id, Player(std::move(socket), id, packet.playerInfoConnection.entitySubType));
+        std::tie(itNewPlayer, std::ignore) = m_Players.emplace(id, Player(std::move(socket), id, packet.playerInfoConnection.entitySubType, std::move(std::string(packet.playerInfoConnection.name))));
         itNewPlayer->second.playerSpawn(m_World,++m_PlayerSpawned);
 
         NewPlayer packetNewPlayer( m_World.m_World, id, m_Floor );
@@ -1105,8 +1105,6 @@ namespace redsquare
                             }
                             m_PlayerSpawned = 0;
 
-                            fillChest();
-
                             for (auto it3 = m_Players.begin(); it3 != m_Players.end(); ++it3)
                             {
                                 it3->second.playerSpawn(m_World,++m_PlayerSpawned);
@@ -1160,6 +1158,8 @@ namespace redsquare
 
                                 sendPacketToAllPlayers( sendPacket );
                             }
+                            
+                            fillChest();
                         }
                         else
                         {

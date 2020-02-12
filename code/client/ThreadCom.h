@@ -15,6 +15,12 @@ namespace redsquare
     class ThreadCom
     {
     public:
+        ThreadCom(gf::Queue<T> &queue)
+        : m_queue(&queue)
+        {
+
+        }
+
         ThreadCom(SocketTcp socket, gf::Queue<T> &queue)
         : m_socket(std::move(socket))
         , m_queue(&queue)
@@ -22,10 +28,15 @@ namespace redsquare
 
         }
 
-        ThreadCom(char* hostname, char *port, gf::Queue<T> &queue)
+        ThreadCom(const char* hostname, const char *port, gf::Queue<T> &queue)
         : m_queue(&queue)
         {
             m_socket.connectTo(hostname, port);
+        }
+
+        SocketTcp& getSocket()
+        {
+            return m_socket;
         }
 
         void start()

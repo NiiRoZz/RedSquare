@@ -31,6 +31,7 @@ namespace redsquare {
         SocketState getState() const;
 
         void connectTo(const char* server, const char* port);
+        void disconnect();
 
         template<typename T>
         void send(T &packet)

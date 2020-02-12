@@ -9,6 +9,8 @@
 #include <gf/Id.h>
 #include <gf/Views.h>
 #include <gf/Map.h>
+#include <gf/Scene.h>
+#include <gf/Cursor.h>
 
 #include "Monster.h"
 #include "Player.h"
@@ -17,10 +19,13 @@
 #include "ThreadCom.h"
 #include "../common/Packet.h"
 #include "World.h"
+#include "Hud.h"
 
 namespace redsquare
 {
-    class Game: public gf::Entity
+    struct Scenes;
+
+    class GameScene: public gf::Scene
     {
     public:
         //ID of current player
@@ -49,7 +54,7 @@ namespace redsquare
 
         SpellType m_CurrentSpell;
 
-        Game( char* hostname, char *port,gf::ExtendView &view , const char * name);
+        GameScene( Scenes &scenes );
 
         Player* getMyPlayer();
         Player* getPlayer( gf::Id playerID );
@@ -61,13 +66,11 @@ namespace redsquare
         Prop* getProp( gf::Id propID );
         Prop* getProp( gf::Vector2i pos );
 
+        ItemHolder* getItemHolder( gf::Id itemHolderID );
+
         bool monsterInRange();
 
-        void startThreadCom();
-
-        void sendInfoConnection(EntitySubType type, char *name);
-
-        void receiveWorld();
+        bool connect(const char *ip, const char *port, const char *name, const EntitySubType entitySubType);
 
         void movePlayer( int dirX, int dirY, bool mouseClic = false );
 
@@ -77,21 +80,30 @@ namespace redsquare
 
         void processPackets();
 
-        virtual void update(gf::Time time) override;
-
-        virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
+        void doHandleActions(gf::Window& window) override;
+        bool doEarlyProcessEvent(gf::Event &event) override;
+        void doProcessEvent(gf::Event& event) override;
+        void doUpdate(gf::Time time) override;
+        void doRender(gf::RenderTarget& target, const gf::RenderStates &states) override;
 
         void changeSpell(int spell);
 
         void sendPacket(Packet &packet);
 
     private:
+        void sendInfoConnection(EntitySubType type, const char *name);
+        void receiveWorld();
+
+    private:
+        Scenes& m_Scenes;
+
+        Hud m_Hud;
+
         const char *m_Name;
         //Thread for communication
         ThreadCom<Packet> m_ThreadCom;
         //Queue for message
         gf::Queue<Packet> m_ComQueue;
-
 
         gf::Texture &m_NextPosTexture;
 
@@ -107,8 +119,29 @@ namespace redsquare
         //Pass turn
         bool m_PassTurn;
 
-        //View of the game
-        gf::ExtendView &m_View;
+        gf::Action m_FullScreenAction;
+        gf::Action m_LeftAction;
+        gf::Action m_RightAction;
+        gf::Action m_UpAction;
+        gf::Action m_DownAction;
+        gf::Action m_PassTurnAction;
+        gf::Action m_InventoryAction;
+        gf::Action m_MapAction;
+        gf::Action m_HelpMenuAction;
+        gf::Action m_ChatAction;
+        gf::Action m_Spell1Action;
+        gf::Action m_Spell2Action;
+        gf::Action m_Spell3Action;
+        gf::Action m_Spell4Action;
+        gf::Action m_Spell5Action;
+        gf::Action m_Spell6Action;
+        gf::Action m_Spell7Action;
+        gf::Action m_Spell8Action;
+
+        gf::Cursor m_DefaultCursor;
+        gf::Cursor m_AttackCursor;
+        gf::Cursor m_MoveCursor;
+        gf::Cursor m_ChestCursor;
 
         void doAction();
     };
