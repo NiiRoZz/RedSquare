@@ -61,6 +61,8 @@ namespace redsquare {
     constexpr int NBTYPEPLAYER = 4;
 
     constexpr int NBMONSTER = 17;
+
+    constexpr int EQUIPMENT_TYPE = 9; 
 }
 
 #endif // REDSQUARE_CONSTANTS_H
