@@ -39,6 +39,11 @@ namespace redsquare
         m_ChatCom.sendPacket(packet);
     }
 
+    ThreadCom<Message>& Chat::getChatCom()
+    {
+        return m_ChatCom;
+    }
+
     void Chat::update(gf::Time time)
     {
         Message packet;

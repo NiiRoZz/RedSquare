@@ -22,6 +22,7 @@ namespace redsquare
         Chat(gf::Font &font);
 
         void connect(const char *hostname, const char *port, const char* name);
+        ThreadCom<Message>& getChatCom();
 
         void update(gf::Time time);
         void chatThread();
