@@ -21,6 +21,7 @@ namespace redsquare
     : gf::Scene({1024, 576})
     , m_Scenes(scenes)
     , m_Font(scenes.resources.getFont("font/arial.ttf"))
+    , m_ConnectionAsked(false)
     {
         setClearColor(gf::Color::Black);
 
@@ -82,14 +83,26 @@ namespace redsquare
             if (ImGui::Button("Back", DefaultButtonSize))
             {
                 m_Scenes.replaceScene(m_Scenes.mainMenu, m_Scenes.glitchEffect, gf::seconds(0.8f));
+                m_ConnectionAsked = false;
             }
 
             ImGui::SameLine();
 
             if (ImGui::Button("Connect", DefaultButtonSize))
             {
-                m_Scenes.game.connect(m_HostNameBuffer.getData(), m_PortBuffer.getData(), m_NameBuffer.getData());
-                m_Scenes.replaceScene(m_Scenes.game, m_Scenes.glitchEffect, gf::seconds(1.0f));
+                if (m_Scenes.game.connect(m_HostNameBuffer.getData(), m_PortBuffer.getData(), m_NameBuffer.getData()))
+                {
+                    m_Scenes.replaceScene(m_Scenes.game, m_Scenes.glitchEffect, gf::seconds(1.0f));
+                }
+                else
+                {
+                    m_ConnectionAsked = true;
+                }
+            }
+
+            if (m_ConnectionAsked)
+            {
+                ImGui::Text("Error: unable to connect to server.");
             }
         }
         ImGui::End();

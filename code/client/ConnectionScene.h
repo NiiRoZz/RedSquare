@@ -29,6 +29,7 @@ namespace redsquare
 
         gf::Font& m_Font;
 
+        bool m_ConnectionAsked;
         gf::StaticString<255> m_HostNameBuffer;
         gf::StaticString<255> m_PortBuffer;
         gf::StaticString<255> m_NameBuffer;

@@ -129,24 +129,38 @@ namespace redsquare
         addAction(m_Spell8Action);
     }
 
-    void GameScene::connect(const char *ip, const char *port, const char *name)
+    bool GameScene::connect(const char *ip, const char *port, const char *name)
     {
         if (m_ThreadCom.getSocket().getState() != SocketState::Disconnected)
         {
             assert(false);
-            return;
+            return false;
         }
 
         m_ThreadCom.getSocket().connectTo(ip, port);
 
+        if (m_ThreadCom.getSocket().getState() != SocketState::Connected)
+        {
+            gf::Log::debug("Can't connect to game: %s:%s\n",ip,port);
+            return false;
+        }
+
         int portChat = atoi(port)+1;
         m_Hud.getChat().connect(ip, std::to_string(portChat).c_str(), name);
+
+        if (m_Hud.getChat().getChatCom().getSocket().getState() != SocketState::Connected)
+        {
+            gf::Log::debug("Can't connect to chat: %s:%d\n",ip,portChat);
+            return false;
+        }
 
         sendInfoConnection(EntitySubType::Magus, name);
 
         receiveWorld();
 
         m_ThreadCom.start();
+
+        return true;
     }
 
     void GameScene::sendInfoConnection(EntitySubType type, const char *name)
