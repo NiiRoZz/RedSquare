@@ -195,7 +195,7 @@ namespace redsquare
 
         if (nextIndex <= 0u)
         {
-            nextIndex = 1;
+            nextIndex = 5;
         }
 
         if (nextIndex >= 6u)
