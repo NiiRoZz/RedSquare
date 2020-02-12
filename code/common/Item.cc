@@ -228,6 +228,7 @@ namespace redsquare
     void Item::defaultData()
     {
         m_GiveLifePoint = 0;
+        m_GiveManaPoint = 0;
         m_GiveAttackPoint = 0;
         m_GiveDefensePoint = 0;
 
@@ -637,6 +638,7 @@ namespace redsquare
         m_GiveLifePoint += Variance(-(m_GiveLifePoint/10));
         m_GiveAttackPoint += Variance(-(m_GiveAttackPoint/10));
         m_GiveDefensePoint += Variance(-(m_GiveDefensePoint/10));
+        m_GiveManaPoint += Variance(-(m_GiveManaPoint/10));
     }
 
     bool Item::isUseable() const

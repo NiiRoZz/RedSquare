@@ -1,4 +1,5 @@
 #include "ServerEntity.h"
+#include "Player.h"
 #include "Message.h"
 #include "../common/Singletons.h"
 
@@ -56,6 +57,16 @@ namespace redsquare
             m_DefensePoint -= item.m_GiveDefensePoint; 
             m_MaxLifePoint -= item.m_GiveLifePoint;
             m_LifePoint -= item.m_GiveLifePoint;
+
+            Player *player = static_cast<Player*>(this);
+            if (player != nullptr)
+            {
+                player->m_MaxManaPoint -= item.m_GiveManaPoint;
+                if (player->m_ManaPoint > player->m_MaxManaPoint)
+                {
+                    player->m_ManaPoint = player->m_MaxManaPoint;
+                }
+            }
         }
         else
         {
@@ -65,6 +76,12 @@ namespace redsquare
             m_DefensePoint += item.m_GiveDefensePoint; 
             m_MaxLifePoint += item.m_GiveLifePoint;
             m_LifePoint += item.m_GiveLifePoint;
+
+            Player *player = static_cast<Player*>(this);
+            if (player != nullptr)
+            {
+                player->m_MaxManaPoint += item.m_GiveManaPoint;
+            }
         }
 
         UpdateEntityCharacteristic message;
