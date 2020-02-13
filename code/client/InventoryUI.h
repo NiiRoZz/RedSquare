@@ -32,7 +32,7 @@ namespace redsquare
 
         void setVinicityObject(ClientEntity *vinicityObject);
 
-        void inventoryHided();
+        void inventoryHid();
 
     private:
     
