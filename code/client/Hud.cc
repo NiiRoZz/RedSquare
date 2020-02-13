@@ -370,10 +370,7 @@ namespace redsquare
 
     void Hud::showChat()
     {
-        if (!m_ShowInventory)
-        {
-            m_ShowChat = !m_ShowChat;
-        }
+        m_ShowChat = !m_ShowChat;
     }
 
     void Hud::showHelp()
