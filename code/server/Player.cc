@@ -80,7 +80,24 @@ namespace redsquare
 
             m_Range = 3;
             break;
-        
+
+        case EntitySubType::Healer : // ------------------- Healer -------------------
+            m_Class = EntitySubType::Healer;
+            m_LifePoint = 190;
+            m_ManaPoint = 40;
+
+            m_MaxLifePoint = 190;
+            m_MaxManaPoint = 40;
+
+            m_AttackPoint = 40;
+            m_DefensePoint = 10;
+
+            m_MaxAttackPoint = 40;
+            m_MaxDefensePoint = 10;
+
+            m_Range = 2;
+            break;
+
         default:
             break;
         }

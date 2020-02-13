@@ -572,7 +572,7 @@ namespace redsquare
 
                     for( auto &x: m_PlayerSpecialSlots)
                     {
-                        if (x.second.contains(event.mouseButton.coords) && !(x.second.haveItem()) && m_CurrMovingItem->canBeInSlot(x.second.getSlotType()))
+                        if (x.second.contains(event.mouseButton.coords) && m_CurrMovingItem->canBeInSlot(x.second.getSlotType()) && (!(x.second.haveItem()) || (x.second.haveItem() && x.second.getItem()->canBeInSlot(m_OldSlot->getSlotType()))))
                         {
                             //Request move item here
                             Packet packet;
@@ -597,7 +597,7 @@ namespace redsquare
                     {
                         for( auto &x: m_PlayerCargoSlots)
                         {
-                            if (x.second.contains(event.mouseButton.coords) && (!(x.second.haveItem())) && (m_CurrMovingItem->canBeInSlot(x.second.getSlotType())))
+                            if (x.second.contains(event.mouseButton.coords) && (m_CurrMovingItem->canBeInSlot(x.second.getSlotType())) && (!(x.second.haveItem()) || (x.second.haveItem() && x.second.getItem()->canBeInSlot(m_OldSlot->getSlotType()))))
                             {
                                 //Request move item here
                                 Packet packet;
@@ -622,7 +622,7 @@ namespace redsquare
                         {
                             for( auto &x: m_VinicityCargoSlots)
                             {
-                                if (x.second.contains(event.mouseButton.coords) && (!(x.second.haveItem())) && (m_CurrMovingItem->canBeInSlot(x.second.getSlotType())))
+                                if (x.second.contains(event.mouseButton.coords) && (m_CurrMovingItem->canBeInSlot(x.second.getSlotType())) && (!(x.second.haveItem()) || (x.second.haveItem() && x.second.getItem()->canBeInSlot(m_OldSlot->getSlotType()))))
                                 {
                                     //Request move item here
                                     Packet packet;

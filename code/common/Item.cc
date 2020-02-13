@@ -228,6 +228,7 @@ namespace redsquare
     void Item::defaultData()
     {
         m_GiveLifePoint = 0;
+        m_GiveManaPoint = 0;
         m_GiveAttackPoint = 0;
         m_GiveDefensePoint = 0;
         m_GiveManaPoint = 0;

@@ -1437,15 +1437,30 @@ namespace redsquare
                 }
                 else
                 {
-                    ServerItem oldItem = oldEntity->getInventory().removeItem(packet.moveItem.oldSlotType, packet.moveItem.oldPos);
+                    ServerItem oldItem = std::move(oldEntity->getInventory().removeItem(packet.moveItem.oldSlotType, packet.moveItem.oldPos));
                     Packet updatePacket = oldEntity->createUpdateItemPacket(packet.moveItem.oldSlotType, true, packet.moveItem.oldPos);
                     sendPacketToAllPlayers(updatePacket);
+
+                    ServerItem newItem;
+                    if (newEntity->getInventory().getItem(packet.moveItem.newSlotType, packet.moveItem.newPos) != nullptr)
+                    {
+                        newItem = std::move(newEntity->getInventory().removeItem(packet.moveItem.newSlotType, packet.moveItem.newPos));
+                        updatePacket = newEntity->createUpdateItemPacket(packet.moveItem.newSlotType, true, packet.moveItem.newPos);
+                        sendPacketToAllPlayers(updatePacket);
+                    }
 
                     if (oldItem.getType() != ItemType::Unknow)
                     {
                         newEntity->getInventory().addItem(packet.moveItem.newSlotType, std::move(oldItem), packet.moveItem.newPos);
                         updatePacket = newEntity->createUpdateItemPacket(packet.moveItem.newSlotType, false, packet.moveItem.newPos);
                         sendPacketToAllPlayers(updatePacket);
+
+                        if (newItem.getType() != ItemType::Unknow)
+                        {
+                            oldEntity->getInventory().addItem(packet.moveItem.oldSlotType, std::move(newItem), packet.moveItem.oldPos);
+                            updatePacket = oldEntity->createUpdateItemPacket(packet.moveItem.oldSlotType, false, packet.moveItem.oldPos);
+                            sendPacketToAllPlayers(updatePacket);
+                        }
                     }
                 }
 

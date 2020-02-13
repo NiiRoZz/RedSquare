@@ -82,7 +82,7 @@ namespace redsquare
         return nullptr;
     }
 
-    bool Inventory::removeItem(InventorySlotType slotType, uint pos)
+    ClientItem Inventory::removeItem(InventorySlotType slotType, uint pos)
     {
         ItemUpdateUIMessage message;
         message.entityID = m_OwnerID;
@@ -95,11 +95,12 @@ namespace redsquare
             auto it = m_CargoItems.find(pos);
             if (it != m_CargoItems.end())
             {
+                ClientItem item = std::move(it->second);
                 m_CargoItems.erase(it);
 
                 gMessageManager().sendMessage(&message);
 
-                return true;
+                return item;
             }
         }
         else
@@ -107,15 +108,16 @@ namespace redsquare
             auto it = m_SpecialItems.find(slotType);
             if (it != m_SpecialItems.end())
             {
+                ClientItem item = std::move(it->second);
                 m_SpecialItems.erase(it);
 
                 gMessageManager().sendMessage(&message);
 
-                return true;
+                return item;
             }
         }
 
-        return false;
+        return ClientItem();
     }
 
     bool Inventory::moveItem(MoveItem moveItem)
@@ -137,9 +139,22 @@ namespace redsquare
 
                 m_CargoItems.erase(oldIt);
 
-                if ( addItem(moveItem.newSlotType, std::move(item), moveItem.newPos) )
+                ClientItem *tempItem = getItem(moveItem.newSlotType, moveItem.newPos);
+                if (tempItem != nullptr && tempItem->canBeInSlot(moveItem.oldSlotType))
                 {
-                    return true;
+                    ClientItem secondItem = removeItem(moveItem.newSlotType, moveItem.newPos);
+
+                    if ( addItem(moveItem.newSlotType, std::move(item), moveItem.newPos) && addItem(moveItem.oldSlotType, std::move(secondItem), moveItem.oldPos) )
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    if ( addItem(moveItem.newSlotType, std::move(item), moveItem.newPos) )
+                    {
+                        return true;
+                    }
                 }
             }
         }
@@ -154,9 +169,22 @@ namespace redsquare
 
                 m_SpecialItems.erase(oldIt);
 
-                if ( addItem(moveItem.newSlotType, std::move(item), moveItem.newPos) )
+                ClientItem *tempItem = getItem(moveItem.newSlotType, moveItem.newPos);
+                if (tempItem != nullptr && tempItem->canBeInSlot(moveItem.oldSlotType))
                 {
-                    return true;
+                    ClientItem secondItem = removeItem(moveItem.newSlotType, moveItem.newPos);
+
+                    if ( addItem(moveItem.newSlotType, std::move(item), moveItem.newPos) && addItem(moveItem.oldSlotType, std::move(secondItem), moveItem.oldPos) )
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    if ( addItem(moveItem.newSlotType, std::move(item), moveItem.newPos) )
+                    {
+                        return true;
+                    }
                 }
             }
         }

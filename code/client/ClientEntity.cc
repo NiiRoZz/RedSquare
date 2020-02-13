@@ -48,7 +48,7 @@ namespace redsquare
             }
             case EntitySubType::Healer:
             {
-                return &gResourceManager().getTexture("img/Character/Magus.png");
+                return &gResourceManager().getTexture("img/Character/Healer.png");
                 break;
             }
 
