@@ -83,7 +83,7 @@ namespace redsquare
             {
                 gf::Vector2f baseCoordinatesMiniMap = coordinates.getRelativePoint({ 0.03f, 0.1f });
                 gf::Vector2f miniMapShapeSize = coordinates.getRelativeSize({ 0.001953125f, 0.003472222f });
-                Player *myPlayer = m_Game.getMyPlayer();
+                Player *myPlayer = m_Game.getEntities().getPlayer(m_Game.m_PlayerID);
                 gf::ShapeParticles shapeParticles;
 
                 for(uint i = 0; i < World::MapSize; ++i)
@@ -113,7 +113,7 @@ namespace redsquare
 
                         if (draw)
                         {
-                            Player *playerAtPos = m_Game.getPlayer({(int)i,(int)j});
+                            Player *playerAtPos = m_Game.getEntities().getPlayer({(int)i,(int)j});
                             if (playerAtPos != nullptr)
                             {
                                 if (playerAtPos != myPlayer)

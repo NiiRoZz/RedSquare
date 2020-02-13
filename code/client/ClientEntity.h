@@ -8,7 +8,7 @@
 
 namespace redsquare
 {
-    class ClientEntity: public gf::Entity, public redsquare::Entity
+    class ClientEntity: public redsquare::Entity
     {
     public:
         static gf::Texture* loadTexture(const EntitySubType entitySubType);

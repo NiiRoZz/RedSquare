@@ -30,12 +30,10 @@ namespace redsquare
         
         Player( gf::Id entityID, EntitySubType entitySubType, gf::Vector2i pos );
 
-        virtual void update(gf::Time time) override;
-
-        virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
+        void render(gf::RenderTarget& target, const gf::RenderStates& states);
 
         bool canAttack( gf::Vector2i targetPos, GameScene &game);
-        bool canMove( gf::Vector2i targetPos, std::map<gf::Id, Player> &players, std::map<gf::Id, Monster> &monsters, std::map<gf::Id, Prop> &props, gf::SquareMap &map );
+        bool canMove( gf::Vector2i targetPos, gf::SquareMap &map );
         bool canOpenTargetInventory( gf::Vector2i targetPos, GameScene &game);
 
     private:

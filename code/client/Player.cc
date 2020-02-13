@@ -85,11 +85,6 @@ namespace redsquare
         target.draw(m_lvl, states);
     }
 
-    void Player::update(gf::Time time)
-    {
-        //Do something
-    }
-
     bool Player::canAttack(gf::Vector2i targetPos, GameScene &game)
     {
         gf::Distance2<int> distFn = gf::manhattanDistance<int, 2>;
@@ -107,7 +102,7 @@ namespace redsquare
                 if ( isInsideMe(targetPos) ){
                     return true;
                 }
-                if( game.getPlayer(targetPos) != nullptr){
+                if( game.getEntities().getPlayer(targetPos) != nullptr){
                     return true;
                 }
                 break;
@@ -115,7 +110,7 @@ namespace redsquare
                 if ( isInsideMe(targetPos) ){
                     return true;
                 }
-                if( game.getPlayer(targetPos) != nullptr){
+                if( game.getEntities().getPlayer(targetPos) != nullptr){
                     return true;
                 }
                 break;
@@ -123,7 +118,7 @@ namespace redsquare
                 if ( isInsideMe(targetPos) ){
                     return true;
                 }
-                if( game.getPlayer(targetPos) != nullptr){
+                if( game.getEntities().getPlayer(targetPos) != nullptr){
                     return true;
                 }
                 break;
@@ -131,7 +126,7 @@ namespace redsquare
                 if ( isInsideMe(targetPos) ){
                     return true;
                 }
-                if( game.getPlayer(targetPos) != nullptr){
+                if( game.getEntities().getPlayer(targetPos) != nullptr){
                     return true;
                 }
                 break;
@@ -139,7 +134,7 @@ namespace redsquare
                 if ( isInsideMe(targetPos) ){
                     return true;
                 }
-                if( game.getPlayer(targetPos) != nullptr){
+                if( game.getEntities().getPlayer(targetPos) != nullptr){
                     return true;
                 }
                 break;
@@ -164,74 +159,24 @@ namespace redsquare
             return false;
         }
 
-        auto it = game.m_Monsters.begin();
-
-        while ( it != game.m_Monsters.end() )
+        if (game.getEntities().getMonster(targetPos) != nullptr)
         {
-            if ( it->second.isInsideMe( targetPos ) )
-            {
-                return true;
-            }
-
-            ++it;
+            return true;
         }
 
-        auto it2 = game.m_Props.begin();
- 
-        while ( it2 != game.m_Props.end() )
+        if (game.getEntities().getProp(targetPos, false) != nullptr)
         {
-            if ( it2->second.isInsideMe( targetPos ) && !(it2->second.haveInventory()) )
-            {
-                return true;
-            }
-
-            ++it2;
+            return true;
         }
 
         return false;
     }
 
-    bool Player::canMove(gf::Vector2i targetPos, std::map<gf::Id, Player> &players, std::map<gf::Id, Monster> &monsters, std::map<gf::Id, Prop> &props, gf::SquareMap &map)
+    bool Player::canMove(gf::Vector2i targetPos, gf::SquareMap &map)
     {
         if ( m_Pos == targetPos || targetPos[0] < 0 || targetPos[1] < 0 )
         {
             return false;
-        }
-
-        auto it = players.begin();
- 
-        while ( it != players.end() )
-        {
-            if ( it->second.isInsideMe( targetPos ) )
-            {
-                return false;
-            }
-
-            ++it;
-        }
-
-        auto it2 = monsters.begin();
- 
-        while ( it2 != monsters.end() )
-        {
-            if ( it2->second.isInsideMe( targetPos ) )
-            {
-                return false;
-            }
-
-            ++it2;
-        }
-
-        auto it3 = props.begin();
- 
-        while ( it3 != props.end() )
-        {
-            if ( it3->second.isInsideMe( targetPos ) )
-            {
-                return false;
-            }
-
-            ++it3;
         }
 
         return map.isWalkable( targetPos );
@@ -243,28 +188,6 @@ namespace redsquare
 
         float distance = distFn(m_Pos, targetPos);
 
-        if ( distance > m_Range )
-        {
-            return false;
-        }
-
-        if ( isInsideMe(targetPos) )
-        {
-            return false;
-        }
-
-        auto it = game.m_Props.begin();
- 
-        while ( it != game.m_Props.end() )
-        {
-            if ( it->second.isInsideMe( targetPos ) && it->second.haveInventory() )
-            {
-                return true;
-            }
-
-            ++it;
-        }
-
-        return false;
+        return (distance <= m_Range && !(isInsideMe(targetPos)) && game.getEntities().getProp(targetPos, true) != nullptr);
     }
 }

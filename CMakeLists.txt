@@ -30,6 +30,7 @@ add_executable(RedSquare
   code/client/Inventory.cc
   code/client/ItemHolder.cc
   code/client/ConnectionScene.cc
+  code/client/Entities.cc
   code/common/Sockets.cc
   code/common/Entity.cc
   code/common/Singletons.cc
