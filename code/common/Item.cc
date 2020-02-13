@@ -274,7 +274,7 @@ namespace redsquare
                 m_Description = "Attack : +" + std::to_string(m_GiveAttackPoint)+ "\nHP : +"+std::to_string(m_GiveLifePoint);
                 break;
             case ItemType::Sword5: case ItemType::Staff5: case ItemType::SpellBook5: case ItemType::Bow5: case ItemType::Shield5:
-                m_GiveAttackPoint = 6*m_BaseFloor;
+                m_GiveAttackPoint = 5*m_BaseFloor;
                 if(m_Type == ItemType::Sword5){ m_Name = "Blood Sword"; }
                 if(m_Type == ItemType::Staff5){ m_Name = "Blood Staff"; }
                 if(m_Type == ItemType::SpellBook5){ m_Name = "Book of Necromancy"; }
@@ -283,9 +283,9 @@ namespace redsquare
                 m_Description = "Attack : +" + std::to_string(m_GiveAttackPoint);
                 break;
             case ItemType::Sword6: case ItemType::Staff6: case ItemType::SpellBook6: case ItemType::Bow6:  case ItemType::Shield6:
-                m_GiveLifePoint = 5*m_BaseFloor;
-                m_GiveAttackPoint = 5*m_BaseFloor;
-                m_GiveManaPoint = 5*m_BaseFloor;
+                m_GiveLifePoint = 4*m_BaseFloor;
+                m_GiveAttackPoint = 4*m_BaseFloor;
+                m_GiveManaPoint = 4*m_BaseFloor;
                 if(m_Type == ItemType::Sword6){ m_Name = "Long Bronze Sword"; }
                 if(m_Type == ItemType::Staff6){ m_Name = "Strong Bronze Staff"; }
                 if(m_Type == ItemType::SpellBook6){ m_Name = "Great Book of Suffering"; }
@@ -294,7 +294,7 @@ namespace redsquare
                 m_Description = "Attack : +" + std::to_string(m_GiveAttackPoint)+ "\nHP : +" + std::to_string(m_GiveLifePoint)+ "\nMana : +"+std::to_string(m_GiveManaPoint);
                 break;
             case ItemType::Sword7: case ItemType::Staff7: case ItemType::SpellBook7: case ItemType::Bow7:  case ItemType::Shield7:
-                m_GiveLifePoint = 8*m_BaseFloor;
+                m_GiveLifePoint = 6*m_BaseFloor;
                 m_GiveAttackPoint = 4*m_BaseFloor;
                 if(m_Type == ItemType::Sword7){ m_Name = "Long Silver Sword"; }
                 if(m_Type == ItemType::Staff7){ m_Name = "Strong Silver Staff"; }
@@ -304,9 +304,9 @@ namespace redsquare
                 m_Description = "Attack : +" + std::to_string(m_GiveAttackPoint)+ "\nHP : +"+std::to_string(m_GiveLifePoint);
                 break;
             case ItemType::Sword8: case ItemType::Staff8: case ItemType::SpellBook8: case ItemType::Bow8:  case ItemType::Shield8:
-                m_GiveLifePoint = 7*m_BaseFloor;
-                m_GiveAttackPoint = 5*m_BaseFloor;
-                m_GiveManaPoint = 3*m_BaseFloor;
+                m_GiveLifePoint = 5*m_BaseFloor;
+                m_GiveAttackPoint = 4*m_BaseFloor;
+                m_GiveManaPoint = 2*m_BaseFloor;
                 if(m_Type == ItemType::Sword8){ m_Name = "Long Iron Sword"; }
                 if(m_Type == ItemType::Staff8){ m_Name = "Strong Iron Staff"; }
                 if(m_Type == ItemType::SpellBook8){ m_Name = "Great Book of Destruction"; }
@@ -315,7 +315,7 @@ namespace redsquare
                 m_Description = "Attack : +" + std::to_string(m_GiveAttackPoint)+ "\nHP : +" + std::to_string(m_GiveLifePoint)+ "\nMana : +"+std::to_string(m_GiveManaPoint);
                 break; 
             case ItemType::Sword9: case ItemType::Staff9: case ItemType::SpellBook9: case ItemType::Bow9:  case ItemType::Shield9:
-                m_GiveLifePoint = 8*m_BaseFloor;
+                m_GiveLifePoint = 6*m_BaseFloor;
                 if(m_Type == ItemType::Sword9){ m_Name = "Long Golden Sword"; }
                 if(m_Type == ItemType::Staff9){ m_Name = "Strong Golden Staff"; }
                 if(m_Type == ItemType::SpellBook9){ m_Name = "Great Book of Illusion"; }
@@ -359,8 +359,8 @@ namespace redsquare
                 m_Description = "Attack : +" + std::to_string(m_GiveAttackPoint)+ "\nHP : +" + std::to_string(m_GiveLifePoint)+ "\nMana : +"+std::to_string(m_GiveManaPoint)+ "\nDefense : +"+std::to_string(m_GiveDefensePoint);
                 break; 
             case ItemType::Sword13: case ItemType::Staff13: case ItemType::SpellBook13: case ItemType::Bow13:  case ItemType::Shield13:
-                m_GiveAttackPoint = 8*m_BaseFloor;
-                m_GiveDefensePoint = 8*m_BaseFloor;
+                m_GiveAttackPoint = 5*m_BaseFloor;
+                m_GiveDefensePoint = 5*m_BaseFloor;
                 if(m_Type == ItemType::Sword13){ m_Name = "Large Iron Sword"; }
                 if(m_Type == ItemType::Staff13){ m_Name = "Antic Iron Staff"; }
                 if(m_Type == ItemType::SpellBook13){ m_Name = "Superior Book of Destruction"; }
@@ -369,9 +369,9 @@ namespace redsquare
                 m_Description = "Attack : +" + std::to_string(m_GiveAttackPoint) + "\nDefense : +" + std::to_string(m_GiveDefensePoint);
                 break;
             case ItemType::Sword14: case ItemType::Staff14: case ItemType::SpellBook14: case ItemType::Bow14:  case ItemType::Shield14:
-                m_GiveAttackPoint = 10*m_BaseFloor;
-                m_GiveDefensePoint = 5*m_BaseFloor;
-                m_GiveManaPoint = 5*m_BaseFloor;
+                m_GiveAttackPoint = 7*m_BaseFloor;
+                m_GiveDefensePoint = 4*m_BaseFloor;
+                m_GiveManaPoint = 4*m_BaseFloor;
                 if(m_Type == ItemType::Sword14){ m_Name = "Large Golden Sword"; }
                 if(m_Type == ItemType::Staff14){ m_Name = "Antic Golden Staff"; }
                 if(m_Type == ItemType::SpellBook14){ m_Name = "Superior Book of Necromancy"; }
@@ -380,9 +380,9 @@ namespace redsquare
                 m_Description = "Attack : +" + std::to_string(m_GiveAttackPoint) + "\nMana : +" + std::to_string(m_GiveManaPoint) + "\nDefense : +" + std::to_string(m_GiveDefensePoint);
                 break;
             case ItemType::Sword15: case ItemType::Staff15: case ItemType::SpellBook15:case ItemType::Bow15: case ItemType::Shield15:
-                m_GiveAttackPoint = 10*m_BaseFloor;
-                m_GiveLifePoint = 10*m_BaseFloor;
-                m_GiveManaPoint = 10*m_BaseFloor;
+                m_GiveAttackPoint = 8*m_BaseFloor;
+                m_GiveLifePoint = 8*m_BaseFloor;
+                m_GiveManaPoint = 8*m_BaseFloor;
                 if(m_Type == ItemType::Sword15){ m_Name = "Large Blood Sword"; }
                 if(m_Type == ItemType::Staff15){ m_Name = "Antic Blood Staff"; }
                 if(m_Type == ItemType::SpellBook15){ m_Name = "Superior Book of Necromancy"; }
@@ -392,7 +392,7 @@ namespace redsquare
                 break;
 
             case ItemType::Helmet1: case ItemType::Chesplate1: case ItemType::Legging1: case ItemType::Boot1:
-                m_GiveDefensePoint = 2 * m_BaseFloor;   
+                m_GiveDefensePoint = m_BaseFloor;   
                 if(m_Type == ItemType::Helmet1){ m_Name = "Leather Helmet"; }
                 if(m_Type == ItemType::Chesplate1){ m_Name = "Leather Chesplate"; }
                 if(m_Type == ItemType::Legging1){ m_Name = "Leather Legging"; }
@@ -400,8 +400,8 @@ namespace redsquare
                 m_Description = "Defense : +" + std::to_string(m_GiveDefensePoint);
                 break;
             case ItemType::Helmet2: case ItemType::Chesplate2: case ItemType::Legging2: case ItemType::Boot2:
-                m_GiveDefensePoint = 2 * m_BaseFloor; 
-                m_GiveLifePoint = 2 * m_BaseFloor;    
+                m_GiveDefensePoint = m_BaseFloor; 
+                m_GiveLifePoint = m_BaseFloor;    
                 if(m_Type == ItemType::Helmet2){ m_Name = "Bronze Helmet"; }
                 if(m_Type == ItemType::Chesplate2){ m_Name = "Bronze Chesplate"; }
                 if(m_Type == ItemType::Legging2){ m_Name = "Bronze Legging"; }
@@ -409,8 +409,8 @@ namespace redsquare
                 m_Description = "HP : +" + std::to_string(m_GiveLifePoint) + "\nDefense : +" + std::to_string(m_GiveDefensePoint);
                 break;
             case ItemType::Helmet3: case ItemType::Chesplate3: case ItemType::Legging3: case ItemType::Boot3:
-                m_GiveDefensePoint = 3 * m_BaseFloor; 
-                m_GiveLifePoint = 3 * m_BaseFloor;   
+                m_GiveDefensePoint =  2 * m_BaseFloor; 
+                m_GiveLifePoint = 2 * m_BaseFloor;   
                 if(m_Type == ItemType::Helmet3){ m_Name = "Sky Helmet"; }
                 if(m_Type == ItemType::Chesplate3){ m_Name = "Sky Chesplate"; }
                 if(m_Type == ItemType::Legging3){ m_Name = "Sky Legging"; }
@@ -448,7 +448,7 @@ namespace redsquare
                 m_Description = "Attack : +" + std::to_string(m_GiveAttackPoint)+ "\nHP : +" + std::to_string(m_GiveLifePoint)+ "\nMana : +"+std::to_string(m_GiveManaPoint)+ "\nDefense : +"+std::to_string(m_GiveDefensePoint);
                 break;
             case ItemType::Helmet7: case ItemType::Chesplate7: case ItemType::Legging7: case ItemType::Boot7:
-                m_GiveAttackPoint = 4 * m_BaseFloor;  
+                m_GiveAttackPoint = 3 * m_BaseFloor;  
                 m_GiveManaPoint = 3 * m_BaseFloor;  
                 if(m_Type == ItemType::Helmet7){ m_Name = "Angel Helmet"; }
                 if(m_Type == ItemType::Chesplate7){ m_Name = "Angel Chesplate"; }
@@ -458,7 +458,7 @@ namespace redsquare
                 break;
             case ItemType::Helmet8: case ItemType::Chesplate8: case ItemType::Legging8: case ItemType::Boot8:
                 m_GiveAttackPoint = 3 * m_BaseFloor;  
-                m_GiveManaPoint = 4 * m_BaseFloor;   
+                m_GiveManaPoint = 3 * m_BaseFloor;   
                 if(m_Type == ItemType::Helmet8){ m_Name = "Anthracite Helmet"; }
                 if(m_Type == ItemType::Chesplate8){ m_Name = "Anthracite Chesplate"; }
                 if(m_Type == ItemType::Legging8){ m_Name = "Anthracite Legging"; }
@@ -467,7 +467,7 @@ namespace redsquare
                 break;
             case ItemType::Helmet9: case ItemType::Chesplate9: case ItemType::Legging9: case ItemType::Boot9:
                 m_GiveAttackPoint = 2 * m_BaseFloor;  
-                m_GiveManaPoint = 5 * m_BaseFloor;  
+                m_GiveManaPoint = 4 * m_BaseFloor;  
                 if(m_Type == ItemType::Helmet9){ m_Name = "Elf Helmet"; }
                 if(m_Type == ItemType::Chesplate9){ m_Name = "Elf Chesplate"; }
                 if(m_Type == ItemType::Legging9){ m_Name = "Elf Legging"; }
@@ -475,7 +475,7 @@ namespace redsquare
                 m_Description = "Attack : +" + std::to_string(m_GiveAttackPoint)+"\nMana : +"+std::to_string(m_GiveManaPoint);
                 break;
             case ItemType::Helmet10: case ItemType::Chesplate10: case ItemType::Legging10: case ItemType::Boot10:
-                m_GiveDefensePoint = 4 * m_BaseFloor;  
+                m_GiveDefensePoint = 3 * m_BaseFloor;  
                 m_GiveLifePoint = 4 * m_BaseFloor; 
                 if(m_Type == ItemType::Helmet10){ m_Name = "Blood Helmet"; }
                 if(m_Type == ItemType::Chesplate10){ m_Name = "Blood Chesplate"; }
@@ -485,8 +485,8 @@ namespace redsquare
                 break;
             case ItemType::Helmet11: case ItemType::Chesplate11: case ItemType::Legging11: case ItemType::Boot11:
                 m_GiveAttackPoint = 3 * m_BaseFloor;
-                m_GiveDefensePoint = 4 * m_BaseFloor;  
-                m_GiveLifePoint = 4 * m_BaseFloor;    
+                m_GiveDefensePoint = 3 * m_BaseFloor;  
+                m_GiveLifePoint = 3 * m_BaseFloor;    
                 if(m_Type == ItemType::Helmet11){ m_Name = "Ranger Helmet"; }
                 if(m_Type == ItemType::Chesplate11){ m_Name = "Ranger Chesplate"; }
                 if(m_Type == ItemType::Legging11){ m_Name = "Ranger Legging"; }
@@ -494,8 +494,8 @@ namespace redsquare
                 m_Description = "Attack : +" + std::to_string(m_GiveAttackPoint)+"\nHP : +" + std::to_string(m_GiveLifePoint) + "\nDefense : +" + std::to_string(m_GiveDefensePoint);
                 break;
             case ItemType::Helmet12: case ItemType::Chesplate12: case ItemType::Legging12: case ItemType::Boot12:
-                m_GiveAttackPoint = 4 * m_BaseFloor;
-                m_GiveDefensePoint = 4 * m_BaseFloor;  
+                m_GiveAttackPoint = 3 * m_BaseFloor;
+                m_GiveDefensePoint = 3 * m_BaseFloor;  
                 m_GiveLifePoint = 4 * m_BaseFloor;  
                 if(m_Type == ItemType::Helmet12){ m_Name = "Solar Helmet"; }
                 if(m_Type == ItemType::Chesplate12){ m_Name = "Solar Chesplate"; }
