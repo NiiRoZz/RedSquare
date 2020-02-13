@@ -230,11 +230,12 @@ namespace redsquare
         m_GiveLifePoint = 0;
         m_GiveAttackPoint = 0;
         m_GiveDefensePoint = 0;
+        m_GiveManaPoint = 0;
 
         switch (m_Type)
         {
             case ItemType::Sword1: case ItemType::Staff1: case ItemType::SpellBook1: case ItemType::Bow1: case ItemType::Shield1:
-                m_GiveAttackPoint = 2*m_BaseFloor;
+                m_GiveAttackPoint = m_BaseFloor;
                 if(m_Type == ItemType::Sword1){ m_Name = "Bronze Sword"; }
                 if(m_Type == ItemType::Staff1){ m_Name = "Bronze Staff"; }
                 if(m_Type == ItemType::SpellBook1){ m_Name = "Book of Suffering"; }
@@ -243,7 +244,7 @@ namespace redsquare
                 m_Description = "Attack : +" + std::to_string(m_GiveAttackPoint);
                 break;
             case ItemType::Sword2: case ItemType::Staff2: case ItemType::SpellBook2: case ItemType::Bow2: case ItemType::Shield2:
-                m_GiveAttackPoint = 3*m_BaseFloor;
+                m_GiveAttackPoint = 2*m_BaseFloor;
                 if(m_Type == ItemType::Sword2){ m_Name = "Silver Sword"; }
                 if(m_Type == ItemType::Staff2){ m_Name = "Silver Staff"; }
                 if(m_Type == ItemType::SpellBook2){ m_Name = "Book of Conjuration"; }
@@ -252,8 +253,8 @@ namespace redsquare
                 m_Description = "Attack : +" + std::to_string(m_GiveAttackPoint);
                 break;
             case ItemType::Sword3: case ItemType::Staff3: case ItemType::SpellBook3: case ItemType::Bow3: case ItemType::Shield3:
-                m_GiveAttackPoint = 4*m_BaseFloor;
-                m_GiveManaPoint = 4*m_BaseFloor;
+                m_GiveAttackPoint = 3*m_BaseFloor;
+                m_GiveManaPoint = 3*m_BaseFloor;
                 if(m_Type == ItemType::Sword3){ m_Name = "Iron Sword"; }
                 if(m_Type == ItemType::Staff3){ m_Name = "Iron Staff"; }
                 if(m_Type == ItemType::SpellBook3){ m_Name = "Book of Destruction"; }
@@ -262,8 +263,8 @@ namespace redsquare
                 m_Description = "Attack : +" + std::to_string(m_GiveAttackPoint)+ "\nMana : +"+std::to_string(m_GiveManaPoint);
                 break;
             case ItemType::Sword4: case ItemType::Staff4: case ItemType::SpellBook4: case ItemType::Bow4: case ItemType::Shield4:
-                m_GiveAttackPoint = 5*m_BaseFloor;
-                m_GiveLifePoint = 3*m_BaseFloor;
+                m_GiveAttackPoint = 4*m_BaseFloor;
+                m_GiveLifePoint = 2*m_BaseFloor;
                 if(m_Type == ItemType::Sword4){ m_Name = "Golden Sword"; }
                 if(m_Type == ItemType::Staff4){ m_Name = "Golden Staff"; }
                 if(m_Type == ItemType::SpellBook4){ m_Name = "Book of Illusion"; }
@@ -562,64 +563,79 @@ namespace redsquare
                 m_Name = "Mana Potion";
                 m_Description = "Strong potion of mana, give : 70% of max lifepoint";
                 break;
+            case ItemType::EnergyPot1:
+                m_Useable = true;
+                m_Name = "Energy Potion";
+                m_Description = "Basic potion of Energy, give : 25% of max lifepoint and 25% of max manapoint";
+                break;
+            case ItemType::EnergyPot2:
+                m_Useable = true;
+                m_Name = "Energy Potion";
+                m_Description = "Medium potion of Energy, give : 50% of max lifepoint and 50% of max manapoint";
+                break;
+            case ItemType::EnergyPot3:
+                m_Useable = true;
+                m_Name = "Energy Potion";
+                m_Description = "Strong potion of Energy, give : 70% of max lifepoint and 70% of max manapoint";
+                break;
             case ItemType::BoostAttack1:
                 m_Useable = true;
-                m_Name = "Boost Potion";
+                m_Name = "Boost attack";
                 m_Description = "Basic boost of attack, add 10% to your attackpoint";
                 break;
             case ItemType::BoostAttack2:
                 m_Useable = true;
-                m_Name = "Boost Potion";
+                m_Name = "Boost attack";
                 m_Description = "Medium boost of attack, add 15% to your attackpoint";
                 break;
             case ItemType::BoostAttack3:
                 m_Useable = true;
-                m_Name = "Boost Potion";
+                m_Name = "Boost attack";
                 m_Description = "Strong boost of attack, add 20% to your attackpoint";
                 break;
             case ItemType::BoostDefense1:
                 m_Useable = true;
-                m_Name = "Boost Potion";
+                m_Name = "Boost defense";
                 m_Description = "Basic boost of defense, add 10% to your attackpoint";
                 break;
             case ItemType::BoostDefense2:
                 m_Useable = true;
-                m_Name = "Boost Potion";
+                m_Name = "Boost defense";
                 m_Description = "Medium boost of defense, add 15% to your attackpoint";
                 break;
             case ItemType::BoostDefense3:
                 m_Useable = true;
-                m_Name = "Boost Potion";
+                m_Name = "Boost defense";
                 m_Description = "Strong boost of defense, add 20% to your attackpoint";
                 break;
             case ItemType::BoostHP1:
                 m_Useable = true;
-                m_Name = "Boost Potion";
+                m_Name = "Boost health";
                 m_Description = "Basic boost of health, add 10% to your attackpoint";
                 break;
             case ItemType::BoostHP2:
                 m_Useable = true;
-                m_Name = "Boost Potion";
+                m_Name = "Boost health";
                 m_Description = "Medium boost of health, add 15% to your attackpoint";
                 break;
             case ItemType::BoostHP3:
                 m_Useable = true;
-                m_Name = "Boost Potion";
+                m_Name = "Boost health";
                 m_Description = "Strong boost of health, add 20% to your attackpoint";
                 break;
             case ItemType::BoostXP1:
                 m_Useable = true;
-                m_Name = "Boost Potion";
+                m_Name = "Boost XP";
                 m_Description = "Basic boost of XP, add 10% to your attackpoint";
                 break;
             case ItemType::BoostXP2:
                 m_Useable = true;
-                m_Name = "Boost Potion";
+                m_Name = "Boost XP";
                 m_Description = "Medium boost of XP, add 15% to your attackpoint";
                 break;
             case ItemType::BoostXP3:
                 m_Useable = true;
-                m_Name = "Boost Potion";
+                m_Name = "Boost XP";
                 m_Description = "Strong boost of XP, add 20% to your attackpoint";
                 break;
 
@@ -637,6 +653,7 @@ namespace redsquare
         m_GiveLifePoint += Variance(-(m_GiveLifePoint/10));
         m_GiveAttackPoint += Variance(-(m_GiveAttackPoint/10));
         m_GiveDefensePoint += Variance(-(m_GiveDefensePoint/10));
+        m_GiveManaPoint += Variance(-(m_GiveManaPoint/10));
     }
 
     bool Item::isUseable() const

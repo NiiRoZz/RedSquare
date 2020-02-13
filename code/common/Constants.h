@@ -63,6 +63,7 @@ namespace redsquare {
     constexpr int NBMONSTER = 17;
 
     constexpr int EQUIPMENT_TYPE = 9; 
+    constexpr int POTION_TYPE = 8; 
 }
 
 #endif // REDSQUARE_CONSTANTS_H

@@ -131,13 +131,75 @@ namespace redsquare
     {
         for(auto &prop: m_Props)
         {
+            std::cout << " ????????????????????????" << std::endl;
             if (prop.second.m_EntitySubType == EntitySubType::Chest)
             {
+
+                    std::cout << "5 ?  : " << std::endl;
                 if(m_Floor <= 5){
                     // at least 1 piece of equipment and 2 potion
+                    std::cout << "0? : " << m_Floor << std::endl;
+                    uint randomNumber = rand() % (m_Floor+1);
+                    std::cout << "RANDOM NUMBER  : " << randomNumber << std::endl;
+                    ssize_t pos;
+
+                    for(uint nbItem = 0; nbItem < (randomNumber+1u) ; ++nbItem){
+                        std::cout << "nbitem : " <<  nbItem << std::endl;
+                        int randomPotion = rand() % POTION_TYPE;
+                        switch (randomPotion)
+                        {
+                            case 0:{
+                                ServerItem item2(ItemType::HealthPot1, m_Floor+1);
+                                pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                                break;
+                            }
+                            case 1:{
+                                ServerItem item2(ItemType::ManaPot1, m_Floor+1);
+                                pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                                break;
+                            }
+                            case 2:{
+                                ServerItem item2(ItemType::EnergyPot1, m_Floor+1);
+                                pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                                break;
+                            }
+                            case 3:{
+                                ServerItem item2(ItemType::BoostAttack1, m_Floor+1);
+                                pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                                break;
+                            }
+                            case 4:{
+                                ServerItem item2(ItemType::BoostMana1, m_Floor+1);
+                                pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                                break;
+                            }
+                            case 5:{
+                                ServerItem item2(ItemType::BoostXP1, m_Floor+1);
+                                pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                                break;
+                            }
+                            case 6:{
+                                ServerItem item2(ItemType::BoostDefense1, m_Floor+1);
+                                pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                                break;
+                            }
+                            case 7:{
+                                ServerItem item2(ItemType::BoostHP1, m_Floor+1);
+                                pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                                break;
+                            }
+
+                            default:
+                                break;
+                        }
+                        if (pos != -1)
+                        {
+                            Packet packet = prop.second.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                            sendPacketToAllPlayers(packet);
+                        }     
+                    }
                     int randomType = rand() % EQUIPMENT_TYPE;
                     int randomTier = rand() % 5; // 5 first tier 
-                    ssize_t pos;
                     switch (randomType)
                     {
                     case 0:{
@@ -145,27 +207,27 @@ namespace redsquare
                         {
                         case 0:{
                             ServerItem item2(ItemType::Sword1, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 1:{
                             ServerItem item2(ItemType::Sword2, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 2:{
                             ServerItem item2(ItemType::Sword3, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 3:{
                             ServerItem item2(ItemType::Sword4, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 4:{
                             ServerItem item2(ItemType::Sword5, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         default:
@@ -183,27 +245,27 @@ namespace redsquare
                         {
                         case 0:{
                             ServerItem item2(ItemType::Staff1, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 1:{
                             ServerItem item2(ItemType::Staff2, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 2:{
                             ServerItem item2(ItemType::Staff3, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 3:{
                             ServerItem item2(ItemType::Staff4, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 4:{
                             ServerItem item2(ItemType::Staff5, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         default:
@@ -221,27 +283,27 @@ namespace redsquare
                         {
                         case 0:{
                             ServerItem item2(ItemType::Bow1, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 1:{
                             ServerItem item2(ItemType::Bow2, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 2:{
                             ServerItem item2(ItemType::Bow3, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 3:{
                             ServerItem item2(ItemType::Bow4, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 4:{
                             ServerItem item2(ItemType::Bow5, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         default:
@@ -259,27 +321,27 @@ namespace redsquare
                         {
                         case 0:{
                             ServerItem item2(ItemType::SpellBook1, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 1:{
                             ServerItem item2(ItemType::SpellBook2, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 2:{
                             ServerItem item2(ItemType::SpellBook3, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 3:{
                             ServerItem item2(ItemType::SpellBook4, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 4:{
                             ServerItem item2(ItemType::SpellBook5, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         default:
@@ -297,27 +359,27 @@ namespace redsquare
                         {
                         case 0:{
                             ServerItem item2(ItemType::Shield1, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 1:{
                             ServerItem item2(ItemType::Shield2, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 2:{
                             ServerItem item2(ItemType::Shield3, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 3:{
                             ServerItem item2(ItemType::Shield4, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 4:{
                             ServerItem item2(ItemType::Shield5, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         default:
@@ -335,27 +397,27 @@ namespace redsquare
                         {
                         case 0:{
                             ServerItem item2(ItemType::Helmet1, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 1:{
                             ServerItem item2(ItemType::Helmet2, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 2:{
                             ServerItem item2(ItemType::Helmet3, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 3:{
                             ServerItem item2(ItemType::Helmet4, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 4:{
                             ServerItem item2(ItemType::Helmet5, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         default:
@@ -373,27 +435,27 @@ namespace redsquare
                         {
                         case 0:{
                             ServerItem item2(ItemType::Chesplate1, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 1:{
                             ServerItem item2(ItemType::Chesplate2, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 2:{
                             ServerItem item2(ItemType::Chesplate3, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 3:{
                             ServerItem item2(ItemType::Chesplate4, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 4:{
                             ServerItem item2(ItemType::Chesplate5, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         default:
@@ -411,27 +473,27 @@ namespace redsquare
                         {
                         case 0:{
                             ServerItem item2(ItemType::Legging1, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 1:{
                             ServerItem item2(ItemType::Legging2, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 2:{
                             ServerItem item2(ItemType::Legging3, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 3:{
                             ServerItem item2(ItemType::Legging4, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 4:{
                             ServerItem item2(ItemType::Legging5, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         default:
@@ -449,27 +511,27 @@ namespace redsquare
                         {
                         case 0:{
                             ServerItem item2(ItemType::Boot1, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 1:{
                             ServerItem item2(ItemType::Boot2, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 2:{
                             ServerItem item2(ItemType::Boot3, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 3:{
                             ServerItem item2(ItemType::Boot4, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 4:{
                             ServerItem item2(ItemType::Boot5, m_Floor+1);
-                            pos = prop.second.getInventory().addItem(InventorySlotType::Cargo, std::move(item2));
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         default:
@@ -1158,7 +1220,7 @@ namespace redsquare
 
                                 sendPacketToAllPlayers( sendPacket );
                             }
-                            
+                            std::cout << "FILL CHEST" << std::endl;
                             fillChest();
                         }
                         else
