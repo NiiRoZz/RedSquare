@@ -14,6 +14,7 @@ namespace redsquare
     public:
         static gf::Texture& getTexture( ItemType type );
 
+        ClientItem();
         ClientItem(ItemType type, uint8_t slotMask, uint baseFloor);
 
         gf::Texture& getIcon() const;

@@ -19,6 +19,7 @@ namespace redsquare
 
         //Add the item at the first slot possible if it's == cargo, return >= 0 if succes or -1 if not
         ssize_t addItem(InventorySlotType slotType, ServerItem &&item);
+        ssize_t addItemRandom(InventorySlotType slotType, ServerItem &&item);
         bool addItem(InventorySlotType slotType, ServerItem &&item, uint pos);
 
         //pos is used only if slotType == Cargo

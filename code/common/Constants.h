@@ -64,6 +64,8 @@ namespace redsquare {
 
     constexpr int EQUIPMENT_TYPE = 9; 
 
+    constexpr int POTION_TYPE = 8; 
+
     constexpr int MAGUS_LIFEPOINT = 200; 
     constexpr int MAGUS_MANAPOINT = 30; 
     constexpr int MAGUS_MAXLIFEPOINT = 200;
@@ -112,7 +114,7 @@ namespace redsquare {
     constexpr int HEALER_DEFENSEPOINT = 10; 
     constexpr int HEALER_MAXATTACKPOINT = 40; 
     constexpr int HEALER_MAXDEFENSEPOINT = 10; 
-    constexpr int HEALER_RANGE = 2;  
+    constexpr int HEALER_RANGE = 2; 
 }
 
 #endif // REDSQUARE_CONSTANTS_H
