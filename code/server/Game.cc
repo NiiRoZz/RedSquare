@@ -127,426 +127,963 @@ namespace redsquare
         return id;
     }
 
-    void Game::fillChest()
-    {
+    void Game::fillChest() {
         for(auto &prop: m_Props)
         {
-            std::cout << " ????????????????????????" << std::endl;
             if (prop.second.m_EntitySubType == EntitySubType::Chest)
             {
+                // at least 1 piece of equipment and 2 potion
+                uint randomNumber = rand() % (m_Floor+1);
+                ssize_t pos;
 
-                    std::cout << "5 ?  : " << std::endl;
-                if(m_Floor <= 5){
-                    // at least 1 piece of equipment and 2 potion
-                    std::cout << "0? : " << m_Floor << std::endl;
-                    uint randomNumber = rand() % (m_Floor+1);
-                    std::cout << "RANDOM NUMBER  : " << randomNumber << std::endl;
-                    ssize_t pos;
+                for(uint nbItem = 0; nbItem < (randomNumber+1u) ; ++nbItem){
 
-                    for(uint nbItem = 0; nbItem < (randomNumber+1u) ; ++nbItem){
-                        std::cout << "nbitem : " <<  nbItem << std::endl;
-                        int randomPotion = rand() % POTION_TYPE;
-                        switch (randomPotion)
-                        {
-                            case 0:{
-                                ServerItem item2(ItemType::HealthPot1, m_Floor+1);
-                                pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                                break;
-                            }
-                            case 1:{
-                                ServerItem item2(ItemType::ManaPot1, m_Floor+1);
-                                pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                                break;
-                            }
-                            case 2:{
-                                ServerItem item2(ItemType::EnergyPot1, m_Floor+1);
-                                pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                                break;
-                            }
-                            case 3:{
-                                ServerItem item2(ItemType::BoostAttack1, m_Floor+1);
-                                pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                                break;
-                            }
-                            case 4:{
-                                ServerItem item2(ItemType::BoostMana1, m_Floor+1);
-                                pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                                break;
-                            }
-                            case 5:{
-                                ServerItem item2(ItemType::BoostXP1, m_Floor+1);
-                                pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                                break;
-                            }
-                            case 6:{
-                                ServerItem item2(ItemType::BoostDefense1, m_Floor+1);
-                                pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                                break;
-                            }
-                            case 7:{
-                                ServerItem item2(ItemType::BoostHP1, m_Floor+1);
-                                pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                                break;
-                            }
-
-                            default:
-                                break;
-                        }
-                        if (pos != -1)
-                        {
-                            Packet packet = prop.second.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                            sendPacketToAllPlayers(packet);
-                        }     
+                    int randomPotion;
+                    if(m_Floor < 5){
+                        randomPotion = rand() % POTION_TIER1; // potion tier 1 + potion tier 2
+                    }else if( m_Floor >= 5 && m_Floor < 15){
+                        randomPotion = rand() % POTION_TIER2; // potion tier 1 + potion tier 2
+                    }else if( m_Floor >= 15){
+                        randomPotion = rand() % POTION_TIER3; // potion tier 1 + potion tier 2
                     }
-                    int randomType = rand() % EQUIPMENT_TYPE;
-                    int randomTier = rand() % 5; // 5 first tier 
-                    switch (randomType)
+                    switch (randomPotion)
                     {
-                    case 0:{
-                        switch (randomTier)
-                        {
                         case 0:{
-                            ServerItem item2(ItemType::Sword1, m_Floor+1);
+                            ServerItem item2(ItemType::HealthPot1, m_Floor+1);
                             pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 1:{
-                            ServerItem item2(ItemType::Sword2, m_Floor+1);
+                            ServerItem item2(ItemType::ManaPot1, m_Floor+1);
                             pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 2:{
-                            ServerItem item2(ItemType::Sword3, m_Floor+1);
+                            ServerItem item2(ItemType::EnergyPot1, m_Floor+1);
                             pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 3:{
-                            ServerItem item2(ItemType::Sword4, m_Floor+1);
+                            ServerItem item2(ItemType::BoostAttack1, m_Floor+1);
                             pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
                         case 4:{
-                            ServerItem item2(ItemType::Sword5, m_Floor+1);
+                            ServerItem item2(ItemType::BoostMana1, m_Floor+1);
                             pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
-                        default:
+                        case 5:{
+                            ServerItem item2(ItemType::BoostXP1, m_Floor+1);
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                             break;
                         }
-                        if (pos != -1)
-                        {
-                            Packet packet = prop.second.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                            sendPacketToAllPlayers(packet);
+                        case 6:{
+                            ServerItem item2(ItemType::BoostDefense1, m_Floor+1);
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                            break;
                         }
+                        case 7:{
+                            ServerItem item2(ItemType::BoostHP1, m_Floor+1);
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                            break;
+                        }
+                        case 8:{
+                            ServerItem item2(ItemType::HealthPot2, m_Floor+1);
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                            break;
+                        }
+                        case 9:{
+                            ServerItem item2(ItemType::ManaPot2, m_Floor+1);
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                            break;
+                        }
+                        case 10:{
+                            ServerItem item2(ItemType::EnergyPot2, m_Floor+1);
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                            break;
+                        }
+                        case 11:{
+                            ServerItem item2(ItemType::BoostAttack2, m_Floor+1);
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                            break;
+                        }
+                        case 12:{
+                            ServerItem item2(ItemType::BoostMana2, m_Floor+1);
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                            break;
+                        }
+                        case 13:{
+                            ServerItem item2(ItemType::BoostXP2, m_Floor+1);
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                            break;
+                        }
+                        case 14:{
+                            ServerItem item2(ItemType::BoostDefense2, m_Floor+1);
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                            break;
+                        }
+                        case 15:{
+                            ServerItem item2(ItemType::BoostHP2, m_Floor+1);
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                            break;
+                        }
+                        case 16:{
+                            ServerItem item2(ItemType::HealthPot3, m_Floor+1);
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                            break;
+                        }
+                        case 17:{
+                            ServerItem item2(ItemType::ManaPot3, m_Floor+1);
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                            break;
+                        }
+                        case 18:{
+                            ServerItem item2(ItemType::EnergyPot3, m_Floor+1);
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                            break;
+                        }
+                        case 19:{
+                            ServerItem item2(ItemType::BoostAttack3, m_Floor+1);
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                            break;
+                        }
+                        case 20:{
+                            ServerItem item2(ItemType::BoostMana3, m_Floor+1);
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                            break;
+                        }
+                        case 21:{
+                            ServerItem item2(ItemType::BoostXP3, m_Floor+1);
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                            break;
+                        }
+                        case 22:{
+                            ServerItem item2(ItemType::BoostDefense3, m_Floor+1);
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                            break;
+                        }
+                        case 23:{
+                            ServerItem item2(ItemType::BoostHP3, m_Floor+1);
+                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                            break;
+                        }
+
+                        default:
+                            break;
+                    }
+                    if (pos != -1)
+                    {
+                        Packet packet = prop.second.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                        sendPacketToAllPlayers(packet);
+                    }     
+                }
+                int randomType = rand() % EQUIPMENT_TYPE;
+                int randomTier;
+                if(m_Floor < 5){
+                    randomTier = rand() % TIER1; // 5 first tier
+                }else if(m_Floor >= 5 && m_Floor < 15){
+                    randomTier = rand() % TIER2; // 10 first tier
+                }else if(m_Floor >= 15){
+                    randomTier = rand() % TIER3; // all tier
+                }  
+
+                switch (randomType)
+                {
+                case 0:{
+                    switch (randomTier)
+                    {
+                    case 0:{
+                        ServerItem item2(ItemType::Sword1, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                         break;
                     }
                     case 1:{
-                        switch (randomTier)
-                        {
-                        case 0:{
-                            ServerItem item2(ItemType::Staff1, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 1:{
-                            ServerItem item2(ItemType::Staff2, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 2:{
-                            ServerItem item2(ItemType::Staff3, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 3:{
-                            ServerItem item2(ItemType::Staff4, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 4:{
-                            ServerItem item2(ItemType::Staff5, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        default:
-                            break;
-                        }
-                        if (pos != -1)
-                        {
-                            Packet packet = prop.second.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                            sendPacketToAllPlayers(packet);
-                        }
+                        ServerItem item2(ItemType::Sword2, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                         break;
                     }
                     case 2:{
-                        switch (randomTier)
-                        {
-                        case 0:{
-                            ServerItem item2(ItemType::Bow1, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 1:{
-                            ServerItem item2(ItemType::Bow2, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 2:{
-                            ServerItem item2(ItemType::Bow3, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 3:{
-                            ServerItem item2(ItemType::Bow4, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 4:{
-                            ServerItem item2(ItemType::Bow5, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        default:
-                            break;
-                        }
-                        if (pos != -1)
-                        {
-                            Packet packet = prop.second.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                            sendPacketToAllPlayers(packet);
-                        }
+                        ServerItem item2(ItemType::Sword3, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                         break;
                     }
                     case 3:{
-                        switch (randomTier)
-                        {
-                        case 0:{
-                            ServerItem item2(ItemType::SpellBook1, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 1:{
-                            ServerItem item2(ItemType::SpellBook2, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 2:{
-                            ServerItem item2(ItemType::SpellBook3, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 3:{
-                            ServerItem item2(ItemType::SpellBook4, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 4:{
-                            ServerItem item2(ItemType::SpellBook5, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        default:
-                            break;
-                        }
-                        if (pos != -1)
-                        {
-                            Packet packet = prop.second.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                            sendPacketToAllPlayers(packet);
-                        }
+                        ServerItem item2(ItemType::Sword4, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                         break;
                     }
                     case 4:{
-                        switch (randomTier)
-                        {
-                        case 0:{
-                            ServerItem item2(ItemType::Shield1, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 1:{
-                            ServerItem item2(ItemType::Shield2, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 2:{
-                            ServerItem item2(ItemType::Shield3, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 3:{
-                            ServerItem item2(ItemType::Shield4, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 4:{
-                            ServerItem item2(ItemType::Shield5, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        default:
-                            break;
-                        }
-                        if (pos != -1)
-                        {
-                            Packet packet = prop.second.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                            sendPacketToAllPlayers(packet);
-                        }
+                        ServerItem item2(ItemType::Sword5, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                         break;
                     }
                     case 5:{
-                        switch (randomTier)
-                        {
-                        case 0:{
-                            ServerItem item2(ItemType::Helmet1, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 1:{
-                            ServerItem item2(ItemType::Helmet2, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 2:{
-                            ServerItem item2(ItemType::Helmet3, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 3:{
-                            ServerItem item2(ItemType::Helmet4, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 4:{
-                            ServerItem item2(ItemType::Helmet5, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        default:
-                            break;
-                        }
-                        if (pos != -1)
-                        {
-                            Packet packet = prop.second.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                            sendPacketToAllPlayers(packet);
-                        }
+                        ServerItem item2(ItemType::Sword6, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                         break;
                     }
                     case 6:{
-                        switch (randomTier)
-                        {
-                        case 0:{
-                            ServerItem item2(ItemType::Chesplate1, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 1:{
-                            ServerItem item2(ItemType::Chesplate2, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 2:{
-                            ServerItem item2(ItemType::Chesplate3, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 3:{
-                            ServerItem item2(ItemType::Chesplate4, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 4:{
-                            ServerItem item2(ItemType::Chesplate5, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        default:
-                            break;
-                        }
-                        if (pos != -1)
-                        {
-                            Packet packet = prop.second.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                            sendPacketToAllPlayers(packet);
-                        }
+                        ServerItem item2(ItemType::Sword7, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                         break;
                     }
                     case 7:{
-                        switch (randomTier)
-                        {
-                        case 0:{
-                            ServerItem item2(ItemType::Legging1, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 1:{
-                            ServerItem item2(ItemType::Legging2, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 2:{
-                            ServerItem item2(ItemType::Legging3, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 3:{
-                            ServerItem item2(ItemType::Legging4, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 4:{
-                            ServerItem item2(ItemType::Legging5, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        default:
-                            break;
-                        }
-                        if (pos != -1)
-                        {
-                            Packet packet = prop.second.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                            sendPacketToAllPlayers(packet);
-                        }
+                        ServerItem item2(ItemType::Sword8, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                         break;
                     }
                     case 8:{
-                        switch (randomTier)
-                        {
-                        case 0:{
-                            ServerItem item2(ItemType::Boot1, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 1:{
-                            ServerItem item2(ItemType::Boot2, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 2:{
-                            ServerItem item2(ItemType::Boot3, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 3:{
-                            ServerItem item2(ItemType::Boot4, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        case 4:{
-                            ServerItem item2(ItemType::Boot5, m_Floor+1);
-                            pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
-                            break;
-                        }
-                        default:
-                            break;
-                        }
-                        if (pos != -1)
-                        {
-                            Packet packet = prop.second.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                            sendPacketToAllPlayers(packet);
-                        }
+                        ServerItem item2(ItemType::Sword9, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 9:{
+                        ServerItem item2(ItemType::Sword10, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 10:{
+                        ServerItem item2(ItemType::Sword11, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 11:{
+                        ServerItem item2(ItemType::Sword12, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 12:{
+                        ServerItem item2(ItemType::Sword13, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 13:{
+                        ServerItem item2(ItemType::Sword14, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 15:{
+                        ServerItem item2(ItemType::Sword15, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
                         break;
                     }
                     default:
                         break;
                     }
+                    if (pos != -1)
+                    {
+                        Packet packet = prop.second.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                        sendPacketToAllPlayers(packet);
+                    }
+                    break;
+                }
+                case 1:{
+                    switch (randomTier)
+                    {
+                    case 0:{
+                        ServerItem item2(ItemType::Staff1, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 1:{
+                        ServerItem item2(ItemType::Staff2, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 2:{
+                        ServerItem item2(ItemType::Staff3, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 3:{
+                        ServerItem item2(ItemType::Staff4, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 4:{
+                        ServerItem item2(ItemType::Staff5, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 5:{
+                        ServerItem item2(ItemType::Staff6, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 6:{
+                        ServerItem item2(ItemType::Staff7, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 7:{
+                        ServerItem item2(ItemType::Staff8, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 8:{
+                        ServerItem item2(ItemType::Staff9, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 9:{
+                        ServerItem item2(ItemType::Staff10, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 10:{
+                        ServerItem item2(ItemType::Staff11, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 11:{
+                        ServerItem item2(ItemType::Staff12, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 12:{
+                        ServerItem item2(ItemType::Staff13, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 13:{
+                        ServerItem item2(ItemType::Staff14, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 15:{
+                        ServerItem item2(ItemType::Staff15, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    default:
+                        break;
+                    }
+                    if (pos != -1)
+                    {
+                        Packet packet = prop.second.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                        sendPacketToAllPlayers(packet);
+                    }
+                    break;
+                }
+                case 2:{
+                    switch (randomTier)
+                    {
+                    case 0:{
+                        ServerItem item2(ItemType::Bow1, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 1:{
+                        ServerItem item2(ItemType::Bow2, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 2:{
+                        ServerItem item2(ItemType::Bow3, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 3:{
+                        ServerItem item2(ItemType::Bow4, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 4:{
+                        ServerItem item2(ItemType::Bow5, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 5:{
+                        ServerItem item2(ItemType::Bow6, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 6:{
+                        ServerItem item2(ItemType::Bow7, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 7:{
+                        ServerItem item2(ItemType::Bow8, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 8:{
+                        ServerItem item2(ItemType::Bow9, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 9:{
+                        ServerItem item2(ItemType::Bow10, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 10:{
+                        ServerItem item2(ItemType::Bow11, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 11:{
+                        ServerItem item2(ItemType::Bow12, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 12:{
+                        ServerItem item2(ItemType::Bow13, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 13:{
+                        ServerItem item2(ItemType::Bow14, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 15:{
+                        ServerItem item2(ItemType::Bow15, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    default:
+                        break;
+                    }
+                    if (pos != -1)
+                    {
+                        Packet packet = prop.second.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                        sendPacketToAllPlayers(packet);
+                    }
+                    break;
+                }
+                case 3:{
+                    switch (randomTier)
+                    {
+                    case 0:{
+                        ServerItem item2(ItemType::SpellBook1, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 1:{
+                        ServerItem item2(ItemType::SpellBook2, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 2:{
+                        ServerItem item2(ItemType::SpellBook3, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 3:{
+                        ServerItem item2(ItemType::SpellBook4, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 4:{
+                        ServerItem item2(ItemType::SpellBook5, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 5:{
+                        ServerItem item2(ItemType::SpellBook6, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 6:{
+                        ServerItem item2(ItemType::SpellBook7, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 7:{
+                        ServerItem item2(ItemType::SpellBook8, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 8:{
+                        ServerItem item2(ItemType::SpellBook9, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 9:{
+                        ServerItem item2(ItemType::SpellBook10, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 10:{
+                        ServerItem item2(ItemType::SpellBook11, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 11:{
+                        ServerItem item2(ItemType::SpellBook12, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 12:{
+                        ServerItem item2(ItemType::SpellBook13, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 13:{
+                        ServerItem item2(ItemType::SpellBook14, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 15:{
+                        ServerItem item2(ItemType::SpellBook15, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    default:
+                        break;
+                    }
+                    if (pos != -1)
+                    {
+                        Packet packet = prop.second.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                        sendPacketToAllPlayers(packet);
+                    }
+                    break;
+                }
+                case 4:{
+                    switch (randomTier)
+                    {
+                    case 0:{
+                        ServerItem item2(ItemType::Shield1, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 1:{
+                        ServerItem item2(ItemType::Shield2, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 2:{
+                        ServerItem item2(ItemType::Shield3, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 3:{
+                        ServerItem item2(ItemType::Shield4, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 4:{
+                        ServerItem item2(ItemType::Shield5, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 5:{
+                        ServerItem item2(ItemType::Shield6, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 6:{
+                        ServerItem item2(ItemType::Shield7, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 7:{
+                        ServerItem item2(ItemType::Shield8, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 8:{
+                        ServerItem item2(ItemType::Shield9, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 9:{
+                        ServerItem item2(ItemType::Shield10, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 10:{
+                        ServerItem item2(ItemType::Shield11, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 11:{
+                        ServerItem item2(ItemType::Shield12, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 12:{
+                        ServerItem item2(ItemType::Shield13, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 13:{
+                        ServerItem item2(ItemType::Shield14, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 15:{
+                        ServerItem item2(ItemType::Shield15, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    default:
+                        break;
+                    }
+                    if (pos != -1)
+                    {
+                        Packet packet = prop.second.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                        sendPacketToAllPlayers(packet);
+                    }
+                    break;
+                }
+                case 5:{
+                    switch (randomTier)
+                    {
+                    case 0:{
+                        ServerItem item2(ItemType::Helmet1, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 1:{
+                        ServerItem item2(ItemType::Helmet2, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 2:{
+                        ServerItem item2(ItemType::Helmet3, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 3:{
+                        ServerItem item2(ItemType::Helmet4, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 4:{
+                        ServerItem item2(ItemType::Helmet5, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 5:{
+                        ServerItem item2(ItemType::Helmet6, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 6:{
+                        ServerItem item2(ItemType::Helmet7, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 7:{
+                        ServerItem item2(ItemType::Helmet8, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 8:{
+                        ServerItem item2(ItemType::Helmet9, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 9:{
+                        ServerItem item2(ItemType::Helmet5, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 10:{
+                        ServerItem item2(ItemType::Helmet11, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 11:{
+                        ServerItem item2(ItemType::Helmet12, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 12:{
+                        ServerItem item2(ItemType::Helmet13, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 13:{
+                        ServerItem item2(ItemType::Helmet14, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 15:{
+                        ServerItem item2(ItemType::Helmet15, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    default:
+                        break;
+                    }
+                    if (pos != -1)
+                    {
+                        Packet packet = prop.second.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                        sendPacketToAllPlayers(packet);
+                    }
+                    break;
+                }
+                case 6:{
+                    switch (randomTier)
+                    {
+                    case 0:{
+                        ServerItem item2(ItemType::Chesplate1, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 1:{
+                        ServerItem item2(ItemType::Chesplate2, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 2:{
+                        ServerItem item2(ItemType::Chesplate3, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 3:{
+                        ServerItem item2(ItemType::Chesplate4, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 4:{
+                        ServerItem item2(ItemType::Chesplate5, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 5:{
+                        ServerItem item2(ItemType::Chesplate6, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 6:{
+                        ServerItem item2(ItemType::Chesplate7, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 7:{
+                        ServerItem item2(ItemType::Chesplate8, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 8:{
+                        ServerItem item2(ItemType::Chesplate9, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 9:{
+                        ServerItem item2(ItemType::Chesplate10, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 10:{
+                        ServerItem item2(ItemType::Chesplate11, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 11:{
+                        ServerItem item2(ItemType::Chesplate12, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 12:{
+                        ServerItem item2(ItemType::Chesplate13, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 13:{
+                        ServerItem item2(ItemType::Chesplate14, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 15:{
+                        ServerItem item2(ItemType::Chesplate15, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    default:
+                        break;
+                    }
+                    if (pos != -1)
+                    {
+                        Packet packet = prop.second.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                        sendPacketToAllPlayers(packet);
+                    }
+                    break;
+                }
+                case 7:{
+                    switch (randomTier)
+                    {
+                    case 0:{
+                        ServerItem item2(ItemType::Legging1, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 1:{
+                        ServerItem item2(ItemType::Legging2, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 2:{
+                        ServerItem item2(ItemType::Legging3, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 3:{
+                        ServerItem item2(ItemType::Legging4, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 4:{
+                        ServerItem item2(ItemType::Legging5, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 5:{
+                        ServerItem item2(ItemType::Legging6, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 6:{
+                        ServerItem item2(ItemType::Legging7, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 7:{
+                        ServerItem item2(ItemType::Legging8, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 8:{
+                        ServerItem item2(ItemType::Legging9, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 9:{
+                        ServerItem item2(ItemType::Legging10, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 10:{
+                        ServerItem item2(ItemType::Legging11, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 11:{
+                        ServerItem item2(ItemType::Legging12, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 12:{
+                        ServerItem item2(ItemType::Legging13, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 13:{
+                        ServerItem item2(ItemType::Legging14, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 15:{
+                        ServerItem item2(ItemType::Legging15, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    default:
+                        break;
+                    }
+                    if (pos != -1)
+                    {
+                        Packet packet = prop.second.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                        sendPacketToAllPlayers(packet);
+                    }
+                    break;
+                }
+                case 8:{
+                    switch (randomTier)
+                    {
+                    case 0:{
+                        ServerItem item2(ItemType::Boot1, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 1:{
+                        ServerItem item2(ItemType::Boot2, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 2:{
+                        ServerItem item2(ItemType::Boot3, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 3:{
+                        ServerItem item2(ItemType::Boot4, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 4:{
+                        ServerItem item2(ItemType::Boot5, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 5:{
+                        ServerItem item2(ItemType::Boot6, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 6:{
+                        ServerItem item2(ItemType::Boot7, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 7:{
+                        ServerItem item2(ItemType::Boot8, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 8:{
+                        ServerItem item2(ItemType::Boot9, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 9:{
+                        ServerItem item2(ItemType::Boot10, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 10:{
+                        ServerItem item2(ItemType::Boot11, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 11:{
+                        ServerItem item2(ItemType::Boot12, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 12:{
+                        ServerItem item2(ItemType::Boot13, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 13:{
+                        ServerItem item2(ItemType::Boot14, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    case 15:{
+                        ServerItem item2(ItemType::Boot15, m_Floor+1);
+                        pos = prop.second.getInventory().addItemRandom(InventorySlotType::Cargo, std::move(item2));
+                        break;
+                    }
+                    default:
+                        break;
+                    }
+                    if (pos != -1)
+                    {
+                        Packet packet = prop.second.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                        sendPacketToAllPlayers(packet);
+                    }
+                    break;
+                }
+                default:
+                    break;
                 }
             }
         }
