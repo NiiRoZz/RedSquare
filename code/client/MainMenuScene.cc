@@ -59,7 +59,7 @@ namespace redsquare
             case MenuChoice::None:
                 break;
             case MenuChoice::Start:
-                m_Scenes.replaceScene(m_Scenes.connection, m_Scenes.glitchEffect, gf::seconds(0.8f));
+                m_Scenes.replaceScene(m_Scenes.connection, m_Scenes.glitchEffect, gf::seconds(0.4f));
                 break;
             case MenuChoice::Quit:
                 m_Scenes.popScene();

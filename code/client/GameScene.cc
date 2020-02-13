@@ -172,6 +172,11 @@ namespace redsquare
         return true;
     }
 
+    void GameScene::disconnect()
+    {
+        m_ThreadCom.getSocket().disconnect();
+    }
+
     void GameScene::sendInfoConnection(EntitySubType type, const char *name)
     {
         Packet sendPacket;
@@ -800,7 +805,7 @@ namespace redsquare
                     m_TempMove.clear();
                     m_TempMoveTarget = {0, 0};
                     receiveWorld();
-                    m_Scenes.replaceScene(m_Scenes.game, m_Scenes.glitchEffect, gf::seconds(1.0f));
+                    m_Scenes.replaceScene(m_Scenes.game, m_Scenes.glitchEffect, gf::seconds(0.4f));
                     m_ThreadCom.start();
                     break;
                 }

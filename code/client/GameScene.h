@@ -46,6 +46,8 @@ namespace redsquare
 
         bool connect(const char *ip, const char *port, const char *name, const EntitySubType entitySubType);
 
+        void disconnect();
+
         void movePlayer( int dirX, int dirY, bool mouseClic = false );
 
         void attackPos( int posX, int posY );

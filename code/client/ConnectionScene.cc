@@ -105,7 +105,7 @@ namespace redsquare
 
             if (ImGui::Button("Back", DefaultButtonSize))
             {
-                m_Scenes.replaceScene(m_Scenes.mainMenu, m_Scenes.glitchEffect, gf::seconds(0.8f));
+                m_Scenes.replaceScene(m_Scenes.mainMenu, m_Scenes.glitchEffect, gf::seconds(0.4f));
                 m_ConnectionAsked = false;
             }
 
@@ -115,7 +115,7 @@ namespace redsquare
             {
                 if (m_Scenes.game.connect(m_HostNameBuffer.getData(), m_PortBuffer.getData(), m_NameBuffer.getData(), m_DisplayEntitySubType))
                 {
-                    m_Scenes.replaceScene(m_Scenes.game, m_Scenes.glitchEffect, gf::seconds(1.0f));
+                    m_Scenes.replaceScene(m_Scenes.game, m_Scenes.glitchEffect, gf::seconds(0.4f));
                 }
                 else
                 {
