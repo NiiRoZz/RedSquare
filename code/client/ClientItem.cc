@@ -506,7 +506,14 @@ namespace redsquare
                 break;
         }
 
-        return gResourceManager().getTexture("img/attackCursor.png");
+        return gResourceManager().getTexture("img/Cursor/attackCursor.png");
+    }
+
+    ClientItem::ClientItem()
+    : Item(ItemType::Unknow, 1u)
+    , m_Icon(ClientItem::getTexture(ItemType::Unknow))
+    {
+
     }
 
     ClientItem::ClientItem(ItemType type, uint8_t slotMask, uint baseFloor)
