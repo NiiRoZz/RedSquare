@@ -44,12 +44,8 @@ int main( int argc, char **argv )
 
     Game game;
 
-	Chat::getInstance();
-	
-	
 	boost::asio::io_service m_IoService;
     boost::asio::ip::tcp::acceptor m_Acceptor(m_IoService, tcp::endpoint(tcp::v4(), port));
-
 
 	boost::asio::io_service m_IoServiceChat;
     boost::asio::ip::tcp::acceptor m_AcceptorChat(m_IoServiceChat, tcp::endpoint(tcp::v4(), port+1));
@@ -61,7 +57,6 @@ int main( int argc, char **argv )
 
 		tcp::socket socketChat(m_IoServiceChat);
 		m_AcceptorChat.accept(socketChat);
-		
 
 		SocketTcp wrapper(std::move(socket));
 		SocketTcp wrapperChat(std::move(socketChat));
@@ -69,6 +64,9 @@ int main( int argc, char **argv )
 		gf::Id idPlayer = game.addNewPlayer(std::move(wrapper));
 		Chat::getInstance().addPlayer(idPlayer,std::move(wrapperChat));
 	}
+
+	m_Acceptor.close();
+	m_AcceptorChat.close();
 
 	Chat::getInstance().startChat();
 
