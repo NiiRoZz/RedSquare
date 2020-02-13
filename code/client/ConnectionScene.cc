@@ -140,8 +140,27 @@ namespace redsquare
         ImGui::Begin("Description Character", nullptr, DefaultWindowFlags);
         
         ImVec2 descP=ImGui::GetWindowSize();
-        ImGui::TextWrapped("The logging API redirects all text output so you can easily capture the content of a window or a block. Tree nodes can be automatically expanded.");
-        ImGui::SetWindowFontScale(descP[0]/300);
+        if(m_DisplayEntitySubType == EntitySubType::Magus)
+        {
+            ImGui::TextWrapped("Magus demolish their foes with incantations. Although they wield powerful offensive spells, mages are fragile and lightly armored, making them particularly vulnerable to close-range attacks. Wise mages make careful use of their spells to keep their foes at a distance or hold them in place.");
+        }
+        if(m_DisplayEntitySubType == EntitySubType::Warrior)
+        {
+            ImGui::TextWrapped("Warriors equip themselves carefully for combat and engage their enemies head-on, letting attacks glance off their heavy armor. They use diverse combat tactics and a wide variety of weapon types to protect their more vulnerable allies.");
+        }
+        if(m_DisplayEntitySubType == EntitySubType::Rogue)
+        {
+            ImGui::TextWrapped("Rogues often initiate combat with a surprise attack from the shadows, leading with vicious melee strikes. When in protracted battles, they utilize a successive combination of carefully chosen attacks to soften the enemy up for a killing blow.");
+        }
+        if(m_DisplayEntitySubType == EntitySubType::Ranger)
+        {
+            ImGui::TextWrapped("Ranger battle their foes at a distance, they nock their arrows between the two eyes. Though their missile weapons are effective at short and long ranges, hunters are also highly mobile.");
+        }
+        if(m_DisplayEntitySubType == EntitySubType::Healer)
+        {
+            ImGui::TextWrapped("Priests use powerful healing magic to fortify themselves and their allies. They also wield powerful offensive spells from a distance, but can be overwhelmed by enemies due to their physical frailty and minimal armor. Experienced priests carefully balance the use of their offensive powers when tasked with keeping their party alive.");
+        }
+        ImGui::SetWindowFontScale(descP[0]/290);
 
         ImGui::End();
 
@@ -179,8 +198,32 @@ namespace redsquare
         ImGui::Begin("Characteristic Character", nullptr, DefaultWindowFlags);
         
         ImVec2 charP=ImGui::GetWindowSize();
-        ImGui::TextWrapped("The logging API redirects all text output so you can easily capture the content of a window or a block. Tree nodes can be automatically expanded.");
-        ImGui::SetWindowFontScale(charP[0]/300);
+        if(m_DisplayEntitySubType == EntitySubType::Magus)
+        {
+            std::string text= "Lifepoint : " + std::to_string(MAGUS_LIFEPOINT)+"\n"+"Manapoint : " + std::to_string(MAGUS_MANAPOINT)+"\n"+"Attack : " + std::to_string(MAGUS_ATTACKPOINT)+"\n"+"Defense : " + std::to_string(MAGUS_DEFENSEPOINT)+"\n"+"Range : " + std::to_string(MAGUS_RANGE);
+            ImGui::TextWrapped(text.c_str());
+        }
+        if(m_DisplayEntitySubType == EntitySubType::Warrior)
+        {
+            std::string text= "Lifepoint : " + std::to_string(WARRIOR_LIFEPOINT)+"\n"+"Manapoint : " + std::to_string(WARRIOR_MANAPOINT)+"\n"+"Attack : " + std::to_string(WARRIOR_ATTACKPOINT)+"\n"+"Defense : " + std::to_string(WARRIOR_DEFENSEPOINT)+"\n"+"Range : " + std::to_string(WARRIOR_RANGE);
+            ImGui::TextWrapped(text.c_str());
+        }  
+        if(m_DisplayEntitySubType == EntitySubType::Rogue)
+        {
+            std::string text= "Lifepoint : " + std::to_string(ROGUE_LIFEPOINT)+"\n"+"Manapoint : " + std::to_string(ROGUE_MANAPOINT)+"\n"+"Attack : " + std::to_string(ROGUE_ATTACKPOINT)+"\n"+"Defense : " + std::to_string(ROGUE_DEFENSEPOINT)+"\n"+"Range : " + std::to_string(ROGUE_RANGE);
+            ImGui::TextWrapped(text.c_str());
+        }  
+        if(m_DisplayEntitySubType == EntitySubType::Ranger)
+        {
+            std::string text= "Lifepoint : " + std::to_string(RANGER_LIFEPOINT)+"\n"+"Manapoint : " + std::to_string(RANGER_MANAPOINT)+"\n"+"Attack : " + std::to_string(RANGER_ATTACKPOINT)+"\n"+"Defense : " + std::to_string(RANGER_DEFENSEPOINT)+"\n"+"Range : " + std::to_string(RANGER_RANGE);
+            ImGui::TextWrapped(text.c_str());
+        }  
+        if(m_DisplayEntitySubType == EntitySubType::Healer)
+        {
+            std::string text= "Lifepoint : " + std::to_string(HEALER_LIFEPOINT)+"\n"+"Manapoint : " + std::to_string(HEALER_MANAPOINT)+"\n"+"Attack : " + std::to_string(HEALER_ATTACKPOINT)+"\n"+"Defense : " + std::to_string(HEALER_DEFENSEPOINT)+"\n"+"Range : " + std::to_string(HEALER_RANGE);
+            ImGui::TextWrapped(text.c_str());
+        }          
+        ImGui::SetWindowFontScale(charP[0]/290);
 
         ImGui::End();
 

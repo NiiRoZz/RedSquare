@@ -139,8 +139,11 @@ namespace redsquare
         gf::Action m_Spell8Action;
 
         gf::Cursor m_DefaultCursor;
+        gf::Image m_AttackCursorImage;
         gf::Cursor m_AttackCursor;
+        gf::Image m_MoveCursorImage;
         gf::Cursor m_MoveCursor;
+        gf::Image m_ChestCursorImage;
         gf::Cursor m_ChestCursor;
 
         void doAction();

@@ -15,87 +15,87 @@ namespace redsquare
         switch (m_EntitySubType){
         case EntitySubType::Magus : // ------------------- Magus -------------------
             m_Class = EntitySubType::Magus;
-            m_LifePoint = 200;
-            m_ManaPoint = 30;
+            m_LifePoint = MAGUS_LIFEPOINT;
+            m_ManaPoint = MAGUS_MANAPOINT;
 
-            m_MaxLifePoint = 200;
-            m_MaxManaPoint = 30;
+            m_MaxLifePoint = MAGUS_MAXLIFEPOINT;
+            m_MaxManaPoint = MAGUS_MAXMANAPOINT;
 
-            m_AttackPoint = 60;
-            m_DefensePoint = 10;
+            m_AttackPoint = MAGUS_ATTACKPOINT;
+            m_DefensePoint = MAGUS_DEFENSEPOINT;
 
-            m_MaxAttackPoint = 60;
-            m_MaxDefensePoint = 10;
+            m_MaxAttackPoint = MAGUS_MAXATTACKPOINT;
+            m_MaxDefensePoint = MAGUS_MAXDEFENSEPOINT;
 
-            m_Range = 2;
+            m_Range = MAGUS_RANGE;
             break;
 
         case EntitySubType::Warrior : // ------------------- Warrior -------------------
             m_Class = EntitySubType::Warrior;
-            m_LifePoint = 300;
-            m_ManaPoint = 20;
+            m_LifePoint = WARRIOR_LIFEPOINT;
+            m_ManaPoint = WARRIOR_MANAPOINT;
 
-            m_MaxLifePoint = 300;
-            m_MaxManaPoint = 20;
+            m_MaxLifePoint = WARRIOR_MAXLIFEPOINT;
+            m_MaxManaPoint = WARRIOR_MAXMANAPOINT;
 
-            m_AttackPoint = 70;
-            m_DefensePoint = 20;
+            m_AttackPoint = WARRIOR_ATTACKPOINT;
+            m_DefensePoint = WARRIOR_DEFENSEPOINT;
 
-            m_MaxAttackPoint = 70;
-            m_MaxDefensePoint = 20;
+            m_MaxAttackPoint = WARRIOR_MAXATTACKPOINT;
+            m_MaxDefensePoint = WARRIOR_MAXDEFENSEPOINT;
 
-            m_Range = 1;
+            m_Range = WARRIOR_RANGE;
             break;
 
         case EntitySubType::Rogue : // ------------------- Rogue -------------------
             m_Class = EntitySubType::Rogue;
-            m_LifePoint = 250;
-            m_ManaPoint = 25;
+            m_LifePoint = ROGUE_LIFEPOINT;
+            m_ManaPoint = ROGUE_MANAPOINT;
 
-            m_MaxLifePoint = 250;
-            m_MaxManaPoint = 25;
+            m_MaxLifePoint = ROGUE_MAXLIFEPOINT;
+            m_MaxManaPoint = ROGUE_MAXMANAPOINT;
 
-            m_AttackPoint = 80;
-            m_DefensePoint = 15;
+            m_AttackPoint = ROGUE_ATTACKPOINT;
+            m_DefensePoint = ROGUE_DEFENSEPOINT;
 
-            m_MaxAttackPoint = 80;
-            m_MaxDefensePoint = 15;
+            m_MaxAttackPoint = ROGUE_MAXATTACKPOINT;
+            m_MaxDefensePoint = ROGUE_MAXDEFENSEPOINT;
 
-            m_Range = 1;
+            m_Range = ROGUE_RANGE;
             break;
 
         case EntitySubType::Ranger : // ------------------- Rogue -------------------
             m_Class = EntitySubType::Ranger;
-            m_LifePoint = 190;
-            m_ManaPoint = 20;
+            m_LifePoint = RANGER_LIFEPOINT;
+            m_ManaPoint = RANGER_MANAPOINT;
 
-            m_MaxLifePoint = 190;
-            m_MaxManaPoint = 20;
+            m_MaxLifePoint = RANGER_MAXLIFEPOINT;
+            m_MaxManaPoint = RANGER_MAXMANAPOINT;
 
-            m_AttackPoint = 45;
-            m_DefensePoint = 10;
+            m_AttackPoint = RANGER_ATTACKPOINT;
+            m_DefensePoint = RANGER_DEFENSEPOINT;
 
-            m_MaxAttackPoint = 45;
-            m_MaxDefensePoint = 10;
+            m_MaxAttackPoint = RANGER_MAXATTACKPOINT;
+            m_MaxDefensePoint = RANGER_MAXDEFENSEPOINT;
 
-            m_Range = 3;
+            m_Range = RANGER_RANGE;
             break;
 
         case EntitySubType::Healer : // ------------------- Healer -------------------
             m_Class = EntitySubType::Healer;
-            m_LifePoint = 190;
-            m_ManaPoint = 40;
+            m_LifePoint = HEALER_LIFEPOINT;
+            m_ManaPoint = HEALER_MANAPOINT;
 
-            m_MaxLifePoint = 190;
-            m_MaxManaPoint = 40;
+            m_MaxLifePoint = HEALER_MAXLIFEPOINT;
+            m_MaxManaPoint = HEALER_MAXMANAPOINT;
 
-            m_AttackPoint = 40;
-            m_DefensePoint = 10;
+            m_AttackPoint = HEALER_ATTACKPOINT;
+            m_DefensePoint = HEALER_DEFENSEPOINT;
 
-            m_MaxAttackPoint = 40;
-            m_MaxDefensePoint = 10;
+            m_MaxAttackPoint = HEALER_MAXATTACKPOINT;
+            m_MaxDefensePoint = HEALER_MAXDEFENSEPOINT;
 
-            m_Range = 2;
+            m_Range = HEALER_RANGE;
             break;
 
         default:
