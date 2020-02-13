@@ -378,15 +378,15 @@ namespace redsquare
                 if(m_Level == 2){
                     m_SpellTab.push_back(SpellType::Heal);
                 }else if(m_Level == 3){
-                    // m_SpellTab.push_back(SpellType::Massacre);
+                    m_SpellTab.push_back(SpellType::FireBall);
                 }else if(m_Level == 4){
-                    // m_SpellTab.push_back(SpellType::Berserk);
+                    m_SpellTab.push_back(SpellType::Protection);
                 }else if(m_Level == 5){
-                    // m_SpellTab.push_back(SpellType::Scorch);
+                    m_SpellTab.push_back(SpellType::DamageUp);
                 }else if(m_Level == 6){
-                   // m_SpellTab.push_back(SpellType::DoubleStrike);
+                   m_SpellTab.push_back(SpellType::ArmorUp);
                 }else if(m_Level == 7){
-                   // m_SpellTab.push_back(SpellType::Massacre);
+                   m_SpellTab.push_back(SpellType::Incinerate);
                 }
                 sendUpdateOfSpells();
                 break;
