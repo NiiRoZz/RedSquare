@@ -429,8 +429,7 @@ namespace redsquare
         {
             newPosX = rand() % MapSize;
             newPosY = rand() % MapSize;
-
-        } while( m_World( { (uint)newPosX,(uint) newPosX } ) != Tile::Room ); // only putting stair on an empty randon room's tile 
+        } while( m_World( { (uint)newPosX,(uint) newPosY } ) != Tile::Room ); // only putting stair on an empty randon room's tile 
 
         m_Spawn = std::move(gf::Vector2i(newPosX, newPosY));
 
