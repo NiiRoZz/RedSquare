@@ -59,9 +59,4 @@ namespace redsquare
         m_lvl.setAnchor(gf::Anchor::CenterRight);
         target.draw(m_lvl, states);
     }
-
-    void Monster::update(gf::Time time)
-    {
-        //Do something
-    }
 }

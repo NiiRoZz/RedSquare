@@ -14,9 +14,9 @@ namespace redsquare
     public:
         Prop( gf::Id entityID, EntitySubType entitySubType, gf::Vector2i pos );
 
-        virtual void update(gf::Time time) override;
+        void update(gf::Time time);
 
-        virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
+        void render(gf::RenderTarget& target, const gf::RenderStates& states);
 
         bool haveInventory() const;
 

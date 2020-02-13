@@ -2,6 +2,7 @@
 #include "Scenes.h"
 #include "../common/Singletons.h"
 #include "Message.h"
+#include "ItemHolder.h"
 
 #include <iostream>
 #include <utility>
@@ -63,6 +64,7 @@ namespace redsquare
 
         m_World.setPriority(-1);
         addWorldEntity(m_World);
+        addWorldEntity(m_Entities);
 
         addHudEntity(m_Hud);
 
@@ -250,42 +252,42 @@ namespace redsquare
             m_Hud.showEchap();
         }
 
-        if( m_Spell1Action.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && getMyPlayer() != nullptr && getMyPlayer()->m_Level >= 2)
+        if( m_Spell1Action.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && m_Entities.getPlayer(m_PlayerID) != nullptr && m_Entities.getPlayer(m_PlayerID)->m_Level >= 2)
         {
             changeSpell(1);
         }
 
-        if( m_Spell2Action.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && getMyPlayer() != nullptr && getMyPlayer()->m_Level >= 2)
+        if( m_Spell2Action.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && m_Entities.getPlayer(m_PlayerID) != nullptr && m_Entities.getPlayer(m_PlayerID)->m_Level >= 2)
         {
             changeSpell(2);
         }
 
-        if( m_Spell3Action.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && getMyPlayer() != nullptr && getMyPlayer()->m_Level >= 3)
+        if( m_Spell3Action.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && m_Entities.getPlayer(m_PlayerID) != nullptr && m_Entities.getPlayer(m_PlayerID)->m_Level >= 3)
         {
             changeSpell(3);
         }
 
-        if( m_Spell4Action.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && getMyPlayer() != nullptr && getMyPlayer()->m_Level >= 4)
+        if( m_Spell4Action.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && m_Entities.getPlayer(m_PlayerID) != nullptr && m_Entities.getPlayer(m_PlayerID)->m_Level >= 4)
         {
             changeSpell(4);
         }
 
-        if( m_Spell5Action.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && getMyPlayer() != nullptr && getMyPlayer()->m_Level >= 5)
+        if( m_Spell5Action.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && m_Entities.getPlayer(m_PlayerID) != nullptr && m_Entities.getPlayer(m_PlayerID)->m_Level >= 5)
         {
             changeSpell(5);
         }
 
-        if( m_Spell6Action.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && getMyPlayer() != nullptr && getMyPlayer()->m_Level >= 6)
+        if( m_Spell6Action.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && m_Entities.getPlayer(m_PlayerID) != nullptr && m_Entities.getPlayer(m_PlayerID)->m_Level >= 6)
         {
             changeSpell(6);
         }
 
-        if( m_Spell7Action.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && getMyPlayer() != nullptr && getMyPlayer()->m_Level >= 7)
+        if( m_Spell7Action.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && m_Entities.getPlayer(m_PlayerID) != nullptr && m_Entities.getPlayer(m_PlayerID)->m_Level >= 7)
         {
             changeSpell(7);
         }
 
-        if( m_Spell8Action.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && getMyPlayer() != nullptr && getMyPlayer()->m_Level >= 8)
+        if( m_Spell8Action.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && m_Entities.getPlayer(m_PlayerID) != nullptr && m_Entities.getPlayer(m_PlayerID)->m_Level >= 8)
         {
             changeSpell(8);
         }
@@ -306,21 +308,21 @@ namespace redsquare
                 {
                     gf::Vector2i pos = m_Scenes.getRenderer().mapPixelToCoords(event.mouseButton.coords, getWorldView()) / World::TileSize;
 
-                    Player* myPlayer = getMyPlayer();
+                    Player* myPlayer = m_Entities.getPlayer(m_PlayerID);
                     if ( myPlayer != nullptr && m_CanPlay )
                     {
                         if ( myPlayer->canAttack(pos, *this) )
                         {
                             attackPos( pos[0], pos[1] );
                         }
-                        else if (myPlayer->canMove(pos, m_Players, m_Monsters, m_Props, m_World.m_SquareMap))
+                        else if (myPlayer->canMove(pos, m_World.m_SquareMap))
                         {
                             movePlayer( pos[0], pos[1], true );
                         }
                         else if ( myPlayer->canOpenTargetInventory(pos, *this) )
                         {
-                            ClientEntity *entity = static_cast<ClientEntity*>(getProp(pos));
-                            if (entity)
+                            ClientEntity *entity = static_cast<ClientEntity*>(m_Entities.getProp(pos));
+                            if (entity != nullptr)
                             {
                                 m_Hud.getInventoryUI().setVinicityObject(entity);
                                 
@@ -338,7 +340,7 @@ namespace redsquare
                 {
                     gf::Vector2i pos = m_Scenes.getRenderer().mapPixelToCoords(event.mouseCursor.coords, getWorldView()) / World::TileSize;
 
-                    Player* myPlayer = getMyPlayer();
+                    Player* myPlayer = m_Entities.getPlayer(m_PlayerID);
                     if ( myPlayer != nullptr && m_CanPlay )
                     {
                         if ( myPlayer->canAttack(pos, *this) )
@@ -346,7 +348,7 @@ namespace redsquare
                             m_Scenes.getWindow().setMouseCursor(m_AttackCursor);
                             m_TempMove.clear();
                         }
-                        else if (myPlayer->canMove(pos, m_Players, m_Monsters, m_Props, m_World.m_SquareMap))
+                        else if (myPlayer->canMove(pos, m_World.m_SquareMap))
                         {
                             m_Scenes.getWindow().setMouseCursor(m_MoveCursor);
 
@@ -431,12 +433,10 @@ namespace redsquare
         m_World.update( time );
 
         //We update only the player we are controlling
-        Player* player = getMyPlayer();
+        Player* player = m_Entities.getPlayer(m_PlayerID);
 
         if ( player != nullptr )
         {
-            player->update( time );
-
             getWorldView().setCenter( { (float)(player->m_Pos[0] * World::TileSize), (float)(player->m_Pos[1] * World::TileSize )} );
 
             //Do all actions stuff here
@@ -451,7 +451,7 @@ namespace redsquare
             return;
         }
 
-        Player* myPlayer = getMyPlayer();
+        Player* myPlayer = m_Entities.getPlayer(m_PlayerID);
 
         if ( myPlayer == nullptr )
         {
@@ -553,7 +553,7 @@ namespace redsquare
                     {
                         case EntityType::Player:
                         {
-                            Player* player = getPlayer( packet.receiveMove.entityID );
+                            Player* player = m_Entities.getPlayer( packet.receiveMove.entityID );
                             assert( player != nullptr );
 
                             m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(player), true);
@@ -569,7 +569,7 @@ namespace redsquare
 
                         case EntityType::Monster:
                         {
-                            Monster* monster = getMonster( packet.receiveMove.entityID );
+                            Monster* monster = m_Entities.getMonster( packet.receiveMove.entityID );
                             assert( monster != nullptr );
 
                             m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(monster), true);
@@ -592,54 +592,46 @@ namespace redsquare
                     {
                         case EntityType::Player:
                         {
-                            Player* player = getPlayer( packet.entityDisconnected.entityID );
+                            Player* player = m_Entities.getPlayer( packet.entityDisconnected.entityID );
                             assert( player != nullptr );
-
-                            removeWorldEntity(player);
 
                             m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(player), true);
                             m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(player), true);
 
-                            m_Players.erase( packet.entityDisconnected.entityID );
+                            m_Entities.removePlayer( packet.entityDisconnected.entityID );
                             break;
                         }
 
                         case EntityType::Monster:
                         {
-                            Monster* monster = getMonster( packet.entityDisconnected.entityID );
+                            Monster* monster = m_Entities.getMonster( packet.entityDisconnected.entityID );
                             assert( monster != nullptr );
-
-                            removeWorldEntity(monster);
 
                             m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(monster), true);
                             m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(monster), true);
 
-                            m_Monsters.erase( packet.entityDisconnected.entityID );
+                            m_Entities.removeMonster( packet.entityDisconnected.entityID );
                             break;
                         }
 
                         case EntityType::Prop:
                         {
-                            Prop* prop = getProp( packet.entityDisconnected.entityID );
+                            Prop* prop = m_Entities.getProp( packet.entityDisconnected.entityID );
                             assert( prop != nullptr );
-
-                            removeWorldEntity(prop);
 
                             m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(prop), true);
                             m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(prop), true);
 
-                            m_Props.erase( packet.entityDisconnected.entityID );
+                            m_Entities.removeProp( packet.entityDisconnected.entityID );
                             break;
                         }
 
                         case EntityType::ItemHolder:
                         {
-                            ItemHolder* itemHolder = getItemHolder( packet.entityDisconnected.entityID );
+                            ItemHolder* itemHolder = m_Entities.getItemHolder( packet.entityDisconnected.entityID );
                             assert( itemHolder != nullptr );
 
-                            removeWorldEntity(itemHolder);
-
-                            m_ItemHolders.erase( packet.entityDisconnected.entityID );
+                            m_Entities.removeItemHolder( packet.entityDisconnected.entityID );
                             break;
                         }
                     }
@@ -651,14 +643,14 @@ namespace redsquare
                 {
                     // TODO cd on some spell
 
-                    Player* myPlayer = getMyPlayer();
+                    Player* myPlayer = m_Entities.getPlayer(m_PlayerID);
 
                     if ( myPlayer == nullptr )
                     {
                         break;
                     }
 
-                    if ( m_TempMoveTarget != gf::Vector2i(0,0) && myPlayer->m_Pos != m_TempMoveTarget && !monsterInRange() && getPlayer(m_TempMoveTarget) == nullptr && getMonster(m_TempMoveTarget) == nullptr )
+                    if ( m_TempMoveTarget != gf::Vector2i(0,0) && myPlayer->m_Pos != m_TempMoveTarget && !m_Entities.monsterInRange(myPlayer->m_Pos, myPlayer->m_Range) )
                     {
                         m_TempMove.clear();
 
@@ -670,7 +662,7 @@ namespace redsquare
 
                             gf::Vector2i pos = allPos[1];
 
-                            if ( getPlayer(pos) == nullptr && getMonster(pos) == nullptr )
+                            if ( m_Entities.getPlayer(pos) == nullptr && m_Entities.getMonster(pos) == nullptr )
                             {
                                 Packet packet;
                                 packet.type = PacketType::RequestMove;
@@ -703,54 +695,42 @@ namespace redsquare
                     {
                         case EntityType::Player:
                         {
-                            auto it = m_Players.insert( std::make_pair( packet.spawnEntity.entityID, Player( packet.spawnEntity.entityID, packet.spawnEntity.typeOfEntity, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) ) ) );
-                            assert( it.second );
-
-                            addWorldEntity(it.first->second);
+                            Player& player = m_Entities.addNewPlayer(packet.spawnEntity.entityID, std::move(Player( packet.spawnEntity.entityID, packet.spawnEntity.typeOfEntity, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY))));
 
                             if (packet.spawnEntity.entityID == m_PlayerID)
                             {
                                 MyPlayerReceivedTypeMessage message;
-                                message.player = &(it.first->second);
+                                message.player = &player;
 
                                 gMessageManager().sendMessage(&message);
                             }
 
-                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&(it.first->second)), false);
-                            m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(&(it.first->second)), false);
+                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&player), false);
+                            m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(&player), false);
                             break;
                         }
 
                         case EntityType::Monster:
                         {
-                            auto it = m_Monsters.insert( std::make_pair( packet.spawnEntity.entityID, Monster( packet.spawnEntity.entityID, packet.spawnEntity.typeOfEntity, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) ) ) );
-                            assert( it.second );
+                            Monster& monster = m_Entities.addNewMonster(packet.spawnEntity.entityID, std::move(Monster( packet.spawnEntity.entityID, packet.spawnEntity.typeOfEntity, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) )));
 
-                            addWorldEntity(it.first->second);
-
-                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&(it.first->second)), false);
-                            m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(&(it.first->second)), false);
+                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&monster), false);
+                            m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(&monster), false);
                             break;
                         }
 
                         case EntityType::Prop:
                         {
-                            auto it = m_Props.insert( std::make_pair( packet.spawnEntity.entityID, Prop( packet.spawnEntity.entityID, packet.spawnEntity.typeOfEntity, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) ) ) );
-                            assert( it.second );
+                            Prop& prop = m_Entities.addNewProp(packet.spawnEntity.entityID, std::move(Prop( packet.spawnEntity.entityID, packet.spawnEntity.typeOfEntity, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) )));
 
-                            addWorldEntity(it.first->second);
-
-                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&(it.first->second)), false);
-                            m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(&(it.first->second)), false);
+                            m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&prop), false);
+                            m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(&prop), false);
                             break;
                         }
 
                         case EntityType::ItemHolder:
                         {
-                            auto it = m_ItemHolders.insert( std::make_pair( packet.spawnEntity.entityID, ItemHolder( packet.spawnEntity.entityID, packet.spawnEntity.holdingItem, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) ) ) );
-                            assert( it.second );
-
-                            addWorldEntity(it.first->second);
+                            ItemHolder& itemHolder = m_Entities.addNewItemHolder(packet.spawnEntity.entityID, std::move(ItemHolder(packet.spawnEntity.entityID, packet.spawnEntity.holdingItem, gf::Vector2i(packet.spawnEntity.posX, packet.spawnEntity.posY) )));
                             break;
                         }
                     }
@@ -761,7 +741,7 @@ namespace redsquare
                 {
                     if ( packet.entityCar.entityType == EntityType::Player )
                     {
-                        Player* player = getPlayer(packet.entityCar.entityID);
+                        Player* player = m_Entities.getPlayer(packet.entityCar.entityID);
                         assert(player != nullptr);
 
                         player->m_LifePoint = packet.entityCar.m_LifePoint;
@@ -785,7 +765,7 @@ namespace redsquare
                     }
                     else if ( packet.entityCar.entityType == EntityType::Monster )
                     {
-                        Monster* monster = getMonster(packet.entityCar.entityID);
+                        Monster* monster = m_Entities.getMonster(packet.entityCar.entityID);
                         assert(monster != nullptr);
 
                         monster->m_LifePoint = packet.entityCar.m_LifePoint;
@@ -827,7 +807,7 @@ namespace redsquare
 
                 case PacketType::UpdateSpells:
                 {
-                    Player *myPlayer = getMyPlayer();
+                    Player *myPlayer = m_Entities.getPlayer(m_PlayerID);
 
                     if ( myPlayer == nullptr )
                     {
@@ -851,19 +831,19 @@ namespace redsquare
                     {
                         case EntityType::Player:
                         {
-                            entity = getPlayer(packet.updateItem.entityID);
+                            entity = m_Entities.getPlayer(packet.updateItem.entityID);
                             break;
                         }
 
                         case EntityType::Monster:
                         {
-                            entity = getMonster(packet.updateItem.entityID);
+                            entity = m_Entities.getMonster(packet.updateItem.entityID);
                             break;
                         }
 
                         case EntityType::Prop:
                         {
-                            entity = getProp(packet.updateItem.entityID);
+                            entity = m_Entities.getProp(packet.updateItem.entityID);
                             break;
                         }
                     }
@@ -891,19 +871,19 @@ namespace redsquare
                     {
                         case EntityType::Player:
                         {
-                            oldEntity = getPlayer(packet.moveItem.oldEntityID);
+                            oldEntity = m_Entities.getPlayer(packet.moveItem.oldEntityID);
                             break;
                         }
 
                         case EntityType::Monster:
                         {
-                            oldEntity = getMonster(packet.moveItem.oldEntityID);
+                            oldEntity = m_Entities.getMonster(packet.moveItem.oldEntityID);
                             break;
                         }
 
                         case EntityType::Prop:
                         {
-                            oldEntity = getProp(packet.moveItem.oldEntityID);
+                            oldEntity = m_Entities.getProp(packet.moveItem.oldEntityID);
                             break;
                         }
                     }
@@ -913,19 +893,19 @@ namespace redsquare
                     {
                         case EntityType::Player:
                         {
-                            newEntity = getPlayer(packet.moveItem.newEntityID);
+                            newEntity = m_Entities.getPlayer(packet.moveItem.newEntityID);
                             break;
                         }
 
                         case EntityType::Monster:
                         {
-                            newEntity = getMonster(packet.moveItem.newEntityID);
+                            newEntity = m_Entities.getMonster(packet.moveItem.newEntityID);
                             break;
                         }
 
                         case EntityType::Prop:
                         {
-                            newEntity = getProp(packet.moveItem.newEntityID);
+                            newEntity = m_Entities.getProp(packet.moveItem.newEntityID);
                             break;
                         }
                     }
@@ -973,150 +953,10 @@ namespace redsquare
 
         m_PassTurn = true;
     }
-
-    Player* GameScene::getMyPlayer()
-    {
-        auto player = m_Players.find( m_PlayerID );
-
-        if ( player != m_Players.end() )
-        {
-            return &player->second;
-        }
-
-        return nullptr;
-    }
-
-    Player* GameScene::getPlayer( gf::Id playerID )
-    {
-        auto player = m_Players.find( playerID );
-
-        if ( player != m_Players.end() )
-        {
-            return &player->second;
-        }
-
-        return nullptr;
-    }
-
-    Player* GameScene::getPlayer( gf::Vector2i pos )
-    {
-        auto it = m_Players.begin();
-
-        // Iterate over the map using Iterator till end.
-        while ( it != m_Players.end() )
-        {
-            if ( it->second.isInsideMe(pos) )
-            {
-                return &it->second;
-            }
-
-            ++it;
-        }
-
-        return nullptr;
-    }
-
-    Monster* GameScene::getMonster( gf::Id monsterID )
-    {
-        auto monster = m_Monsters.find( monsterID );
-
-        if ( monster != m_Monsters.end() )
-        {
-            return &monster->second;
-        }
-
-        return nullptr;
-    }
-
-    Monster* GameScene::getMonster( gf::Vector2i pos )
-    {
-        auto it = m_Monsters.begin();
-
-        // Iterate over the map using Iterator till end.
-        while ( it != m_Monsters.end() )
-        {
-            if ( it->second.isInsideMe(pos) )
-            {
-                return &it->second;
-            }
-
-            ++it;
-        }
-
-        return nullptr;
-    }
-
-    Prop* GameScene::getProp( gf::Id propID )
-    {
-        auto prop = m_Props.find( propID );
-
-        if ( prop != m_Props.end() )
-        {
-            return &prop->second;
-        }
-
-        return nullptr;
-    }
-
-    Prop* GameScene::getProp( gf::Vector2i pos )
-    {
-        auto it = m_Props.begin();
-
-        // Iterate over the map using Iterator till end.
-        while ( it != m_Props.end() )
-        {
-            if ( it->second.isInsideMe(pos) )
-            {
-                return &it->second;
-            }
-
-            ++it;
-        }
-
-        return nullptr;
-    }
-
-    ItemHolder* GameScene::getItemHolder( gf::Id itemHolderID )
-    {
-        auto itemHolder = m_ItemHolders.find( itemHolderID );
-
-        if ( itemHolder != m_ItemHolders.end() )
-        {
-            return &itemHolder->second;
-        }
-
-        return nullptr;
-    }
-
-    bool GameScene::monsterInRange()
-    {
-        Player* myPlayer = getMyPlayer();
-
-        if ( myPlayer == nullptr )
-        {
-            return false;
-        }
-
-        gf::Distance2<int> distFn = gf::manhattanDistance<int, 2>;
-
-        auto it = m_Monsters.begin();
-
-        while ( it != m_Monsters.end() )
-        {
-            if ( distFn(myPlayer->m_Pos, it->second.m_Pos) <= myPlayer->m_Range )
-            {
-                return true;
-            }
-
-            ++it;
-        }
-
-        return false;
-    }
     
     void GameScene::changeSpell(int spell){
 
-        auto currentPlayer = getMyPlayer();
+        auto currentPlayer = m_Entities.getPlayer(m_PlayerID);
         if(currentPlayer != nullptr){
             m_CurrentSpell = currentPlayer->m_SpellTab[spell-1];
         }else{
@@ -1130,5 +970,10 @@ namespace redsquare
     void GameScene::sendPacket(Packet &packet)
     {
         m_ThreadCom.sendPacket(packet);
+    }
+
+    Entities& GameScene::getEntities()
+    {
+        return m_Entities;
     }
 }

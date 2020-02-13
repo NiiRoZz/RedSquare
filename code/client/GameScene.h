@@ -12,10 +12,7 @@
 #include <gf/Scene.h>
 #include <gf/Cursor.h>
 
-#include "Monster.h"
-#include "Player.h"
-#include "Prop.h"
-#include "ItemHolder.h"
+#include "Entities.h"
 #include "ThreadCom.h"
 #include "../common/Packet.h"
 #include "World.h"
@@ -30,15 +27,6 @@ namespace redsquare
     public:
         //ID of current player
         gf::Id m_PlayerID;
-
-        //All players
-        std::map<gf::Id, Player> m_Players;
-        //All monsters
-        std::map<gf::Id, Monster> m_Monsters;
-        //All props
-        std::map<gf::Id, Prop> m_Props;
-        //All itemHolders
-        std::map<gf::Id, ItemHolder> m_ItemHolders;
 
         //Value if it's his turn and he can play
         bool m_CanPlay;
@@ -55,20 +43,6 @@ namespace redsquare
         SpellType m_CurrentSpell;
 
         GameScene( Scenes &scenes );
-
-        Player* getMyPlayer();
-        Player* getPlayer( gf::Id playerID );
-        Player* getPlayer( gf::Vector2i pos );
-
-        Monster* getMonster( gf::Id monsterID );
-        Monster* getMonster( gf::Vector2i pos );
-
-        Prop* getProp( gf::Id propID );
-        Prop* getProp( gf::Vector2i pos );
-
-        ItemHolder* getItemHolder( gf::Id itemHolderID );
-
-        bool monsterInRange();
 
         bool connect(const char *ip, const char *port, const char *name, const EntitySubType entitySubType);
 
@@ -90,6 +64,8 @@ namespace redsquare
 
         void sendPacket(Packet &packet);
 
+        Entities& getEntities();
+
     private:
         void sendInfoConnection(EntitySubType type, const char *name);
         void receiveWorld();
@@ -98,6 +74,8 @@ namespace redsquare
         Scenes& m_Scenes;
 
         Hud m_Hud;
+
+        Entities m_Entities;
 
         const char *m_Name;
         //Thread for communication
