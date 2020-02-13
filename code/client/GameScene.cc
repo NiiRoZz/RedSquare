@@ -175,6 +175,7 @@ namespace redsquare
     void GameScene::disconnect()
     {
         m_ThreadCom.getSocket().disconnect();
+        m_Hud.getChat().getChatCom().getSocket().disconnect();
     }
 
     void GameScene::sendInfoConnection(EntitySubType type, const char *name)
