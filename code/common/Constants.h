@@ -63,8 +63,13 @@ namespace redsquare {
     constexpr int NBMONSTER = 17;
 
     constexpr int EQUIPMENT_TYPE = 9; 
+    constexpr int POTION_TIER1 = 8; 
+    constexpr int POTION_TIER2 = 16; 
+    constexpr int POTION_TIER3 = 24; 
 
-    constexpr int POTION_TYPE = 8; 
+    constexpr int TIER1 = 5;
+    constexpr int TIER2 = 10;
+    constexpr int TIER3 = 15;
 
     constexpr int MAGUS_LIFEPOINT = 200; 
     constexpr int MAGUS_MANAPOINT = 30; 
