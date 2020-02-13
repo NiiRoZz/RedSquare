@@ -26,10 +26,13 @@ namespace redsquare
     , m_SpellWidgetHover(nullptr)
     , m_ShowMap(false)
     , m_ShowChat(true)
+    , m_ShowEchap(false)
     , m_ShowHelp(false)
     , m_ShowInventory(false)
     , m_PlayerDead(false)
-    , m_QuitWidget("Back", m_Font)
+    , m_QuitWidget("Back to Menu", m_Font)
+    , m_BackgroundTexture(gResourceManager().getTexture("img/Inventory/BorderSlot.png"))
+    , m_Background(m_BackgroundTexture)
     {
         gMessageManager().registerHandler<SpellUpdateMessage>(&Hud::onSpellUpdate, this);
         gMessageManager().registerHandler<MyPlayerDeadMessage>(&Hud::onPlayerDeadUpdate, this);
@@ -253,6 +256,25 @@ namespace redsquare
             {
                 m_InventoryUI.render(target, states);
             }
+
+            if(m_ShowEchap)
+            {
+                gf::Vector2f InventoryWindowSize = coordinates.getRelativeSize({ 1.0f, 1.0f });
+                m_Background.setScale({InventoryWindowSize[0],InventoryWindowSize[1]});
+                
+                unsigned characterSize = coordinates.getRelativeCharacterSize(0.095f);
+                auto startPosition = coordinates.getRelativePoint({ 0.5f, 0.5f });
+                m_QuitWidget.setCharacterSize(characterSize);
+                m_QuitWidget.setAnchor(gf::Anchor::Center);
+                m_QuitWidget.setPosition(startPosition);
+                m_QuitWidget.setDefaultTextColor(gf::Color::White);
+                m_QuitWidget.setDefaultTextOutlineColor(gf::Color::Black);
+                m_QuitWidget.setSelectedTextOutlineColor(gf::Color::Black);
+                m_QuitWidget.setTextOutlineThickness(characterSize * 0.05f);
+
+                target.draw( m_Background, states );
+                target.draw( m_QuitWidget, states );
+            }
         }
     }
 
@@ -386,6 +408,11 @@ namespace redsquare
         {
             m_InventoryUI.setVinicityObject(nullptr);
         }
+    }
+
+    void Hud::showEchap()
+    {
+        m_ShowEchap = !m_ShowEchap;
     }
 
     InventoryUI& Hud::getInventoryUI()

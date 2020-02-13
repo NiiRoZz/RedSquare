@@ -129,6 +129,7 @@ namespace redsquare
         gf::Action m_MapAction;
         gf::Action m_HelpMenuAction;
         gf::Action m_ChatAction;
+        gf::Action m_EchapAction;
         gf::Action m_Spell1Action;
         gf::Action m_Spell2Action;
         gf::Action m_Spell3Action;

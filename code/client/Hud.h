@@ -38,6 +38,7 @@ namespace redsquare
         void showChat();
         void showHelp();
         void showInventory();
+        void showEchap();
 
         InventoryUI& getInventoryUI();
         Chat& getChat();
@@ -62,8 +63,12 @@ namespace redsquare
         bool m_ShowHelp;
         bool m_ShowInventory;
         bool m_PlayerDead;
+        bool m_ShowEchap;
 
         gf::TextWidget m_QuitWidget;
+
+        gf::Texture &m_BackgroundTexture;
+        InventoryWidget m_Background;
     };
 
 }

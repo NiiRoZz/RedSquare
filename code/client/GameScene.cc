@@ -39,6 +39,7 @@ namespace redsquare
     , m_MapAction("Map")
     , m_HelpMenuAction("HelpMenu")
     , m_ChatAction("Chat")
+    , m_EchapAction("Echap")
     , m_Spell1Action("Spell")
     , m_Spell2Action("Spell")
     , m_Spell3Action("Spell")
@@ -98,6 +99,9 @@ namespace redsquare
 
         m_ChatAction.addKeycodeKeyControl(gf::Keycode::C);
         addAction(m_ChatAction);
+
+        m_EchapAction.addKeycodeKeyControl(gf::Keycode::Escape);
+        addAction(m_EchapAction);
 
         m_Spell1Action.addKeycodeKeyControl(gf::Keycode::Num1);
         m_Spell1Action.addKeycodeKeyControl(gf::Keycode::Numpad1);
@@ -239,6 +243,11 @@ namespace redsquare
         if (m_ChatAction.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard))
         {
             m_Hud.showChat();
+        }
+
+        if (m_EchapAction.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard))
+        {
+            m_Hud.showEchap();
         }
 
         if( m_Spell1Action.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && getMyPlayer() != nullptr && getMyPlayer()->m_Level >= 2)
