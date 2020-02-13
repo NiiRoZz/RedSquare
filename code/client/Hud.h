@@ -33,12 +33,13 @@ namespace redsquare
 
         bool hoveringChat();
         bool shownInventory();
+        bool escapeOpen();
 
         void showMap();
         void showChat();
         void showHelp();
         void showInventory();
-        void showEchap();
+        void showEscape();
 
         InventoryUI& getInventoryUI();
         Chat& getChat();
@@ -63,7 +64,7 @@ namespace redsquare
         bool m_ShowHelp;
         bool m_ShowInventory;
         bool m_PlayerDead;
-        bool m_ShowEchap;
+        bool m_ShowEscape;
 
         gf::TextWidget m_QuitWidget;
 

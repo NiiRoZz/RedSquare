@@ -26,7 +26,7 @@ namespace redsquare
     , m_SpellWidgetHover(nullptr)
     , m_ShowMap(false)
     , m_ShowChat(true)
-    , m_ShowEchap(false)
+    , m_ShowEscape(false)
     , m_ShowHelp(false)
     , m_ShowInventory(false)
     , m_PlayerDead(false)
@@ -257,7 +257,7 @@ namespace redsquare
                 m_InventoryUI.render(target, states);
             }
 
-            if(m_ShowEchap)
+            if(m_ShowEscape)
             {
                 gf::Vector2f InventoryWindowSize = coordinates.getRelativeSize({ 1.0f, 1.0f });
                 m_Background.setScale({InventoryWindowSize[0],InventoryWindowSize[1]});
@@ -323,18 +323,18 @@ namespace redsquare
                 m_MouseHoverPostionOnSpell = {0,0};
             }
 
-            if (m_ShowEchap && m_QuitWidget.contains(event.mouseCursor.coords))
+            if (m_ShowEscape && m_QuitWidget.contains(event.mouseCursor.coords))
             {
                 m_QuitWidget.setState(gf::WidgetState::Selected);
             }
-            else if (m_ShowEchap)
+            else if (m_ShowEscape)
             {
                 m_QuitWidget.setState(gf::WidgetState::Default);
             }
         }
         else if (event.type == gf::EventType::MouseButtonPressed && event.mouseButton.button == gf::MouseButton::Left)
         {
-            if (m_ShowEchap && m_QuitWidget.contains(event.mouseButton.coords))
+            if (m_ShowEscape && m_QuitWidget.contains(event.mouseButton.coords))
             {
                 m_Game.disconnect();
                 m_Scenes.replaceScene(m_Scenes.mainMenu, m_Scenes.glitchEffect, gf::seconds(0.4f));
@@ -411,9 +411,14 @@ namespace redsquare
         }
     }
 
-    void Hud::showEchap()
+    void Hud::showEscape()
     {
-        m_ShowEchap = !m_ShowEchap;
+        m_ShowEscape = !m_ShowEscape;
+    }
+
+    bool Hud::escapeOpen()
+    {
+        return m_ShowEscape;
     }
 
     InventoryUI& Hud::getInventoryUI()
