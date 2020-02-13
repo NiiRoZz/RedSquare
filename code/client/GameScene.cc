@@ -49,14 +49,13 @@ namespace redsquare
     , m_Spell8Action("Spell")
     , m_DefaultCursor(gf::Cursor::Type::Arrow)
     , m_AttackCursorImage(scenes.resources.getTexture("img/Cursor/attackCursor.png").copyToImage())
+    , m_AttackCursor(m_AttackCursorImage, {8u, 8u})
     , m_MoveCursorImage(scenes.resources.getTexture("img/Cursor/moveCursor.png").copyToImage())
+    , m_MoveCursor(m_MoveCursorImage, {8u, 8u})
     , m_ChestCursorImage(scenes.resources.getTexture("img/Cursor/chestCursor.png").copyToImage())
+    , m_ChestCursor(m_ChestCursorImage, {8u, 8u})
     {
         setClearColor(gf::Color::Black);
-
-        m_AttackCursorImage.flipHorizontally();
-        m_MoveCursorImage.flipHorizontally();
-        m_ChestCursorImage.flipHorizontally();
 
         getWorldView().setCenter({0.0f, 0.0f});
         getWorldView().setSize({300.0f, 300.0f});
