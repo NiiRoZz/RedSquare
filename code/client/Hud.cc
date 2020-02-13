@@ -408,6 +408,7 @@ namespace redsquare
         if (!m_ShowInventory)
         {
             m_InventoryUI.setVinicityObject(nullptr);
+            m_InventoryUI.inventoryHided();
         }
     }
 

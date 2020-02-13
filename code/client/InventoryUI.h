@@ -32,6 +32,8 @@ namespace redsquare
 
         void setVinicityObject(ClientEntity *vinicityObject);
 
+        void inventoryHided();
+
     private:
     
         gf::MessageStatus onItemUpdateUI(gf::Id id, gf::Message *msg);

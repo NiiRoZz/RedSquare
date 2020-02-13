@@ -883,4 +883,10 @@ namespace redsquare
 
         return gf::MessageStatus::Keep;
     }
+
+    void InventoryUI::inventoryHided()
+    {
+        m_RightClickedSlot = nullptr;
+        m_HoveringSlot = nullptr;
+    }
 }
