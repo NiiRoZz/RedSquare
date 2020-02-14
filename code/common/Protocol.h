@@ -330,9 +330,9 @@ namespace redsquare
 
     struct NewPlayer
     {
+        gf::Array2D<Tile> world;
         gf::Id playerID;
         uint floor;
-        gf::Array2D<Tile> world;
 
         NewPlayer( gf::Array2D<Tile> &tile, gf::Id id, uint currFloor )
         : world( tile )

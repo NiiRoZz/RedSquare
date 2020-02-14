@@ -55,16 +55,16 @@ namespace redsquare
        
         gf::Font &m_Font;
         gf::UI m_UI;
-        std::vector<SpellWidget> m_SpellsWidgets;
         SpellWidget *m_SpellWidgetHover;
+        std::vector<SpellWidget> m_SpellsWidgets;
         gf::Vector2f m_MouseHoverPostionOnSpell;
 
         bool m_ShowMap;
         bool m_ShowChat;
         bool m_ShowHelp;
         bool m_ShowInventory;
-        bool m_PlayerDead;
         bool m_ShowEscape;
+        bool m_PlayerDead;
 
         gf::TextWidget m_QuitWidget;
 

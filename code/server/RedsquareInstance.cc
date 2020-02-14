@@ -587,6 +587,9 @@ namespace redsquare
                 }
                 break;
             }
+
+            default:
+                break;
         }
     }
 
@@ -1308,7 +1311,7 @@ namespace redsquare
     {
         uint nextPlayerIndex = ++m_PlayerIndexTurn;
 
-        if (nextPlayerIndex >= getPlayersCount())
+        if (static_cast<uint32_t>(nextPlayerIndex) >= getPlayersCount())
         {
             //monster turn
             for (auto it = m_Monsters.begin(); it != m_Monsters.end(); ++it)

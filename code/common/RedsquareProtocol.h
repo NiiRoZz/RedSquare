@@ -3,6 +3,7 @@
 
 #include <gf/Id.h>
 #include <gf/Array2D.h>
+#include <gf/Unused.h>
 
 #include "ProtocolData.h"
 
@@ -58,6 +59,7 @@ namespace redsquare
     template<typename Archive>
     Archive operator|(Archive& ar, RedsquareServerPlayerTurn& data)
     {
+        gf::unused(data);
         return ar;
     }
 
@@ -69,6 +71,7 @@ namespace redsquare
     template<typename Archive>
     Archive operator|(Archive& ar, RedsquareServerPlayerDead& data)
     {
+        gf::unused(data);
         return ar;
     }
 

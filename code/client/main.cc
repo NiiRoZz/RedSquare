@@ -36,7 +36,7 @@
 
 using namespace redsquare;
 
-int main( int argc, char **argv )
+int main()
 {
     ClientNetwork network;
 

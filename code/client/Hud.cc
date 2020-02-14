@@ -13,6 +13,7 @@
 #include <gf/Color.h>
 #include <gf/Text.h>
 #include <gf/Particles.h>
+#include <gf/Unused.h>
 #include <vector>
 
 namespace redsquare
@@ -27,9 +28,9 @@ namespace redsquare
     , m_SpellWidgetHover(nullptr)
     , m_ShowMap(false)
     , m_ShowChat(true)
-    , m_ShowEscape(false)
     , m_ShowHelp(false)
     , m_ShowInventory(false)
+    , m_ShowEscape(false)
     , m_PlayerDead(false)
     , m_QuitWidget("Back to Menu", m_Font)
     , m_BackgroundTexture(gResourceManager().getTexture("img/Inventory/BorderSlot.png"))
@@ -380,6 +381,7 @@ namespace redsquare
 
     gf::MessageStatus Hud::onPlayerDeadUpdate(gf::Id id, gf::Message *msg)
     {
+        gf::unused(msg);
         assert(id == MyPlayerDeadMessage::type);
 
         m_PlayerDead = true;
