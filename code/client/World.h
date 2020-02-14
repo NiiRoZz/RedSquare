@@ -24,7 +24,6 @@ namespace redsquare
         void setWalkableFromEntity(redsquare::Entity *entity, bool walkable);
         void setTransparentFromEntity(redsquare::Entity *entity, bool transparent);
 
-    public:
         static constexpr int MapSize = 100; // size of the map composed of tile
         static constexpr int TileSize = 16; // size of a tile
         static constexpr int TileSetSize = 16; // size of a tileset
@@ -33,11 +32,8 @@ namespace redsquare
         gf::Array2D<Tile> m_World;
 
     private:
-        gf::Texture &m_TileTexture;
         gf::TileLayer m_TileSet;
-
-        /*gf::Texture tileTexture2;
-        gf::TileLayer m_TileSet2; TODO */
+        gf::Texture &m_TileTexture;
     };
 }
 

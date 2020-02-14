@@ -14,8 +14,8 @@ namespace redsquare
     }
 
     World::World()
-    : m_TileSet({ MapSize, MapSize } )
-    , m_SquareMap( {MapSize, MapSize} )
+    : m_SquareMap( {MapSize, MapSize} )
+    , m_TileSet({ MapSize, MapSize } )
     , m_TileTexture(gResourceManager().getTexture("img/TileSet/TileSet3.png"))
     {
         m_TileSet.setTilesetTileSize({ TileSetSize, TileSetSize });

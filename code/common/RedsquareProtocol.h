@@ -171,6 +171,7 @@ namespace redsquare
     template<typename Archive>
     Archive operator|(Archive& ar, RedsquareClientPassTurn& data)
     {
+        gf::unused(data);
         return ar;
     }
 

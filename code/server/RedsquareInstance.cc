@@ -262,7 +262,6 @@ namespace redsquare
                     if (targetPlayer != nullptr)
                     {
                         targetServerEntity = dynamic_cast<ServerEntity*>(targetPlayer);
-                        int level = playerTarget->m_Level;
                         Packet sendPacket;
 
                         if( in.spellType == SpellType::LightningStrike )
@@ -309,7 +308,6 @@ namespace redsquare
                     else if (targetMonster != nullptr)
                     {
                         targetServerEntity = dynamic_cast<ServerEntity*>(targetMonster);
-                        int level = playerTarget->m_Level;
                         Packet sendPacket;
 
                         if( in.spellType == SpellType::Reaper )
@@ -434,6 +432,9 @@ namespace redsquare
                         oldEntity = getProp( in.oldEntityID );
                         break;
                     }
+
+                    default:
+                        break;
                 }
                 assert(oldEntity != nullptr);
 
@@ -456,6 +457,9 @@ namespace redsquare
                         newEntity = getProp( in.newEntityID );
                         break;
                     }
+
+                    default:
+                        break;
                 }
                 assert(newEntity != nullptr);
 
@@ -511,6 +515,9 @@ namespace redsquare
                         entity = getProp( in.entityId );
                         break;
                     }
+
+                    default:
+                        break;
                 }
                 assert(entity != nullptr);
 
@@ -565,6 +572,9 @@ namespace redsquare
                         entity = getProp( in.entityId );
                         break;
                     }
+
+                    default:
+                        break;
                 }
                 assert(entity != nullptr);
 
@@ -1311,7 +1321,7 @@ namespace redsquare
     {
         uint nextPlayerIndex = ++m_PlayerIndexTurn;
 
-        if (static_cast<uint32_t>(nextPlayerIndex) >= getPlayersCount())
+        if (static_cast<int32_t>(nextPlayerIndex) >= getPlayersCount())
         {
             //monster turn
             for (auto it = m_Monsters.begin(); it != m_Monsters.end(); ++it)

@@ -116,7 +116,7 @@ namespace redsquare
         int newPosX = m_Pos[0] + dir[0];
         int newPosY = m_Pos[1] + dir[1];
 
-        if ( newPosY >= 0 && newPosY < World::MapSize-1 && newPosX >= 0 && newPosX < World::MapSize-1 && world.m_SquareWorld.isWalkable( {newPosX, newPosY} ) )
+        if ( newPosY >= 0 && static_cast<uint>(newPosY) < World::MapSize-1u && newPosX >= 0 && static_cast<uint>(newPosX) < World::MapSize-1u && world.m_SquareWorld.isWalkable( {newPosX, newPosY} ) )
         {
             world.setWalkableFromEntity(static_cast<redsquare::Entity*>(this), true);
             world.setTransparentFromEntity( static_cast<redsquare::Entity*>(this), true );
@@ -243,7 +243,9 @@ namespace redsquare
                 }
                 break;
             }
-                
+
+            default:
+                break;
         }
         
     }
@@ -473,6 +475,8 @@ namespace redsquare
                 break;
             case SpellType::LightningStrike:
                 return LightningStrike(target,monsters);
+                break;
+            default:
                 break;
         }
         std::vector<Monster*> empty;

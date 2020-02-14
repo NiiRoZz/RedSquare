@@ -30,13 +30,11 @@ namespace redsquare
 
     private:
         Scenes& m_Scenes;
-
-        gf::Font& m_Font;
         MenuChoice m_MenuChoice;
-        gf::WidgetContainer m_Container;
+        gf::Font& m_Font;
         gf::TextWidget m_StartWidget;
         gf::TextWidget m_QuitWidget;
-
+        gf::WidgetContainer m_Container;
     };
 }
 

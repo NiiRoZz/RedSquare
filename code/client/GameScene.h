@@ -33,6 +33,8 @@ namespace redsquare
 
         bool canPlay() const;
 
+        bool playerDead() const;
+
     public:
         World m_World;
 

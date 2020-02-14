@@ -361,11 +361,11 @@ namespace redsquare
     { 
         gf::SquareMap tampon = m_SquareWorld; // using tampon to not modify m_squareworld flags
 
-        for(int i = 0; i < MapSize; ++i)
+        for(uint i = 0; i < MapSize; ++i)
         {
-            for (int j = 0; j < MapSize; ++j)
+            for (uint j = 0; j < MapSize; ++j)
             {  
-                tampon.setWalkable({i,j}, true); // every tile are walkable  on the tampon
+                tampon.setWalkable({static_cast<int>(i),static_cast<int>(j)}, true); // every tile are walkable  on the tampon
             }
         }
 
@@ -522,11 +522,11 @@ namespace redsquare
             newPosX = currentRoom[0] + (rand() % currentRoom[2]); // length of the room
             newPosY = currentRoom[1] + (rand() % currentRoom[3]); // width of the room
 
-            for(int size1 = 0 ; size1 < prop.m_Size[0]; ++size1)
+            for(uint size1 = 0 ; size1 < prop.m_Size[0]; ++size1)
             {
-                for(int size2 = 0 ; size2 < prop.m_Size[1]; ++size2)
+                for(uint size2 = 0 ; size2 < prop.m_Size[1]; ++size2)
                 {
-                    if(!m_SquareWorld.isWalkable({newPosX + size1, newPosY + size2}))
+                    if(!m_SquareWorld.isWalkable({static_cast<int>(newPosX + size1), static_cast<int>(newPosY + size2)}))
                     {
                         free = false;
                         break;
