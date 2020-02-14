@@ -138,7 +138,8 @@ namespace redsquare
                 break;
             }
 
-            /*case ClientChatMessage::type: {
+            case ClientChatMessage::type:
+            {
                 gf::Log::info("(LOBBY) {%" PRIX64 "} Chat message.\n", player.id);
                 if (player.room != nullptr)
                 {
@@ -156,7 +157,6 @@ namespace redsquare
                 broadcast(out);
                 break;
             }
-            */
         }
 
         if (player.room != nullptr)

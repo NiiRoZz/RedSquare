@@ -56,9 +56,10 @@ namespace redsquare
 
                 // broadcast new state
                 broadcastPlayers();
+                break;
             }
 
-            /*case ClientChatMessage::type:
+            case ClientChatMessage::type:
             {
                 gf::Log::info("(ROOM) {%" PRIX64 "} Chat message.\n", player.id);
                 if (isGameStarted())
@@ -76,7 +77,6 @@ namespace redsquare
                 broadcast(out);
                 break;
             }
-            */
         }
 
         if (isGameStarted())

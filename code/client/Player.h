@@ -36,8 +36,11 @@ namespace redsquare
         bool canMove( gf::Vector2i targetPos, gf::SquareMap &map );
         bool canOpenTargetInventory( gf::Vector2i targetPos, GameScene &game);
 
+        std::string getName() const;
+
     private:
         gf::Font &m_Font;
+        std::string m_Name;
 
     };
 }

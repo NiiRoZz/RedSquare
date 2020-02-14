@@ -109,9 +109,38 @@ namespace redsquare
     {
         switch (bytes.getType())
         {
+            case ClientChatMessage::type:
+            {
+                gf::Log::info("(RedsquareInstance) {%" PRIX64 "} Chat message.\n", player.id);
+                // deserialize
+                auto in = bytes.as<ClientChatMessage>();
+
+                ServerChatMessage out;
+                out.message.origin = player.id;
+                out.message.author = player.name;
+                out.message.content = std::move(in.content);
+
+                // If it's a private message
+                if (in.recipient != gf::InvalidId)
+                {
+                    out.message.recipient = in.recipient;
+
+                    // Send to the recipient
+                    send(in.recipient, out);
+
+                    // Send back to the sender
+                    send(player.id, out);
+                }
+                else
+                {
+                    broadcast(out);
+                }
+                break;
+            }
+
             case RedsquareClientMove::type:
             {
-                gf::Log::info("(PemInstance) {%" PRIX64 "} RedsquareClientMove.\n", player.id);
+                gf::Log::info("(RedsquareInstance) {%" PRIX64 "} RedsquareClientMove.\n", player.id);
 
                 Player *playerTarget = getPlayer( player.id );
                 if ( playerTarget != nullptr && playerTarget->m_PlayerTurn )
@@ -256,7 +285,7 @@ namespace redsquare
 
             case RedsquareClientAttack::type:
             {
-                gf::Log::info("(PemInstance) {%" PRIX64 "} RedsquareClientAttack.\n", player.id);
+                gf::Log::info("(RedsquareInstance) {%" PRIX64 "} RedsquareClientAttack.\n", player.id);
 
                 Player *playerTarget = getPlayer( player.id );
                 if ( playerTarget != nullptr && playerTarget->m_PlayerTurn )
@@ -402,7 +431,7 @@ namespace redsquare
 
             case RedsquareClientPassTurn::type:
             {
-                gf::Log::info("(PemInstance) {%" PRIX64 "} RedsquareClientPassTurn.\n", player.id);
+                gf::Log::info("(RedsquareInstance) {%" PRIX64 "} RedsquareClientPassTurn.\n", player.id);
 
                 Player *playerTarget = getPlayer( player.id );
                 if ( playerTarget != nullptr && playerTarget->m_PlayerTurn )
@@ -415,7 +444,7 @@ namespace redsquare
 
             case RedsquareClientMoveItem::type:
             {
-                gf::Log::info("(PemInstance) {%" PRIX64 "} RedsquareClientMoveItem.\n", player.id);
+                gf::Log::info("(RedsquareInstance) {%" PRIX64 "} RedsquareClientMoveItem.\n", player.id);
 
                 auto in = bytes.as<RedsquareClientMoveItem>();
 
@@ -499,7 +528,7 @@ namespace redsquare
 
             case RedsquareClientDropItem::type:
             {
-                gf::Log::info("(PemInstance) {%" PRIX64 "} RedsquareClientDropItem.\n", player.id);
+                gf::Log::info("(RedsquareInstance) {%" PRIX64 "} RedsquareClientDropItem.\n", player.id);
 
                 auto in = bytes.as<RedsquareClientDropItem>();
 
@@ -556,7 +585,7 @@ namespace redsquare
 
             case RedsquareClientUseItem::type:
             {
-                gf::Log::info("(PemInstance) {%" PRIX64 "} RedsquareClientUseItem.\n", player.id);
+                gf::Log::info("(RedsquareInstance) {%" PRIX64 "} RedsquareClientUseItem.\n", player.id);
 
                 auto in = bytes.as<RedsquareClientUseItem>();
 
@@ -2432,6 +2461,13 @@ namespace redsquare
         }
     }
 
+    void RedsquareInstance::doAddPlayer(ServerPlayer& player)
+    {
+        gf::unused(player);
+
+        broadcastPlayers();
+    }
+
     void RedsquareInstance::doRemovePlayer(ServerPlayer& player)
     {
         if (getPlayersCount() > 0)
@@ -2453,6 +2489,8 @@ namespace redsquare
                     goNextTurn();
                 }
             }
+
+            broadcastPlayers();
         }
     }
 
@@ -2472,5 +2510,12 @@ namespace redsquare
         }
 
         return gf::MessageStatus::Keep;
+    }
+
+    void RedsquareInstance::broadcastPlayers()
+    {
+        ServerListRoomPlayers data;
+        data.players = getPlayers();
+        broadcast(data);
     }
 }

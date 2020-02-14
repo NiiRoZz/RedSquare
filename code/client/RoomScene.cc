@@ -27,6 +27,7 @@ namespace redsquare
     : gf::Scene(InitialSize)
     , m_Scenes(scenes)
     , m_Network(network)
+    , m_Chat(network)
     , m_Font(scenes.resources.getFont("font/arial.ttf"))
     , m_GaucheButton("<===", m_Font, 25)
     , m_DroiteButton("===>", m_Font, 25)
@@ -107,14 +108,13 @@ namespace redsquare
                     break;
                 }
 
-                /*case ServerChatMessage::type:
+                case ServerChatMessage::type:
                 {
                     gf::Log::debug("(ROOM) Receive ServerChatMessage\n");
                     auto data = bytes.as<ServerChatMessage>();
-                    m_chat.appendMessage(std::move(data.message));
+                    m_Chat.appendMessage(std::move(data.message));
                     break;
                 }
-                */
 
                 case ServerStartGame::type:
                 {
@@ -134,7 +134,7 @@ namespace redsquare
                     message.author = "server";
                     message.content = serverErrorString(data.reason);
 
-                    //m_chat.appendMessage(std::move(message));
+                    m_Chat.appendMessage(std::move(message));
                     break;
                 }
             }
@@ -148,7 +148,7 @@ namespace redsquare
 
         // UI
         ImGui::NewFrame();
-        ImGui::SetNextWindowPos(ImVec2(position.x, position.y), 0, ImVec2(0.5f, 1.6f));
+        ImGui::SetNextWindowPos(ImVec2(position.x, position.y), 0, ImVec2(0.5f, 0.8f));
         ImGui::SetNextWindowSize(ImVec2(1000.0f, 0.0f));
 
         if (ImGui::Begin("Room", nullptr, DefaultWindowFlags))
@@ -172,7 +172,7 @@ namespace redsquare
 
             ImGui::NextColumn();
 
-            //m_chat.display(10);
+            m_Chat.display(7);
 
             ImGui::Columns();
 
@@ -199,9 +199,9 @@ namespace redsquare
             }
             else
             {
-                //int32_t readyPlayers = std::count_if(m_Players.begin(), m_Players.end(), [](auto& player) { return player.ready; });
+                int32_t readyPlayers = std::count_if(m_Players.begin(), m_Players.end(), [](auto& player) { return player.ready; });
                 ImGui::PushItemWidth(-1.0f);
-                //ImGui::ProgressBar(static_cast<float>(readyPlayers) / (m_settings.teams * m_settings.playersByTeam), DefaultProgressSize, "Waiting players...");
+                ImGui::ProgressBar(static_cast<float>(readyPlayers) / (m_Players.size()), DefaultProgressSize, "Waiting players...");
             }
         }
         ImGui::End();

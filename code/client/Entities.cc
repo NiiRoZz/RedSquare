@@ -18,6 +18,11 @@ namespace redsquare
         return it.first->second;
     }
 
+    const std::map<gf::Id, Player>& Entities::getPlayers() const
+    {
+        return m_Players;
+    }
+
     void Entities::removePlayer(gf::Id id)
     {
         assert( m_Players.erase(id) > 0u );

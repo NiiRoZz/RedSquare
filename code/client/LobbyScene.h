@@ -5,8 +5,8 @@
 #include <gf/StaticString.h>
 
 #include "../common/ProtocolData.h"
-
 #include "ClientNetwork.h"
+#include "LobbyChat.h"
 
 namespace redsquare
 {
@@ -25,6 +25,8 @@ namespace redsquare
     private:
         Scenes& m_Scenes;
         ClientNetwork& m_Network;
+        LobbyChat m_Chat;
+
         gf::StaticString<255> m_RoomBuffer;
         gf::StaticString<255> m_NameBuffer;
 
