@@ -13,6 +13,7 @@
 #include <gf/Color.h>
 #include <gf/Text.h>
 #include <gf/Particles.h>
+#include <gf/Unused.h>
 #include <vector>
 
 namespace redsquare
@@ -28,7 +29,6 @@ namespace redsquare
     , m_SpellWidgetHover(nullptr)
     , m_ShowMap(false)
     , m_ShowChat(true)
-    , m_ShowEscape(false)
     , m_ShowHelp(false)
     , m_ShowInventory(false)
     , m_QuitWidget("Back to Menu", m_Font)

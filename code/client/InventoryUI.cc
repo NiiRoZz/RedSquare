@@ -192,6 +192,8 @@ namespace redsquare
                         x.second.update(posVector, scale);
                         break;
                     }
+                    default:
+                        break;
                 }
 
             }
@@ -558,6 +560,9 @@ namespace redsquare
                         }
                         break;
                     }
+
+                    default:
+                        break;
                 }
 
                 break;
@@ -653,6 +658,7 @@ namespace redsquare
                     m_DraggingFromEntity = nullptr;
                     m_OffsetDrag = {0,0};
                 }
+                break;
             }
 
             case gf::EventType::MouseMoved:
@@ -754,6 +760,9 @@ namespace redsquare
                 }
                 break;
             }
+
+            default:
+                break;
         }
     }
 

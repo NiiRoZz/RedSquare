@@ -310,6 +310,9 @@ namespace redsquare
                 return &gResourceManager().getTexture("img/Props/pots.png");
                 break;
             }
+
+            default:
+                break;
         }
 
         std::cout << "ClientEntity::loadTexture Error default : " << static_cast<uint8_t>(entitySubType) * 1.0 << " " << static_cast<uint16_t>(entitySubType) * 1.0 << std::endl;

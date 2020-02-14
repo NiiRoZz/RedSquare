@@ -104,7 +104,7 @@ namespace redsquare
                 case ServerJoinRoom::type:
                 {
                     gf::Log::debug("(LOBBY) Receive ServerJoinRoom\n");
-                    auto data = bytes.as<ServerJoinRoom>();
+                    //auto data = bytes.as<ServerJoinRoom>();
                     m_Scenes.room.startRoom();
                     m_Scenes.replaceScene(m_Scenes.room, m_Scenes.glitchEffect, gf::seconds(0.4f));
                     // do not poll any more message as the next messages are for the room
@@ -114,7 +114,7 @@ namespace redsquare
                 case ServerChatMessage::type:
                 {
                     gf::Log::debug("(LOBBY) Receive ServerChatMessage\n");
-                    auto data = bytes.as<ServerChatMessage>();
+                    //auto data = bytes.as<ServerChatMessage>();
                     //m_chat.appendMessage(std::move(data.message));
                     break;
                 }

@@ -159,6 +159,7 @@ namespace redsquare
 
     void GameScene::doHandleActions(gf::Window &window)
     {
+        gf::unused(window);
         if (m_FullScreenAction.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard))
         {
             m_Scenes.getWindow().toggleFullscreen();
@@ -647,6 +648,9 @@ namespace redsquare
                                 entity = m_Entities.getProp(data.id);
                                 break;
                             }
+
+                            default:
+                                break;
                         }
                         assert(entity != nullptr);
 

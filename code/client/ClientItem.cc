@@ -504,6 +504,8 @@ namespace redsquare
             case ItemType::BoostXP3: 
                 return gResourceManager().getTexture("img/Item/Consumables/Potion/BoostXP/BoostXP3.png");
                 break;
+            default:
+                break;
         }
 
         return gResourceManager().getTexture("img/Cursor/attackCursor.png");

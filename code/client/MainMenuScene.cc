@@ -54,6 +54,7 @@ namespace redsquare
 
     void MainMenuScene::doUpdate(gf::Time time)
     {
+        gf::unused(time);
         switch (m_MenuChoice)
         {
             case MenuChoice::None:

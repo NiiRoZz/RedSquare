@@ -197,7 +197,7 @@ namespace redsquare
             }
             else
             {
-                int32_t readyPlayers = std::count_if(m_Players.begin(), m_Players.end(), [](auto& player) { return player.ready; });
+                //int32_t readyPlayers = std::count_if(m_Players.begin(), m_Players.end(), [](auto& player) { return player.ready; });
                 ImGui::PushItemWidth(-1.0f);
                 //ImGui::ProgressBar(static_cast<float>(readyPlayers) / (m_settings.teams * m_settings.playersByTeam), DefaultProgressSize, "Waiting players...");
             }
