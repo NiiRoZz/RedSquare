@@ -4,6 +4,7 @@
 namespace redsquare
 {
     Inventory::Inventory()
+    : m_Owner(nullptr)
     {
     }
 
@@ -14,6 +15,7 @@ namespace redsquare
 
     ssize_t Inventory::addItem(InventorySlotType slotType, ServerItem &&item)
     {
+        gf::Log::debug("Inventory::addItem 1\n");
         if (slotType == InventorySlotType::Cargo && item.canBeInSlot(slotType))
         {
             for(uint i = 0; i < RowCargoSlotNmb; ++i )
@@ -30,16 +32,24 @@ namespace redsquare
         }
         else
         {
+            gf::Log::debug("Inventory::addItem 2\n");
             if (m_SpecialItems.find(slotType) == m_SpecialItems.end() && item.canBeInSlot(slotType))
             {
-                if (m_Owner) m_Owner->onMovedItem(item, false);
+                gf::Log::debug("Inventory::addItem 3\n");
+                if (m_Owner != nullptr)
+                {
+                    gf::Log::debug("Inventory::addItem 4\n");
+                    m_Owner->onMovedItem(item, false);
+                    gf::Log::debug("Inventory::addItem 5\n");
+                }
+                gf::Log::debug("Inventory::addItem 6\n");
                 m_SpecialItems.insert(std::make_pair(slotType, std::move(item)));
                 return 0;
             }
         }
-        
         return -1;
     }
+
     ssize_t Inventory::addItemRandom(InventorySlotType slotType, ServerItem &&item)
     {
         if (slotType == InventorySlotType::Cargo && item.canBeInSlot(slotType))
@@ -79,7 +89,10 @@ namespace redsquare
             auto it = m_SpecialItems.find(slotType);
             if (it == m_SpecialItems.end() && item.canBeInSlot(slotType))
             {
-                if (m_Owner) m_Owner->onMovedItem(item, false);
+                if (m_Owner != nullptr)
+                {
+                    m_Owner->onMovedItem(item, false);
+                }
                 m_SpecialItems.insert(std::make_pair(slotType, std::move(item)));
                 return true;
             }
@@ -106,7 +119,10 @@ namespace redsquare
             if (it != m_SpecialItems.end())
             {
                 ServerItem item = std::move(it->second);
-                if (m_Owner) m_Owner->onMovedItem(item, true);
+                if (m_Owner != nullptr)
+                {
+                    m_Owner->onMovedItem(item, true);
+                }
                 m_SpecialItems.erase(it);
                 return item;
             }

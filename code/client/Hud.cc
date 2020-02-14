@@ -22,7 +22,7 @@ namespace redsquare
     : m_Scenes(scenes)
     , m_Network(network)
     , m_Game(game)
-    //, m_Chat(font)
+    , m_Chat(network, game)
     , m_InventoryUI(font, game, network)
     , m_Font(font)
     , m_UI(font)
@@ -37,7 +37,17 @@ namespace redsquare
     , m_Background(m_BackgroundTexture)
     {
         gMessageManager().registerHandler<SpellUpdateMessage>(&Hud::onSpellUpdate, this);
+    }
 
+    void Hud::initialize()
+    {
+        m_SpellWidgetHover = nullptr;
+        m_ShowMap = false;
+        m_ShowChat = false;
+        m_ShowHelp = false;
+        m_ShowInventory = false;
+        m_ShowEscape = false;
+        m_InventoryUI.initialize();
     }
 
     static constexpr float HudSpellSize = 55.0f;
@@ -221,10 +231,10 @@ namespace redsquare
                 target.draw(m_UI);
             }
 
-            /*if (m_ShowChat)
+            if (m_ShowChat)
             {
-                m_Chat.render(target, states);
-            }*/
+                m_Chat.display(coordinates);
+            }
 
             if (m_ShowHelp) 
             {
@@ -280,11 +290,6 @@ namespace redsquare
 
     void Hud::update(gf::Time time)
     {
-        /*if (m_ShowChat)
-        {
-            m_Chat.update(time);
-        }*/
-
         if (m_ShowInventory)
         {
             m_InventoryUI.update(time);
@@ -293,11 +298,6 @@ namespace redsquare
 
     void Hud::processEvent(const gf::Event &event)
     {
-        /*if (m_ShowChat)
-        {
-            m_Chat.processEvent(event);
-        }*/
-
         if (m_ShowInventory)
         {
             m_InventoryUI.processEvent(event);
@@ -360,8 +360,7 @@ namespace redsquare
 
     bool Hud::hoveringChat() const
     {
-        //return m_Chat.m_HoveringChat;
-        return false;
+        return m_Chat.hoveringChat();
     }
 
     bool Hud::shownInventory() const
@@ -440,8 +439,8 @@ namespace redsquare
         return (m_SpellWidgetHover != nullptr);
     }
 
-    /*Chat& Hud::getChat()
+    GameChat& Hud::getChat()
     {
         return m_Chat;
-    }*/
+    }
 }

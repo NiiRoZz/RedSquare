@@ -25,6 +25,8 @@ namespace redsquare
     public:
         InventoryUI(gf::Font &font, GameScene &game, ClientNetwork &network);
 
+        void initialize();
+
         void update(gf::Time time);
 
         void render(gf::RenderTarget& target, const gf::RenderStates& states);

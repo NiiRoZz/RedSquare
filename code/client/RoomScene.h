@@ -14,8 +14,8 @@
 #include <gf/StaticString.h>
 
 #include "../common/ProtocolData.h"
-
 #include "ClientNetwork.h"
+#include "LobbyChat.h"
 
 namespace redsquare 
 {
@@ -38,10 +38,13 @@ namespace redsquare
         Scenes& m_Scenes;
         ClientNetwork& m_Network;
 
+        LobbyChat m_Chat;
+
         bool m_Ready;
         gf::Font& m_Font;
 
         std::vector<PlayerData> m_Players;
+        std::vector<const char *> m_PlayersView;
 
         gf::SpriteWidget m_PlayerWidget;
         gf::WidgetContainer m_Container;

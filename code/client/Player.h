@@ -37,8 +37,11 @@ namespace redsquare
         bool canOpenTargetInventory( gf::Vector2i targetPos, GameScene &game);
         void update(gf::Time time);
 
+        std::string getName() const;
+
     private:
         gf::Font &m_Font;
+        std::string m_Name;
 
     };
 }

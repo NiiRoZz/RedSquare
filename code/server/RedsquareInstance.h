@@ -56,9 +56,13 @@ namespace redsquare
 
         void fillChest();
 
+        void doAddPlayer(ServerPlayer& player) override;
+
         void doRemovePlayer(ServerPlayer& player) override;
 
         gf::MessageStatus onUpdateEntityCharacteristic(gf::Id id, gf::Message *msg);
+
+        void broadcastPlayers();
 
     private:
         gf::Random m_Random;

@@ -4,6 +4,7 @@
 #include "InventoryUI.h"
 #include "Message.h"
 #include "SpellWidget.h"
+#include "GameChat.h"
 
 #include <gf/Font.h>
 #include <iostream>
@@ -25,6 +26,8 @@ namespace redsquare
     public:
         Hud(Scenes &scenes, GameScene &game, gf::Font &font, ClientNetwork &network);
 
+        void initialize();
+
         virtual void update(gf::Time time) override;
 
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
@@ -43,7 +46,8 @@ namespace redsquare
         void showEscape();
 
         InventoryUI& getInventoryUI();
-        //Chat& getChat();
+
+        GameChat& getChat();
         
     private:
         gf::MessageStatus onSpellUpdate(gf::Id id, gf::Message *msg);
@@ -52,7 +56,7 @@ namespace redsquare
         Scenes &m_Scenes;
         ClientNetwork &m_Network;
         GameScene &m_Game;
-        //Chat m_Chat;
+        GameChat m_Chat;
         InventoryUI m_InventoryUI;
        
         gf::Font &m_Font;

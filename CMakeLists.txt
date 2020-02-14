@@ -39,6 +39,8 @@ add_executable(RedSquare
   code/client/ClientItem.cc
   code/client/Hud.cc
   code/client/SpellWidget.cc
+  code/client/LobbyChat.cc
+  code/client/GameChat.cc
 
   code/common/Entity.cc
   code/common/Item.cc

@@ -138,15 +138,21 @@ namespace redsquare
     
     void Player::defaultInventoryStuff()
     {
+        gf::Log::debug("Player::defaultInventoryStuff 1\n");
         switch (m_EntitySubType)
         {
             case EntitySubType::Magus:{
+                gf::Log::debug("Player::defaultInventoryStuff 2\n");
                 //Example how to spawn item in weapon slot
                 ServerItem item1(ItemType::Staff1, 1u);
+                gf::Log::debug("Player::defaultInventoryStuff 3\n");
                 ssize_t pos = m_Inventory.addItem(InventorySlotType::Weapon, std::move(item1));
+                gf::Log::debug("Player::defaultInventoryStuff 4\n");
                 if (pos != -1)
                 {
+                    gf::Log::debug("Player::defaultInventoryStuff 5\n");
                     m_RedsquareInstance.send(m_EntityID, createUpdateItemPacket(InventorySlotType::Weapon, false, pos));
+                    gf::Log::debug("Player::defaultInventoryStuff 6\n");
                 }
                 break;
             }
@@ -181,7 +187,8 @@ namespace redsquare
             default:
                 break;
         }
-        
+
+        gf::Log::debug("Player::defaultInventoryStuff 7\n");
     }
 
     void Player::levelUp(){ // method to level up a player

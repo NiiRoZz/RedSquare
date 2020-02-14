@@ -40,13 +40,6 @@ namespace redsquare
         gMessageManager().registerHandler<ItemUpdateUIMessage>(&InventoryUI::onItemUpdateUI, this);
         gMessageManager().registerHandler<MyPlayerReceivedTypeMessage>(&InventoryUI::onMyPlayerReceived, this);
 
-        m_PlayerSpecialSlots.insert(std::make_pair(InventorySlotType::Helmet, std::move(InventorySlot(InventorySlotType::Helmet))));
-        m_PlayerSpecialSlots.insert(std::make_pair(InventorySlotType::ChestPlate, std::move(InventorySlot(InventorySlotType::ChestPlate))));
-        m_PlayerSpecialSlots.insert(std::make_pair(InventorySlotType::Legging, std::move(InventorySlot(InventorySlotType::Legging))));
-        m_PlayerSpecialSlots.insert(std::make_pair(InventorySlotType::Boot, std::move(InventorySlot(InventorySlotType::Boot))));
-        m_PlayerSpecialSlots.insert(std::make_pair(InventorySlotType::Weapon, std::move(InventorySlot(InventorySlotType::Weapon))));
-        m_PlayerSpecialSlots.insert(std::make_pair(InventorySlotType::Shield, std::move(InventorySlot(InventorySlotType::Shield))));
-
         m_NameText.setAlignment(gf::Alignment::Center);
         m_NameText.setColor(gf::Color::White);
 
@@ -70,6 +63,21 @@ namespace redsquare
         m_UseButton.setSelectedTextColor(gf::Color::Gray(0.5f));
         m_UseButton.setState(gf::WidgetState::Default);
         m_UseButton.setAnchor(gf::Anchor::TopLeft);
+    }
+
+    void InventoryUI::initialize()
+    {
+        m_PlayerEntity = nullptr;
+        m_VinicityEntity = nullptr;
+        m_OldSlot = nullptr;
+        m_CurrMovingWidget = nullptr;
+        m_CurrMovingItem = nullptr;
+        m_DraggingFromEntity = nullptr;
+        m_HoveringSlot = nullptr;
+        m_RightClickedSlot = nullptr;
+        m_RightClickedFromEntity = nullptr;
+        m_PlayerCargoSlots.clear();
+        m_VinicityCargoSlots.clear();
     }
 
     void InventoryUI::update(gf::Time time)
@@ -810,6 +818,14 @@ namespace redsquare
             m_PlayerWidget.setSelectedSprite(*playerTexture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
 
             m_PlayerEntity = message->player;
+
+            m_PlayerSpecialSlots.clear();
+            m_PlayerSpecialSlots.insert(std::make_pair(InventorySlotType::Helmet, std::move(InventorySlot(InventorySlotType::Helmet))));
+            m_PlayerSpecialSlots.insert(std::make_pair(InventorySlotType::ChestPlate, std::move(InventorySlot(InventorySlotType::ChestPlate))));
+            m_PlayerSpecialSlots.insert(std::make_pair(InventorySlotType::Legging, std::move(InventorySlot(InventorySlotType::Legging))));
+            m_PlayerSpecialSlots.insert(std::make_pair(InventorySlotType::Boot, std::move(InventorySlot(InventorySlotType::Boot))));
+            m_PlayerSpecialSlots.insert(std::make_pair(InventorySlotType::Weapon, std::move(InventorySlot(InventorySlotType::Weapon))));
+            m_PlayerSpecialSlots.insert(std::make_pair(InventorySlotType::Shield, std::move(InventorySlot(InventorySlotType::Shield))));
 
             m_PlayerCargoSlots.clear();
             for(uint i = 0; i < m_PlayerEntity->m_RowCargoSlotNmb; ++i )

@@ -20,6 +20,7 @@ namespace redsquare
     : gf::Scene(InitialSize)
     , m_Scenes(scenes)
     , m_Network(network)
+    , m_Chat(network)
     , m_SelectedRoom(-1)
     , m_SelectedNmbPlayers(1)
     {
@@ -114,8 +115,8 @@ namespace redsquare
                 case ServerChatMessage::type:
                 {
                     gf::Log::debug("(LOBBY) Receive ServerChatMessage\n");
-                    //auto data = bytes.as<ServerChatMessage>();
-                    //m_chat.appendMessage(std::move(data.message));
+                    auto data = bytes.as<ServerChatMessage>();
+                    m_Chat.appendMessage(std::move(data.message));
                     break;
                 }
 
@@ -128,7 +129,7 @@ namespace redsquare
                     message.author = "server";
                     message.content = serverErrorString(data.reason);
 
-                    //m_chat.appendMessage(std::move(message));
+                    m_Chat.appendMessage(std::move(message));
                     break;
                 }
             }
@@ -187,7 +188,7 @@ namespace redsquare
             ImGui::NextColumn();
 
             ImGui::BeginGroup();
-            //m_chat.display(10);
+            m_Chat.display(10);
             ImGui::EndGroup();
 
             ImGui::NextColumn();

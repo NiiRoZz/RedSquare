@@ -74,6 +74,7 @@ namespace redsquare
 
     void ServerEntity::onMovedItem(ServerItem &item, bool remove)
     {
+        gf::Log::debug("ServerEntity::onMovedItem 1\n");
         if (remove)
         {
             m_MaxAttackPoint -= item.m_GiveAttackPoint;
@@ -95,6 +96,7 @@ namespace redsquare
         }
         else
         {
+            gf::Log::debug("ServerEntity::onMovedItem 2\n");
             m_MaxAttackPoint += item.m_GiveAttackPoint;
             m_AttackPoint += item.m_GiveAttackPoint;
             m_MaxDefensePoint += item.m_GiveDefensePoint;
@@ -102,15 +104,21 @@ namespace redsquare
             m_MaxLifePoint += item.m_GiveLifePoint;
             m_LifePoint += item.m_GiveLifePoint;
 
+            gf::Log::debug("ServerEntity::onMovedItem 3\n");
             Player *player = static_cast<Player*>(this);
+            gf::Log::debug("ServerEntity::onMovedItem 4\n");
             if (player != nullptr)
             {
+                gf::Log::debug("ServerEntity::onMovedItem 5\n");
                 player->m_MaxManaPoint += item.m_GiveManaPoint;
             }
         }
 
+        gf::Log::debug("ServerEntity::onMovedItem 6\n");
         UpdateEntityCharacteristic message;
         message.entity = this;
+        gf::Log::debug("ServerEntity::onMovedItem 7\n");
         gMessageManager().sendMessage(&message);
+        gf::Log::debug("ServerEntity::onMovedItem 8\n");
     }
 }

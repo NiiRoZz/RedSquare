@@ -145,6 +145,12 @@ namespace redsquare
         m_AttackPos = {0,0};
         m_MovePlayer.first = {0,0};
         m_CanPlay = false;
+        m_Hud.initialize();
+    }
+
+    const std::vector<PlayerData>& GameScene::getPlayersData() const
+    {
+        return m_Players;
     }
 
     Entities& GameScene::getEntities()
@@ -433,6 +439,22 @@ namespace redsquare
                     auto data = bytes.as<RedsquareServerInitEntity>();
 
                     createEntity(data.entity);
+                    break;
+                }
+
+                case ServerListRoomPlayers::type:
+                {
+                    gf::Log::debug("(GAME) Receive ServerListRoomPlayers\n");
+                    auto data = bytes.as<ServerListRoomPlayers>();
+                    m_Players = std::move(data.players);
+                    break;
+                }
+
+                 case ServerChatMessage::type:
+                 {
+                    gf::Log::debug("(GAME) receive ServerChatMessage\n");
+                    auto data = bytes.as<ServerChatMessage>();
+                    m_Hud.getChat().appendMessage(std::move(data.message));
                     break;
                 }
 

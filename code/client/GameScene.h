@@ -39,6 +39,8 @@ namespace redsquare
 
         void initialize();
 
+        const std::vector<PlayerData>& getPlayersData() const;
+
     public:
         World m_World;
 
@@ -65,6 +67,8 @@ namespace redsquare
         Entities m_Entities;
 
         Hud m_Hud;
+
+        std::vector<PlayerData> m_Players;
 
         //Value if it's his turn and he can play
         bool m_CanPlay;
@@ -116,52 +120,6 @@ namespace redsquare
         gf::Cursor m_MoveCursor;
         gf::Image m_ChestCursorImage;
         gf::Cursor m_ChestCursor;
-
-        /*
-
-        GameScene( Scenes &scenes );
-
-        void passTurn();
-
-        void processPackets();
-
-        void doHandleActions(gf::Window& window) override;
-        bool doEarlyProcessEvent(gf::Event &event) override;
-        void doProcessEvent(gf::Event& event) override;
-        void doUpdate(gf::Time time) override;
-        void doRender(gf::RenderTarget& target, const gf::RenderStates &states) override;
-
-        void sendPacket(Packet &packet);
-        
-
-    private:
-        void receiveWorld();
-
-    private:
-        Scenes& m_Scenes;
-
-        std::string m_Name;
-
-        gf::Action m_FullScreenAction;
-        gf::Action m_LeftAction;
-        gf::Action m_RightAction;
-        gf::Action m_UpAction;
-        gf::Action m_DownAction;
-        gf::Action m_PassTurnAction;
-        gf::Action m_InventoryAction;
-        gf::Action m_MapAction;
-        gf::Action m_HelpMenuAction;
-        gf::Action m_ChatAction;
-        gf::Action m_EscapeAction;
-        gf::Action m_Spell1Action;
-        gf::Action m_Spell2Action;
-        gf::Action m_Spell3Action;
-        gf::Action m_Spell4Action;
-        gf::Action m_Spell5Action;
-        gf::Action m_Spell6Action;
-        gf::Action m_Spell7Action;
-        gf::Action m_Spell8Action;
-        */
     };
 }
 

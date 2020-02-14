@@ -19,6 +19,7 @@ namespace redsquare
         void initialize();
         
         Player& addNewPlayer(gf::Id id, Player &&player);
+        const std::map<gf::Id, Player>& getPlayers() const;
         void removePlayer(gf::Id id);
 
         Monster& addNewMonster(gf::Id id, Monster &&monster);

@@ -59,14 +59,26 @@ namespace redsquare
 
     void ConnectionScene::doUpdate(gf::Time time)
     {
+        if (!isActive())
+        {
+            return;
+        }
+        
         ImGui_ImplGF_Update(time);
     }
 
     void ConnectionScene::doRender(gf::RenderTarget& target, const gf::RenderStates& states)
     {
-        gf::Coordinates coordinates(target);
-
         ImGui::NewFrame();
+        
+        if (!isActive())
+        {
+            ImGui::Render();
+            ImGui_ImplGF_RenderDrawData(ImGui::GetDrawData());
+            return;
+        }
+
+        gf::Coordinates coordinates(target);
 
         auto position = coordinates.getCenter();
         ImGui::SetNextWindowPos(ImVec2(position.x, position.y), 0, ImVec2(0.5f, 1.1f));
