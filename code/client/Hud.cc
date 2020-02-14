@@ -335,7 +335,7 @@ namespace redsquare
         {
             if (m_ShowEscape && m_QuitWidget.contains(event.mouseButton.coords))
             {
-                m_ShowEscape = true;
+                m_ShowEscape = false;
                 m_Network.disconnect();
                 m_Scenes.replaceScene(m_Scenes.mainMenu, m_Scenes.glitchEffect, gf::seconds(0.4f));
             }
