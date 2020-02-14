@@ -6,6 +6,12 @@
 
 #include <gf/ResourceManager.h>
 #include <gf/Scene.h>
+#include <gf/Window.h>
+#include <gf/RenderWindow.h>
+#include <gf/Widgets.h>
+#include <gf/WidgetContainer.h>
+#include <gf/Text.h>
+#include <gf/StaticString.h>
 
 #include "../common/ProtocolData.h"
 
@@ -26,14 +32,25 @@ namespace redsquare
         void doProcessEvent(gf::Event& event) override;
         void doUpdate(gf::Time time) override;
         void doRender(gf::RenderTarget& target, const gf::RenderStates &states) override;
+        void displayNextSubEntityTexture(int offset);
 
     private:
         Scenes& m_Scenes;
         ClientNetwork& m_Network;
 
         bool m_Ready;
+        gf::Font& m_Font;
 
         std::vector<PlayerData> m_Players;
+
+        gf::SpriteWidget m_PlayerWidget;
+        gf::WidgetContainer m_Container;
+        gf::TextWidget m_GaucheButton;
+        gf::TextWidget m_DroiteButton;
+
+        EntitySubType m_DisplayEntitySubType;
+
+        gf::Text m_InfoText;
     };
 
 }
