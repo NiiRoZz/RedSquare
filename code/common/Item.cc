@@ -557,12 +557,12 @@ namespace redsquare
             case ItemType::ManaPot2:
                 m_Useable = true;
                 m_Name = "Mana Potion";
-                m_Description = "Medium potion of mana, give : 50% of max lifepoint";
+                m_Description = "Medium potion of mana, give : 50% of max manapoint";
                 break;
             case ItemType::ManaPot3:
                 m_Useable = true;
                 m_Name = "Mana Potion";
-                m_Description = "Strong potion of mana, give : 70% of max lifepoint";
+                m_Description = "Strong potion of mana, give : 70% of max manapoint";
                 break;
             case ItemType::EnergyPot1:
                 m_Useable = true;
@@ -597,47 +597,62 @@ namespace redsquare
             case ItemType::BoostDefense1:
                 m_Useable = true;
                 m_Name = "Boost defense";
-                m_Description = "Basic boost of defense, add 10% to your attackpoint";
+                m_Description = "Basic boost of defense, add 10% to your defense";
                 break;
             case ItemType::BoostDefense2:
                 m_Useable = true;
                 m_Name = "Boost defense";
-                m_Description = "Medium boost of defense, add 15% to your attackpoint";
+                m_Description = "Medium boost of defense, add 15% to your defense";
                 break;
             case ItemType::BoostDefense3:
                 m_Useable = true;
                 m_Name = "Boost defense";
-                m_Description = "Strong boost of defense, add 20% to your attackpoint";
+                m_Description = "Strong boost of defense, add 20% to your defense";
                 break;
             case ItemType::BoostHP1:
                 m_Useable = true;
                 m_Name = "Boost health";
-                m_Description = "Basic boost of health, add 10% to your attackpoint";
+                m_Description = "Basic boost of health, add 10% to your healthpoint";
                 break;
             case ItemType::BoostHP2:
                 m_Useable = true;
                 m_Name = "Boost health";
-                m_Description = "Medium boost of health, add 15% to your attackpoint";
+                m_Description = "Medium boost of health, add 15% to your healthpoint";
                 break;
             case ItemType::BoostHP3:
                 m_Useable = true;
                 m_Name = "Boost health";
-                m_Description = "Strong boost of health, add 20% to your attackpoint";
+                m_Description = "Strong boost of health, add 20% to your healthpoint";
                 break;
             case ItemType::BoostXP1:
                 m_Useable = true;
                 m_Name = "Boost XP";
-                m_Description = "Basic boost of XP, add 10% to your attackpoint";
+                m_Description = "Basic boost of XP, add 10% to your XP";
                 break;
             case ItemType::BoostXP2:
                 m_Useable = true;
                 m_Name = "Boost XP";
-                m_Description = "Medium boost of XP, add 15% to your attackpoint";
+                m_Description = "Medium boost of XP, add 15% to your XP";
                 break;
             case ItemType::BoostXP3:
                 m_Useable = true;
                 m_Name = "Boost XP";
-                m_Description = "Strong boost of XP, add 20% to your attackpoint";
+                m_Description = "Strong boost of XP, add 20% to your XP";
+                break;
+            case ItemType::BoostMana1:
+                m_Useable = true;
+                m_Name = "Boost Mana";
+                m_Description = "Basic boost of Mana, add 10% to your manapoint";
+                break;
+            case ItemType::BoostMana2:
+                m_Useable = true;
+                m_Name = "Boost Mana";
+                m_Description = "Medium boost of Mana, add 15% to your manapoint";
+                break;
+            case ItemType::BoostMana3:
+                m_Useable = true;
+                m_Name = "Boost Mana";
+                m_Description = "Strong boost of Mana, add 20% to your manapoint";
                 break;
 
             default:

@@ -111,13 +111,13 @@ namespace redsquare {
     constexpr int RANGER_MAXDEFENSEPOINT = 10; 
     constexpr int RANGER_RANGE = 3;
 
-    constexpr int HEALER_LIFEPOINT = 190; 
+    constexpr int HEALER_LIFEPOINT = 200; 
     constexpr int HEALER_MANAPOINT = 40; 
     constexpr int HEALER_MAXLIFEPOINT = 190;
     constexpr int HEALER_MAXMANAPOINT = 40; 
-    constexpr int HEALER_ATTACKPOINT = 40; 
+    constexpr int HEALER_ATTACKPOINT = 55; 
     constexpr int HEALER_DEFENSEPOINT = 10; 
-    constexpr int HEALER_MAXATTACKPOINT = 40; 
+    constexpr int HEALER_MAXATTACKPOINT = 55; 
     constexpr int HEALER_MAXDEFENSEPOINT = 10; 
     constexpr int HEALER_RANGE = 2; 
 }

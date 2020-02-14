@@ -301,19 +301,19 @@ namespace redsquare
         {
             case EntitySubType::Warrior:  
                 if(m_Level == 2){
-                    m_SpellTab.push_back(SpellType::DamageUp); // gain damage 
-                }else if(m_Level == 3){
                     m_SpellTab.push_back(SpellType::Massacre); // lifesteal attack
-                }else if(m_Level == 4){
-                    m_SpellTab.push_back(SpellType::Berserk); // gain damage and defense
-                }else if(m_Level == 5){
+                }else if(m_Level == 3){
                     m_SpellTab.push_back(SpellType::Revenge); // more damage the less life you have
-                }else if(m_Level == 6){
+                }else if(m_Level == 4){
                     m_SpellTab.push_back(SpellType::Reaper); // damage in front of you 
+                }else if(m_Level == 5){
+                    m_SpellTab.push_back(SpellType::ArmorUp); // gain armor
+                }else if(m_Level == 6){
+                    m_SpellTab.push_back(SpellType::Berserk); // gain damage and defense
                 }else if(m_Level == 7){
                     m_SpellTab.push_back(SpellType::Protection); // give armor to target
                 }else if(m_Level == 8){
-                   m_SpellTab.push_back(SpellType::ArmorUp); // gain armor
+                    m_SpellTab.push_back(SpellType::DamageUp); // gain damage
                 }
                 sendUpdateOfSpells();
                 break;
@@ -358,7 +358,6 @@ namespace redsquare
                 if(m_Level == 2){
                     m_SpellTab.push_back(SpellType::Shoot);
                 }else if(m_Level == 3){
-                    //m_SpellTab.push_back(SpellType::RangeUp); too op for now
                     m_SpellTab.push_back(SpellType::Berserk); // gain damage and defense
                 }else if(m_Level == 4){
                     m_SpellTab.push_back(SpellType::Torpedo);
@@ -380,13 +379,13 @@ namespace redsquare
                 }else if(m_Level == 3){
                     m_SpellTab.push_back(SpellType::FireBall);
                 }else if(m_Level == 4){
-                    m_SpellTab.push_back(SpellType::Protection);
+                    m_SpellTab.push_back(SpellType::LightningStrike); // AOE
                 }else if(m_Level == 5){
-                    m_SpellTab.push_back(SpellType::DamageUp);
+                   m_SpellTab.push_back(SpellType::Incinerate);
                 }else if(m_Level == 6){
                    m_SpellTab.push_back(SpellType::ArmorUp);
                 }else if(m_Level == 7){
-                   m_SpellTab.push_back(SpellType::Incinerate);
+                    m_SpellTab.push_back(SpellType::Protection);
                 }
                 sendUpdateOfSpells();
                 break;
@@ -730,11 +729,11 @@ namespace redsquare
         int critical = rand() % 100;
         int heal;
         if(critical > 90){
-            heal = m_LifePoint / 5;
+            heal = m_LifePoint / 2;
             heal += Variance(-(heal / 10));
             std::cout << " CRITICAL !!! " << std::endl;
         }else{
-            heal = m_LifePoint / 10;
+            heal = m_LifePoint / 3;
             heal += Variance(-(heal / 15));
         }
 

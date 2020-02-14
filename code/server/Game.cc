@@ -278,6 +278,7 @@ namespace redsquare
                         sendPacketToAllPlayers(packet);
                     }     
                 }
+                
                 int randomType = rand() % EQUIPMENT_TYPE;
                 int randomTier;
                 if(m_Floor < 5){
@@ -1106,13 +1107,13 @@ namespace redsquare
     {
         for(gf::Vector4u currentRoom : m_World.TabRoom) // for every room
         { 
-            int randChest = rand() % 5; // rand if the room must contains a chest 
+            int randChest = rand() % 2; // rand if the room must contains a chest 
             int roomType = rand() % 13;
 
             gf::Id id; // if of the props
             std::map<gf::Id, Prop>::iterator itNewProp; // map of props
 
-            if(randChest != 6){ // true chest
+            if(randChest == 1 ){ // 1/2 romm have a chest
                 id = generateId();
                 std::tie(itNewProp, std::ignore) = m_Props.emplace(id, Prop(id, EntitySubType::Chest));
                 m_World.spawnProps(itNewProp->second,*this,currentRoom);

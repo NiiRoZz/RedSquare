@@ -155,6 +155,8 @@ namespace redsquare
                         setTransparentFromEntity(&(itNewMonster->second),false);
                         drawRoutine(itNewMonster->second);
 
+                        itNewMonster->second.levelUp(game.m_Floor); // spawn ennemy with level equals to m_floor
+
                     }else if (BossRoom[column][row] == 'O') { // spawn of player
 
                         m_World( pos ) = Tile::Room;
