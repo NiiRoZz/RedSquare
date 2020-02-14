@@ -329,6 +329,7 @@ namespace redsquare
     {
         gf::Id id;
         std::string name;
+        EntitySubType subType = EntitySubType::Magus;
         bool ready = false;
     };
 

@@ -9,6 +9,7 @@
 #include "Monster.h"
 #include "Prop.h"
 #include "ItemHolder.h"
+#include "Message.h"
 
 namespace redsquare
 {
@@ -56,6 +57,8 @@ namespace redsquare
         void fillChest();
 
         void doRemovePlayer(ServerPlayer& player) override;
+
+        gf::MessageStatus onUpdateEntityCharacteristic(gf::Id id, gf::Message *msg);
 
     private:
         gf::Random m_Random;

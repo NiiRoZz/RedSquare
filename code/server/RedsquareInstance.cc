@@ -7,6 +7,7 @@
 
 #include "../common/Protocol.h"
 #include "../common/RedsquareProtocol.h"
+#include "../common/Singletons.h"
 
 namespace redsquare
 {
@@ -16,6 +17,7 @@ namespace redsquare
     , m_PlayerIndexTurn(0u)
     , m_Floor(0)
     {
+        gMessageManager().registerHandler<UpdateEntityCharacteristic>(&RedsquareInstance::onUpdateEntityCharacteristic, this);
     }
 
     void RedsquareInstance::start()
@@ -2437,5 +2439,23 @@ namespace redsquare
                 goNextTurn();
             }
         }
+    }
+
+    gf::MessageStatus RedsquareInstance::onUpdateEntityCharacteristic(gf::Id id, gf::Message *msg)
+    {
+        assert(id == UpdateEntityCharacteristic::type);
+        
+        UpdateEntityCharacteristic *message = static_cast<UpdateEntityCharacteristic*>(msg);
+
+        if (message && message->entity)
+        {
+            RedsquareServerUpdateCharacteristic packet;
+            packet.entityType = message->entity->getEntityType();
+            packet.id = message->entity->getEntityID();
+            message->entity->createCarPacket(packet.characteristics);
+            broadcast(packet);
+        }
+
+        return gf::MessageStatus::Keep;
     }
 }
