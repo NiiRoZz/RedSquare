@@ -143,9 +143,18 @@ namespace redsquare
 
                                 broadcast(packet);
                             }
+                            for (auto &itemHolder: m_ItemHolders)
+                            {
+                                RedsquareServerDeleteEntity packet;
+                                packet.entityType = EntityType::ItemHolder;
+                                packet.id = itemHolder.first;
+
+                                broadcast(packet);
+                            }
 
                             m_Monsters.clear();
                             m_Props.clear();
+                            m_ItemHolders.clear();
 
                             m_Floor++;
                             if(m_Floor%4 == 0) // boss room every 4 floors 
