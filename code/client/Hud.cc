@@ -339,16 +339,28 @@ namespace redsquare
                 m_Network.disconnect();
                 m_Scenes.replaceScene(m_Scenes.mainMenu, m_Scenes.glitchEffect, gf::seconds(0.4f));
             }
+
+            int index = 1;
+            for(auto &it: m_SpellsWidgets)
+            {
+                if (it.contains(event.mouseButton.coords))
+                {
+                    m_Game.changeSpell(index);
+                    break;
+                }
+
+                index++;
+            }
         }
     }
 
-    bool Hud::hoveringChat()
+    bool Hud::hoveringChat() const
     {
         //return m_Chat.m_HoveringChat;
         return false;
     }
 
-    bool Hud::shownInventory()
+    bool Hud::shownInventory() const
     {
         return m_ShowInventory;
     }
@@ -371,7 +383,7 @@ namespace redsquare
         {
             if (*it != SpellType::Unknow)
             {
-                m_SpellsWidgets.emplace_back(std::move(redsquare::SpellWidget(*it)));
+                m_SpellsWidgets.push_back(std::move(redsquare::SpellWidget(*it)));
             }
         }
 
@@ -409,7 +421,7 @@ namespace redsquare
         m_ShowEscape = !m_ShowEscape;
     }
 
-    bool Hud::escapeOpen()
+    bool Hud::escapeOpen() const
     {
         return m_ShowEscape;
     }
@@ -417,6 +429,11 @@ namespace redsquare
     InventoryUI& Hud::getInventoryUI()
     {
         return m_InventoryUI;
+    }
+
+    bool Hud::hoveringSpellWidgets() const
+    {
+        return (m_SpellWidgetHover != nullptr);
     }
 
     /*Chat& Hud::getChat()

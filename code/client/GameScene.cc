@@ -164,27 +164,27 @@ namespace redsquare
             m_Scenes.getWindow().toggleFullscreen();
         }
 
-        if (m_LeftAction.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && !m_Hud.shownInventory() && !m_Hud.escapeOpen())
+        if (m_LeftAction.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && !m_Hud.shownInventory() && !m_Hud.escapeOpen() && !m_Hud.hoveringSpellWidgets())
         {
             movePlayer(-1, 0);
         }
 
-        if (m_RightAction.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && !m_Hud.shownInventory() && !m_Hud.escapeOpen())
+        if (m_RightAction.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && !m_Hud.shownInventory() && !m_Hud.escapeOpen() && !m_Hud.hoveringSpellWidgets())
         {
             movePlayer(1, 0);
         }
 
-        if (m_UpAction.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && !m_Hud.shownInventory() && !m_Hud.escapeOpen())
+        if (m_UpAction.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && !m_Hud.shownInventory() && !m_Hud.escapeOpen() && !m_Hud.hoveringSpellWidgets())
         {
             movePlayer(0, -1);
         }
 
-        if (m_DownAction.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && !m_Hud.shownInventory() && !m_Hud.escapeOpen())
+        if (m_DownAction.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && !m_Hud.shownInventory() && !m_Hud.escapeOpen() && !m_Hud.hoveringSpellWidgets())
         {
             movePlayer(0, 1);
         }
 
-        if (m_PassTurnAction.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && !m_Hud.shownInventory() && !m_Hud.escapeOpen())
+        if (m_PassTurnAction.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && !m_Hud.shownInventory() && !m_Hud.escapeOpen() && !m_Hud.hoveringSpellWidgets())
         {
             if (m_CanPlay)
             {
@@ -269,7 +269,7 @@ namespace redsquare
         {
             case gf::EventType::MouseButtonReleased:
             {
-                if (!m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && !m_Hud.shownInventory() && !m_Hud.escapeOpen())
+                if (!m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && !m_Hud.shownInventory() && !m_Hud.escapeOpen() && !m_Hud.hoveringSpellWidgets())
                 {
                     gf::Vector2i pos = m_Scenes.getRenderer().mapPixelToCoords(event.mouseButton.coords, getWorldView()) / World::TileSize;
 
@@ -301,7 +301,7 @@ namespace redsquare
 
             case gf::EventType::MouseMoved:
             {
-                if (!m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && !m_Hud.shownInventory() && !m_Hud.escapeOpen())
+                if (!m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && !m_Hud.shownInventory() && !m_Hud.escapeOpen() && !m_Hud.hoveringSpellWidgets())
                 {
                     gf::Vector2i pos = m_Scenes.getRenderer().mapPixelToCoords(event.mouseCursor.coords, getWorldView()) / World::TileSize;
 

@@ -31,9 +31,10 @@ namespace redsquare
 
         void processEvent(const gf::Event &event);
 
-        bool hoveringChat();
-        bool shownInventory();
-        bool escapeOpen();
+        bool hoveringChat() const;
+        bool shownInventory() const;
+        bool escapeOpen() const;
+        bool hoveringSpellWidgets() const;
 
         void showMap();
         void showChat();
