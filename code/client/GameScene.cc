@@ -197,10 +197,7 @@ namespace redsquare
 
         if (m_PassTurnAction.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && !m_Hud.shownInventory() && !m_Hud.escapeOpen() && !m_Hud.hoveringSpellWidgets())
         {
-            if (m_CanPlay)
-            {
-                m_PassTurn = true;
-            }
+            m_PassTurn = true;
         }
 
         if (m_InventoryAction.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && !m_Hud.escapeOpen())
@@ -451,7 +448,7 @@ namespace redsquare
                         break;
                     }
 
-                    if ( m_TempMoveTarget != gf::Vector2i(0,0) && myPlayer->m_Pos != m_TempMoveTarget && !m_Entities.monsterInRange(myPlayer->m_Pos, myPlayer->m_Range) )
+                    if ( m_TempMoveTarget != gf::Vector2i(0,0) && !m_PassTurn && myPlayer->m_Pos != m_TempMoveTarget && !m_Entities.monsterInRange(myPlayer->m_Pos, myPlayer->m_Range) )
                     {
                         m_TempMove.clear();
 
