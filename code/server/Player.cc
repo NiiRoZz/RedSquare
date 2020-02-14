@@ -1408,6 +1408,8 @@ namespace redsquare
     }*/
 
     void Player::createSystemMessage(std::string message, std::string to){
+            gf::unused(message);
+            gf::unused(to);
             /*Message packet;
             int length=0;
             std::string sys("system");
