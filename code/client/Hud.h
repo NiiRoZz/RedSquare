@@ -66,7 +66,6 @@ namespace redsquare
         bool m_ShowHelp;
         bool m_ShowInventory;
         bool m_ShowEscape;
-        bool m_PlayerDead;
 
         gf::TextWidget m_QuitWidget;
 

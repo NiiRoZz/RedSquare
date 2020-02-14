@@ -31,6 +31,7 @@ namespace redsquare
     , m_ShowChat(true)
     , m_ShowHelp(false)
     , m_ShowInventory(false)
+    , m_ShowEscape(false)
     , m_QuitWidget("Back to Menu", m_Font)
     , m_BackgroundTexture(gResourceManager().getTexture("img/Inventory/BorderSlot.png"))
     , m_Background(m_BackgroundTexture)
