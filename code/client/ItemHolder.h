@@ -3,6 +3,9 @@
 
 #include "ClientEntity.h"
 
+#include <gf/RenderTarget.h>
+#include <gf/RenderStates.h>
+
 namespace redsquare
 {
     class ItemHolder: public ClientEntity

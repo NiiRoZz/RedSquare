@@ -7,12 +7,15 @@
 
 namespace redsquare {
 
-    Scenes::Scenes()
-    : gf::SceneManager("Redsquare", {1024, 576})
+    Scenes::Scenes(ClientNetwork& network)
+    : gf::SceneManager("Redsquare", InitialSize)
     , resources({ REDSQUARE_DATA_DIR })
     , mainMenu(*this)
-    , connection(*this)
-    , game(*this)
+    , connection(*this, network)
+    , lobby(*this, network)
+    , room(*this, network)
+    , game(*this, network)
+    , myPlayerId(gf::InvalidId)
     {
         getWindow().setVerticalSyncEnabled(true);
         getWindow().setFramerateLimit(60u);

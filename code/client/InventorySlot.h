@@ -2,7 +2,7 @@
 #define REDSQUARE_CLIENT_INVENTORYSLOT_H
 
 #include "InventoryWidget.h"
-#include "../common/Packet.h"
+#include "../common/ProtocolData.h"
 #include "ClientItem.h"
 
 #include <gf/Time.h>

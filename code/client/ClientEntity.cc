@@ -1,5 +1,6 @@
 #include "ClientEntity.h"
 #include "../common/Singletons.h"
+#include "Player.h"
 
 namespace redsquare
 {
@@ -8,7 +9,6 @@ namespace redsquare
     , m_Inventory(entityID)
     , m_EntityTexture(loadTexture(entitySubType))
     {
-
     }
 
     Inventory& ClientEntity::getInventory()
@@ -315,5 +315,34 @@ namespace redsquare
         std::cout << "ClientEntity::loadTexture Error default : " << static_cast<uint8_t>(entitySubType) * 1.0 << " " << static_cast<uint16_t>(entitySubType) * 1.0 << std::endl;
  
         return &gResourceManager().getTexture("img/Character/Magus.png");
+    }
+
+    void ClientEntity::loadCharacteristic(EntityCharacteristicData &characteristics)
+    {
+        m_LifePoint = characteristics.m_LifePoint;
+        m_MaxLifePoint = characteristics.m_MaxLifePoint;
+
+        m_AttackPoint = characteristics.m_AttackPoint;
+        m_MaxAttackPoint = characteristics.m_MaxAttackPoint;
+
+        m_DefensePoint = characteristics.m_DefensePoint;
+        m_MaxDefensePoint = characteristics.m_MaxDefensePoint;
+
+        m_Range = characteristics.m_Range;
+        m_Level = characteristics.m_Level;
+
+        if (getEntityType() == EntityType::Player)
+        {
+            Player* player = static_cast<Player*>(this);
+            if (player != nullptr)
+            {
+                player->m_ManaPoint = characteristics.m_ManaPoint;
+                player->m_MaxManaPoint = characteristics.m_MaxManaPoint;
+
+                player->m_XP = characteristics.m_XP;
+                player->m_Max_XP = characteristics.m_MaxXP;
+                player->m_SpellTab = characteristics.m_Spells;
+            }
+        }
     }
 }

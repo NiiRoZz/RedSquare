@@ -6,7 +6,6 @@
 #include <gf/RenderTarget.h>
 #include <iostream>
 
-
 namespace redsquare
 {
     void World::render(gf::RenderTarget& target, const gf::RenderStates& states)

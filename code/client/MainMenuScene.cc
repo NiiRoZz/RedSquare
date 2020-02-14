@@ -13,7 +13,7 @@
 namespace redsquare
 {
     MainMenuScene::MainMenuScene(Scenes& scenes)
-    : gf::Scene({1024, 576})
+    : gf::Scene(InitialSize)
     , m_Scenes(scenes)
     , m_MenuChoice(MenuChoice::None)
     , m_Font(scenes.resources.getFont("font/arial.ttf"))

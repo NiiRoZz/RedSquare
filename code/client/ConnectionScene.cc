@@ -17,9 +17,10 @@ constexpr ImGuiWindowFlags DefaultWindowFlags = ImGuiWindowFlags_NoMove | ImGuiW
 
 namespace redsquare
 {
-    ConnectionScene::ConnectionScene(Scenes& scenes)
-    : gf::Scene({1024, 576})
+    ConnectionScene::ConnectionScene(Scenes& scenes, ClientNetwork& network)
+    : gf::Scene(InitialSize)
     , m_Scenes(scenes)
+    , m_Network(network)
     , m_Font(scenes.resources.getFont("font/arial.ttf"))
     , m_GaucheButton("<===", m_Font, 25)
     , m_DroiteButton("===>", m_Font, 25)
@@ -29,16 +30,15 @@ namespace redsquare
         setClearColor(gf::Color::Black);
 
         m_HostNameBuffer = "localhost";
-        m_PortBuffer = "6000";
         m_NameBuffer = "toto";
 
-        m_GaucheButton.setCallback([this]() { displayNextSubEntityTexture(-1); });
-        m_Container.addWidget(m_GaucheButton);
+        //m_GaucheButton.setCallback([this]() { displayNextSubEntityTexture(-1); });
+        //m_Container.addWidget(m_GaucheButton);
 
-        m_DroiteButton.setCallback([this]() { displayNextSubEntityTexture(1); });
-        m_Container.addWidget(m_DroiteButton);
+        //m_DroiteButton.setCallback([this]() { displayNextSubEntityTexture(1); });
+        //m_Container.addWidget(m_DroiteButton);
 
-        displayNextSubEntityTexture(1);
+        //displayNextSubEntityTexture(1);
     }
 
     void ConnectionScene::doHandleActions(gf::Window& window)
@@ -85,52 +85,58 @@ namespace redsquare
         static const ImVec2 DefaultButtonSize = { 170.0f, 40.0f };
 
         if (ImGui::Begin("Connect", nullptr, DefaultWindowFlags)) {
-            ImGui::Text("Hostname:");
-            ImGui::SameLine();
-            float x = ImGui::GetCursorPosX();
-            ImGui::InputText("###hostname", m_HostNameBuffer.getData(), m_HostNameBuffer.getSize());
-
-            ImGui::Text("Port:");
-            ImGui::SameLine();
-            ImGui::SetCursorPosX(x);
-            ImGui::InputText("###port", m_PortBuffer.getData(), m_PortBuffer.getSize());
-
-            ImGui::Text("Name:");
-            ImGui::SameLine();
-            ImGui::SetCursorPosX(x);
-            ImGui::InputText("###name", m_NameBuffer.getData(), m_NameBuffer.getSize());
-            ImGui::SetItemDefaultFocus();
-
-            ImGui::Indent();
-
-            if (ImGui::Button("Back", DefaultButtonSize))
+            if (m_Network.isConnecting())
             {
-                m_Scenes.replaceScene(m_Scenes.mainMenu, m_Scenes.glitchEffect, gf::seconds(0.4f));
-                m_ConnectionAsked = false;
-            }
+                ImGui::Text("Connecting...");
 
-            ImGui::SameLine();
-
-            if (ImGui::Button("Connect", DefaultButtonSize))
-            {
-                if (m_Scenes.game.connect(m_HostNameBuffer.getData(), m_PortBuffer.getData(), m_NameBuffer.getData(), m_DisplayEntitySubType))
+                if (m_Network.isConnected())
                 {
-                    m_Scenes.replaceScene(m_Scenes.game, m_Scenes.glitchEffect, gf::seconds(0.4f));
+                    m_ConnectionAsked = false;
+                    m_Scenes.replaceScene(m_Scenes.lobby, m_Scenes.glitchEffect, gf::seconds(0.4f));
+
+                    ClientHello data;
+                    data.name = m_NameBuffer.getData();
+                    m_Network.send(data);
                 }
-                else
+            }
+            else
+            {
+                ImGui::Text("Hostname:");
+                ImGui::SameLine();
+                float x = ImGui::GetCursorPosX();
+                ImGui::InputText("###hostname", m_HostNameBuffer.getData(), m_HostNameBuffer.getSize());
+
+                ImGui::Text("Name:");
+                ImGui::SameLine();
+                ImGui::SetCursorPosX(x);
+                ImGui::InputText("###name", m_NameBuffer.getData(), m_NameBuffer.getSize());
+                ImGui::SetItemDefaultFocus();
+
+                ImGui::Indent();
+
+                if (ImGui::Button("Back", DefaultButtonSize))
                 {
+                    m_Scenes.replaceScene(m_Scenes.mainMenu, m_Scenes.glitchEffect, gf::seconds(0.4f));
+                    m_ConnectionAsked = false;
+                }
+
+                ImGui::SameLine();
+
+                if (ImGui::Button("Connect", DefaultButtonSize))
+                {
+                    m_Network.connect(m_HostNameBuffer.getData());
                     m_ConnectionAsked = true;
                 }
-            }
 
-            if (m_ConnectionAsked)
-            {
-                ImGui::Text("Error: unable to connect to server.");
+                if (m_ConnectionAsked)
+                {
+                    ImGui::Text("Error: unable to connect to server.");
+                }
             }
         }
         ImGui::End();
 
-        ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_FittingPolicyMask_;
+        /*ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_FittingPolicyMask_;
 
         gf::Vector2f MainMenuWindowSizeDescription = coordinates.getRelativeSize({0.25f,0.25f });
         gf::Vector2f MainMenuWindowPosDescription = coordinates.getRelativePoint({ 0.025,0.65f });
@@ -226,12 +232,17 @@ namespace redsquare
         ImGui::SetWindowFontScale(charP[0]/290);
 
         ImGui::End();
+        */
+
+        // Display
+        renderWorldEntities(target, states);
+        renderHudEntities(target, states);
 
         ImGui::Render();
         ImGui_ImplGF_RenderDrawData(ImGui::GetDrawData());
     }
 
-    void ConnectionScene::displayNextSubEntityTexture(int offset)
+    /*void ConnectionScene::displayNextSubEntityTexture(int offset)
     {
         uint8_t nextIndex = static_cast<uint8_t>(m_DisplayEntitySubType);
         nextIndex += offset;
@@ -251,5 +262,5 @@ namespace redsquare
         m_PlayerWidget.setDefaultSprite(*texture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
         m_PlayerWidget.setDisabledSprite(*texture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
         m_PlayerWidget.setSelectedSprite(*texture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
-    }
+    }*/
 }

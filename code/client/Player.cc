@@ -74,7 +74,6 @@ namespace redsquare
         bar2.setAnchor(gf::Anchor::TopLeft);
         target.draw(bar2, states);
 
-
         gf::Text m_lvl;
         m_lvl.setCharacterSize(8);
         m_lvl.setColor(gf::Color::Black);

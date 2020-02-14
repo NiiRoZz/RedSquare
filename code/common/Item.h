@@ -1,7 +1,7 @@
 #ifndef REDSQUARE_COMMON_ITEM_H
 #define REDSQUARE_COMMON_ITEM_H
 
-#include "Packet.h"
+#include "ProtocolData.h"
 
 namespace redsquare
 {

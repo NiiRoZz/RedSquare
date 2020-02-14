@@ -6,15 +6,19 @@
 #include <gf/MessageManager.h>
 #include <gf/SegueEffects.h>
 
+#include "ClientNetwork.h"
+
 #include "MainMenuScene.h"
 #include "ConnectionScene.h"
+#include "LobbyScene.h"
+#include "RoomScene.h"
 #include "GameScene.h"
 
 namespace redsquare
 {
   struct Scenes : public gf::SceneManager
   {
-    Scenes();
+    Scenes(ClientNetwork& network);
     Scenes(const Scenes&) = delete;
     Scenes(Scenes&&) = delete;
     ~Scenes();
@@ -27,10 +31,14 @@ namespace redsquare
 
     MainMenuScene mainMenu;
     ConnectionScene connection;
+    LobbyScene lobby;
+    RoomScene room;
     GameScene game;
 
     gf::GlitchSegueEffect glitchEffect;
     gf::PixelateSegueEffect pixelateEffect;
+
+    gf::Id myPlayerId;
   };
 
 }

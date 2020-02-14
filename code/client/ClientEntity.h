@@ -4,8 +4,6 @@
 #include "../common/Entity.h"
 #include "Inventory.h"
 
-#include <gf/Entity.h>
-
 namespace redsquare
 {
     class ClientEntity: public redsquare::Entity
@@ -19,6 +17,8 @@ namespace redsquare
         Inventory& getInventory();
 
         gf::Texture* getEntityTexture() const;
+
+        void loadCharacteristic(EntityCharacteristicData &characteristics);
 
     protected:
         Inventory m_Inventory;

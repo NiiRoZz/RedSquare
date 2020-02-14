@@ -274,7 +274,7 @@ namespace redsquare
                     }
                     if (pos != -1)
                     {
-                        Packet packet = prop.second.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
+                        createUpdateItemPacket packet = prop.second.createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
                         sendPacketToAllPlayers(packet);
                     }     
                 }

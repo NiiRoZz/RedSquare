@@ -1,22 +1,25 @@
-#include "World.h"
+#include "RedsquareFactory.h"
+#include "ServerNetwork.h"
 #include "../common/Singletons.h"
-#include "../common/Packet.h"
-#include "Player.h"
-#include "Game.h"
-#include "Chat.h"
-#include <time.h>
-#include <stdlib.h>
 
-#include <iostream>
-#include <gf/Streams.h>
-#include <gf/Serialization.h>
-#include <gf/SerializationOps.h>
+#include <gf/Random.h>
 
 using namespace redsquare;
 
 int main( int argc, char **argv )
 {
-	if ( argc != 3 )
+	gf::SingletonStorage<gf::MessageManager> storageForMessageManager(redsquare::gMessageManager);
+
+	RedsquareFactory factory;
+
+	srand(time(nullptr));
+
+	gf::Random random;
+	ServerNetwork network(random, factory);
+	network.run();
+	return EXIT_SUCCESS;
+	
+	/*if ( argc != 3 )
 	{
 		std::cerr << "Usage : ./RedSquare-Server port numberOfPlayers" << std::endl;
 		return 1;
@@ -254,4 +257,5 @@ int main( int argc, char **argv )
 		}
 	}
 	return 0;
+	*/
 }

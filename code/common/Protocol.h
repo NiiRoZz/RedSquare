@@ -6,327 +6,306 @@
 #include <gf/Id.h>
 #include <gf/Vector.h>
 #include <gf/Array2D.h>
+#include <gf/SerializationOps.h>
 #include <string>
 
-#include "../common/Constants.h"
+#include "Constants.h"
+#include "ProtocolData.h"
+
+using namespace gf::literals;
 
 namespace redsquare
 {
-    enum class EntityType: uint8_t
+    /*
+        Server ===> Client
+    */
+    struct ServerHello
     {
-        Player,
-        Monster,
-        Prop,
-        ItemHolder,
+        static constexpr gf::Id type = "ServerHello"_id;
+        gf::Id playerId;
     };
 
-    enum class EntitySubType: uint8_t
+    template<typename Archive>
+    Archive operator|(Archive& ar, ServerHello& data)
     {
-        Unknow,
-        /* CLASSES */
-        Magus,
-        Warrior,
-        Rogue,
-        Ranger,
-        Healer,
-        /* CLASSES */
+        return ar | data.playerId;
+    }
 
-        /* MONSTER */
-        Bat,
-        Slime,
-        SkeletonKnife,
-        SkeletonMagus,
-        Spirit,
-        Demon,
-        Goblin,
-        Imp,
-        LilGob,
-        LilZombie,
-        Lizard,
-        Mask,
-        Mud,
-        Orc,
-        Shaman,
-        Swamp,
-        Zombie,
-        /* MONSTER */
-
-        /* SMALL PROP */
-        BrokenPots,
-        Pot,
-        LitllePots,
-        Torch,
-        Chest,
-        OpenedChest,
-        Stool,
-        PileWood,
-        GreyBrokenPillar,
-        BrownBrokenPillar,
-        ExtinctTorch,
-        Rock,
-        BrownRock,
-        /* SMALL PROP */
-
-
-        /* BIG PROPS */
-        BlankShelf,
-        BookShelf,
-        BrokenShelf,
-        BrownDualRock,
-        BrownPillar1,
-        BrownPillar2,
-        BrownQuadRock,
-        Box1,
-        Box2,
-        DualBox,
-        EmptyStand,
-        GreyDualRock,
-        GreyPillar1,
-        GreyPillar2,
-        GreyQuadRock,
-        LeftChain,
-        RightChain,
-        PotShelf,
-        Table,
-        Throne,
-        WeaponShelf1,
-        WeaponShelf2,
-        /* BIG PROPS */
+    struct ServerDisconnect
+    {
+        static constexpr gf::Id type = "ServerDisconnect"_id;
     };
 
-    enum class Tile: uint8_t
+    template<typename Archive>
+    Archive operator|(Archive& ar, ServerDisconnect&)
     {
-        Void,
-        Wall,
-        Room,
-        Corridor,
-        Stair,
-        Grid,
-        Test,
+        return ar;
+    }
+
+    struct ServerAnswerRoom
+    {
+        static constexpr gf::Id type = "ServerAnswerRoom"_id;
+        gf::Id room;
+        std::string name;
     };
 
-    enum class SpellType: uint8_t
+    template<typename Archive>
+    Archive operator|(Archive& ar, ServerAnswerRoom& data)
     {
-        Unknow,
-        BasicAttack, // basic attack ------- ALL
-        FireBall, // randed attack that can burn foes ------- MAGUS
-        ArmorUp, // gain a bonus of armor for x turns ------- WARRIOR
-        RangeUp, // gain 1 range for x turns ---------- MAGUS / SHOOTER
-        DoubleStrike, // IDK for now
-        Heal, // heal a foes ------- PRIEST
-        Assasinate, // can one shot a foes  with high miss rate ------- ROGUE
-        DamageUp, // gain a bonus of attack for x turns ------- WARRIOR/ROGUE
-        Protection, // protect an ally
-        Revenge, // deal damage to foes based on missing health of source
-        Lacerate, // deal damage to foes based on missing health of targer
-        Incinerate, // deal damage to foes and can burn ennemy
-        Massacre, // bleed dmg
-        LightningStrike, // AOE dmg
-        Scorch, // dmg + bleed
-        Berserk, // gain attack, loose defence
-        Torpedo, // 
-        Shoot, // long attack range
-        Backstab, // deal damage to foes : x2 if behind foes
-        Reaper, // dmg in front of you
+        return ar | data.room | data.name;
+    }
+
+    struct ServerJoinRoom
+    {
+        static constexpr gf::Id type = "ServerJoinRoom"_id;
+        gf::Id room;
     };
 
-    enum class InventorySlotType: uint8_t
+    template<typename Archive>
+    Archive operator|(Archive& ar, ServerJoinRoom& data)
     {
-        Helmet = 1,
-        ChestPlate = 2,
-        Legging = 4,
-        Boot = 8,
-        Weapon = 16,
-        Shield = 32,
-        Cargo = 64,
+        return ar | data.room;
+    }
+
+    struct ServerLeaveRoom
+    {
+        static constexpr gf::Id type = "ServerLeaveRoom"_id;
     };
 
-    enum class ItemType: uint16_t
+    template<typename Archive>
+    Archive operator|(Archive& ar, ServerLeaveRoom&)
     {
-        //Should be the first one
-        Unknow,
-        
-        Sword1,
-        Sword2,
-        Sword3,
-        Sword4,
-        Sword5,
-        Sword6,
-        Sword7,
-        Sword8,
-        Sword9,
-        Sword10,
-        Sword11,
-        Sword12,
-        Sword13,
-        Sword14,
-        Sword15,
+        return ar;
+    }
 
-        Staff1,
-        Staff2,
-        Staff3,
-        Staff4,
-        Staff5,
-        Staff6,
-        Staff7,
-        Staff8,
-        Staff9,
-        Staff10,
-        Staff11,
-        Staff12,
-        Staff13,
-        Staff14,
-        Staff15,
-
-        Bow1,
-        Bow2,
-        Bow3,
-        Bow4,
-        Bow5,
-        Bow6,
-        Bow7,
-        Bow8,
-        Bow9,
-        Bow10,
-        Bow11,
-        Bow12,
-        Bow13,
-        Bow14,
-        Bow15,
-
-        SpellBook1,
-        SpellBook2,
-        SpellBook3,
-        SpellBook4,
-        SpellBook5,
-        SpellBook6,
-        SpellBook7,
-        SpellBook8,
-        SpellBook9,
-        SpellBook10,
-        SpellBook11,
-        SpellBook12,
-        SpellBook13,
-        SpellBook14,
-        SpellBook15,
-
-        Shield1,
-        Shield2,
-        Shield3,
-        Shield4,
-        Shield5,
-        Shield6,
-        Shield7,
-        Shield8,
-        Shield9,
-        Shield10,
-        Shield11,
-        Shield12,
-        Shield13,
-        Shield14,
-        Shield15,
-
-        Helmet1,
-        Helmet2,
-        Helmet3,
-        Helmet4,
-        Helmet5,
-        Helmet6,
-        Helmet7,
-        Helmet8,
-        Helmet9,
-        Helmet10,
-        Helmet11,
-        Helmet12,
-        Helmet13,
-        Helmet14,
-        Helmet15,
-
-        Chesplate1,
-        Chesplate2,
-        Chesplate3,
-        Chesplate4,
-        Chesplate5,
-        Chesplate6,
-        Chesplate7,
-        Chesplate8,
-        Chesplate9,
-        Chesplate10,
-        Chesplate11,
-        Chesplate12,
-        Chesplate13,
-        Chesplate14,
-        Chesplate15,
-
-        Legging1,
-        Legging2,
-        Legging3,
-        Legging4,
-        Legging5,
-        Legging6,
-        Legging7,
-        Legging8,
-        Legging9,
-        Legging10,
-        Legging11,
-        Legging12,
-        Legging13,
-        Legging14,
-        Legging15,
-
-        Boot1,
-        Boot2,
-        Boot3,
-        Boot4,
-        Boot5,
-        Boot6,
-        Boot7,
-        Boot8,
-        Boot9,
-        Boot10,
-        Boot11,
-        Boot12,
-        Boot13,
-        Boot14,
-        Boot15,
-
-        // CONSUMABLES
-        ManaPot1,
-        ManaPot2,
-        ManaPot3,
-
-        HealthPot1,
-        HealthPot2,
-        HealthPot3,
-
-        EnergyPot1,
-        EnergyPot2,
-        EnergyPot3,
-        
-        BoostAttack1,
-        BoostAttack2,
-        BoostAttack3,
-        
-        BoostDefense1,
-        BoostDefense2,
-        BoostDefense3,
-        
-        BoostHP1,
-        BoostHP2,
-        BoostHP3,
-        
-        BoostMana1,
-        BoostMana2,
-        BoostMana3,
-        
-        BoostXP1,
-        BoostXP2,
-        BoostXP3,
-
-        Fish,
-        Candy,
-        // CONSUMABLES
+    struct ServerReady
+    {
+        static constexpr gf::Id type = "ServerReady"_id;
+        bool ready;
     };
+
+    template<typename Archive>
+    Archive operator|(Archive& ar, ServerReady& data)
+    {
+        return ar | data.ready;
+    }
+
+    struct ServerChatMessage
+    {
+        static constexpr gf::Id type = "ServerChatMessage"_id;
+        MessageData message;
+    };
+
+    template<typename Archive>
+    Archive operator|(Archive& ar, ServerChatMessage& data)
+    {
+        return ar | data.message;
+    }
+
+    struct ServerListPlayers
+    {
+        static constexpr gf::Id type = "ServerListPlayers"_id;
+        std::vector<PlayerData> players;
+    };
+
+    template<typename Archive>
+    Archive operator|(Archive& ar, ServerListPlayers& data)
+    {
+        return ar | data.players;
+    }
+
+    struct ServerListRoomPlayers
+    {
+        static constexpr gf::Id type = "ServerListRoomPlayers"_id;
+        std::vector<PlayerData> players;
+    };
+
+    template<typename Archive>
+    Archive operator|(Archive& ar, ServerListRoomPlayers& data)
+    {
+        return ar | data.players;
+    }
+
+    struct ServerListRooms
+    {
+        static constexpr gf::Id type = "ServerListRooms"_id;
+        std::vector<RoomData> rooms;
+    };
+
+    template<typename Archive>
+    Archive operator|(Archive& ar, ServerListRooms& data)
+    {
+        return ar | data.rooms;
+    }
+
+    struct ServerStartGame
+    {
+        static constexpr gf::Id type = "ServerStartGame"_id;
+    };
+
+    template<typename Archive>
+    Archive operator|(Archive& ar, ServerStartGame&)
+    {
+        return ar;
+    }
+
+    struct ServerStopGame
+    {
+        static constexpr gf::Id type = "ServerStopGame"_id;
+    };
+
+    template<typename Archive>
+    Archive operator|(Archive& ar, ServerStopGame&)
+    {
+        return ar;
+    }
+
+    struct ServerError
+    {
+        static constexpr gf::Id type = "ServerError"_id;
+
+        enum Type : uint16_t
+        {
+            PlayerAlreadyInRoom,
+            PlayerAlreadyReady,
+            PlayerNotInRoom,
+            PlayerNotInTeam,
+            UnknownRoom,
+            FullRoom,
+            UnknownTeam,
+            FullTeam,
+            GameAlreadyStarted,
+        };
+
+        Type reason;
+    };
+
+    inline std::string serverErrorString(ServerError::Type type)
+    {
+        switch (type)
+        {
+            case ServerError::Type::PlayerAlreadyInRoom:
+            return "You are already in room.";
+
+            case ServerError::Type::PlayerAlreadyReady:
+            return "You are already ready.";
+
+            case ServerError::Type::PlayerNotInRoom:
+            return "You are not in room.";
+
+            case ServerError::Type::PlayerNotInTeam:
+            return "You are not in team.";
+
+            case ServerError::Type::UnknownRoom:
+            return "The room is unknown.";
+
+            case ServerError::Type::FullRoom:
+            return "The room is full.";
+
+            case ServerError::Type::UnknownTeam:
+            return "The team is unknown.";
+
+            case ServerError::Type::FullTeam:
+            return "The team is full.";
+
+            case ServerError::Type::GameAlreadyStarted:
+            return "The game is already started.";
+        }
+
+        assert(false);
+        return "";
+    }
+
+    template<typename Archive>
+    Archive operator|(Archive& ar, ServerError& data)
+    {
+        return ar | data.reason;
+    }
+
+    /*
+        Client ===> Server
+    */
+    struct ClientHello
+    {
+        static constexpr gf::Id type = "ClientHello"_id;
+        std::string name;
+    };
+
+    template<typename Archive>
+    Archive operator|(Archive& ar, ClientHello& data)
+    {
+        return ar | data.name;
+    }
+
+    struct ClientDisconnect
+    {
+        static constexpr gf::Id type = "ClientDisconnect"_id;
+    };
+
+    template<typename Archive>
+    Archive operator|(Archive& ar, ClientDisconnect&)
+    {
+        return ar;
+    }
+
+    struct ClientCreateRoom
+    {
+        static constexpr gf::Id type = "ClientCreateRoom"_id;
+        std::string name;
+    };
+
+    template<typename Archive>
+    Archive operator|(Archive& ar, ClientCreateRoom& data)
+    {
+        return ar | data.name;
+    }
+
+    struct ClientQueryRoom
+    {
+        static constexpr gf::Id type = "ClientQueryRoom"_id;
+        gf::Id room;
+    };
+
+    template<typename Archive>
+    Archive operator|(Archive& ar, ClientQueryRoom& data)
+    {
+        return ar | data.room;
+    }
+
+    struct ClientJoinRoom
+    {
+        static constexpr gf::Id type = "ClientJoinRoom"_id;
+        gf::Id room;
+    };
+
+    template<typename Archive>
+    Archive operator|(Archive& ar, ClientJoinRoom& data)
+    {
+        return ar | data.room;
+    }
+
+    struct ClientLeaveRoom
+    {
+        static constexpr gf::Id type = "ClientLeaveRoom"_id;
+    };
+
+    template<typename Archive>
+    Archive operator|(Archive& ar, ClientLeaveRoom&)
+    {
+        return ar;
+    }
+
+    struct ClientReady
+    {
+        static constexpr gf::Id type = "ClientReady"_id;
+        bool ready;
+    };
+
+    template<typename Archive>
+    Archive operator|(Archive& ar, ClientReady& data)
+    {
+        return ar | data.ready;
+    }
 
     enum class PacketType : uint16_t
     {
@@ -706,6 +685,61 @@ namespace redsquare
         return ar;
     }
 
+    /*struct PlayerData
+    {
+        gf::Id id;
+        char name[MAX_SIZE_FROM_CHAT];
+    };
+
+    struct PlayerReady
+    {
+        gf::Id id;
+        bool ready;
+    };
+
+    enum class LobbyPacketType : uint16_t
+    {
+        PlayerData,
+        PlayerReady,
+    };
+
+    struct LobbyPacket
+    {
+        LobbyPacketType type;
+
+        union
+        {
+            PlayerData playerData;
+            PlayerReady playerReady;
+        };
+    };
+
+    template<class Archive>
+    Archive& operator|(Archive& ar, LobbyPacket& packet)
+    {
+        ar | packet.type;
+
+        switch (packet.type)
+        {
+            case LobbyPacketType::PlayerData:
+            {
+                ar | packet.playerData.id;
+                ar | packet.playerData.name;
+                ar | packet.playerData.ready;
+                break;
+            }
+
+            case LobbyPacketType::PlayerReady:
+            {
+                ar | packet.playerReady.id;
+                ar | packet.playerReady.ready;
+                break;
+            }
+        }
+
+        return ar;
+    }
+    */
 }
 
 #endif

@@ -1,8 +1,13 @@
 #ifndef REDSQUARE_CONSTANTS_H
 #define REDSQUARE_CONSTANTS_H
 
+namespace redsquare
+{
+    constexpr int MIN_PLAYERS = 1;
+    constexpr int MAX_PLAYERS = 9;
 
-namespace redsquare {
+    constexpr gf::Vector2i InitialSize = { 1024, 576 };
+    constexpr const char *Service = "6000";
 
     constexpr int TOP = 160;
     constexpr int BOTTOM = 160;

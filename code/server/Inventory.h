@@ -4,6 +4,7 @@
 #include "ServerItem.h"
 
 #include <sys/types.h>
+#include <map>
 
 namespace redsquare
 {
@@ -27,8 +28,6 @@ namespace redsquare
 
         //pos is used only if slotType == Cargo, nullptr if Item doesn't exist
         ServerItem* getItem(InventorySlotType slotType, uint pos = 0u);
-
-        bool moveItem(MoveItem moveItem);
 
     private:
         const uint RowCargoSlotNmb = 6;
