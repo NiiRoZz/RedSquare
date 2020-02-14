@@ -1404,7 +1404,7 @@ namespace redsquare
     }*/
 
     void Player::createSystemMessage(std::string message, std::string to){
-            Message packet;
+            /*Message packet;
             int length=0;
             std::string sys("system");
             length = message.copy(packet.message, message.length());
@@ -1418,6 +1418,6 @@ namespace redsquare
                 length = sys.copy(packet.to, sys.length());
                 packet.to[length]='\0';
             }
-            //Chat::getInstance().sendMessage(packet);  
+            //Chat::getInstance().sendMessage(packet); */
     }
 }

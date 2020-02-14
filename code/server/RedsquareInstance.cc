@@ -263,7 +263,6 @@ namespace redsquare
                     {
                         targetServerEntity = dynamic_cast<ServerEntity*>(targetPlayer);
                         int level = playerTarget->m_Level;
-                        Packet sendPacket;
 
                         if( in.spellType == SpellType::LightningStrike )
                         {
@@ -310,7 +309,6 @@ namespace redsquare
                     {
                         targetServerEntity = dynamic_cast<ServerEntity*>(targetMonster);
                         int level = playerTarget->m_Level;
-                        Packet sendPacket;
 
                         if( in.spellType == SpellType::Reaper )
                         {
@@ -343,7 +341,7 @@ namespace redsquare
                         else
                         {
                             playerTarget->attack(in.spellType, targetServerEntity);
-                            Packet sendPacket;
+                            
                             if ( targetMonster->m_LifePoint > 0 )
                             {
                                 RedsquareServerUpdateCharacteristic packet;
