@@ -35,6 +35,7 @@ namespace redsquare
         bool canAttack( gf::Vector2i targetPos, GameScene &game);
         bool canMove( gf::Vector2i targetPos, gf::SquareMap &map );
         bool canOpenTargetInventory( gf::Vector2i targetPos, GameScene &game);
+        void update(gf::Time time);
 
         std::string getName() const;
 

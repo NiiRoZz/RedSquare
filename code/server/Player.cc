@@ -201,7 +201,9 @@ namespace redsquare
 
         m_AttackPoint += 2;
         m_DefensePoint += 2;
-
+        m_MaxDefensePoint += 2;
+        m_MaxAttackPoint += 2;
+ 
         m_XP = 0;
         m_MaxXP += 30;
 
@@ -1310,35 +1312,51 @@ namespace redsquare
     }
     void Player::BoostDefense(float ratio){
         int defense = (m_MaxDefensePoint*ratio);
+        if(defense == 0){
+            defense = 1;
+        }
+        std::cout << " m_MaxDefensePoint +" << defense << std::endl;
         m_MaxDefensePoint += defense; 
         m_DefensePoint = m_MaxDefensePoint;
-        std::cout << " m_MaxDefensePoint +" << defense << std::endl;
+
     }
     void Player::BoostAttack(float ratio){
         int attack = (m_MaxAttackPoint*ratio);
+        if(attack == 0){
+            attack = 1;
+        }
+        std::cout << " m_MaxAttackPoint +" << attack << std::endl;
         m_MaxAttackPoint += attack;
         m_AttackPoint = m_MaxAttackPoint;
-        std::cout << " m_MaxAttackPoint +" << attack << std::endl;
     }
     void Player::BoostXP(float ratio){
         int XP = (m_MaxXP*ratio);
+        if(XP == 0){
+            XP = 1;
+        }
+        std::cout << " m_XP +" << XP << std::endl;
         m_XP += XP;
         if(m_XP > m_MaxXP){
             levelUp();
         }
-        std::cout << " m_XP +" << XP << std::endl;
     }
     void Player::BoostMana(float ratio){
         int mana = (m_MaxManaPoint*ratio);
+        if(mana == 0){
+            mana = 1;
+        }
+        std::cout << " m_MaxManaPoint +" << mana << std::endl;
         m_MaxManaPoint += mana; 
         m_ManaPoint = m_MaxManaPoint;
-        std::cout << " m_MaxManaPoint +" << mana << std::endl;
     }
     void Player::BoostHealth(float ratio){
         int health = (m_MaxLifePoint*ratio);
+        if(health == 0){
+            health = 1;
+        }
+        std::cout << " m_MaxLifePoint +" << health << std::endl;
         m_MaxLifePoint += health; 
         m_LifePoint = m_MaxLifePoint;
-        std::cout << " m_MaxLifePoint +" << health << std::endl;
     }
 
     /*void Player::sendMessageToChat(std::string str){

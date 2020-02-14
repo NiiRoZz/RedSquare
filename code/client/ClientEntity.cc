@@ -1,5 +1,7 @@
 #include "ClientEntity.h"
 #include "../common/Singletons.h"
+#include <gf/AnimatedSprite.h>
+#include <gf/Sprite.h>  
 #include "Player.h"
 
 namespace redsquare
@@ -8,7 +10,91 @@ namespace redsquare
     : redsquare::Entity(entityID,entityType,entitySubType)
     , m_Inventory(entityID)
     , m_EntityTexture(loadTexture(entitySubType))
-    {
+    , m_Animated(false)
+    { 
+
+        switch (m_EntitySubType)
+        {
+            case EntitySubType::Warrior:
+                m_Animated = true;
+                loadAnimation("img/Character/Warrior_animation.png", 0, 0, 6, 0.2f);
+                break;
+
+            case EntitySubType::Shaman:
+                m_Animated = true;
+                loadAnimation("img/Monster/Shaman_animation.png", 0, 0, 5, 0.2f);
+                break;
+
+            case EntitySubType::Orc:
+                m_Animated = true;
+                loadAnimation("img/Monster/Orc_animation.png", 0, 0, 5, 0.2f);
+                break;
+
+            case EntitySubType::Goblin:
+                m_Animated = true;
+                loadAnimation("img/Monster/Goblin_animation.png", 0, 0, 6, 0.1f);
+                break;
+
+            case EntitySubType::Bat:
+                m_Animated = true;
+                loadAnimation("img/Monster/Bat_animation.png", 0, 0, 4, 0.2f);
+                break;
+            
+            case EntitySubType::Slime:
+                m_Animated = true;
+                loadAnimation("img/Monster/Slime_animation.png", 0, 0, 6, 0.15f);
+                break;
+
+            case EntitySubType::Imp:
+                m_Animated = true;
+                loadAnimation("img/Monster/Imp_animation.png", 0, 0, 4, 0.15f);
+                break;
+
+            case EntitySubType::LilGob:
+                m_Animated = true;
+                loadAnimation("img/Monster/LilGob_animation.png", 0, 0, 4, 0.15f);
+                break;
+
+            case EntitySubType::LilZombie:
+                m_Animated = true;
+                loadAnimation("img/Monster/LilZombie_animation.png", 0, 0, 4, 0.15f);
+                break;
+
+            case EntitySubType::Swamp:
+                m_Animated = true;
+                loadAnimation("img/Monster/Swamp_animation.png", 0, 0, 4, 0.15f);
+                break;
+
+            case EntitySubType::Mud:
+                m_Animated = true;
+                loadAnimation("img/Monster/Mud_animation.png", 0, 0, 4, 0.15f);
+                break;
+
+            case EntitySubType::Zombie:
+                m_Animated = true;
+                loadAnimation("img/Monster/Zombie_animation.png", 0, 0, 4, 0.15f);
+                break;
+
+            case EntitySubType::Mask:
+                m_Animated = true;
+                loadAnimation("img/Monster/Mask_animation.png", 0, 0, 4, 0.15f);
+                break;
+             
+            default:
+                break;
+        }
+        
+        
+        if (m_EntitySubType == EntitySubType::Swamp)
+        {
+            m_Animated = true;
+            loadAnimation("img/Monster/Swamp_animation.png", 0, 0, 4, 0.15f);
+        }
+        if (m_EntitySubType == EntitySubType::LilGob)
+        {
+            m_Animated = true;
+            loadAnimation("img/Monster/LilGob_animation.png", 0, 0, 4, 0.15f);
+        }
     }
 
     Inventory& ClientEntity::getInventory()
@@ -346,6 +432,20 @@ namespace redsquare
                 player->m_Max_XP = characteristics.m_MaxXP;
                 player->m_SpellTab = characteristics.m_Spells;
             }
+        }
+    }
+
+    void ClientEntity::loadAnimation(gf::Path pathTextureAnimated, int line, int startFramePos, int nmbFrames, float frameDuration)
+    {
+        static constexpr gf::Vector2f FrameSize = { 16.0f, 16.0f };
+        gf::Time TimeFrameDuration = gf::seconds(frameDuration);
+        gf::Texture &textureAnimated = gResourceManager().getTexture(pathTextureAnimated);
+        gf::Vector2i textureSize = textureAnimated.getSize();
+
+        for (int i = startFramePos; i < (startFramePos + nmbFrames); ++i)
+        {
+            gf::RectF frame = gf::RectF::fromPositionSize( gf::Vector2i(i, line) * FrameSize / textureSize, FrameSize / textureSize);
+            m_Animation.addFrame(textureAnimated, frame, TimeFrameDuration);
         }
     }
 }

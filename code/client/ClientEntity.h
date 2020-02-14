@@ -3,6 +3,9 @@
 
 #include "../common/Entity.h"
 #include "Inventory.h"
+#include <gf/Entity.h>
+#include <gf/Texture.h>
+#include <gf/Animation.h>
 
 namespace redsquare
 {
@@ -20,9 +23,13 @@ namespace redsquare
 
         void loadCharacteristic(EntityCharacteristicData &characteristics);
 
+        void loadAnimation( gf::Path pathTextureAnimated, int line, int startFramePos, int nmbFrames, float frameDuration);
+
     protected:
         Inventory m_Inventory;
         gf::Texture* m_EntityTexture;
+        bool m_Animated;
+        gf::Animation m_Animation;
     };
 }
 

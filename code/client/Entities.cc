@@ -188,6 +188,16 @@ namespace redsquare
         {
             prop.second.update(time);
         }
+
+        for(auto &player: m_Players)
+        {
+            player.second.update(time);
+        }
+        
+        for(auto &monster: m_Monsters)
+        {
+            monster.second.update(time);
+        }
     }
 
     void Entities::render(gf::RenderTarget& target, const gf::RenderStates& states)

@@ -16,6 +16,7 @@ namespace redsquare
         Monster( gf::Id entityID, EntitySubType entitySubType, gf::Vector2i pos );
 
         void render(gf::RenderTarget& target, const gf::RenderStates& states);
+        void update(gf::Time time);
 
     private:
         gf::Font &m_Font;
