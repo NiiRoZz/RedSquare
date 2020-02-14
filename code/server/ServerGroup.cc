@@ -48,6 +48,7 @@ namespace redsquare
             data.id = player.id;
             data.name = player.name;
             data.ready = player.ready;
+            data.subType = player.subType;
             list.push_back(std::move(data));
         }
 

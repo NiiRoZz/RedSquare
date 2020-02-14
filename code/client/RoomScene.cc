@@ -163,7 +163,8 @@ namespace redsquare
 
             for (auto& player : m_Players)
             {
-                ImGui::BulletText("%s [%s]", player.name.c_str(), player.ready ? "ready" : "not ready");
+                std::string subTypeName = entitySubTypeString(player.subType);
+                ImGui::BulletText("%s - %s [%s]", player.name.c_str(), subTypeName.c_str(), player.ready ? "ready" : "not ready");
             }
 
             ImGui::EndGroup();
@@ -336,5 +337,9 @@ namespace redsquare
         m_PlayerWidget.setDefaultSprite(*texture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
         m_PlayerWidget.setDisabledSprite(*texture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
         m_PlayerWidget.setSelectedSprite(*texture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
+
+        ClientSubType packet;
+        packet.entitySubType = m_DisplayEntitySubType;
+        m_Network.send(packet);
     }
 }

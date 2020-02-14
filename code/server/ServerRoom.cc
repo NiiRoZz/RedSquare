@@ -47,6 +47,17 @@ namespace redsquare
                 break;
             }
 
+            case ClientSubType::type:
+            {
+                gf::Log::info("(ROOM) {%" PRIX64 "} ClientSubType::type.\n", player.id);
+
+                auto data = bytes.as<ClientSubType>();
+                player.subType = data.entitySubType;
+
+                // broadcast new state
+                broadcastPlayers();
+            }
+
             /*case ClientChatMessage::type:
             {
                 gf::Log::info("(ROOM) {%" PRIX64 "} Chat message.\n", player.id);

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <assert.h>
 
 #include <gf/Id.h>
 #include <gf/Vector.h>
@@ -90,6 +91,33 @@ namespace redsquare
         WeaponShelf2,
         /* BIG PROPS */
     };
+
+    inline std::string entitySubTypeString(EntitySubType type)
+    {
+        switch (type)
+        {
+            case EntitySubType::Magus:
+            return "Magus";
+
+            case EntitySubType::Warrior:
+            return "Warrior";
+
+            case EntitySubType::Rogue:
+            return "Rogue";
+
+            case EntitySubType::Ranger:
+            return "Ranger";
+
+            case EntitySubType::Healer:
+            return "THealer";
+
+            default:
+            return "";
+        }
+
+        assert(false);
+        return "";
+    }
 
     enum class Tile: uint8_t
     {
@@ -336,7 +364,7 @@ namespace redsquare
     template<typename Archive>
     Archive operator|(Archive& ar, PlayerData& data)
     {
-        return ar | data.id | data.name | data.ready;
+        return ar | data.id | data.name | data.subType | data.ready;
     }
 
     struct RoomData

@@ -748,18 +748,14 @@ namespace redsquare
         {
             case EntityType::Player:
             {
-                gf::Log::debug("GameScene::createEntity EntityType::Player 1\n");
                 m_Entities.addNewPlayer(entity.id, std::move(Player(entity.id, entity.entitySubType, entity.pos)));
-                gf::Log::debug("GameScene::createEntity EntityType::Player 2\n");
 
                 Player *player = m_Entities.getPlayer(entity.id);
                 assert(player != nullptr);
                 player->loadCharacteristic(entity.characteristics);
 
                 m_World.setWalkableFromEntity(player, false);
-                gf::Log::debug("GameScene::createEntity EntityType::Player 3\n");
                 m_World.setTransparentFromEntity(player, false);
-                gf::Log::debug("GameScene::createEntity EntityType::Player 4\n");
                 break;
             }
 

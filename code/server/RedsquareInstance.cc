@@ -35,7 +35,7 @@ namespace redsquare
         int indexPlayer = 1;
         for(auto &player: players)
         {
-            auto it = m_Players.emplace(player.id, std::move(Player(player.id, EntitySubType::Magus, player.name, *this)));
+            auto it = m_Players.emplace(player.id, std::move(Player(player.id, player.subType, player.name, *this)));
             assert(it.second);
 
             it.first->second.playerSpawn(m_World, indexPlayer++);

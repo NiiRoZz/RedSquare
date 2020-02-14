@@ -306,6 +306,18 @@ namespace redsquare
     {
         return ar | data.ready;
     }
+
+    struct ClientSubType
+    {
+        static constexpr gf::Id type = "ClientSubType"_id;
+        EntitySubType entitySubType;
+    };
+
+    template<typename Archive>
+    Archive operator|(Archive& ar, ClientSubType& data)
+    {
+        return ar | data.entitySubType;
+    }
 }
 
 #endif

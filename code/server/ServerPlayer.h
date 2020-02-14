@@ -7,6 +7,7 @@
 #include <gf/TcpSocket.h>
 
 #include "../common/ProtocolBytes.h"
+#include "../common/RedsquareProtocol.h"
 
 namespace redsquare
 {
@@ -19,6 +20,7 @@ namespace redsquare
         gf::TcpSocket socket;
         ServerRoom *room = nullptr;
         bool ready = false;
+        EntitySubType subType = EntitySubType::Magus;
 
         template<typename T>
         void send(const T& data)
