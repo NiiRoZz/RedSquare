@@ -37,7 +37,17 @@ namespace redsquare
     , m_Background(m_BackgroundTexture)
     {
         gMessageManager().registerHandler<SpellUpdateMessage>(&Hud::onSpellUpdate, this);
+    }
 
+    void Hud::initialize()
+    {
+        m_SpellWidgetHover = nullptr;
+        m_ShowMap = false;
+        m_ShowChat = false;
+        m_ShowHelp = false;
+        m_ShowInventory = false;
+        m_ShowEscape = false;
+        m_InventoryUI.initialize();
     }
 
     static constexpr float HudSpellSize = 55.0f;

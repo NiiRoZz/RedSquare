@@ -145,6 +145,7 @@ namespace redsquare
         m_AttackPos = {0,0};
         m_MovePlayer.first = {0,0};
         m_CanPlay = false;
+        m_Hud.initialize();
     }
 
     const std::vector<PlayerData>& GameScene::getPlayersData() const

@@ -48,6 +48,8 @@ namespace redsquare
     void RoomScene::startRoom()
     {
         m_Ready = false;
+        m_DisplayEntitySubType = EntitySubType::Unknow;
+        displayNextSubEntityTexture(1);
     }
 
     void RoomScene::doProcessEvent(gf::Event& event)

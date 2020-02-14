@@ -26,6 +26,8 @@ namespace redsquare
     public:
         Hud(Scenes &scenes, GameScene &game, gf::Font &font, ClientNetwork &network);
 
+        void initialize();
+
         virtual void update(gf::Time time) override;
 
         virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
