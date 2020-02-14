@@ -1,7 +1,7 @@
 #ifndef REDSQUARE_CLIENT_SPELLWIDGET_H
 #define REDSQUARE_CLIENT_SPELLWIDGET_H
 
-#include "../common/Packet.h"
+#include "../common/ProtocolData.h"
 
 #include <gf/Widgets.h>
 

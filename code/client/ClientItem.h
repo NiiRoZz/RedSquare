@@ -1,7 +1,7 @@
 #ifndef REDSQUARE_CLIENT_CLIENTITEM_H
 #define REDSQUARE_CLIENT_CLIENTITEM_H
 
-#include "../common/Packet.h"
+#include "../common/ProtocolData.h"
 #include "../common/Item.h"
 
 #include <gf/Texture.h>

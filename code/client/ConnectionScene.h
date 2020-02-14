@@ -8,7 +8,8 @@
 #include <gf/WidgetContainer.h>
 #include <gf/StaticString.h>
 
-#include "../common/Packet.h"
+#include "../common/Protocol.h"
+#include "ClientNetwork.h"
 
 namespace redsquare
 {
@@ -17,7 +18,7 @@ namespace redsquare
     class ConnectionScene: public gf::Scene
     {
     public:
-        ConnectionScene(Scenes& scenes);
+        ConnectionScene(Scenes& scenes, ClientNetwork& network);
 
     private:
         void doHandleActions(gf::Window& window) override;
@@ -30,12 +31,12 @@ namespace redsquare
 
     private:
         Scenes& m_Scenes;
+        ClientNetwork& m_Network;
 
         gf::Font& m_Font;
 
         bool m_ConnectionAsked;
         gf::StaticString<255> m_HostNameBuffer;
-        gf::StaticString<255> m_PortBuffer;
         gf::StaticString<255> m_NameBuffer;
         gf::SpriteWidget m_PlayerWidget;
         gf::WidgetContainer m_Container;

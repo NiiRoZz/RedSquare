@@ -2,7 +2,7 @@
 #define REDSQUARE_SERVER_MONSTER_H
 
 #include "ServerEntity.h"
-#include "../common/Packet.h"
+#include "../common/ProtocolData.h"
 #include <gf/Id.h>
 #include <gf/Vector.h>
 #include <gf/VectorOps.h>
@@ -14,7 +14,6 @@ namespace redsquare
     public:
         Monster(gf::Id entityID);
 
-        virtual void createCarPacket(Packet &packet) override;
         gf::Vector2i m_bait;
         gf::Vector2i m_Routine;
         bool checkRoutine();

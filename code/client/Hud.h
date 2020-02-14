@@ -1,7 +1,6 @@
 #ifndef REDSQUARE_CLIENT_HUD_H
 #define REDSQUARE_CLIENT_HUD_H
 
-#include "Chat.h"
 #include "InventoryUI.h"
 #include "Message.h"
 #include "SpellWidget.h"
@@ -19,11 +18,12 @@ namespace redsquare
     //Forward classes
     class GameScene;
     struct Scenes;
+    class ClientNetwork;
 
     class Hud: public gf::Entity
     {
     public:
-        Hud(Scenes &scenes, GameScene &game, gf::Font &font);
+        Hud(Scenes &scenes, GameScene &game, gf::Font &font, ClientNetwork &network);
 
         virtual void update(gf::Time time) override;
 
@@ -42,7 +42,7 @@ namespace redsquare
         void showEscape();
 
         InventoryUI& getInventoryUI();
-        Chat& getChat();
+        //Chat& getChat();
         
     private:
         gf::MessageStatus onSpellUpdate(gf::Id id, gf::Message *msg);
@@ -50,7 +50,7 @@ namespace redsquare
 
         Scenes &m_Scenes;
         GameScene &m_Game;
-        Chat m_Chat;
+        //Chat m_Chat;
         InventoryUI m_InventoryUI;
        
         gf::Font &m_Font;

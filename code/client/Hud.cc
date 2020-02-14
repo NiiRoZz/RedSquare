@@ -2,6 +2,7 @@
 #include "Scenes.h"
 #include "GameScene.h"
 #include "../common/Singletons.h"
+#include "ClientNetwork.h"
 
 #include <gf/Event.h>
 #include <gf/RenderWindow.h>
@@ -16,11 +17,11 @@
 
 namespace redsquare
 {
-    Hud::Hud(Scenes &scenes, GameScene &game, gf::Font &font)
+    Hud::Hud(Scenes &scenes, GameScene &game, gf::Font &font, ClientNetwork &network)
     : m_Scenes(scenes)
     , m_Game(game)
-    , m_Chat(font)
-    , m_InventoryUI(font, game)
+    //, m_Chat(font)
+    , m_InventoryUI(font, game, network)
     , m_Font(font)
     , m_UI(font)
     , m_SpellWidgetHover(nullptr)
@@ -63,7 +64,7 @@ namespace redsquare
             text.setOutlineColor(gf::Color::Black);
             text.setOutlineThickness(coordinates.getRelativeSize({ 1.0f, 0.002f }).height);
             text.setCharacterSize(coordinates.getRelativeCharacterSize(0.045f));
-            text.setString("Floor : " + std::to_string(m_Game.m_Floor));
+            text.setString("Floor : " + std::to_string(m_Game.getCurrentFloor()));
             text.setAnchor(gf::Anchor::TopLeft);
             text.setPosition(coordinates.getRelativePoint({ 0.03f, 0.05f }));
             target.draw(text, states);
@@ -86,7 +87,7 @@ namespace redsquare
             {
                 gf::Vector2f baseCoordinatesMiniMap = coordinates.getRelativePoint({ 0.03f, 0.1f });
                 gf::Vector2f miniMapShapeSize = coordinates.getRelativeSize({ 0.001953125f, 0.003472222f });
-                Player *myPlayer = m_Game.getEntities().getPlayer(m_Game.m_PlayerID);
+                Player *myPlayer = m_Game.getEntities().getPlayer(m_Scenes.myPlayerId);
                 gf::ShapeParticles shapeParticles;
 
                 for(uint i = 0; i < World::MapSize; ++i)
@@ -143,7 +144,7 @@ namespace redsquare
             text.setOutlineColor(gf::Color::White);
             text.setOutlineThickness(coordinates.getRelativeSize({ 1.0f, 0.002f }).height);
             text.setCharacterSize(coordinates.getRelativeCharacterSize(0.045f));
-            text.setString("Floor : " + std::to_string(m_Game.m_Floor));
+            text.setString("Floor : " + std::to_string(m_Game.getCurrentFloor()));
             text.setAnchor(gf::Anchor::TopLeft);
             text.setPosition(coordinates.getRelativePoint({ 0.03f, 0.05f }));
             target.draw(text, states);
@@ -156,7 +157,7 @@ namespace redsquare
             target.draw(text, states);
 
             //Draw it's your turn
-            if (m_Game.m_CanPlay)
+            if (m_Game.canPlay())
             {
                 gf::Text text;
                 text.setFont(m_Font);
@@ -182,7 +183,7 @@ namespace redsquare
                 target.draw(it, states);
                 x += 1.2;
                 
-                if(it.m_SpellType == m_Game.m_CurrentSpell)
+                if( it.m_SpellType == m_Game.m_CurrentSpell )
                 {
                     gf::Sprite sprite;
                     sprite.setTexture( gResourceManager().getTexture("img/SpellIcon/frame-9-red.png") );
@@ -190,7 +191,6 @@ namespace redsquare
                     sprite.setScale(scale);
                     target.draw(sprite, states);
                 }
-
 
                 if ( index % 4 == 0 )
                 {
@@ -221,10 +221,10 @@ namespace redsquare
                 target.draw(m_UI);
             }
 
-            if (m_ShowChat)
+            /*if (m_ShowChat)
             {
                 m_Chat.render(target, states);
-            }
+            }*/
 
             if (m_ShowHelp) 
             {
@@ -280,10 +280,10 @@ namespace redsquare
 
     void Hud::update(gf::Time time)
     {
-        if (m_ShowChat)
+        /*if (m_ShowChat)
         {
             m_Chat.update(time);
-        }
+        }*/
 
         if (m_ShowInventory)
         {
@@ -293,10 +293,10 @@ namespace redsquare
 
     void Hud::processEvent(const gf::Event &event)
     {
-        if (m_ShowChat)
+        /*if (m_ShowChat)
         {
             m_Chat.processEvent(event);
-        }
+        }*/
 
         if (m_ShowInventory)
         {
@@ -336,7 +336,7 @@ namespace redsquare
         {
             if (m_ShowEscape && m_QuitWidget.contains(event.mouseButton.coords))
             {
-                m_Game.disconnect();
+                //m_Game.disconnect();
                 m_Scenes.replaceScene(m_Scenes.mainMenu, m_Scenes.glitchEffect, gf::seconds(0.4f));
             }
         }
@@ -344,7 +344,8 @@ namespace redsquare
 
     bool Hud::hoveringChat()
     {
-        return m_Chat.m_HoveringChat;
+        //return m_Chat.m_HoveringChat;
+        return false;
     }
 
     bool Hud::shownInventory()
@@ -427,8 +428,8 @@ namespace redsquare
         return m_InventoryUI;
     }
 
-    Chat& Hud::getChat()
+    /*Chat& Hud::getChat()
     {
         return m_Chat;
-    }
+    }*/
 }

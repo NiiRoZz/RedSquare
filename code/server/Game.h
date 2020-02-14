@@ -2,7 +2,7 @@
 #define REDSQUARE_SERVER_GAME_H
 
 #include "../common/Sockets.h"
-#include "../common/Packet.h"
+#include "../common/ProtocolData.h"
 #include "Player.h"
 #include "Monster.h"
 #include "Prop.h"

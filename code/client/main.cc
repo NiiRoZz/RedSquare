@@ -30,6 +30,7 @@
 
 #include "Scenes.h"
 #include "../common/Singletons.h"
+#include "ClientNetwork.h"
 #include "config.h"
 
 
@@ -37,12 +38,14 @@ using namespace redsquare;
 
 int main( int argc, char **argv )
 {
+    ClientNetwork network;
+
     gf::SingletonStorage<gf::MessageManager> storageForMessageManager(redsquare::gMessageManager);
     gf::SingletonStorage<gf::ResourceManager> storageForResourceManager(redsquare::gResourceManager);
 
     redsquare::gResourceManager().addSearchDir(REDSQUARE_DATA_DIR);
 
-    Scenes scenes;
+    Scenes scenes(network);
 
     scenes.pushScene(scenes.mainMenu);
     scenes.run();

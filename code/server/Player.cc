@@ -1,16 +1,18 @@
 #include "Player.h"
+#include "RedsquareInstance.h"
+#include "RedsquareInstance.h"
+
 #include <iostream>
-#include "Game.h"
-#include "Chat.h"
 
 #include "../common/Constants.h"
 
 namespace redsquare
 {
-    Player::Player(SocketTcp socket, gf::Id playerID, const EntitySubType entitySubType, std::string name)
+    Player::Player(gf::Id playerID, const EntitySubType entitySubType, std::string name, RedsquareInstance &instance)
     : ServerEntity(playerID, EntityType::Player, entitySubType)
+    , m_PlayerTurn(false)
+    , m_RedsquareInstance(instance)
     , m_Name(name)
-    , m_Socket(std::move(socket))
     {
         switch (m_EntitySubType){
         case EntitySubType::Magus : // ------------------- Magus -------------------
@@ -109,33 +111,17 @@ namespace redsquare
         m_SpellTab.push_back(SpellType::BasicAttack);
     }
 
-    void Player::sendPacket(Packet &packet)
+    bool Player::applyMove(gf::Vector2i dir, World &world)
     {
-        m_Socket.send(packet);
-    }
-
-    void Player::receivePacket(Packet &packet)
-    {
-        m_Socket.receive(packet);
-    }
-
-    void Player::sendPacket( NewPlayer &packet )
-    {
-        m_Socket.send(packet);
-    }
-
-    bool Player::applyMove(int dirX, int dirY, World &world)
-    {
-        int newPosX = m_Pos[0] + dirX;
-        int newPosY = m_Pos[1] + dirY;
+        int newPosX = m_Pos[0] + dir[0];
+        int newPosY = m_Pos[1] + dir[1];
 
         if ( newPosY >= 0 && newPosY < World::MapSize-1 && newPosX >= 0 && newPosX < World::MapSize-1 && world.m_SquareWorld.isWalkable( {newPosX, newPosY} ) )
         {
             world.setWalkableFromEntity(static_cast<redsquare::Entity*>(this), true);
             world.setTransparentFromEntity( static_cast<redsquare::Entity*>(this), true );
 
-            m_Pos[1] = newPosY;
-            m_Pos[0] = newPosX;
+            m_Pos += dir;
 
             world.setWalkableFromEntity(static_cast<redsquare::Entity*>(this), false);
             world.setTransparentFromEntity( static_cast<redsquare::Entity*>(this), false );
@@ -149,11 +135,6 @@ namespace redsquare
 
         return false;
     }
-
-    bool Player::playerDisconnected() const
-    {
-        return (m_Socket.getState() == SocketState::Disconnected);
-    }
     
     void Player::defaultInventoryStuff()
     {
@@ -165,8 +146,7 @@ namespace redsquare
                 ssize_t pos = m_Inventory.addItem(InventorySlotType::Weapon, std::move(item1));
                 if (pos != -1)
                 {
-                    Packet packet = createUpdateItemPacket(InventorySlotType::Weapon, false, pos);
-                    sendPacket(packet);
+                    m_RedsquareInstance.send(m_EntityID, createUpdateItemPacket(InventorySlotType::Weapon, false, pos));
                 }
 
                 //Example how to spawn item in cargo slot
@@ -174,16 +154,14 @@ namespace redsquare
                 pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item2));
                 if (pos != -1)
                 {
-                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                    sendPacket(packet);
+                    m_RedsquareInstance.send(m_EntityID, createUpdateItemPacket(InventorySlotType::Cargo, false, pos));
                 }
                 //Example how to spawn item in cargo slot
                 ServerItem item3(ItemType::HealthPot2, 1u);
                 pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item3));
                 if (pos != -1)
                 {
-                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                    sendPacket(packet);
+                    m_RedsquareInstance.send(m_EntityID, createUpdateItemPacket(InventorySlotType::Cargo, false, pos));
                 }
 
                 //Example how to spawn item in cargo slot
@@ -191,8 +169,7 @@ namespace redsquare
                 pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item4));
                 if (pos != -1)
                 {
-                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                    sendPacket(packet);
+                    m_RedsquareInstance.send(m_EntityID, createUpdateItemPacket(InventorySlotType::Cargo, false, pos));
                 }
 
                 //Example how to spawn item in cargo slot
@@ -200,16 +177,14 @@ namespace redsquare
                 pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item5));
                 if (pos != -1)
                 {
-                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                    sendPacket(packet);
+                    m_RedsquareInstance.send(m_EntityID, createUpdateItemPacket(InventorySlotType::Cargo, false, pos));
                 }
                 //Example how to spawn item in cargo slot
                 ServerItem item6(ItemType::ManaPot2, 1u);
                 pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item6));
                 if (pos != -1)
                 {
-                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                    sendPacket(packet);
+                    m_RedsquareInstance.send(m_EntityID, createUpdateItemPacket(InventorySlotType::Cargo, false, pos));
                 }
 
                 //Example how to spawn item in cargo slot
@@ -217,8 +192,7 @@ namespace redsquare
                 pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item7));
                 if (pos != -1)
                 {
-                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                    sendPacket(packet);
+                    m_RedsquareInstance.send(m_EntityID, createUpdateItemPacket(InventorySlotType::Cargo, false, pos));
                 }
                 
                 //Example how to spawn item in cargo slot
@@ -226,22 +200,19 @@ namespace redsquare
                 pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item8));
                 if (pos != -1)
                 {
-                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                    sendPacket(packet);
+                    m_RedsquareInstance.send(m_EntityID, createUpdateItemPacket(InventorySlotType::Cargo, false, pos));
                 }
                 ServerItem item9(ItemType::BoostDefense2, 1u);
                 pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item9));
                 if (pos != -1)
                 {
-                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                    sendPacket(packet);
+                    m_RedsquareInstance.send(m_EntityID, createUpdateItemPacket(InventorySlotType::Cargo, false, pos));
                 }
                 ServerItem item10(ItemType::BoostDefense3, 1u);
                 pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item10));
                 if (pos != -1)
                 {
-                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                    sendPacket(packet);
+                    m_RedsquareInstance.send(m_EntityID, createUpdateItemPacket(InventorySlotType::Cargo, false, pos));
                 }
                 break;
             }
@@ -250,8 +221,7 @@ namespace redsquare
                 ssize_t pos = m_Inventory.addItem(InventorySlotType::Weapon, std::move(item1));
                 if (pos != -1)
                 {
-                    Packet packet = createUpdateItemPacket(InventorySlotType::Weapon, false, pos);
-                    sendPacket(packet);
+                    m_RedsquareInstance.send(m_EntityID, createUpdateItemPacket(InventorySlotType::Weapon, false, pos));
                 }
                 break;
             }
@@ -260,8 +230,7 @@ namespace redsquare
                 ssize_t pos = m_Inventory.addItem(InventorySlotType::Weapon, std::move(item1));
                 if (pos != -1)
                 {
-                    Packet packet = createUpdateItemPacket(InventorySlotType::Weapon, false, pos);
-                    sendPacket(packet);
+                    m_RedsquareInstance.send(m_EntityID, createUpdateItemPacket(InventorySlotType::Weapon, false, pos));
                 }
                 break;
             }
@@ -270,8 +239,7 @@ namespace redsquare
                 ssize_t pos = m_Inventory.addItem(InventorySlotType::Weapon, std::move(item1));
                 if (pos != -1)
                 {
-                    Packet packet = createUpdateItemPacket(InventorySlotType::Weapon, false, pos);
-                    sendPacket(packet);
+                    m_RedsquareInstance.send(m_EntityID, createUpdateItemPacket(InventorySlotType::Weapon, false, pos));
                 }
                 break;
             }
@@ -315,7 +283,6 @@ namespace redsquare
                 }else if(m_Level == 8){
                    m_SpellTab.push_back(SpellType::ArmorUp); // gain armor
                 }
-                sendUpdateOfSpells();
                 break;
 
             case EntitySubType::Magus:
@@ -334,7 +301,6 @@ namespace redsquare
                 }else if(m_Level == 8){
                     m_SpellTab.push_back(SpellType::Revenge); // more damage the less life you have
                 }
-                sendUpdateOfSpells();
                 break;
 
             case EntitySubType::Rogue:  
@@ -351,7 +317,6 @@ namespace redsquare
                 }else if(m_Level == 8){
                     m_SpellTab.push_back(SpellType::Massacre); // lifesteal attack
                 }
-                sendUpdateOfSpells();
                 break;
 
             case EntitySubType::Ranger:  
@@ -371,7 +336,6 @@ namespace redsquare
                 }else if(m_Level == 8){
                     m_SpellTab.push_back(SpellType::LightningStrike); // AOE
                 }
-                sendUpdateOfSpells();
                 break;
 
             case EntitySubType::Healer:  
@@ -388,55 +352,11 @@ namespace redsquare
                 }else if(m_Level == 7){
                    m_SpellTab.push_back(SpellType::Incinerate);
                 }
-                sendUpdateOfSpells();
                 break;
 
             default: 
                 break;
         }
-    }
-
-    void Player::createCarPacket(Packet &packet) // create the packet of the caracteristic who will be send to player
-    {
-        packet.type = PacketType::EntityCar;
-        packet.entityCar.entityType = EntityType::Player;
-        packet.entityCar.entityID = getEntityID();
-
-        packet.entityCar.m_LifePoint = m_LifePoint;
-        packet.entityCar.m_ManaPoint = m_ManaPoint;
-
-        packet.entityCar.m_MaxLifePoint = m_MaxLifePoint;
-        packet.entityCar.m_MaxManaPoint = m_MaxManaPoint;
-
-        packet.entityCar.m_AttackPoint = m_AttackPoint;
-        packet.entityCar.m_DefensePoint = m_DefensePoint;
-
-        packet.entityCar.m_MaxAttackPoint = m_MaxAttackPoint;
-        packet.entityCar.m_MaxDefensePoint = m_MaxDefensePoint;
-
-        packet.entityCar.m_Range = m_Range;
-
-        packet.entityCar.m_XP = m_XP;
-        packet.entityCar.m_MaxXP= m_MaxXP;
-
-        packet.entityCar.m_Level = m_Level;
-    }
-
-    void Player::sendUpdateOfSpells()
-    {
-        Packet packet;
-        packet.type = PacketType::UpdateSpells;
-        std::fill(packet.updateSpells.spells, packet.updateSpells.spells + MAX_SPELL_PER_PLAYER, static_cast<SpellType>(0));
-
-        if (m_SpellTab.size() > MAX_SPELL_PER_PLAYER)
-        {
-            std::copy_n(m_SpellTab.begin(), MAX_SPELL_PER_PLAYER, packet.updateSpells.spells);
-        }
-        else
-        {
-            std::copy(m_SpellTab.begin(), m_SpellTab.end(), packet.updateSpells.spells);
-        }
-        sendPacket(packet);
     }
 
     void Player::playerSpawn(World &world, int playerSpawned){ // set spawn for a player 
@@ -1477,12 +1397,12 @@ namespace redsquare
         std::cout << " m_MaxLifePoint +" << health << std::endl;
     }
 
-    void Player::sendMessageToChat(std::string str){
+    /*void Player::sendMessageToChat(std::string str){
         Message mess;
         int length = str.copy(mess.message,str.length());
         mess.message[length]='\0';
         m_Socket.send(mess);
-    }
+    }*/
 
     void Player::createSystemMessage(std::string message, std::string to){
             Message packet;
@@ -1499,6 +1419,6 @@ namespace redsquare
                 length = sys.copy(packet.to, sys.length());
                 packet.to[length]='\0';
             }
-            Chat::getInstance().sendMessage(packet);  
+            //Chat::getInstance().sendMessage(packet);  
     }
 }

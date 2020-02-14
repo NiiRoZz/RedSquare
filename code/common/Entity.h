@@ -1,7 +1,7 @@
 #ifndef REDSQUARE_COMMON_ENTITY_H
 #define REDSQUARE_COMMON_ENTITY_H
 
-#include "Packet.h"
+#include "Protocol.h"
 
 #include <gf/Vector.h>
 #include <gf/Id.h>

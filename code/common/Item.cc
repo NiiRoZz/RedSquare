@@ -1,5 +1,7 @@
 #include "Item.h"
 
+#include <iostream>
+
 namespace redsquare
 {
     Item::Item(ItemType type, uint baseFloor)

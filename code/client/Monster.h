@@ -5,6 +5,8 @@
 
 #include <gf/Texture.h>
 #include <gf/Font.h>
+#include <gf/RenderTarget.h>
+#include <gf/RenderStates.h>
 
 namespace redsquare
 {

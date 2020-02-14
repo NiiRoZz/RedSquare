@@ -153,26 +153,6 @@ namespace redsquare
        }
     }
 
-    void Monster::createCarPacket(Packet &packet)
-    {
-        packet.type = PacketType::EntityCar;
-        packet.entityCar.entityType = EntityType::Monster;
-        packet.entityCar.entityID = getEntityID();
-
-        packet.entityCar.m_LifePoint = m_LifePoint;
-        packet.entityCar.m_MaxLifePoint = m_MaxLifePoint;
-
-        packet.entityCar.m_AttackPoint = m_AttackPoint;
-        packet.entityCar.m_DefensePoint = m_DefensePoint;
-
-        packet.entityCar.m_MaxAttackPoint = m_MaxAttackPoint;
-        packet.entityCar.m_MaxDefensePoint = m_MaxDefensePoint;
-
-        packet.entityCar.m_Range = m_Range;
-
-        packet.entityCar.m_Level = m_Level;
-    }
-
     bool Monster::checkRoutine(){
         if(m_Pos[0] == m_Routine[0] && m_Pos[1] == m_Routine[1]){
             return true;
