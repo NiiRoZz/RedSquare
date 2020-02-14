@@ -36,6 +36,10 @@ namespace redsquare
         ItemHolder* getItemHolder( gf::Id itemHolderID );
         ItemHolder* getItemHolder( gf::Vector2i pos ); // getter of itemHolder pos
 
+        gf::Random& getRandom();
+
+        uint getFloor() const;
+
     public:
         World m_World;
 

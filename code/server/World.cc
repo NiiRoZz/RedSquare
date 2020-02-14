@@ -118,7 +118,7 @@ namespace redsquare
         }
         else
         {
-            /*m_SquareWorld.reset(gf::Flags<gf::CellProperty>());
+            m_SquareWorld.reset(gf::Flags<gf::CellProperty>());
             std::fill(m_World.begin(),m_World.end(),Tile::Void);
             TabRoom.clear();
             std::map<gf::Id, Prop>::iterator itNewProp; // map of props
@@ -144,7 +144,7 @@ namespace redsquare
 
                         m_World( pos ) = Tile::Room;
                         m_SquareWorld.setWalkable(pos, true);
-                        gf::Id id = game.generateId();
+                        gf::Id id = m_Instance.getRandom().computeId();
                         std::map<gf::Id, Monster>::iterator itNewMonster;
 
                         // Create a new monster
@@ -155,7 +155,7 @@ namespace redsquare
                         setTransparentFromEntity(&(itNewMonster->second),false);
                         drawRoutine(itNewMonster->second);
 
-                        itNewMonster->second.levelUp(game.m_Floor); // spawn ennemy with level equals to m_floor
+                        itNewMonster->second.levelUp(m_Instance.getFloor()); // spawn ennemy with level equals to m_floor
 
                     }else if (BossRoom[column][row] == 'O') { // spawn of player
 
@@ -172,7 +172,7 @@ namespace redsquare
                     }else if (BossRoom[column][row] == 'C'){ // spawn of chest
 
                         m_World( pos ) = Tile::Room;
-                        gf::Id id = game.generateId();
+                        gf::Id id = m_Instance.getRandom().computeId();
                         std::tie(itNewProp, std::ignore) = m_Instance.m_Props.emplace(id, Prop(id, EntitySubType::Chest));
                         itNewProp->second.m_Pos = pos;
 
@@ -181,7 +181,7 @@ namespace redsquare
                     }else if (BossRoom[column][row] == 'P'){ // spawn pillar props
 
                         m_World( pos ) = Tile::Room;
-                        gf::Id id = game.generateId();
+                        gf::Id id = m_Instance.getRandom().computeId();
                         std::tie(itNewProp, std::ignore) = m_Instance.m_Props.emplace(id, Prop(id, EntitySubType::GreyPillar1));
                         itNewProp->second.m_Pos = pos;
 
@@ -189,7 +189,7 @@ namespace redsquare
                     }else if (BossRoom[column][row] == 'A'){ // spawn torch
 
                         m_World( pos ) = Tile::Room;
-                        gf::Id id = game.generateId();
+                        gf::Id id = m_Instance.getRandom().computeId();
                         std::tie(itNewProp, std::ignore) = m_Instance.m_Props.emplace(id, Prop(id, EntitySubType::Torch));
                         itNewProp->second.m_Pos = pos;
 
@@ -197,7 +197,7 @@ namespace redsquare
                     }else if (BossRoom[column][row] == 'T'){ // spawn throne
 
                         m_World( pos ) = Tile::Room;
-                        gf::Id id = game.generateId();
+                        gf::Id id = m_Instance.getRandom().computeId();
                         std::tie(itNewProp, std::ignore) = m_Instance.m_Props.emplace(id, Prop(id, EntitySubType::Throne));
                         itNewProp->second.m_Pos = pos;
 
@@ -205,7 +205,7 @@ namespace redsquare
                     }else if (BossRoom[column][row] == 'V'){ // spawn vase
 
                         m_World( pos ) = Tile::Room;
-                        gf::Id id = game.generateId();
+                        gf::Id id = m_Instance.getRandom().computeId();
                         std::tie(itNewProp, std::ignore) = m_Instance.m_Props.emplace(id, Prop(id, EntitySubType::Pot));
                         itNewProp->second.m_Pos = pos;
 
@@ -213,7 +213,6 @@ namespace redsquare
                     }
                 }
             }
-            */
         }
     }
 

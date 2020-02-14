@@ -1346,6 +1346,16 @@ namespace redsquare
         return nullptr;
     }
 
+    gf::Random& RedsquareInstance::getRandom()
+    {
+        return m_Random;
+    }
+
+    uint RedsquareInstance::getFloor() const
+    {
+        return m_Floor;
+    }
+
     bool RedsquareInstance::canAttack(Monster &monster, gf::Vector2i targetPos)
     {
         if ( monster.isInsideMe( targetPos ) )
