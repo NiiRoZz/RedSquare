@@ -27,23 +27,16 @@ namespace redsquare
         void doUpdate(gf::Time time) override;
         void doRender(gf::RenderTarget &target, const gf::RenderStates &states) override;
 
-        void displayNextSubEntityTexture(int offset);
-
     private:
         Scenes& m_Scenes;
         ClientNetwork& m_Network;
         
         gf::Font& m_Font;
 
-        gf::TextWidget m_GaucheButton;
-        gf::TextWidget m_DroiteButton;
-
         bool m_ConnectionAsked;
-
-        EntitySubType m_DisplayEntitySubType;
+        
         gf::StaticString<255> m_HostNameBuffer;
         gf::StaticString<255> m_NameBuffer;
-        gf::SpriteWidget m_PlayerWidget;
         gf::WidgetContainer m_Container;
 
 
