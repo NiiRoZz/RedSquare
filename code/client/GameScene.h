@@ -35,6 +35,8 @@ namespace redsquare
 
         bool playerDead() const;
 
+        void changeSpell(int spell);
+
     public:
         World m_World;
 
@@ -53,8 +55,6 @@ namespace redsquare
         void createEntity(EntityData &entity);
 
         void doAction();
-
-        void changeSpell(int spell);
 
     private:
         Scenes& m_Scenes;

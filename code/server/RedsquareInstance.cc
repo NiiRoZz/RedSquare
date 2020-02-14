@@ -262,7 +262,6 @@ namespace redsquare
                     if (targetPlayer != nullptr)
                     {
                         targetServerEntity = dynamic_cast<ServerEntity*>(targetPlayer);
-                        Packet sendPacket;
 
                         if( in.spellType == SpellType::LightningStrike )
                         {
@@ -308,7 +307,6 @@ namespace redsquare
                     else if (targetMonster != nullptr)
                     {
                         targetServerEntity = dynamic_cast<ServerEntity*>(targetMonster);
-                        Packet sendPacket;
 
                         if( in.spellType == SpellType::Reaper )
                         {
@@ -341,7 +339,7 @@ namespace redsquare
                         else
                         {
                             playerTarget->attack(in.spellType, targetServerEntity);
-                            Packet sendPacket;
+                            
                             if ( targetMonster->m_LifePoint > 0 )
                             {
                                 RedsquareServerUpdateCharacteristic packet;
