@@ -152,6 +152,11 @@ namespace redsquare
         return m_CanPlay;
     }
 
+    bool GameScene::playerDead() const
+    {
+        return m_PlayerDead;
+    }
+
     void GameScene::doHandleActions(gf::Window &window)
     {
         if (m_FullScreenAction.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard))

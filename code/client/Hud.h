@@ -49,6 +49,7 @@ namespace redsquare
         gf::MessageStatus onPlayerDeadUpdate(gf::Id id, gf::Message *msg);
 
         Scenes &m_Scenes;
+        ClientNetwork &m_Network;
         GameScene &m_Game;
         //Chat m_Chat;
         InventoryUI m_InventoryUI;
@@ -63,7 +64,6 @@ namespace redsquare
         bool m_ShowChat;
         bool m_ShowHelp;
         bool m_ShowInventory;
-        bool m_PlayerDead;
         bool m_ShowEscape;
 
         gf::TextWidget m_QuitWidget;

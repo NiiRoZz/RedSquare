@@ -34,11 +34,6 @@ namespace redsquare
         static const gf::Id type = "MyPlayerReceived"_id;
         Player *player;
     };
-
-    struct MyPlayerDeadMessage : public gf::Message
-    {
-        static const gf::Id type = "MyPlayerDead"_id;
-    };
 }
 
 #endif // REDSQUARE_CLIENT_MESSAGE_H

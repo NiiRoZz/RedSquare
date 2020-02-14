@@ -19,6 +19,7 @@ namespace redsquare
 {
     Hud::Hud(Scenes &scenes, GameScene &game, gf::Font &font, ClientNetwork &network)
     : m_Scenes(scenes)
+    , m_Network(network)
     , m_Game(game)
     //, m_Chat(font)
     , m_InventoryUI(font, game, network)
@@ -30,13 +31,11 @@ namespace redsquare
     , m_ShowEscape(false)
     , m_ShowHelp(false)
     , m_ShowInventory(false)
-    , m_PlayerDead(false)
     , m_QuitWidget("Back to Menu", m_Font)
     , m_BackgroundTexture(gResourceManager().getTexture("img/Inventory/BorderSlot.png"))
     , m_Background(m_BackgroundTexture)
     {
         gMessageManager().registerHandler<SpellUpdateMessage>(&Hud::onSpellUpdate, this);
-        gMessageManager().registerHandler<MyPlayerDeadMessage>(&Hud::onPlayerDeadUpdate, this);
 
     }
 
@@ -47,7 +46,7 @@ namespace redsquare
     {
         gf::Coordinates coordinates(target);
 
-        if (m_PlayerDead)
+        if (m_Game.playerDead())
         {
             gf::Text text;
             text.setFont(m_Font);
@@ -336,7 +335,8 @@ namespace redsquare
         {
             if (m_ShowEscape && m_QuitWidget.contains(event.mouseButton.coords))
             {
-                //m_Game.disconnect();
+                m_ShowEscape = true;
+                m_Network.disconnect();
                 m_Scenes.replaceScene(m_Scenes.mainMenu, m_Scenes.glitchEffect, gf::seconds(0.4f));
             }
         }
@@ -374,15 +374,6 @@ namespace redsquare
                 m_SpellsWidgets.emplace_back(std::move(redsquare::SpellWidget(*it)));
             }
         }
-
-        return gf::MessageStatus::Keep;
-    }
-
-    gf::MessageStatus Hud::onPlayerDeadUpdate(gf::Id id, gf::Message *msg)
-    {
-        assert(id == MyPlayerDeadMessage::type);
-
-        m_PlayerDead = true;
 
         return gf::MessageStatus::Keep;
     }
