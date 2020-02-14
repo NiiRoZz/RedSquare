@@ -109,7 +109,7 @@ namespace redsquare
             return "Ranger";
 
             case EntitySubType::Healer:
-            return "THealer";
+            return "Healer";
 
             default:
             return "";

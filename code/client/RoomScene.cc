@@ -119,6 +119,7 @@ namespace redsquare
                 case ServerStartGame::type:
                 {
                     gf::Log::debug("(ROOM) Receive ServerStartGame\n");
+                    m_Scenes.game.initialize();
                     m_Scenes.replaceScene(m_Scenes.game, m_Scenes.glitchEffect, gf::seconds(0.4f));
                     // do not poll any more message as the next messages are for the game
                     return;

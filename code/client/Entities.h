@@ -16,6 +16,8 @@ namespace redsquare
     class Entities: public gf::Entity
     {
     public:
+        void initialize();
+        
         Player& addNewPlayer(gf::Id id, Player &&player);
         void removePlayer(gf::Id id);
 

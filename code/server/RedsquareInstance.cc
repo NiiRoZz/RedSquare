@@ -1362,12 +1362,17 @@ namespace redsquare
 
                             m_Players.erase(it2);
 
+                            removePlayer(getServerPlayer(disconnectedID));
+
+                            if (getPlayersCount() <= 0)
+                            {
+                                return;
+                            }
+
                             RedsquareServerDeleteEntity packet2;
                             packet2.entityType = EntityType::Player;
                             packet2.id = disconnectedID;
                             broadcast(packet2);
-
-                            removePlayer(getServerPlayer(disconnectedID));
 
                             hasAttacked = false;
                             isTarget = false;
@@ -2420,23 +2425,24 @@ namespace redsquare
 
     void RedsquareInstance::doRemovePlayer(ServerPlayer& player)
     {
-        Player *player2 = getPlayer(player.id);
-        assert(player2 != nullptr);
-
-        bool wasHisTurn = player2->m_PlayerTurn;
-
-        m_Players.erase(player.id);
-
         if (getPlayersCount() > 0)
         {
-            RedsquareServerDeleteEntity packet;
-            packet.entityType = EntityType::Player;
-            packet.id = player.id;
-            broadcast(packet);
-
-            if (wasHisTurn)
+            Player *player2 = getPlayer(player.id);
+            if (player2 != nullptr)
             {
-                goNextTurn();
+                bool wasHisTurn = player2->m_PlayerTurn;
+
+                m_Players.erase(player.id);
+
+                RedsquareServerDeleteEntity packet;
+                packet.entityType = EntityType::Player;
+                packet.id = player.id;
+                broadcast(packet);
+
+                if (wasHisTurn)
+                {
+                    goNextTurn();
+                }
             }
         }
     }

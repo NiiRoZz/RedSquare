@@ -323,21 +323,24 @@ namespace redsquare
                 m_MouseHoverPostionOnSpell = {0,0};
             }
 
-            if (m_ShowEscape && m_QuitWidget.contains(event.mouseCursor.coords))
+            if ((m_ShowEscape || m_Game.playerDead()) && m_QuitWidget.contains(event.mouseCursor.coords))
             {
                 m_QuitWidget.setState(gf::WidgetState::Selected);
             }
-            else if (m_ShowEscape)
+            else if ((m_ShowEscape || m_Game.playerDead()))
             {
                 m_QuitWidget.setState(gf::WidgetState::Default);
             }
         }
         else if (event.type == gf::EventType::MouseButtonPressed && event.mouseButton.button == gf::MouseButton::Left)
         {
-            if (m_ShowEscape && m_QuitWidget.contains(event.mouseButton.coords))
+            if ((m_ShowEscape || m_Game.playerDead()) && m_QuitWidget.contains(event.mouseButton.coords))
             {
                 m_ShowEscape = false;
-                m_Network.disconnect();
+                if (m_Network.isConnected())
+                {
+                    m_Network.disconnect();
+                }
                 m_Scenes.replaceScene(m_Scenes.mainMenu, m_Scenes.glitchEffect, gf::seconds(0.4f));
             }
 

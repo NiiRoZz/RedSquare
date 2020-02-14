@@ -2,6 +2,14 @@
 
 namespace redsquare
 {
+    void Entities::initialize()
+    {
+        m_Players.clear();
+        m_Props.clear();
+        m_Monsters.clear();
+        m_ItemHolders.clear();
+    }
+
     Player& Entities::addNewPlayer(gf::Id id, Player &&player)
     {
         auto it = m_Players.insert( std::make_pair( id, std::move(player) ) );

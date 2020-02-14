@@ -37,6 +37,8 @@ namespace redsquare
 
         void changeSpell(int spell);
 
+        void initialize();
+
     public:
         World m_World;
 

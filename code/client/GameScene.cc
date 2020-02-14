@@ -137,6 +137,16 @@ namespace redsquare
         addAction(m_Spell8Action);
     }
 
+    void GameScene::initialize()
+    {
+        m_PlayerDead = false;
+        m_Entities.initialize();
+        m_TempMoveTarget = {0,0};
+        m_AttackPos = {0,0};
+        m_MovePlayer.first = {0,0};
+        m_CanPlay = false;
+    }
+
     Entities& GameScene::getEntities()
     {
         return m_Entities;
@@ -664,6 +674,13 @@ namespace redsquare
                             entity->getInventory().addItem(data.slotType, std::move(item), data.pos);
                         }
                     }
+                    break;
+                }
+
+                case RedsquareServerPlayerDead::type:
+                {
+                    gf::Log::debug("(GAME) receive RedsquareServerPlayerDead\n");
+                    m_PlayerDead = true;
                     break;
                 }
 
