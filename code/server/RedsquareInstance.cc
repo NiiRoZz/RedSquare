@@ -219,16 +219,18 @@ namespace redsquare
                             broadcast(map);
 
                             int playerSpawnIndex = 1;
+                            RedsquareServerMoves moves;
                             for(auto &player: m_Players)
                             {
                                 player.second.playerSpawn(m_World, playerSpawnIndex++);
 
-                                RedsquareServerMove packet;
-                                packet.id = player.first;
-                                packet.entityType = EntityType::Player;
-                                packet.pos = player.second.m_Pos;
-                                broadcast(packet);
+                                EntityMove move;
+                                move.id = player.first;
+                                move.entityType = EntityType::Player;
+                                move.pos = player.second.m_Pos;
+                                moves.moves.push_back(std::move(move));
                             }
+                            broadcast(moves);
 
                             RedsquareServerInitEntities entities;
                             for(auto &monster: m_Monsters)
@@ -267,9 +269,9 @@ namespace redsquare
                         else
                         {
                             RedsquareServerMove movePacket;
-                            movePacket.entityType = EntityType::Player;
-                            movePacket.id = player.id;
-                            movePacket.pos = playerTarget->m_Pos;
+                            movePacket.move.entityType = EntityType::Player;
+                            movePacket.move.id = player.id;
+                            movePacket.move.pos = playerTarget->m_Pos;
                             broadcast(movePacket);
 
                             //Detect if the player walked on an item holder
@@ -1389,6 +1391,7 @@ namespace redsquare
 
         if (static_cast<int32_t>(nextPlayerIndex) >= getPlayersCount())
         {
+            RedsquareServerMoves moves;
             //monster turn
             for (auto it = m_Monsters.begin(); it != m_Monsters.end(); ++it)
             {
@@ -1498,14 +1501,19 @@ namespace redsquare
                             m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(&(it->second)), false);
                             m_World.setTransparentFromEntity( static_cast<redsquare::Entity*>(&(it->second)), false );
 
-                            RedsquareServerMove packet;
-                            packet.entityType = it->second.getEntityType();
-                            packet.id = it->second.getEntityID();
-                            packet.pos = it->second.m_Pos;
-                            broadcast(packet);
+                            EntityMove move;
+                            move.entityType = it->second.getEntityType();
+                            move.id = it->second.getEntityID();
+                            move.pos = it->second.m_Pos;
+                            moves.moves.push_back(std::move(move));
                         }
                     }
                 }
+            }
+
+            if (moves.moves.size() > 0)
+            {
+                broadcast(moves);
             }
 
             nextPlayerIndex = 0u;
