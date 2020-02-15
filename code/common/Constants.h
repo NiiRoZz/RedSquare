@@ -57,9 +57,9 @@ namespace redsquare
     constexpr double POTRATIO2 = 0.50;
     constexpr double POTRATIO3 = 0.70;
 
-    constexpr double BOOSTRATIO1 = 0.10;
-    constexpr double BOOSTRATIO2 = 0.15;
-    constexpr double BOOSTRATIO3 = 0.20;
+    constexpr double BOOSTRATIO1 = 0.05;
+    constexpr double BOOSTRATIO2 = 0.10;
+    constexpr double BOOSTRATIO3 = 0.15;
 
     constexpr int MINSIZE = 6;
 

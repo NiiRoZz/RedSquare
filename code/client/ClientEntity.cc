@@ -17,7 +17,23 @@ namespace redsquare
         {
             case EntitySubType::Warrior:
                 m_Animated = true;
-                loadAnimation("img/Character/Warrior_animation.png", 0, 0, 6, 0.2f);
+                //loadAnimation("img/Character/Warrior_animation.png", 0, 0, 6, 0.2f);
+                loadAnimation("img/Character/WarriorNew_animation.png", 0, 0, 3, 0.2f);
+                break;
+
+            case EntitySubType::Magus:
+                m_Animated = true;
+                loadAnimation("img/Character/Magus_animation.png", 0, 0, 4, 0.2f);
+                break;
+
+            case EntitySubType::Ranger:
+                m_Animated = true;
+                loadAnimation("img/Character/Ranger_animation.png", 0, 0, 4, 0.2f);
+                break;
+
+            case EntitySubType::Rogue:
+                m_Animated = true;
+                loadAnimation("img/Character/Rogue_animation.png", 0, 0, 3, 0.3f);
                 break;
 
             case EntitySubType::Shaman:
@@ -119,7 +135,7 @@ namespace redsquare
             }
             case EntitySubType::Warrior:
             {
-                return &gResourceManager().getTexture("img/Character/Warrior.png");
+                return &gResourceManager().getTexture("img/Character/WarriorNew.png");
                 break;
             }
             case EntitySubType::Rogue:

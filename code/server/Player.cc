@@ -729,17 +729,20 @@ namespace redsquare
 
         int critical = rand() % 100;
         int damage;
-        double currentHealth = (target->m_LifePoint / target->m_MaxLifePoint) * 2;
+        double currentHealth = (m_LifePoint)/25;
+        std::cout << "CURRENT HEALTH : " << currentHealth << std::endl;
         if(currentHealth == 0){
             currentHealth = 0.5;
         }
         if(critical > 90){
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) * currentHealth;
+            damage = ((m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint)*0.8) + currentHealth;
             damage *= 2;
             damage += Variance(-(damage / 10));
+            std::cout << "CRITICAL damage : " << damage << std::endl;
         }else{ 
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) * currentHealth;
+            damage = ((m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint)*0.8) + currentHealth;
             damage += Variance(-(damage / 10));
+            std::cout << "damage : " << damage << std::endl;
         }
         if(target->m_LifePoint - damage < 0){
             target->m_LifePoint = 0;
@@ -1351,7 +1354,6 @@ namespace redsquare
         }
         std::cout << " m_MaxManaPoint +" << mana << std::endl;
         m_MaxManaPoint += mana; 
-        m_ManaPoint = m_MaxManaPoint;
     }
     void Player::BoostHealth(float ratio){
         int health = (m_MaxLifePoint*ratio);
@@ -1360,7 +1362,6 @@ namespace redsquare
         }
         std::cout << " m_MaxLifePoint +" << health << std::endl;
         m_MaxLifePoint += health; 
-        m_LifePoint = m_MaxLifePoint;
     }
 
     /*void Player::sendMessageToChat(std::string str){
