@@ -325,7 +325,7 @@ namespace redsquare
         uint8_t nextIndex = static_cast<uint8_t>(m_DisplayEntitySubType);
         nextIndex += offset;
 
-        if (nextIndex <= 0u)
+        if (nextIndex == 0u)
         {
             nextIndex = 5;
         }

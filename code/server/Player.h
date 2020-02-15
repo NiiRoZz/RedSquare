@@ -33,11 +33,8 @@ namespace redsquare
         std::vector<SpellType> m_SpellTab;
 
         bool m_PlayerTurn;
-
-        uint8_t m_PointInRound;
-        bool m_MovedInRound;
         
-        Player(gf::Id playerID, const EntitySubType entitySubType, std::string name, RedsquareInstance &instance);
+        Player(gf::Id playerID, const EntitySubType entitySubType, const std::string name, RedsquareInstance &instance);
 
         bool applyMove( gf::Vector2i dir, World &world );
 

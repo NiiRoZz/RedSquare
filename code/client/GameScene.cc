@@ -29,6 +29,7 @@ namespace redsquare
     , m_NextPosTexture(scenes.resources.getTexture("img/Cursor/case_selected.png"))
     , m_TempMoveTarget({0,0})
     , m_AttackPos({0,0})
+    , m_PassTurn(false)
     , m_FullScreenAction("FullScreen")
     , m_LeftAction("Left")
     , m_RightAction("Right")
@@ -145,6 +146,7 @@ namespace redsquare
         m_AttackPos = {0,0};
         m_MovePlayer.first = {0,0};
         m_CanPlay = false;
+        m_PassTurn = false;
         m_Hud.initialize();
     }
 

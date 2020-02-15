@@ -8,7 +8,7 @@
 
 namespace redsquare
 {
-    Player::Player(gf::Id playerID, const EntitySubType entitySubType, std::string name, RedsquareInstance &instance)
+    Player::Player(gf::Id playerID, const EntitySubType entitySubType, const std::string name, RedsquareInstance &instance)
     : ServerEntity(playerID, EntityType::Player, entitySubType)
     , m_PlayerTurn(false)
     , m_RedsquareInstance(instance)
@@ -107,7 +107,6 @@ namespace redsquare
         m_MaxXP = 15;
 
         m_Level = 1;
-        m_MovedInRound = false;
         m_SpellTab.push_back(SpellType::BasicAttack);
     }
 
@@ -340,9 +339,8 @@ namespace redsquare
         m_Inventory.setOwner(this);
     }
 
-    void Player::attack(SpellType spellType, ServerEntity *target){
-        m_PointInRound = 0;
-
+    void Player::attack(SpellType spellType, ServerEntity *target)
+    {
         switch (spellType)
         {
             case SpellType::BasicAttack:
@@ -410,8 +408,6 @@ namespace redsquare
 
     std::vector<Monster*> Player::attack(SpellType spellType, ServerEntity *target,std::map<gf::Id, Monster> &monsters)
     {
-        m_PointInRound = 0;
-
         switch (spellType){
             case SpellType::Reaper:
                 return Reaper(target,monsters);

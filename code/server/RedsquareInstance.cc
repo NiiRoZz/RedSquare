@@ -1543,7 +1543,7 @@ namespace redsquare
 
                 for(uint nbItem = 0; nbItem < (randomNumber+1u) ; ++nbItem)
                 {
-                    int randomPotion;
+                    int randomPotion = 0;
                     if(m_Floor < 5)
                     {
                         randomPotion = rand() % POTION_TIER1; // potion tier 1 + potion tier 2
