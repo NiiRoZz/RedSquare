@@ -3,6 +3,7 @@
 #include "GameScene.h"
 #include "../common/Singletons.h"
 #include "ClientNetwork.h"
+#include "../common/ImGuiConstants.h"
 
 #include <gf/Event.h>
 #include <gf/RenderWindow.h>
@@ -211,24 +212,25 @@ namespace redsquare
                 index++;
             }
 
-            if (m_SpellWidgetHover != nullptr)
+            if (m_SpellWidgetHover != nullptr && !m_ShowHelp)
             {
-                gf::Vector2f DescriptionWindowSize=coordinates.getRelativeSize({ 0.4f,0.2f });
-
                 std::string desc = m_SpellWidgetHover->m_Description;
                 std::string cost = m_SpellWidgetHover->m_ManaCost;
 
-                if( m_UI.begin("Description", gf::RectF::fromPositionSize(coordinates.getRelativePoint({ 0.40f,0.55f }),DescriptionWindowSize), gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
-                {   
-                    m_UI.setCharacterSize(coordinates.getRelativeCharacterSize(0.025f));
-                    m_UI.layoutRowDynamic(coordinates.getRelativeCharacterSize(0.03f), 1);
-                    m_UI.label("! Spell need to be selected before using it !");
-                    m_UI.layoutRowDynamic(coordinates.getRelativeCharacterSize(0.04f), 1);
-                    m_UI.label("Mana cost: " + cost);
-                    m_UI.label(desc);
-                    m_UI.end();
-                }
-                target.draw(m_UI);
+                gf::Vector2f SpellDescriptionWindowSize = coordinates.getRelativeSize({0.4f,0.2f });
+                gf::Vector2f SpellDescriptionWindowPos = coordinates.getRelativePoint({ 0.3f,0.6f });
+                ImGui::SetNextWindowSize(ImVec2(SpellDescriptionWindowSize[0], SpellDescriptionWindowSize[1]));
+                ImGui::SetNextWindowPos(ImVec2(SpellDescriptionWindowPos[0], SpellDescriptionWindowPos[1]));
+
+                ImGui::Begin("Spell desciption", nullptr, DefaultWindowFlags);
+                ImVec2 charP=ImGui::GetWindowSize();
+                std::string text= "! Spell need to be selected before using it ! | Mana cost: " + cost + "\n\n" + desc ;
+                ImGui::TextWrapped(text.c_str());
+                ImGui::SetWindowFontScale(charP[0]/477);
+                ImGui::End();
+
+                ImGui::Render();
+                ImGui_ImplGF_RenderDrawData(ImGui::GetDrawData());
             }
 
             if (m_ShowChat)
@@ -238,28 +240,20 @@ namespace redsquare
 
             if (m_ShowHelp) 
             {
-                
-                gf::Coordinates coordinates(target);
-                gf::Vector2f DescriptionWindowSize=coordinates.getRelativeSize({ 0.4f,0.3f });
-                if( m_UI.begin("Help", gf::RectF::fromPositionSize(coordinates.getRelativePoint({ 0.60f,0.6f }),DescriptionWindowSize), gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
-                {   
-                    m_UI.setCharacterSize(coordinates.getRelativeCharacterSize(0.024f));
-                    m_UI.layoutRowDynamic(coordinates.getRelativeCharacterSize(0.024f), 1);
-                    m_UI.label("Escape -> Close the game");
-                    m_UI.label("C -> Hide/Chat");
-                    m_UI.label("I -> Inventory/Hide");
-                    m_UI.label("F -> Fullscreen");
-                    m_UI.label("M -> Map/Hide");
-                    m_UI.label("Spell description : pass your mouse hover spells icons");
-                    m_UI.layoutRowDynamic(coordinates.getRelativeCharacterSize(0.024f), 2);
-                    m_UI.label("Spell Shortcuts");
-                    m_UI.label(" 1 2 3 4 ");
-                    m_UI.layoutRowDynamic(coordinates.getRelativeCharacterSize(0.024f), 2);
-                    m_UI.label("");
-                    m_UI.label(" 5 6 7 8 ");
-                    m_UI.end();
-                }
-                target.draw(m_UI);
+                gf::Vector2f DescriptionWindowSize = coordinates.getRelativeSize({0.4f,0.3f });
+                gf::Vector2f DescriptionWindowPos = coordinates.getRelativePoint({ 0.6f,0.6f });
+                ImGui::SetNextWindowSize(ImVec2(DescriptionWindowSize[0], DescriptionWindowSize[1]));
+                ImGui::SetNextWindowPos(ImVec2(DescriptionWindowPos[0], DescriptionWindowPos[1]));
+
+                ImGui::Begin("Help Menu", nullptr, DefaultWindowFlags);
+                ImVec2 charP=ImGui::GetWindowSize();
+                std::string text= "Escape -> Echap menu \n C -> Hide/Chat \n I -> Inventory/Hide \n F -> Fullscreen \n M -> Map/Hide \n Spell description : pass your mouse hover spells icons \n Spell selection : click on it or press number touch ";
+                ImGui::TextWrapped(text.c_str());
+                ImGui::SetWindowFontScale(charP[0]/470);
+                ImGui::End();
+
+                ImGui::Render();
+                ImGui_ImplGF_RenderDrawData(ImGui::GetDrawData());
             }
 
             if (m_ShowInventory)
