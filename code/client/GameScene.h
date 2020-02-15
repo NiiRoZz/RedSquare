@@ -60,6 +60,8 @@ namespace redsquare
 
         void doAction();
 
+        void moveEntity(EntityMove &move);
+
     private:
         Scenes& m_Scenes;
         ClientNetwork& m_Network;

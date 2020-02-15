@@ -29,6 +29,7 @@ namespace redsquare
     , m_NextPosTexture(scenes.resources.getTexture("img/Cursor/case_selected.png"))
     , m_TempMoveTarget({0,0})
     , m_AttackPos({0,0})
+    , m_PassTurn(false)
     , m_FullScreenAction("FullScreen")
     , m_LeftAction("Left")
     , m_RightAction("Right")
@@ -145,6 +146,7 @@ namespace redsquare
         m_AttackPos = {0,0};
         m_MovePlayer.first = {0,0};
         m_CanPlay = false;
+        m_PassTurn = false;
         m_Hud.initialize();
     }
 
@@ -505,45 +507,19 @@ namespace redsquare
                     gf::Log::debug("(GAME) receive RedsquareServerMove\n");
                     auto data = bytes.as<RedsquareServerMove>();
 
-                    if (data.id != gf::InvalidId)
+                    moveEntity(data.move);
+                    break;
+                }
+
+                //Receive multiple moves from server
+                case RedsquareServerMoves::type:
+                {
+                    gf::Log::debug("(GAME) receive RedsquareServerMoves\n");
+                    auto data = bytes.as<RedsquareServerMoves>();
+
+                    for(auto &move: data.moves)
                     {
-                        switch (data.entityType)
-                        {
-                            case EntityType::Player:
-                            {
-                                Player* player = m_Entities.getPlayer( data.id );
-                                assert( player != nullptr );
-
-                                m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(player), true);
-                                m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(player), true);
-
-                                player->m_Pos = data.pos;
-
-                                m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(player), false);
-                                m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(player), false);
-                                break;
-                            }
-
-                            case EntityType::Monster:
-                            {
-                                Monster* monster = m_Entities.getMonster( data.id );
-                                assert( monster != nullptr );
-
-                                m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(monster), true);
-                                m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(monster), true);
-
-                                monster->m_Pos = data.pos;
-
-                                m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(monster), false);
-                                m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(monster), false);
-                                break;
-                            }
-
-                            default:
-                            {
-                                break;
-                            }
-                        }
+                        moveEntity(move);
                     }
                     break;
                 }
@@ -917,6 +893,50 @@ namespace redsquare
         if(currentPlayer != nullptr)
         {
             m_CurrentSpell = currentPlayer->m_SpellTab[spell-1];
+        }
+    }
+
+    void GameScene::moveEntity(EntityMove &move)
+    {
+        if (move.id != gf::InvalidId)
+        {
+            switch (move.entityType)
+            {
+                case EntityType::Player:
+                {
+                    Player* player = m_Entities.getPlayer( move.id );
+                    assert( player != nullptr );
+
+                    m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(player), true);
+                    m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(player), true);
+
+                    player->m_Pos = move.pos;
+
+                    m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(player), false);
+                    m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(player), false);
+                    break;
+                }
+
+                case EntityType::Monster:
+                {
+                    Monster* monster = m_Entities.getMonster( move.id );
+                    assert( monster != nullptr );
+
+                    m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(monster), true);
+                    m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(monster), true);
+
+                    monster->m_Pos = move.pos;
+
+                    m_World.setWalkableFromEntity(static_cast<redsquare::Entity*>(monster), false);
+                    m_World.setTransparentFromEntity(static_cast<redsquare::Entity*>(monster), false);
+                    break;
+                }
+
+                default:
+                {
+                    break;
+                }
+            }
         }
     }
 }

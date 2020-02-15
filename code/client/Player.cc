@@ -16,10 +16,13 @@ namespace redsquare
 {
     Player::Player( gf::Id entityID, EntitySubType entitySubType, gf::Vector2i pos )
     : ClientEntity(entityID, EntityType::Player, entitySubType)
+    , m_ManaPoint(0)
+    , m_MaxManaPoint(0)
+    , m_XP(0)
+    , m_Max_XP(0)
     , m_Font(gResourceManager().getFont("font/arial.ttf"))
     {
         m_Pos = pos;
-        m_Max_XP = 0;
     }
 
     void Player::render(gf::RenderTarget& target, const gf::RenderStates& states)

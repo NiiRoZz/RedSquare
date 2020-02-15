@@ -78,15 +78,25 @@ namespace redsquare
     struct RedsquareServerMove
     {
         static constexpr gf::Id type = "RedsquareServerMove"_id;
-        EntityType entityType;
-        gf::Id id = gf::InvalidId;
-        gf::Vector2i pos;
+        EntityMove move;
     };
 
     template<typename Archive>
     Archive operator|(Archive& ar, RedsquareServerMove& data)
     {
-        return ar | data.entityType | data.id | data.pos;
+        return ar | data.move;
+    }
+
+    struct RedsquareServerMoves
+    {
+        static constexpr gf::Id type = "RedsquareServerMoves"_id;
+        std::vector<EntityMove> moves;
+    };
+
+    template<typename Archive>
+    Archive operator|(Archive& ar, RedsquareServerMoves& data)
+    {
+        return ar | data.moves;
     }
 
     struct RedsquareServerUpdateCharacteristic

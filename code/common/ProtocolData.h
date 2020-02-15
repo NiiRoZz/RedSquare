@@ -442,6 +442,19 @@ namespace redsquare
     {
         return ar | data.id | data.entityType | data.entitySubType | data.pos | data.holdingItem | data.characteristics;
     }
+
+    struct EntityMove
+    {
+        gf::Id id = gf::InvalidId;
+        EntityType entityType;
+        gf::Vector2i pos;
+    };
+
+    template<typename Archive>
+    Archive operator|(Archive& ar, EntityMove& data)
+    {
+        return ar | data.id | data.entityType | data.pos;
+    }
 }
 
 #endif // REDSQUARE_PROTOCOL_DATA_H
