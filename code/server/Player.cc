@@ -527,11 +527,13 @@ namespace redsquare
 
         if(critical > 90){
             defense = m_DefensePoint / 2;
-            m_DefensePoint += defense;
+            m_MaxDefensePoint += defense;
+            m_DefensePoint = m_MaxDefensePoint;
             std::cout << " CRITICAL !!! " << std::endl;
         }else{
             defense = m_DefensePoint / 4;
-            m_DefensePoint += defense;
+            m_MaxDefensePoint += defense;
+            m_DefensePoint = m_MaxDefensePoint;
         }
 
         m_ManaPoint -= 5;
@@ -652,13 +654,13 @@ namespace redsquare
         if(critical > 90){
             attack = m_AttackPoint / 5;
             attack += Variance(-(m_AttackPoint / 15));
-            m_AttackPoint += attack;
             m_MaxAttackPoint += attack;
+            m_AttackPoint = m_MaxAttackPoint;
         }else{
             attack = m_AttackPoint / 10;
             attack += Variance(-(m_AttackPoint / 15));
-            m_AttackPoint += attack;
             m_MaxAttackPoint += attack;
+            m_AttackPoint = m_MaxAttackPoint;
         }
 
         m_ManaPoint -= 5;
@@ -677,11 +679,13 @@ namespace redsquare
         if(critical > 90){
             defense = target->m_DefensePoint / 5;
             defense += Variance(-(target->m_DefensePoint / 15));
-            target->m_DefensePoint += defense;
+            target->m_MaxDefensePoint += defense;
+            target->m_DefensePoint = m_MaxDefensePoint;
         }else{
             defense = target->m_DefensePoint / 10;
             defense += Variance(-(target->m_DefensePoint / 15));
-            target->m_DefensePoint += defense;
+            target->m_MaxDefensePoint += defense;
+            target->m_DefensePoint = m_MaxDefensePoint;
         }
 
         m_ManaPoint -= 5;
