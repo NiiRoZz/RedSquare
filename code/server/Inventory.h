@@ -9,14 +9,14 @@
 namespace redsquare
 {
     //Forwad classes
-    class ServerEntity;
+    class Player;
 
     class Inventory
     {
     public:
         Inventory();
 
-        void setOwner(ServerEntity *owner);
+        void setOwner(Player *owner);
 
         //Add the item at the first slot possible if it's == cargo, return >= 0 if succes or -1 if not
         ssize_t addItem(InventorySlotType slotType, ServerItem &&item);
@@ -36,7 +36,7 @@ namespace redsquare
 
         std::map<InventorySlotType, ServerItem> m_SpecialItems;
         
-        ServerEntity *m_Owner;
+        Player *m_Owner;
     };
 }
 

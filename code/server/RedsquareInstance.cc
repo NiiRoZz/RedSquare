@@ -17,25 +17,18 @@ namespace redsquare
     , m_PlayerIndexTurn(0u)
     , m_Floor(0)
     {
-        gMessageManager().registerHandler<UpdateEntityCharacteristic>(&RedsquareInstance::onUpdateEntityCharacteristic, this);
     }
 
     void RedsquareInstance::start()
     {
         m_CountPlayers = getPlayersCount();
 
-        gf::Log::debug("RedsquareInstance::start 1\n");
-
         generateWorld();
-
-        gf::Log::debug("RedsquareInstance::start 2\n");
 
         RedsquareServerInitMap map;
         map.world = m_World.m_World;
         map.floor = m_Floor;
         broadcast(map);
-
-        gf::Log::debug("RedsquareInstance::start 3\n");
 
         auto players = getPlayers();
         int indexPlayer = 1;
@@ -46,8 +39,6 @@ namespace redsquare
 
             it.first->second.playerSpawn(m_World, indexPlayer++);
         }
-
-        gf::Log::debug("RedsquareInstance::start 4\n");
 
         RedsquareServerInitEntities entities;
         for(auto &player: m_Players)
@@ -92,30 +83,20 @@ namespace redsquare
 
         broadcast(entities);
 
-        gf::Log::debug("RedsquareInstance::start 5\n");
-
         for (auto &player: m_Players)
         {
             player.second.defaultInventoryStuff();
         }
 
-        gf::Log::debug("RedsquareInstance::start 6\n");
-
         fillChest();
-
-        gf::Log::debug("RedsquareInstance::start 7\n");
 
         auto *player = getPlayer(players[0].id);
         assert(player != nullptr);
         player->m_PlayerTurn = true;
         m_PlayerIndexTurn = 0;
 
-        gf::Log::debug("RedsquareInstance::start 8\n");
-
         RedsquareServerPlayerTurn turn;
         send(players[0].id, turn);
-
-        gf::Log::debug("RedsquareInstance::start 9\n");
     }
 
     bool RedsquareInstance::isFinished()
@@ -2528,31 +2509,6 @@ namespace redsquare
 
             broadcastPlayers();
         }
-    }
-
-    gf::MessageStatus RedsquareInstance::onUpdateEntityCharacteristic(gf::Id id, gf::Message *msg)
-    {
-        assert(id == UpdateEntityCharacteristic::type);
-        
-        UpdateEntityCharacteristic *message = static_cast<UpdateEntityCharacteristic*>(msg);
-
-        gf::Log::debug("RedsquareInstance::onUpdateEntityCharacteristic 1\n");
-
-        if (message && message->entity)
-        {
-            gf::Log::debug("RedsquareInstance::onUpdateEntityCharacteristic 2\n");
-            RedsquareServerUpdateCharacteristic packet;
-            packet.entityType = message->entity->getEntityType();
-            gf::Log::debug("RedsquareInstance::onUpdateEntityCharacteristic 3\n");
-            packet.id = message->entity->getEntityID();
-            gf::Log::debug("RedsquareInstance::onUpdateEntityCharacteristic 4\n");
-            message->entity->createCarPacket(packet.characteristics);
-            gf::Log::debug("RedsquareInstance::onUpdateEntityCharacteristic 5\n");
-            broadcast(packet);
-            gf::Log::debug("RedsquareInstance::onUpdateEntityCharacteristic 6\n");
-        }
-
-        return gf::MessageStatus::Die;
     }
 
     void RedsquareInstance::broadcastPlayers()

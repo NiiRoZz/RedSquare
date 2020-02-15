@@ -52,6 +52,8 @@ namespace redsquare
         virtual void defaultInventoryStuff() override;
         void UseItem(ItemType type);
 
+        void onMovedItem(ServerItem &item, bool remove);
+
         //void sendMessageToChat(std::string str);
 
     private:

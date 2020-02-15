@@ -23,8 +23,6 @@ namespace redsquare
 
         virtual void defaultInventoryStuff();
 
-        virtual void onMovedItem(ServerItem &item, bool remove);
-
     protected:
         Inventory m_Inventory;
     };
