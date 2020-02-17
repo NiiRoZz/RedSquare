@@ -2494,6 +2494,9 @@ namespace redsquare
             {
                 bool wasHisTurn = player2->m_PlayerTurn;
 
+                m_World.setWalkableFromEntity(player2, true);
+                m_World.setTransparentFromEntity(player2, true);
+
                 m_Players.erase(player.id);
 
                 RedsquareServerDeleteEntity packet;
