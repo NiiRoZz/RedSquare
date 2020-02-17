@@ -208,7 +208,7 @@ namespace redsquare
             m_PassTurn = true;
         }
 
-        if (m_InventoryAction.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && !m_Hud.escapeOpen())
+        if (m_InventoryAction.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && !m_Hud.escapeOpen() && !m_Hud.hoveringSpellWidgets())
         {
             m_Hud.showInventory();
         }

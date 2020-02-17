@@ -212,21 +212,22 @@ namespace redsquare
                 index++;
             }
 
-            if (m_SpellWidgetHover != nullptr && !m_ShowHelp)
+            if (m_SpellWidgetHover != nullptr && !m_ShowHelp && !m_ShowInventory)
             {
                 std::string desc = m_SpellWidgetHover->m_Description;
                 std::string cost = m_SpellWidgetHover->m_ManaCost;
+                std::string name = m_SpellWidgetHover->m_SpellName;
 
-                gf::Vector2f SpellDescriptionWindowSize = coordinates.getRelativeSize({0.4f,0.2f });
+                gf::Vector2f SpellDescriptionWindowSize = coordinates.getRelativeSize({0.5f,0.22f });
                 gf::Vector2f SpellDescriptionWindowPos = coordinates.getRelativePoint({ 0.3f,0.6f });
                 ImGui::SetNextWindowSize(ImVec2(SpellDescriptionWindowSize[0], SpellDescriptionWindowSize[1]));
                 ImGui::SetNextWindowPos(ImVec2(SpellDescriptionWindowPos[0], SpellDescriptionWindowPos[1]));
 
                 ImGui::Begin("Spell desciption", nullptr, DefaultWindowFlags);
                 ImVec2 charP=ImGui::GetWindowSize();
-                std::string text= "! Spell need to be selected before using it ! | Mana cost: " + cost + "\n\n" + desc ;
+                std::string text= "! Spell need to be selected before using it ! | Mana cost: " + cost + "\n\n" + name + ": \n"+ desc ;
                 ImGui::TextWrapped(text.c_str());
-                ImGui::SetWindowFontScale(charP[0]/477);
+                ImGui::SetWindowFontScale(charP[0]/500);
                 ImGui::End();
             }
 
