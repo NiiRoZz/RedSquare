@@ -114,7 +114,7 @@ namespace redsquare
     constexpr int RANGER_DEFENSEPOINT = 10; 
     constexpr int RANGER_MAXATTACKPOINT = 45; 
     constexpr int RANGER_MAXDEFENSEPOINT = 10; 
-    constexpr int RANGER_RANGE = 3;
+    constexpr int RANGER_RANGE = 2;
 
     constexpr int HEALER_LIFEPOINT = 200; 
     constexpr int HEALER_MANAPOINT = 40; 

@@ -178,14 +178,24 @@ namespace redsquare
         std::cout << "The monster dealed " << damage << " damage " << std::endl;
     }
 
-    void Monster::levelUp(uint m_Floor){ // method to level up a player
+    void Monster::levelUp(uint m_Floor){ // method to level up a monster
 
-        m_MaxLifePoint += 2*m_Floor;
-        m_LifePoint += 2*m_Floor;
-
-        m_AttackPoint += 2*m_Floor;
-        m_DefensePoint += 2*m_Floor;
+        int gain;
+        if(m_Floor < 5){
+            gain = 2;
+        }else if(m_Floor >= 5 && m_Floor < 8){
+            gain = 3;
+        }else if(m_Floor >= 8 && m_Floor < 12){
+            gain = 4;
+        }else if(m_Floor >= 12){
+            gain = 5;
+        }
         
+        m_MaxLifePoint += gain*m_Floor;
+        m_LifePoint += gain*m_Floor;
+
+        m_AttackPoint += gain*m_Floor;
+        m_DefensePoint += gain*m_Floor;
         m_Level = (m_Floor+1);
     }
 
