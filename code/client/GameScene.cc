@@ -702,8 +702,6 @@ namespace redsquare
 
     void GameScene::doRender(gf::RenderTarget& target, const gf::RenderStates &states)
     {
-        ImGui::NewFrame();
-
         //World entities
         renderWorldEntities(target, states);
         //Show only when the player is not dead
@@ -727,6 +725,7 @@ namespace redsquare
         }
 
         //Hud entities
+        ImGui::NewFrame();
         renderHudEntities(target, states);
 
         ImGui::Render();

@@ -228,9 +228,6 @@ namespace redsquare
                 ImGui::TextWrapped(text.c_str());
                 ImGui::SetWindowFontScale(charP[0]/477);
                 ImGui::End();
-
-                ImGui::Render();
-                ImGui_ImplGF_RenderDrawData(ImGui::GetDrawData());
             }
 
             if (m_ShowChat)
@@ -251,9 +248,6 @@ namespace redsquare
                 ImGui::TextWrapped(text.c_str());
                 ImGui::SetWindowFontScale(charP[0]/470);
                 ImGui::End();
-
-                ImGui::Render();
-                ImGui_ImplGF_RenderDrawData(ImGui::GetDrawData());
             }
 
             if (m_ShowInventory)
