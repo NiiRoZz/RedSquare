@@ -89,7 +89,15 @@ namespace redsquare
                 }
                 auto& room = it->second;
                 // check if the room can accept more players
-                if (room.isGameStarted() || room.getPlayersCount() == MAX_PLAYERS)
+                if (room.isGameStarted())
+                {
+                    gf::Log::warning("(LOBBY) {%" PRIX64 "} Game started @%" PRIu64 "\n", player.id, data.room);
+                    ServerError error;
+                    error.reason = ServerError::GameAlreadyStarted;
+                    player.send(error);
+                    break;
+                }
+                if (room.getPlayersCount() == MAX_PLAYERS)
                 {
                     gf::Log::warning("(LOBBY) {%" PRIX64 "} Full room @%" PRIu64 "\n", player.id, data.room);
                     ServerError error;

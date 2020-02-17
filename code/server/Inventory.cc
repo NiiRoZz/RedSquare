@@ -1,5 +1,5 @@
 #include "Inventory.h"
-#include "ServerEntity.h"
+#include "Player.h"
 
 namespace redsquare
 {
@@ -8,14 +8,13 @@ namespace redsquare
     {
     }
 
-    void Inventory::setOwner(ServerEntity *owner)
+    void Inventory::setOwner(Player *owner)
     {
         m_Owner = owner;
     }
 
     ssize_t Inventory::addItem(InventorySlotType slotType, ServerItem &&item)
     {
-        gf::Log::debug("Inventory::addItem 1\n");
         if (slotType == InventorySlotType::Cargo && item.canBeInSlot(slotType))
         {
             for(uint i = 0; i < RowCargoSlotNmb; ++i )
@@ -32,17 +31,12 @@ namespace redsquare
         }
         else
         {
-            gf::Log::debug("Inventory::addItem 2\n");
             if (m_SpecialItems.find(slotType) == m_SpecialItems.end() && item.canBeInSlot(slotType))
             {
-                gf::Log::debug("Inventory::addItem 3\n");
                 if (m_Owner != nullptr)
                 {
-                    gf::Log::debug("Inventory::addItem 4\n");
                     m_Owner->onMovedItem(item, false);
-                    gf::Log::debug("Inventory::addItem 5\n");
                 }
-                gf::Log::debug("Inventory::addItem 6\n");
                 m_SpecialItems.insert(std::make_pair(slotType, std::move(item)));
                 return 0;
             }

@@ -1,6 +1,5 @@
 #include "Player.h"
 #include "RedsquareInstance.h"
-#include "RedsquareInstance.h"
 
 #include <iostream>
 
@@ -137,21 +136,15 @@ namespace redsquare
     
     void Player::defaultInventoryStuff()
     {
-        gf::Log::debug("Player::defaultInventoryStuff 1\n");
         switch (m_EntitySubType)
         {
             case EntitySubType::Magus:{
-                gf::Log::debug("Player::defaultInventoryStuff 2\n");
                 //Example how to spawn item in weapon slot
                 ServerItem item1(ItemType::Staff1, 1u);
-                gf::Log::debug("Player::defaultInventoryStuff 3\n");
                 ssize_t pos = m_Inventory.addItem(InventorySlotType::Weapon, std::move(item1));
-                gf::Log::debug("Player::defaultInventoryStuff 4\n");
                 if (pos != -1)
                 {
-                    gf::Log::debug("Player::defaultInventoryStuff 5\n");
                     m_RedsquareInstance.send(m_EntityID, createUpdateItemPacket(InventorySlotType::Weapon, false, pos));
-                    gf::Log::debug("Player::defaultInventoryStuff 6\n");
                 }
                 break;
             }
@@ -186,8 +179,6 @@ namespace redsquare
             default:
                 break;
         }
-
-        gf::Log::debug("Player::defaultInventoryStuff 7\n");
     }
 
     void Player::levelUp(){ // method to level up a player
@@ -1385,5 +1376,40 @@ namespace redsquare
                 packet.to[length]='\0';
             }
             //Chat::getInstance().sendMessage(packet); */
+    }
+
+    void Player::onMovedItem(ServerItem &item, bool remove)
+    {
+        if (remove)
+        {
+            m_MaxAttackPoint -= item.m_GiveAttackPoint;
+            m_AttackPoint -= item.m_GiveAttackPoint;
+            m_MaxDefensePoint -= item.m_GiveDefensePoint;
+            m_DefensePoint -= item.m_GiveDefensePoint; 
+            m_MaxLifePoint -= item.m_GiveLifePoint;
+            m_LifePoint -= item.m_GiveLifePoint;
+
+            m_MaxManaPoint -= item.m_GiveManaPoint;
+            if (m_ManaPoint > m_MaxManaPoint)
+            {
+                m_ManaPoint = m_MaxManaPoint;
+            }
+        }
+        else
+        {
+            m_MaxAttackPoint += item.m_GiveAttackPoint;
+            m_AttackPoint += item.m_GiveAttackPoint;
+            m_MaxDefensePoint += item.m_GiveDefensePoint;
+            m_DefensePoint += item.m_GiveDefensePoint; 
+            m_MaxLifePoint += item.m_GiveLifePoint;
+            m_LifePoint += item.m_GiveLifePoint;
+            m_MaxManaPoint += item.m_GiveManaPoint;
+        }
+
+        RedsquareServerUpdateCharacteristic packet;
+        packet.entityType = getEntityType();
+        packet.id = getEntityID();
+        createCarPacket(packet.characteristics);
+        m_RedsquareInstance.broadcast(packet);
     }
 }

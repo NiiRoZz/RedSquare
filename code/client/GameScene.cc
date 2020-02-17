@@ -208,7 +208,7 @@ namespace redsquare
             m_PassTurn = true;
         }
 
-        if (m_InventoryAction.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && !m_Hud.escapeOpen())
+        if (m_InventoryAction.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && !m_Hud.escapeOpen() && !m_Hud.hoveringSpellWidgets())
         {
             m_Hud.showInventory();
         }
@@ -218,7 +218,7 @@ namespace redsquare
             m_Hud.showMap();
         }
 
-        if (m_HelpMenuAction.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && !m_Hud.escapeOpen())
+        if (m_HelpMenuAction.isActive() && !m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && !m_Hud.escapeOpen() && !m_Hud.hoveringSpellWidgets())
         {
             m_Hud.showHelp();
         }
@@ -285,7 +285,7 @@ namespace redsquare
         {
             case gf::EventType::MouseButtonReleased:
             {
-                if (!m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && !m_Hud.shownInventory() && !m_Hud.escapeOpen() && !m_Hud.hoveringSpellWidgets())
+                if (!m_Hud.hoveringChat() && !(ImGui::GetIO().WantCaptureKeyboard) && !m_Hud.shownInventory() && !m_Hud.escapeOpen() && !m_Hud.hoveringSpellWidgets() )
                 {
                     gf::Vector2i pos = m_Scenes.getRenderer().mapPixelToCoords(event.mouseButton.coords, getWorldView()) / World::TileSize;
 
@@ -702,8 +702,6 @@ namespace redsquare
 
     void GameScene::doRender(gf::RenderTarget& target, const gf::RenderStates &states)
     {
-        ImGui::NewFrame();
-
         //World entities
         renderWorldEntities(target, states);
         //Show only when the player is not dead
@@ -727,6 +725,7 @@ namespace redsquare
         }
 
         //Hud entities
+        ImGui::NewFrame();
         renderHudEntities(target, states);
 
         ImGui::Render();

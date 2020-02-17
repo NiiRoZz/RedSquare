@@ -64,8 +64,6 @@ namespace redsquare
 
         void doRemovePlayer(ServerPlayer& player) override;
 
-        gf::MessageStatus onUpdateEntityCharacteristic(gf::Id id, gf::Message *msg);
-
         void broadcastPlayers();
 
     private:
