@@ -1,6 +1,7 @@
 #include "Player.h"
 #include <iostream>
 #include "Game.h"
+#include "World.h"
 #include "Chat.h"
 
 #include "../common/Constants.h"
@@ -552,7 +553,7 @@ namespace redsquare
     }
 
     void Player::BasicAttack(ServerEntity *target){ // DONE
-
+        std::string messToChat("");
         int damage;
         int critical = rand() % 100;
         if(critical > 95){ // critical hit
@@ -560,7 +561,7 @@ namespace redsquare
             damage *= 2; // double the damage 
             //unique
             std::cout << " CRITICAL !!! " << std::endl;
-            createSystemMessage(" CRITICAL !!! ",m_Name);
+            createSystemMessage("CRITICAL !!! ",m_Name,m_Name);
 
             
 
@@ -573,24 +574,27 @@ namespace redsquare
         if(target->m_LifePoint - damage <= 0){
             target->m_LifePoint = 0;
             //multiple
-            std::cout << " BasicAttack dealed : " << damage << std::endl;
-            createSystemMessage(" BasicAttack dealed : ","system");
+            std::cout << " BasicAttack dealed " << damage << std::endl;
+            messToChat= " BasicAttack dealed :" + std::to_string(damage);
+            createSystemMessage( messToChat,"system",m_Name);
             std::cout << " The target is dead" << std::endl;
-            createSystemMessage( " The target is dead","system");
+            createSystemMessage( "The target is dead","system",m_Name);
             return;
         }else{
             target->m_LifePoint -= damage;
         }
         //multiple
         std::cout << " BasicAttack dealed : " << damage << std::endl;
-        createSystemMessage(  "BasicAttack dealed : ","system");
+        messToChat= " BasicAttack dealed :" + std::to_string(damage);
+        createSystemMessage( messToChat,"system",m_Name);
     }
 
     void Player::Fireball(ServerEntity *target){
-
+        std::string messToChat("");
         if(m_ManaPoint < 5){
             //unique
             std::cout << "NOT ENOUGH MANA" << std::endl;
+            createSystemMessage("NOT ENOUGH MANA",m_Name,m_Name);
             return;
         }
 
@@ -602,6 +606,7 @@ namespace redsquare
             damage *= 2; // double the damage 
             //unique
             std::cout << " CRITICAL !!! " << std::endl;
+            createSystemMessage("CRITICAL !!! ",m_Name,m_Name);
         }else{
             damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
         }
@@ -610,12 +615,16 @@ namespace redsquare
 
         m_ManaPoint -= 5;
         //multiple
+        
         std::cout << " Fireball dealed : " << damage << std::endl;
+        messToChat= " Fireball dealed : "+ std::to_string(damage);
+        createSystemMessage(messToChat,"system",m_Name);
 
         if(target->m_LifePoint - damage <= 0){
             target->m_LifePoint = 0;
             //multiple
             std::cout << " The target is dead" << std::endl;
+            createSystemMessage( "The target is dead","system",m_Name);
             return;
         }else{
             target->m_LifePoint -= damage;
@@ -625,6 +634,7 @@ namespace redsquare
     void Player::RangeUp(){ // Reset the boost x turn after the cast
         if(m_ManaPoint < 5){
             std::cout << "NOT ENOUGH MANA" << std::endl;
+            createSystemMessage("NOT ENOUGH MANA",m_Name,m_Name);
             return;
         }
         m_ManaPoint -= 5;
@@ -636,16 +646,19 @@ namespace redsquare
     void Player::ArmorUp(){ // TODO : ending the boost after x turns
         if(m_ManaPoint < 5){
             std::cout << "NOT ENOUGH MANA" << std::endl;
+            createSystemMessage("NOT ENOUGH MANA",m_Name,m_Name);
             return;
         }
 
         int critical = rand() % 100;
         int defense;
+        std::string messToChat("");
 
         if(critical > 90){
             defense = m_DefensePoint / 2;
             m_DefensePoint += defense;
             std::cout << " CRITICAL !!! " << std::endl;
+            createSystemMessage(" CRITICAL",m_Name,m_Name);
         }else{
             defense = m_DefensePoint / 4;
             m_DefensePoint += defense;
@@ -653,18 +666,22 @@ namespace redsquare
 
         m_ManaPoint -= 5;
         std::cout << " ArmorUp boosted your defense by " << defense << " points" << std::endl;
+        messToChat= " ArmorUp boosted your defense by " +std::to_string(defense) + " points";
+        createSystemMessage(messToChat,m_Name,m_Name);
     }
 
 
     void Player::DoubleStrike(ServerEntity *target){ // DONE
         if(m_ManaPoint < 5){
             std::cout << "NOT ENOUGH MANA" << std::endl;
+            createSystemMessage("NOT ENOUGH MANA",m_Name,m_Name);
             return;
         }
-
+        
         int critical = rand() % 100;
         int damage1;
         int damage2;
+        std::string messToChat("");
         if(critical > 90){
             damage1 = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) / 1.5;
             damage1 += Variance(-(damage1/10)); // -10% to +10% dmg 
@@ -686,10 +703,13 @@ namespace redsquare
         m_ManaPoint -= 5;
         //multiple
         std::cout << " DoubleStrike dealed " << damage1 << " then " << damage2 << std::endl;
+        messToChat = " DoubleStrike dealed " + std::to_string(damage1) + " then " + std::to_string(damage2); 
+        createSystemMessage(messToChat,"system",m_Name);
 
         if(target->m_LifePoint - damage1 <= 0){
             target->m_LifePoint = 0;
             std::cout << " The target is dead" << std::endl;
+            createSystemMessage("The target is dead","system",m_Name);
             return;
         }else{
             target->m_LifePoint -= damage1;
@@ -698,6 +718,7 @@ namespace redsquare
         if(target->m_LifePoint - damage2 <= 0){
             target->m_LifePoint = 0;
             std::cout << " The target is dead" << std::endl;
+            createSystemMessage("The target is dead","system",m_Name);
             return;
         }else{
             target->m_LifePoint -= damage2;
@@ -707,6 +728,7 @@ namespace redsquare
     void Player::Heal(ServerEntity *target){ // DONE
         if(m_ManaPoint < 5){
             std::cout << "NOT ENOUGH MANA" << std::endl;
+            createSystemMessage("NOT ENOUGH MANA",m_Name,m_Name);
             return;
         }
 
@@ -716,6 +738,7 @@ namespace redsquare
             heal = m_LifePoint / 5;
             heal += Variance(-(heal / 10));
             std::cout << " CRITICAL !!! " << std::endl;
+            createSystemMessage("CRITICAL !!!",m_Name,m_Name);
         }else{
             heal = m_LifePoint / 10;
             heal += Variance(-(heal / 15));
@@ -732,12 +755,16 @@ namespace redsquare
         }
 
         m_ManaPoint -= 5;
+        std::string messToChat("");
         std::cout << " Healed by " << heal << "Hp" << std::endl;
+        messToChat="Healed by "+std::to_string(heal)+"Hp";
+        createSystemMessage(messToChat,"system",m_Name);
     }
 
     void Player::Assasinate(ServerEntity *target){ // DONE
          if(m_ManaPoint < 5){
             std::cout << "NOT ENOUGH MANA" << std::endl;
+            createSystemMessage("NOT ENOUGH MANA",m_Name,m_Name);
             return;
         }
 
@@ -745,6 +772,7 @@ namespace redsquare
         if(critical > 95){
             target->m_LifePoint = 0;
             std::cout << "The target has been assassinated" << std::endl;
+            createSystemMessage("The target has been assassinated","system",m_Name);
         }else{
             target->m_LifePoint -= 10;
             if(target->m_LifePoint -10 < 0){
@@ -753,6 +781,7 @@ namespace redsquare
                 target->m_LifePoint -= 10 ;
             }
             std::cout << "Assasination missed but still done some damage (10Hp)" << std::endl;
+             createSystemMessage("Assasination missed but still done some damage (10Hp)","system",m_Name);
         }
 
         m_ManaPoint -= 5;
@@ -761,6 +790,7 @@ namespace redsquare
     void Player::DamageUp(){  // TODO : turn 
         if(m_ManaPoint < 5){
             std::cout << "NOT ENOUGH MANA" << std::endl;
+            createSystemMessage("NOT ENOUGH MANA",m_Name,m_Name);
             return;
         }
 
@@ -779,14 +809,17 @@ namespace redsquare
         }
 
         m_ManaPoint -= 5;
-        
+        std::string messToChat("");
         std::cout << " Gained " << attack << " AttackPoints"<< std::endl;
+        messToChat = "Gained"+std::to_string(attack)+" AttackPoints";
+        createSystemMessage(messToChat,"system",m_Name);
     }
 
 
     void Player::Protection(ServerEntity *target){ // WARRIOR
         if(m_ManaPoint < 5){
             std::cout << "NOT ENOUGH MANA" << std::endl;
+            createSystemMessage("NOT ENOUGH MANA",m_Name,m_Name);
             return;
         }
         int critical = rand() % 100;
@@ -802,13 +835,16 @@ namespace redsquare
         }
 
         m_ManaPoint -= 5;
-        
+        std::string messToChat("");
         std::cout << "The target Gained " << defense << " DefensePoints"<< std::endl;
+        messToChat = "The target Gained "+std::to_string(defense)+" DefensePoints";
+        createSystemMessage("The target Gained "+std::to_string(defense)+" DefensePoints","system",m_Name);
     }
 
     void Player::Revenge(ServerEntity *target){ // WARRIOR ROGUE
         if(m_ManaPoint < 5){
             std::cout << "NOT ENOUGH MANA" << std::endl;
+            createSystemMessage("NOT ENOUGH MANA",m_Name,m_Name);
             return;
         }
 
@@ -831,12 +867,16 @@ namespace redsquare
         }
 
         m_ManaPoint -= 5;
+        std::string messToChat("");
         std::cout << "Revenge dealed " << damage << std::endl;
+        messToChat="Revenge dealed "+std::to_string(damage);
+        createSystemMessage("Revenge dealed "+std::to_string(damage),"system",m_Name);
     }
 
     void Player::Lacerate(ServerEntity *target){ // DONE
         if(m_ManaPoint < 5){
             std::cout << "NOT ENOUGH MANA" << std::endl;
+            createSystemMessage("NOT ENOUGH MANA",m_Name,m_Name);
             return;
         }
 
@@ -861,12 +901,17 @@ namespace redsquare
         }
 
         m_ManaPoint -= 5;
+        std::string messToChat("");
         std::cout << "Lacerate dealed " << damage << std::endl;
+        messToChat="Lacerate dealed "+std::to_string(damage);
+        createSystemMessage(messToChat,"system",m_Name);
+        
     }
 
     void Player::Incinerate(ServerEntity *target){
         if(m_ManaPoint < 5){
             std::cout << "NOT ENOUGH MANA" << std::endl;
+            createSystemMessage("NOT ENOUGH MANA",m_Name,m_Name);
             return;
         }
 
@@ -902,14 +947,19 @@ namespace redsquare
 
         m_ManaPoint -= 5;
         std::cout << "Incinerate dealed " << damage << std::endl;
+        std::string messToChat("");
+        messToChat="Incinerate dealed " + std::to_string(damage);
+        createSystemMessage(messToChat,"system",m_Name);
     }
 
     void Player::Massacre(ServerEntity *target){ // WARRIOR ROGUE
 
         if(m_ManaPoint < 5){
             std::cout << "NOT ENOUGH MANA" << std::endl;
+            createSystemMessage( "NOT ENOUGH MANA" ,m_Name,m_Name);
             return;
         }
+        std::string messToChat("");
         int critical = rand() % 100;
         int damage;
         int health;
@@ -939,6 +989,8 @@ namespace redsquare
         m_ManaPoint -= 5;
 
         std::cout << "Massacre dealed " << damage << " and healed you for " << health << std::endl;
+        messToChat="Massacre dealed " +std::to_string(damage) + " and healed you for " +std::to_string(health);
+        createSystemMessage( messToChat ,"system",m_Name);
     }
 
     std::vector<Monster*> Player::LightningStrike(ServerEntity *target,std::map<gf::Id, Monster> &monsters){
@@ -954,10 +1006,13 @@ namespace redsquare
         std::vector<Monster*> allPacket;
         if(m_ManaPoint < 7){
             std::cout << "NOT ENOUGH MANA" << std::endl;
+            createSystemMessage( "NOT ENOUGH MANA" ,m_Name,m_Name);
+
 
             return allPacket;
         }
 
+        std::string messToChat("");
         gf::Vector2i mainPos = target->m_Pos; // pos of the main target
         //std::cout << mainPos[0] << ":" << mainPos[1] << std::endl;
         /* adjacent tile */
@@ -986,6 +1041,8 @@ namespace redsquare
 
                 allPacket.push_back(&it->second);
                 std::cout << "LightningStrike dealed " << damage << " to the target" << std::endl;
+                messToChat =  "LightningStrike dealed " +std::to_string(damage) + " to the target";
+                createSystemMessage( messToChat,"system",m_Name);
             }else if(it->second.m_Pos == Pos2){
                 damage += Variance(-(damage / 10));
                 if(it->second.m_LifePoint - damage < 0){
@@ -1000,7 +1057,9 @@ namespace redsquare
                 }
 
                 allPacket.push_back(&it->second);
+                messToChat =  "LightningStrike dealed " +std::to_string(damage) + " to the target";
                 std::cout << "LightningStrike dealed " << damage << " to the target" << std::endl;
+                createSystemMessage( messToChat,"system",m_Name);
             }else if(it->second.m_Pos == Pos3){
                 damage += Variance(-(damage / 10));
                 if(it->second.m_LifePoint - damage < 0){
@@ -1015,7 +1074,9 @@ namespace redsquare
                 }
 
                 allPacket.push_back(&it->second);
+                messToChat =  "LightningStrike dealed " +std::to_string(damage) + " to the target";
                 std::cout << "LightningStrike dealed " << damage << " to the target" << std::endl;
+                createSystemMessage( messToChat,"system",m_Name);
             }else if(it->second.m_Pos == Pos4){
                 damage += Variance(-(damage / 10));
                 if(it->second.m_LifePoint - damage < 0){
@@ -1030,7 +1091,9 @@ namespace redsquare
                 }
 
                 allPacket.push_back(&it->second);
+                messToChat =  "LightningStrike dealed " +std::to_string(damage) + " to the target";
                 std::cout << "LightningStrike dealed " << damage << " to the target" << std::endl;
+                createSystemMessage( messToChat,"system",m_Name);
             
             }
             it++;
@@ -1045,9 +1108,10 @@ namespace redsquare
 
         if(m_ManaPoint < 5){
             std::cout << "NOT ENOUGH MANA" << std::endl;
+            createSystemMessage( "NOT ENOUGH MANA" ,m_Name,m_Name);
             return;
         }
-
+        std::string messToChat("");
         int damage;
         int critical = rand() % 100;
         if(critical > 95){ // critical hit
@@ -1055,6 +1119,8 @@ namespace redsquare
             damage *= 2; // double the damage 
             damage += Variance(-(damage / 10));
             std::cout << " CRITICAL !!! " << std::endl;
+            createSystemMessage( "NOT ENOUGH MANA" ,m_Name,m_Name);
+            
         }else{
             damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
             damage += Variance(-(damage / 10));
@@ -1063,18 +1129,21 @@ namespace redsquare
         if(target->m_LifePoint - damage <= 0){
             target->m_LifePoint = 0;
             std::cout << " The target is dead" << std::endl;
+            createSystemMessage( "NOT ENOUGH MANA" ,"system",m_Name);
             return;
         }else{
             target->m_LifePoint -= damage;
         }
         m_ManaPoint -= 5;
-
+        messToChat=" Scorch dealed : " + std::to_string(damage); 
          std::cout << " Scorch dealed : " << damage << std::endl;
+         createSystemMessage( messToChat ,"system",m_Name);
     }
 
     void Player::Berserk(){ // WARRIOR
         if(m_ManaPoint < 7){
             std::cout << "NOT ENOUGH MANA" << std::endl;
+            createSystemMessage( "NOT ENOUGH MANA" ,m_Name,m_Name);
             return;
         }
         int critical = rand() % 100;
@@ -1084,12 +1153,14 @@ namespace redsquare
             m_DefensePoint += 7;
             m_MaxDefensePoint += 7;
             std::cout << "+7 attack and defense point" <<  std::endl;
+            createSystemMessage( "+7 attack and defense point",m_Name,m_Name);
         }else{
             m_AttackPoint += 5;
             m_MaxAttackPoint += 5;
             m_DefensePoint += 5;
             m_MaxDefensePoint += 5;
             std::cout << "+5 attack and defense point" <<  std::endl;
+            createSystemMessage( "+5 attack and defense point",m_Name,m_Name);
         }
 
         m_ManaPoint -= 7;
@@ -1098,6 +1169,7 @@ namespace redsquare
     void Player::Shoot(ServerEntity *target){
         if(m_ManaPoint < 5){
             std::cout << "NOT ENOUGH MANA" << std::endl;
+            createSystemMessage( "NOT ENOUGH MANA" ,m_Name,m_Name);
             return;
         }
         int damage;
@@ -1119,14 +1191,18 @@ namespace redsquare
         }
 
         m_ManaPoint -=5;
-
+        std::string messToChat("");
         std::cout << "Shoot dealed " << damage << std::endl;
+        messToChat = "Shoot dealed " + std::to_string(damage);
+        createSystemMessage( messToChat,"system",m_Name);
+         
     }
 
     void Player::Backstab(ServerEntity *target){
         
         if(m_ManaPoint < 5){
             std::cout << "NOT ENOUGH MANA" << std::endl;
+            createSystemMessage( "NOT ENOUGH MANA" ,m_Name,m_Name);
             return;
         }
         int damage;
@@ -1150,14 +1226,17 @@ namespace redsquare
             target->m_LifePoint -= damage;
         }
         m_ManaPoint -= 5;
+        std::string messToChat("");
+        messToChat= "Backstab dealed " +std::to_string(damage); 
         std::cout << "Backstab dealed " << damage << std::endl;
-
+        createSystemMessage( messToChat,"system",m_Name);
     }
 
     void Player::Torpedo(ServerEntity *target){ // RANGER DONE
 
         if(m_ManaPoint < 5){
             std::cout << "NOT ENOUGH MANA" << std::endl;
+             createSystemMessage( "NOT ENOUGH MANA",m_Name,m_Name);
             return;
         }
         int damage;
@@ -1179,7 +1258,10 @@ namespace redsquare
         }
 
         m_ManaPoint -= 5;
+        std::string messToChat("");
         std::cout << "Torpedo dealed " << damage << std::endl;
+        messToChat =  "Torpedo dealed " + std::to_string(damage);
+        createSystemMessage( messToChat,"system",m_Name);
     }
 
     std::vector<Monster*> Player::Reaper(ServerEntity *target,std::map<gf::Id, Monster> &monsters){ // deal damage to the 3 tile in front of user 
@@ -1198,10 +1280,11 @@ namespace redsquare
         std::vector<Monster*> allPacket;
         if(m_ManaPoint < 7){
             std::cout << "NOT ENOUGH MANA" << std::endl;
+            createSystemMessage( "NOT ENOUGH MANA",m_Name,m_Name);
 
             return allPacket;
         }
-
+        std::string messToChat("");
         gf::Vector2i mainPos = target->m_Pos; // pos of the main target
 
         /* adjacent tile */
@@ -1216,7 +1299,8 @@ namespace redsquare
         int sideDamage;
 
         std::cout << "Reaper dealed " << mainDamage << " to the main target" << std::endl;
-
+        messToChat= "Reaper dealed " +std::to_string(mainDamage) + " to the main target";
+        createSystemMessage(messToChat,"system",m_Name);
         auto it = monsters.begin();
         while(it != monsters.end()){
             if(it->second.m_Pos == Pos1){
@@ -1236,7 +1320,9 @@ namespace redsquare
                     }
 
                     allPacket.push_back(&it->second);
+                    messToChat="Reaper dealed " +std::to_string(sideDamage) + " to the side target" ;
                     std::cout << "Reaper dealed " << sideDamage << " to the side target" << std::endl;
+                    createSystemMessage(messToChat,"system",m_Name);
                 }
             }else if(it->second.m_Pos == Pos2){
                 if(m_Pos != Pos1){ // avoid dealing damage to the tile behind the main target
@@ -1254,7 +1340,9 @@ namespace redsquare
                     }
 
                     allPacket.push_back(&it->second);
+                    messToChat="Reaper dealed " +std::to_string(sideDamage) + " to the side target" ;
                     std::cout << "Reaper dealed " << sideDamage << " to the side target" << std::endl;
+                    createSystemMessage(messToChat,"system",m_Name);
                 }
             }else if(it->second.m_Pos == Pos3){
                 if(m_Pos != Pos4){ // avoid dealing damage to the tile behind the main target
@@ -1271,7 +1359,9 @@ namespace redsquare
                         it->second.m_LifePoint -= sideDamage;
                     }
                     allPacket.push_back(&it->second);
+                    messToChat="Reaper dealed " +std::to_string(sideDamage) + " to the side target" ;
                     std::cout << "Reaper dealed " << sideDamage << " to the side target" << std::endl;
+                    createSystemMessage(messToChat,"system",m_Name);
                 }
             }else if(it->second.m_Pos == Pos4){
                 if(m_Pos != Pos3){ // avoid dealing damage to the tile behind the main target
@@ -1289,6 +1379,8 @@ namespace redsquare
                     }
                     allPacket.push_back(&it->second);
                     std::cout << "Reaper dealed " << sideDamage << " to the side target" << std::endl;
+                    messToChat="Reaper dealed " +std::to_string(sideDamage) + " to the side target" ;
+                    createSystemMessage(messToChat,"system",m_Name);
                 }
             }
             /* main target */ // need to be done here to obtain targetMonster value
@@ -1412,7 +1504,10 @@ namespace redsquare
         }else{
             m_ManaPoint += mana;
         }
+        std::string messToChat("");
         std::cout << " m_ManaPoint +" << mana << std::endl;
+        messToChat = " m_ManaPoint +" + std::to_string(mana);
+        createSystemMessage(messToChat,m_Name,m_Name);
     }
     void Player::HealthPot(float ratio){
         int health = (m_MaxLifePoint*ratio);
@@ -1421,6 +1516,9 @@ namespace redsquare
         }else{
             m_LifePoint += health;
         }
+        std::string messToChat("");
+        messToChat = " m_LifePoint +" + std::to_string(health);
+        createSystemMessage(messToChat,m_Name,m_Name);
         std::cout << " m_LifePoint +" << health << std::endl;
     }
     void Player::EnergyPot(float ratio){
@@ -1431,12 +1529,18 @@ namespace redsquare
         int defense = (m_MaxDefensePoint*ratio);
         m_MaxDefensePoint += defense; 
         m_DefensePoint = m_MaxDefensePoint;
+        std::string messToChat("");
+        messToChat = " m_MaxDefensePoint +" + std::to_string(defense);
+        createSystemMessage(messToChat,m_Name,m_Name);
         std::cout << " m_MaxDefensePoint +" << defense << std::endl;
     }
     void Player::BoostAttack(float ratio){
         int attack = (m_MaxAttackPoint*ratio);
         m_MaxAttackPoint += attack;
         m_AttackPoint = m_MaxAttackPoint;
+        std::string messToChat("");
+        messToChat = " m_MaxAttackPoint +" + std::to_string(attack);
+        createSystemMessage(messToChat,m_Name,m_Name);
         std::cout << " m_MaxAttackPoint +" << attack << std::endl;
     }
     void Player::BoostXP(float ratio){
@@ -1445,18 +1549,27 @@ namespace redsquare
         if(m_XP > m_MaxXP){
             levelUp();
         }
+        std::string messToChat("");
+        messToChat = " m_XP +" + std::to_string(XP);
+        createSystemMessage(messToChat,m_Name,m_Name);
         std::cout << " m_XP +" << XP << std::endl;
     }
     void Player::BoostMana(float ratio){
         int mana = (m_MaxManaPoint*ratio);
         m_MaxManaPoint += mana; 
         m_ManaPoint = m_MaxManaPoint;
+        std::string messToChat("");
+        messToChat = " m_MaxManaPoint +" + std::to_string(mana);
+        createSystemMessage(messToChat,m_Name,m_Name);
         std::cout << " m_MaxManaPoint +" << mana << std::endl;
     }
     void Player::BoostHealth(float ratio){
         int health = (m_MaxLifePoint*ratio);
         m_MaxLifePoint += health; 
         m_LifePoint = m_MaxLifePoint;
+        std::string messToChat("");
+        messToChat = " m_MaxLifePoint +" + std::to_string(health);
+        createSystemMessage(messToChat,m_Name,m_Name);
         std::cout << " m_MaxLifePoint +" << health << std::endl;
     }
 
@@ -1467,11 +1580,14 @@ namespace redsquare
         m_Socket.send(mess);
     }
 
-    void Player::createSystemMessage(std::string message, std::string to){
+    void Player::createSystemMessage(std::string message, std::string to, std::string name){
+            std::cout<<message<<std::endl;
             Message packet;
             int length=0;
+            std::string myMessage;
+            myMessage =  name + " -> "+message;
             std::string sys("system");
-            length = message.copy(packet.message, message.length());
+            length = myMessage.copy(packet.message, myMessage.length());
             packet.message[length]='\0';
             length = sys.copy(packet.from, sys.length());
             packet.from[length]='\0';

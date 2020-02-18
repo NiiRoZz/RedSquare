@@ -3,7 +3,6 @@
 
 #include "../common/Sockets.h"
 #include "ServerEntity.h"
-#include "World.h"
 #include "Monster.h"
 #include "../common/Packet.h"
 #include "Inventory.h"
@@ -17,6 +16,7 @@ namespace redsquare
 {
     // forward class
     class Game;
+    class World;
 
     class Player: public ServerEntity
     {
@@ -94,7 +94,7 @@ namespace redsquare
         void BoostMana(float ratio);
         void BoostHealth(float ratio);
         void BoostXP(float ratio);
-        void createSystemMessage(std::string message, std::string to);
+        void createSystemMessage(std::string message, std::string to,std::string name);
         std::string m_Name;
         SocketTcp m_Socket;
     };

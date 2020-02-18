@@ -3,6 +3,7 @@
 
 #include "ServerEntity.h"
 #include "../common/Packet.h"
+#include "Chat.h"
 #include <gf/Id.h>
 #include <gf/Vector.h>
 #include <gf/VectorOps.h>
@@ -21,6 +22,7 @@ namespace redsquare
         void attack(ServerEntity *target);
         void levelUp(uint m_Floor);
         int Variance(int range);
+        //void createSystemMessage(std::string message, std::string to,std::string name);
        
 
     private:

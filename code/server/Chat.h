@@ -6,8 +6,10 @@
 #include <gf/Font.h>
 #include <gf/RenderWindow.h>
 #include <gf/Id.h>
+#include <gf/Queue.h>
 #include <thread>
-#include "Player.h"
+#include "../common/Sockets.h"
+#include "../common/Packet.h"
 
 namespace redsquare
 {
