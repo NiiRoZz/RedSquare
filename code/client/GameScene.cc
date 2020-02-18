@@ -141,6 +141,7 @@ namespace redsquare
     void GameScene::initialize()
     {
         m_PlayerDead = false;
+        m_CurrentSpell = SpellType::BasicAttack;
         m_Entities.initialize();
         m_TempMoveTarget = {0,0};
         m_AttackPos = {0,0};
