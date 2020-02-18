@@ -73,10 +73,8 @@ namespace redsquare
             m_MaxLifePoint = 170;
 
             m_AttackPoint = 50;
-            m_MaxAttackPoint = 50;
 
             m_DefensePoint = 4;
-            m_MaxDefensePoint = 4;
 
             m_Range = 1;
             m_Level = 1;
@@ -87,10 +85,8 @@ namespace redsquare
             m_MaxLifePoint = 220;
 
             m_AttackPoint = 60;
-            m_MaxAttackPoint = 60;
 
             m_DefensePoint = 5;
-            m_MaxDefensePoint = 5;
 
             m_Range = 1;
             m_Level = 1;
@@ -101,10 +97,8 @@ namespace redsquare
             m_MaxLifePoint = 190;
 
             m_AttackPoint = 50;
-            m_MaxAttackPoint = 50;
 
             m_DefensePoint = 5;
-            m_MaxDefensePoint = 5;
 
             m_Range = 2;
             m_Level = 1;
@@ -115,10 +109,8 @@ namespace redsquare
             m_MaxLifePoint = 160;
 
             m_AttackPoint = 45;
-            m_MaxAttackPoint = 45;
 
             m_DefensePoint = 5;
-            m_MaxDefensePoint = 5;
 
             m_Range = 1;
             m_Level = 1;
@@ -129,10 +121,8 @@ namespace redsquare
             m_MaxLifePoint = 140;
 
             m_AttackPoint = 45;
-            m_MaxAttackPoint = 45;
 
             m_DefensePoint = 5;
-            m_MaxDefensePoint = 5;
 
             m_Range = 1;
             m_Level = 1;
@@ -142,10 +132,8 @@ namespace redsquare
             m_MaxLifePoint = 220;
 
             m_AttackPoint = 50;
-            m_MaxAttackPoint = 50;
 
             m_DefensePoint = 5;
-            m_MaxDefensePoint = 5;
 
             m_Range = 1;
             m_Level = 1;

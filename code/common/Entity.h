@@ -20,10 +20,8 @@ namespace redsquare
         int m_MaxLifePoint;
 
         int m_AttackPoint;
-        int m_MaxAttackPoint;
         
         int m_DefensePoint;
-        int m_MaxDefensePoint;
         
         int m_Range;
 

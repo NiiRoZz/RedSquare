@@ -25,9 +25,6 @@ namespace redsquare
             m_AttackPoint = MAGUS_ATTACKPOINT;
             m_DefensePoint = MAGUS_DEFENSEPOINT;
 
-            m_MaxAttackPoint = MAGUS_MAXATTACKPOINT;
-            m_MaxDefensePoint = MAGUS_MAXDEFENSEPOINT;
-
             m_Range = MAGUS_RANGE;
             break;
 
@@ -41,9 +38,6 @@ namespace redsquare
 
             m_AttackPoint = WARRIOR_ATTACKPOINT;
             m_DefensePoint = WARRIOR_DEFENSEPOINT;
-
-            m_MaxAttackPoint = WARRIOR_MAXATTACKPOINT;
-            m_MaxDefensePoint = WARRIOR_MAXDEFENSEPOINT;
 
             m_Range = WARRIOR_RANGE;
             break;
@@ -59,9 +53,6 @@ namespace redsquare
             m_AttackPoint = ROGUE_ATTACKPOINT;
             m_DefensePoint = ROGUE_DEFENSEPOINT;
 
-            m_MaxAttackPoint = ROGUE_MAXATTACKPOINT;
-            m_MaxDefensePoint = ROGUE_MAXDEFENSEPOINT;
-
             m_Range = ROGUE_RANGE;
             break;
 
@@ -76,9 +67,6 @@ namespace redsquare
             m_AttackPoint = RANGER_ATTACKPOINT;
             m_DefensePoint = RANGER_DEFENSEPOINT;
 
-            m_MaxAttackPoint = RANGER_MAXATTACKPOINT;
-            m_MaxDefensePoint = RANGER_MAXDEFENSEPOINT;
-
             m_Range = RANGER_RANGE;
             break;
 
@@ -92,9 +80,6 @@ namespace redsquare
 
             m_AttackPoint = HEALER_ATTACKPOINT;
             m_DefensePoint = HEALER_DEFENSEPOINT;
-
-            m_MaxAttackPoint = HEALER_MAXATTACKPOINT;
-            m_MaxDefensePoint = HEALER_MAXDEFENSEPOINT;
 
             m_Range = HEALER_RANGE;
             break;
@@ -191,8 +176,6 @@ namespace redsquare
 
         m_AttackPoint += 2;
         m_DefensePoint += 2;
-        m_MaxDefensePoint += 2;
-        m_MaxAttackPoint += 2;
  
         m_XP = 0;
         m_MaxXP += 40;
@@ -525,14 +508,12 @@ namespace redsquare
 
         if(critical > 90){
             defense = 10;
-            m_MaxDefensePoint += defense;
-            m_DefensePoint = m_MaxDefensePoint;
+            m_DefensePoint += defense;
             std::cout << " CRITICAL !!! " << std::endl;
             createSystemMessage(" CRITICAL",m_Name,m_Name);
         }else{
             defense = 5;
-            m_MaxDefensePoint += defense;
-            m_DefensePoint = m_MaxDefensePoint;
+            m_DefensePoint += defense;
         }
 
         m_ManaPoint -= 5;
@@ -669,12 +650,10 @@ namespace redsquare
         int attack;
         if(critical > 90){
             attack = 10;
-            m_MaxAttackPoint += attack;
-            m_AttackPoint = m_MaxAttackPoint;
+            m_AttackPoint += attack;
         }else{
             attack = 5;
-            m_MaxAttackPoint += attack;
-            m_AttackPoint = m_MaxAttackPoint;
+            m_AttackPoint += attack;
         }
 
         m_ManaPoint -= 5;
@@ -695,12 +674,10 @@ namespace redsquare
         int defense;
         if(critical > 90){
             defense = 10;
-            target->m_MaxDefensePoint += defense;
-            target->m_DefensePoint = m_MaxDefensePoint;
+            target->m_DefensePoint += defense;
         }else{
             defense = 5;
-            target->m_MaxDefensePoint += defense;
-            target->m_DefensePoint = m_MaxDefensePoint;
+            target->m_DefensePoint += defense;
         }
 
         m_ManaPoint -= 5;
@@ -1021,16 +998,12 @@ namespace redsquare
         int critical = rand() % 100;
         if(critical > 90){
             m_AttackPoint += 7;
-            m_MaxAttackPoint += 7;
             m_DefensePoint += 7;
-            m_MaxDefensePoint += 7;
             std::cout << "+7 attack and defense point" <<  std::endl;
             createSystemMessage( "+7 attack and defense point",m_Name,m_Name);
         }else{
             m_AttackPoint += 5;
-            m_MaxAttackPoint += 5;
             m_DefensePoint += 5;
-            m_MaxDefensePoint += 5;
             std::cout << "+5 attack and defense point" <<  std::endl;
             createSystemMessage( "+5 attack and defense point",m_Name,m_Name);
         }
@@ -1083,13 +1056,11 @@ namespace redsquare
             damage = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint);
             damage *= 2;
             damage += Variance(-(damage / 10));
-            m_AttackPoint += m_MaxAttackPoint / 10;
-            m_MaxAttackPoint += m_MaxAttackPoint / 10;
+            m_AttackPoint += m_AttackPoint / 10;
         }else{  
             damage = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint);
             damage += Variance(-(damage / 10));
-            m_AttackPoint += m_MaxAttackPoint / 5;
-            m_MaxAttackPoint += m_MaxAttackPoint / 5;
+            m_AttackPoint += m_AttackPoint / 5;
         }
 
         if(target->m_LifePoint - damage < 0){
@@ -1398,23 +1369,19 @@ namespace redsquare
         HealthPot(ratio);
     }
     void Player::BoostDefense(float ratio){
-
-        m_MaxDefensePoint += ratio; 
-        m_DefensePoint = m_MaxDefensePoint;
+        m_DefensePoint += ratio;
         std::string messToChat("");
-        messToChat = " m_MaxDefensePoint +" + std::to_string(m_MaxDefensePoint);
+        messToChat = " m_DefensePoint +" + std::to_string(ratio);
         createSystemMessage(messToChat,m_Name,m_Name);
-        std::cout << " m_MaxDefensePoint +" << m_MaxDefensePoint << std::endl;
+        std::cout << " m_DefensePoint +" << m_DefensePoint << std::endl;
     }
 
     void Player::BoostAttack(float ratio){
-
-        m_MaxAttackPoint += ratio;
-        m_AttackPoint = m_MaxAttackPoint;
+        m_AttackPoint += ratio;
         std::string messToChat("");
-        messToChat = " m_MaxAttackPoint +" + std::to_string(m_MaxAttackPoint);
+        messToChat = " m_AttackPoint +" + std::to_string(m_AttackPoint);
         createSystemMessage(messToChat,m_Name,m_Name);
-        std::cout << " m_MaxAttackPoint +" << m_MaxAttackPoint << std::endl;
+        std::cout << " m_AttackPoint +" << m_AttackPoint << std::endl;
     }
     
     void Player::BoostXP(float ratio){
@@ -1430,9 +1397,8 @@ namespace redsquare
 
     void Player::BoostHealth(float ratio){
         m_MaxLifePoint += ratio; 
-
         std::string messToChat("");
-        messToChat = " m_MaxLifePoint +" + std::to_string(health);
+        messToChat = " m_MaxLifePoint +" + std::to_string(ratio);
         createSystemMessage(messToChat,m_Name,m_Name);
     }
 
@@ -1456,9 +1422,7 @@ namespace redsquare
     {
         if (remove)
         {
-            m_MaxAttackPoint -= item.m_GiveAttackPoint;
             m_AttackPoint -= item.m_GiveAttackPoint;
-            m_MaxDefensePoint -= item.m_GiveDefensePoint;
             m_DefensePoint -= item.m_GiveDefensePoint; 
             m_MaxLifePoint -= item.m_GiveLifePoint;
             m_LifePoint -= item.m_GiveLifePoint;
@@ -1471,9 +1435,7 @@ namespace redsquare
         }
         else
         {
-            m_MaxAttackPoint += item.m_GiveAttackPoint;
             m_AttackPoint += item.m_GiveAttackPoint;
-            m_MaxDefensePoint += item.m_GiveDefensePoint;
             m_DefensePoint += item.m_GiveDefensePoint; 
             m_MaxLifePoint += item.m_GiveLifePoint;
             m_LifePoint += item.m_GiveLifePoint;

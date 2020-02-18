@@ -373,10 +373,8 @@ namespace redsquare
         m_MaxLifePoint = characteristics.m_MaxLifePoint;
 
         m_AttackPoint = characteristics.m_AttackPoint;
-        m_MaxAttackPoint = characteristics.m_MaxAttackPoint;
 
         m_DefensePoint = characteristics.m_DefensePoint;
-        m_MaxDefensePoint = characteristics.m_MaxDefensePoint;
 
         m_Range = characteristics.m_Range;
         m_Level = characteristics.m_Level;

@@ -82,8 +82,6 @@ namespace redsquare
     constexpr int MAGUS_MAXMANAPOINT = 30; 
     constexpr int MAGUS_ATTACKPOINT = 60; 
     constexpr int MAGUS_DEFENSEPOINT = 10; 
-    constexpr int MAGUS_MAXATTACKPOINT = 60; 
-    constexpr int MAGUS_MAXDEFENSEPOINT = 10; 
     constexpr int MAGUS_RANGE = 2; 
 
     constexpr int WARRIOR_LIFEPOINT = 300; 
@@ -91,9 +89,7 @@ namespace redsquare
     constexpr int WARRIOR_MAXLIFEPOINT = 300;
     constexpr int WARRIOR_MAXMANAPOINT = 20; 
     constexpr int WARRIOR_ATTACKPOINT = 70; 
-    constexpr int WARRIOR_DEFENSEPOINT = 20; 
-    constexpr int WARRIOR_MAXATTACKPOINT = 70; 
-    constexpr int WARRIOR_MAXDEFENSEPOINT = 20; 
+    constexpr int WARRIOR_DEFENSEPOINT = 20;
     constexpr int WARRIOR_RANGE = 1; 
 
     constexpr int ROGUE_LIFEPOINT = 250; 
@@ -101,9 +97,7 @@ namespace redsquare
     constexpr int ROGUE_MAXLIFEPOINT = 250;
     constexpr int ROGUE_MAXMANAPOINT = 25; 
     constexpr int ROGUE_ATTACKPOINT = 80; 
-    constexpr int ROGUE_DEFENSEPOINT = 15; 
-    constexpr int ROGUE_MAXATTACKPOINT = 80; 
-    constexpr int ROGUE_MAXDEFENSEPOINT = 15; 
+    constexpr int ROGUE_DEFENSEPOINT = 15;
     constexpr int ROGUE_RANGE = 1; 
 
     constexpr int RANGER_LIFEPOINT = 220; 
@@ -111,9 +105,7 @@ namespace redsquare
     constexpr int RANGER_MAXLIFEPOINT = 220;
     constexpr int RANGER_MAXMANAPOINT = 20; 
     constexpr int RANGER_ATTACKPOINT = 50; 
-    constexpr int RANGER_DEFENSEPOINT = 15; 
-    constexpr int RANGER_MAXATTACKPOINT = 50; 
-    constexpr int RANGER_MAXDEFENSEPOINT = 15; 
+    constexpr int RANGER_DEFENSEPOINT = 15;
     constexpr int RANGER_RANGE = 2;
 
     constexpr int HEALER_LIFEPOINT = 200; 
@@ -121,9 +113,7 @@ namespace redsquare
     constexpr int HEALER_MAXLIFEPOINT = 200;
     constexpr int HEALER_MAXMANAPOINT = 40; 
     constexpr int HEALER_ATTACKPOINT = 55; 
-    constexpr int HEALER_DEFENSEPOINT = 20; 
-    constexpr int HEALER_MAXATTACKPOINT = 55; 
-    constexpr int HEALER_MAXDEFENSEPOINT = 20; 
+    constexpr int HEALER_DEFENSEPOINT = 20;
     constexpr int HEALER_RANGE = 3; 
 }
 

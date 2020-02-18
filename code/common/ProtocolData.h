@@ -406,10 +406,8 @@ namespace redsquare
         int m_MaxManaPoint = 0;
 
         int m_AttackPoint;
-        int m_MaxAttackPoint;
 
         int m_DefensePoint;
-        int m_MaxDefensePoint;
 
         int m_Range;
 
@@ -424,7 +422,7 @@ namespace redsquare
     template<typename Archive>
     Archive operator|(Archive& ar, EntityCharacteristicData& data)
     {
-        return ar | data.id | data.entityType | data.m_LifePoint | data.m_MaxLifePoint | data.m_ManaPoint | data.m_MaxManaPoint | data.m_AttackPoint | data.m_MaxAttackPoint | data.m_DefensePoint | data.m_MaxDefensePoint | data.m_Range | data.m_XP | data.m_MaxXP | data.m_Level | data.m_Spells;
+        return ar | data.id | data.entityType | data.m_LifePoint | data.m_MaxLifePoint | data.m_ManaPoint | data.m_MaxManaPoint | data.m_AttackPoint | data.m_DefensePoint | data.m_Range | data.m_XP | data.m_MaxXP | data.m_Level | data.m_Spells;
     }
 
     struct EntityData

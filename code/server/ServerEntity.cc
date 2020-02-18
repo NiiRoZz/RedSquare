@@ -22,9 +22,6 @@ namespace redsquare
         characteristics.m_AttackPoint = m_AttackPoint;
         characteristics.m_DefensePoint = m_DefensePoint;
 
-        characteristics.m_MaxAttackPoint = m_MaxAttackPoint;
-        characteristics.m_MaxDefensePoint = m_MaxDefensePoint;
-
         characteristics.m_Range = m_Range;
         characteristics.m_Level = m_Level;
 
