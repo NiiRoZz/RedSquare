@@ -83,8 +83,8 @@ namespace redsquare
            break;
 
         case EntitySubType::SkeletonKnife:  case EntitySubType::Lizard:  case EntitySubType::Mask: case EntitySubType::Orc:  
-            m_LifePoint = 180;
-            m_MaxLifePoint = 180;
+            m_LifePoint = 220;
+            m_MaxLifePoint = 220;
 
             m_AttackPoint = 12;
             m_MaxAttackPoint = 12;
@@ -97,8 +97,8 @@ namespace redsquare
            break;
 
         case EntitySubType::SkeletonMagus: case EntitySubType::Shaman:   
-            m_LifePoint = 160;
-            m_MaxLifePoint = 160;
+            m_LifePoint = 200;
+            m_MaxLifePoint = 200;
 
             m_AttackPoint = 8;
             m_MaxAttackPoint = 8;
@@ -111,35 +111,35 @@ namespace redsquare
            break;
 
         case EntitySubType::Slime:  case EntitySubType::Mud: case EntitySubType::Swamp: case EntitySubType::Goblin: 
-            m_LifePoint = 140;
-            m_MaxLifePoint = 140;
+            m_LifePoint = 160;
+            m_MaxLifePoint = 160;
 
             m_AttackPoint = 10;
             m_MaxAttackPoint = 10;
 
-            m_DefensePoint = 0;
-            m_MaxDefensePoint = 0;
+            m_DefensePoint = 5;
+            m_MaxDefensePoint = 5;
 
             m_Range = 1;
             m_Level = 1;
            break;
 
         case EntitySubType::Spirit: case EntitySubType::LilZombie: case EntitySubType::LilGob: case EntitySubType::Imp:    
-            m_LifePoint = 100;
-            m_MaxLifePoint = 100;
+            m_LifePoint = 120;
+            m_MaxLifePoint = 120;
 
             m_AttackPoint = 12;
             m_MaxAttackPoint = 12;
 
-            m_DefensePoint = 2;
-            m_MaxDefensePoint = 2;
+            m_DefensePoint = 5;
+            m_MaxDefensePoint = 5;
 
             m_Range = 1;
             m_Level = 1;
            break;
        default:
-            m_LifePoint = 200;
-            m_MaxLifePoint = 200;
+            m_LifePoint = 220;
+            m_MaxLifePoint = 220;
 
             m_AttackPoint = 10;
             m_MaxAttackPoint = 10;
@@ -151,26 +151,6 @@ namespace redsquare
             m_Level = 1;
            break;
        }
-    }
-
-    void Monster::createCarPacket(Packet &packet)
-    {
-        packet.type = PacketType::EntityCar;
-        packet.entityCar.entityType = EntityType::Monster;
-        packet.entityCar.entityID = getEntityID();
-
-        packet.entityCar.m_LifePoint = m_LifePoint;
-        packet.entityCar.m_MaxLifePoint = m_MaxLifePoint;
-
-        packet.entityCar.m_AttackPoint = m_AttackPoint;
-        packet.entityCar.m_DefensePoint = m_DefensePoint;
-
-        packet.entityCar.m_MaxAttackPoint = m_MaxAttackPoint;
-        packet.entityCar.m_MaxDefensePoint = m_MaxDefensePoint;
-
-        packet.entityCar.m_Range = m_Range;
-
-        packet.entityCar.m_Level = m_Level;
     }
 
     bool Monster::checkRoutine(){
@@ -202,14 +182,24 @@ namespace redsquare
         createSystemMessage("The monster killed a player " , "system","monster");*/
     }
 
-    void Monster::levelUp(uint m_Floor){ // method to level up a player
+    void Monster::levelUp(uint m_Floor){ // method to level up a monster
 
-        m_MaxLifePoint += 2*m_Floor;
-        m_LifePoint += 2*m_Floor;
-
-        m_AttackPoint += 2*m_Floor;
-        m_DefensePoint += 2*m_Floor;
+        int gain;
+        if(m_Floor < 5){
+            gain = 2;
+        }else if(m_Floor >= 5 && m_Floor < 8){
+            gain = 3;
+        }else if(m_Floor >= 8 && m_Floor < 12){
+            gain = 4;
+        }else if(m_Floor >= 12){
+            gain = 5;
+        }
         
+        m_MaxLifePoint += gain*m_Floor;
+        m_LifePoint += gain*m_Floor;
+
+        m_AttackPoint += gain*m_Floor;
+        m_DefensePoint += gain*m_Floor;
         m_Level = (m_Floor+1);
     }
 

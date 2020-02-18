@@ -5,6 +5,8 @@
 
 #include <gf/Texture.h>
 #include <gf/Font.h>
+#include <gf/RenderTarget.h>
+#include <gf/RenderStates.h>
 
 namespace redsquare
 {
@@ -13,9 +15,8 @@ namespace redsquare
     public:
         Monster( gf::Id entityID, EntitySubType entitySubType, gf::Vector2i pos );
 
-        virtual void update(gf::Time time) override;
-
-        virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
+        void render(gf::RenderTarget& target, const gf::RenderStates& states);
+        void update(gf::Time time);
 
     private:
         gf::Font &m_Font;

@@ -1,4 +1,5 @@
 #include "ServerEntity.h"
+#include "Player.h"
 #include "Message.h"
 #include "../common/Singletons.h"
 
@@ -10,27 +11,52 @@ namespace redsquare
 
     }
 
-    void ServerEntity::createCarPacket(Packet &packet)
+    void ServerEntity::createCarPacket(EntityCharacteristicData &characteristics)
     {
+        characteristics.id = getEntityID();
+        characteristics.entityType = getEntityType();
 
+        characteristics.m_LifePoint = m_LifePoint;
+        characteristics.m_MaxLifePoint = m_MaxLifePoint;
+
+        characteristics.m_AttackPoint = m_AttackPoint;
+        characteristics.m_DefensePoint = m_DefensePoint;
+
+        characteristics.m_MaxAttackPoint = m_MaxAttackPoint;
+        characteristics.m_MaxDefensePoint = m_MaxDefensePoint;
+
+        characteristics.m_Range = m_Range;
+        characteristics.m_Level = m_Level;
+
+        if (getEntityType() == EntityType::Player)
+        {
+            Player *player = static_cast<Player*>(this);
+            if (player != nullptr)
+            {
+                characteristics.m_ManaPoint = player->m_ManaPoint;
+                characteristics.m_MaxManaPoint = player->m_MaxManaPoint;
+                characteristics.m_XP = player->m_XP;
+                characteristics.m_MaxXP = player->m_MaxXP;
+                characteristics.m_Spells = player->m_SpellTab;
+            }
+        }
     }
 
-    Packet&& ServerEntity::createUpdateItemPacket(InventorySlotType slotType, bool remove, uint pos)
+    RedsquareServerUpdateItem ServerEntity::createUpdateItemPacket(InventorySlotType slotType, bool remove, uint pos)
     {
-        Packet packet;
-        packet.type = PacketType::UpdateItem;
-        packet.updateItem.entityID = m_EntityID;
-        packet.updateItem.entityType = m_EntityType;
-        packet.updateItem.slotType = slotType;
-        packet.updateItem.pos = pos;
-        packet.updateItem.removeItem = remove;
+        RedsquareServerUpdateItem packet;
+        packet.id = m_EntityID;
+        packet.entityType = m_EntityType;
+        packet.slotType = slotType;
+        packet.pos = pos;
+        packet.removeItem = remove;
 
         ServerItem* item = m_Inventory.getItem(slotType, pos);
         if (item != nullptr)
         {
-            packet.updateItem.typeItem = item->getType();
-            packet.updateItem.slotMask = item->getSlotMask();
-            packet.updateItem.baseFloorItem = item->getBaseFloor();
+            packet.typeItem = item->getType();
+            packet.slotMask = item->getSlotMask();
+            packet.baseFloorItem = item->getBaseFloor();
         }
 
         return std::move(packet);
@@ -44,31 +70,5 @@ namespace redsquare
     void ServerEntity::defaultInventoryStuff()
     {
 
-    }
-
-    void ServerEntity::onMovedItem(ServerItem &item, bool remove)
-    {
-        if (remove)
-        {
-            m_MaxAttackPoint -= item.m_GiveAttackPoint;
-            m_AttackPoint -= item.m_GiveAttackPoint;
-            m_MaxDefensePoint -= item.m_GiveDefensePoint;
-            m_DefensePoint -= item.m_GiveDefensePoint; 
-            m_MaxLifePoint -= item.m_GiveLifePoint;
-            m_LifePoint -= item.m_GiveLifePoint;
-        }
-        else
-        {
-            m_MaxAttackPoint += item.m_GiveAttackPoint;
-            m_AttackPoint += item.m_GiveAttackPoint;
-            m_MaxDefensePoint += item.m_GiveDefensePoint;
-            m_DefensePoint += item.m_GiveDefensePoint; 
-            m_MaxLifePoint += item.m_GiveLifePoint;
-            m_LifePoint += item.m_GiveLifePoint;
-        }
-
-        UpdateEntityCharacteristic message;
-        message.entity = this;
-        gMessageManager().sendMessage(&message);
     }
 }

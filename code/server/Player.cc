@@ -1,87 +1,104 @@
 #include "Player.h"
+#include "RedsquareInstance.h"
+
 #include <iostream>
-#include "Game.h"
-#include "World.h"
-#include "Chat.h"
 
 #include "../common/Constants.h"
 
 namespace redsquare
 {
-    Player::Player(SocketTcp socket, gf::Id playerID, const EntitySubType entitySubType, std::string name)
+    Player::Player(gf::Id playerID, const EntitySubType entitySubType, const std::string name, RedsquareInstance &instance)
     : ServerEntity(playerID, EntityType::Player, entitySubType)
+    , m_PlayerTurn(false)
+    , m_RedsquareInstance(instance)
     , m_Name(name)
-    , m_Socket(std::move(socket))
     {
         switch (m_EntitySubType){
         case EntitySubType::Magus : // ------------------- Magus -------------------
             m_Class = EntitySubType::Magus;
-            m_LifePoint = 200;
-            m_ManaPoint = 30;
+            m_LifePoint = MAGUS_LIFEPOINT;
+            m_ManaPoint = MAGUS_MANAPOINT;
 
-            m_MaxLifePoint = 200;
-            m_MaxManaPoint = 30;
+            m_MaxLifePoint = MAGUS_MAXLIFEPOINT;
+            m_MaxManaPoint = MAGUS_MAXMANAPOINT;
 
-            m_AttackPoint = 60;
-            m_DefensePoint = 10;
+            m_AttackPoint = MAGUS_ATTACKPOINT;
+            m_DefensePoint = MAGUS_DEFENSEPOINT;
 
-            m_MaxAttackPoint = 60;
-            m_MaxDefensePoint = 10;
+            m_MaxAttackPoint = MAGUS_MAXATTACKPOINT;
+            m_MaxDefensePoint = MAGUS_MAXDEFENSEPOINT;
 
-            m_Range = 2;
+            m_Range = MAGUS_RANGE;
             break;
 
         case EntitySubType::Warrior : // ------------------- Warrior -------------------
             m_Class = EntitySubType::Warrior;
-            m_LifePoint = 300;
-            m_ManaPoint = 20;
+            m_LifePoint = WARRIOR_LIFEPOINT;
+            m_ManaPoint = WARRIOR_MANAPOINT;
 
-            m_MaxLifePoint = 300;
-            m_MaxManaPoint = 20;
+            m_MaxLifePoint = WARRIOR_MAXLIFEPOINT;
+            m_MaxManaPoint = WARRIOR_MAXMANAPOINT;
 
-            m_AttackPoint = 70;
-            m_DefensePoint = 20;
+            m_AttackPoint = WARRIOR_ATTACKPOINT;
+            m_DefensePoint = WARRIOR_DEFENSEPOINT;
 
-            m_MaxAttackPoint = 70;
-            m_MaxDefensePoint = 20;
+            m_MaxAttackPoint = WARRIOR_MAXATTACKPOINT;
+            m_MaxDefensePoint = WARRIOR_MAXDEFENSEPOINT;
 
-            m_Range = 1;
+            m_Range = WARRIOR_RANGE;
             break;
 
         case EntitySubType::Rogue : // ------------------- Rogue -------------------
             m_Class = EntitySubType::Rogue;
-            m_LifePoint = 250;
-            m_ManaPoint = 25;
+            m_LifePoint = ROGUE_LIFEPOINT;
+            m_ManaPoint = ROGUE_MANAPOINT;
 
-            m_MaxLifePoint = 250;
-            m_MaxManaPoint = 25;
+            m_MaxLifePoint = ROGUE_MAXLIFEPOINT;
+            m_MaxManaPoint = ROGUE_MAXMANAPOINT;
 
-            m_AttackPoint = 80;
-            m_DefensePoint = 15;
+            m_AttackPoint = ROGUE_ATTACKPOINT;
+            m_DefensePoint = ROGUE_DEFENSEPOINT;
 
-            m_MaxAttackPoint = 80;
-            m_MaxDefensePoint = 15;
+            m_MaxAttackPoint = ROGUE_MAXATTACKPOINT;
+            m_MaxDefensePoint = ROGUE_MAXDEFENSEPOINT;
 
-            m_Range = 1;
+            m_Range = ROGUE_RANGE;
             break;
 
         case EntitySubType::Ranger : // ------------------- Rogue -------------------
             m_Class = EntitySubType::Ranger;
-            m_LifePoint = 190;
-            m_ManaPoint = 20;
+            m_LifePoint = RANGER_LIFEPOINT;
+            m_ManaPoint = RANGER_MANAPOINT;
 
-            m_MaxLifePoint = 190;
-            m_MaxManaPoint = 20;
+            m_MaxLifePoint = RANGER_MAXLIFEPOINT;
+            m_MaxManaPoint = RANGER_MAXMANAPOINT;
 
-            m_AttackPoint = 45;
-            m_DefensePoint = 10;
+            m_AttackPoint = RANGER_ATTACKPOINT;
+            m_DefensePoint = RANGER_DEFENSEPOINT;
 
-            m_MaxAttackPoint = 45;
-            m_MaxDefensePoint = 10;
+            m_MaxAttackPoint = RANGER_MAXATTACKPOINT;
+            m_MaxDefensePoint = RANGER_MAXDEFENSEPOINT;
 
-            m_Range = 3;
+            m_Range = RANGER_RANGE;
             break;
-        
+
+        case EntitySubType::Healer : // ------------------- Healer -------------------
+            m_Class = EntitySubType::Healer;
+            m_LifePoint = HEALER_LIFEPOINT;
+            m_ManaPoint = HEALER_MANAPOINT;
+
+            m_MaxLifePoint = HEALER_MAXLIFEPOINT;
+            m_MaxManaPoint = HEALER_MAXMANAPOINT;
+
+            m_AttackPoint = HEALER_ATTACKPOINT;
+            m_DefensePoint = HEALER_DEFENSEPOINT;
+
+            m_MaxAttackPoint = HEALER_MAXATTACKPOINT;
+            m_MaxDefensePoint = HEALER_MAXDEFENSEPOINT;
+
+            m_Range = HEALER_RANGE;
+            break;
+
         default:
             break;
         }
@@ -89,37 +106,20 @@ namespace redsquare
         m_MaxXP = 15;
 
         m_Level = 1;
-        m_MovedInRound = false;
         m_SpellTab.push_back(SpellType::BasicAttack);
     }
 
-    void Player::sendPacket(Packet &packet)
+    bool Player::applyMove(gf::Vector2i dir, World &world)
     {
-        m_Socket.send(packet);
-    }
+        int newPosX = m_Pos[0] + dir[0];
+        int newPosY = m_Pos[1] + dir[1];
 
-    void Player::receivePacket(Packet &packet)
-    {
-        m_Socket.receive(packet);
-    }
-
-    void Player::sendPacket( NewPlayer &packet )
-    {
-        m_Socket.send(packet);
-    }
-
-    bool Player::applyMove(int dirX, int dirY, World &world)
-    {
-        int newPosX = m_Pos[0] + dirX;
-        int newPosY = m_Pos[1] + dirY;
-
-        if ( newPosY >= 0 && newPosY < World::MapSize-1 && newPosX >= 0 && newPosX < World::MapSize-1 && world.m_SquareWorld.isWalkable( {newPosX, newPosY} ) )
+        if ( newPosY >= 0 && static_cast<uint>(newPosY) < World::MapSize-1u && newPosX >= 0 && static_cast<uint>(newPosX) < World::MapSize-1u && world.m_SquareWorld.isWalkable( {newPosX, newPosY} ) )
         {
             world.setWalkableFromEntity(static_cast<redsquare::Entity*>(this), true);
             world.setTransparentFromEntity( static_cast<redsquare::Entity*>(this), true );
 
-            m_Pos[1] = newPosY;
-            m_Pos[0] = newPosX;
+            m_Pos += dir;
 
             world.setWalkableFromEntity(static_cast<redsquare::Entity*>(this), false);
             world.setTransparentFromEntity( static_cast<redsquare::Entity*>(this), false );
@@ -133,11 +133,6 @@ namespace redsquare
 
         return false;
     }
-
-    bool Player::playerDisconnected() const
-    {
-        return (m_Socket.getState() == SocketState::Disconnected);
-    }
     
     void Player::defaultInventoryStuff()
     {
@@ -149,83 +144,7 @@ namespace redsquare
                 ssize_t pos = m_Inventory.addItem(InventorySlotType::Weapon, std::move(item1));
                 if (pos != -1)
                 {
-                    Packet packet = createUpdateItemPacket(InventorySlotType::Weapon, false, pos);
-                    sendPacket(packet);
-                }
-
-                //Example how to spawn item in cargo slot
-                ServerItem item2(ItemType::HealthPot1, 1u);
-                pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item2));
-                if (pos != -1)
-                {
-                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                    sendPacket(packet);
-                }
-                //Example how to spawn item in cargo slot
-                ServerItem item3(ItemType::HealthPot2, 1u);
-                pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item3));
-                if (pos != -1)
-                {
-                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                    sendPacket(packet);
-                }
-
-                //Example how to spawn item in cargo slot
-                ServerItem item4(ItemType::HealthPot3, 1u);
-                pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item4));
-                if (pos != -1)
-                {
-                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                    sendPacket(packet);
-                }
-
-                //Example how to spawn item in cargo slot
-                ServerItem item5(ItemType::ManaPot1, 1u);
-                pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item5));
-                if (pos != -1)
-                {
-                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                    sendPacket(packet);
-                }
-                //Example how to spawn item in cargo slot
-                ServerItem item6(ItemType::ManaPot2, 1u);
-                pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item6));
-                if (pos != -1)
-                {
-                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                    sendPacket(packet);
-                }
-
-                //Example how to spawn item in cargo slot
-                ServerItem item7(ItemType::ManaPot3, 1u);
-                pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item7));
-                if (pos != -1)
-                {
-                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                    sendPacket(packet);
-                }
-                
-                //Example how to spawn item in cargo slot
-                ServerItem item8(ItemType::BoostDefense1, 1u);
-                pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item8));
-                if (pos != -1)
-                {
-                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                    sendPacket(packet);
-                }
-                ServerItem item9(ItemType::BoostDefense2, 1u);
-                pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item9));
-                if (pos != -1)
-                {
-                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                    sendPacket(packet);
-                }
-                ServerItem item10(ItemType::BoostDefense3, 1u);
-                pos = m_Inventory.addItem(InventorySlotType::Cargo, std::move(item10));
-                if (pos != -1)
-                {
-                    Packet packet = createUpdateItemPacket(InventorySlotType::Cargo, false, pos);
-                    sendPacket(packet);
+                    m_RedsquareInstance.send(m_EntityID, createUpdateItemPacket(InventorySlotType::Weapon, false, pos));
                 }
                 break;
             }
@@ -234,8 +153,7 @@ namespace redsquare
                 ssize_t pos = m_Inventory.addItem(InventorySlotType::Weapon, std::move(item1));
                 if (pos != -1)
                 {
-                    Packet packet = createUpdateItemPacket(InventorySlotType::Weapon, false, pos);
-                    sendPacket(packet);
+                    m_RedsquareInstance.send(m_EntityID, createUpdateItemPacket(InventorySlotType::Weapon, false, pos));
                 }
                 break;
             }
@@ -244,8 +162,7 @@ namespace redsquare
                 ssize_t pos = m_Inventory.addItem(InventorySlotType::Weapon, std::move(item1));
                 if (pos != -1)
                 {
-                    Packet packet = createUpdateItemPacket(InventorySlotType::Weapon, false, pos);
-                    sendPacket(packet);
+                    m_RedsquareInstance.send(m_EntityID, createUpdateItemPacket(InventorySlotType::Weapon, false, pos));
                 }
                 break;
             }
@@ -254,14 +171,14 @@ namespace redsquare
                 ssize_t pos = m_Inventory.addItem(InventorySlotType::Weapon, std::move(item1));
                 if (pos != -1)
                 {
-                    Packet packet = createUpdateItemPacket(InventorySlotType::Weapon, false, pos);
-                    sendPacket(packet);
+                    m_RedsquareInstance.send(m_EntityID, createUpdateItemPacket(InventorySlotType::Weapon, false, pos));
                 }
                 break;
             }
-                
+
+            default:
+                break;
         }
-        
     }
 
     void Player::levelUp(){ // method to level up a player
@@ -274,7 +191,9 @@ namespace redsquare
 
         m_AttackPoint += 2;
         m_DefensePoint += 2;
-
+        m_MaxDefensePoint += 2;
+        m_MaxAttackPoint += 2;
+ 
         m_XP = 0;
         m_MaxXP += 30;
 
@@ -285,21 +204,20 @@ namespace redsquare
         {
             case EntitySubType::Warrior:  
                 if(m_Level == 2){
-                    m_SpellTab.push_back(SpellType::DamageUp); // gain damage 
-                }else if(m_Level == 3){
                     m_SpellTab.push_back(SpellType::Massacre); // lifesteal attack
-                }else if(m_Level == 4){
-                    m_SpellTab.push_back(SpellType::Berserk); // gain damage and defense
-                }else if(m_Level == 5){
+                }else if(m_Level == 3){
                     m_SpellTab.push_back(SpellType::Revenge); // more damage the less life you have
-                }else if(m_Level == 6){
+                }else if(m_Level == 4){
                     m_SpellTab.push_back(SpellType::Reaper); // damage in front of you 
+                }else if(m_Level == 5){
+                    m_SpellTab.push_back(SpellType::ArmorUp); // gain armor
+                }else if(m_Level == 6){
+                    m_SpellTab.push_back(SpellType::Berserk); // gain damage and defense
                 }else if(m_Level == 7){
                     m_SpellTab.push_back(SpellType::Protection); // give armor to target
                 }else if(m_Level == 8){
-                   m_SpellTab.push_back(SpellType::ArmorUp); // gain armor
+                    m_SpellTab.push_back(SpellType::DamageUp); // gain damage
                 }
-                sendUpdateOfSpells();
                 break;
 
             case EntitySubType::Magus:
@@ -318,7 +236,6 @@ namespace redsquare
                 }else if(m_Level == 8){
                     m_SpellTab.push_back(SpellType::Revenge); // more damage the less life you have
                 }
-                sendUpdateOfSpells();
                 break;
 
             case EntitySubType::Rogue:  
@@ -335,14 +252,12 @@ namespace redsquare
                 }else if(m_Level == 8){
                     m_SpellTab.push_back(SpellType::Massacre); // lifesteal attack
                 }
-                sendUpdateOfSpells();
                 break;
 
             case EntitySubType::Ranger:  
                 if(m_Level == 2){
                     m_SpellTab.push_back(SpellType::Shoot);
                 }else if(m_Level == 3){
-                    //m_SpellTab.push_back(SpellType::RangeUp); too op for now
                     m_SpellTab.push_back(SpellType::Berserk); // gain damage and defense
                 }else if(m_Level == 4){
                     m_SpellTab.push_back(SpellType::Torpedo);
@@ -355,72 +270,27 @@ namespace redsquare
                 }else if(m_Level == 8){
                     m_SpellTab.push_back(SpellType::LightningStrike); // AOE
                 }
-                sendUpdateOfSpells();
                 break;
 
             case EntitySubType::Healer:  
                 if(m_Level == 2){
                     m_SpellTab.push_back(SpellType::Heal);
                 }else if(m_Level == 3){
-                    // m_SpellTab.push_back(SpellType::Massacre);
+                    m_SpellTab.push_back(SpellType::FireBall);
                 }else if(m_Level == 4){
-                    // m_SpellTab.push_back(SpellType::Berserk);
+                    m_SpellTab.push_back(SpellType::LightningStrike); // AOE
                 }else if(m_Level == 5){
-                    // m_SpellTab.push_back(SpellType::Scorch);
+                   m_SpellTab.push_back(SpellType::Incinerate);
                 }else if(m_Level == 6){
-                   // m_SpellTab.push_back(SpellType::DoubleStrike);
+                   m_SpellTab.push_back(SpellType::ArmorUp);
                 }else if(m_Level == 7){
-                   // m_SpellTab.push_back(SpellType::Massacre);
+                    m_SpellTab.push_back(SpellType::Protection);
                 }
-                sendUpdateOfSpells();
                 break;
 
             default: 
                 break;
         }
-    }
-
-    void Player::createCarPacket(Packet &packet) // create the packet of the caracteristic who will be send to player
-    {
-        packet.type = PacketType::EntityCar;
-        packet.entityCar.entityType = EntityType::Player;
-        packet.entityCar.entityID = getEntityID();
-
-        packet.entityCar.m_LifePoint = m_LifePoint;
-        packet.entityCar.m_ManaPoint = m_ManaPoint;
-
-        packet.entityCar.m_MaxLifePoint = m_MaxLifePoint;
-        packet.entityCar.m_MaxManaPoint = m_MaxManaPoint;
-
-        packet.entityCar.m_AttackPoint = m_AttackPoint;
-        packet.entityCar.m_DefensePoint = m_DefensePoint;
-
-        packet.entityCar.m_MaxAttackPoint = m_MaxAttackPoint;
-        packet.entityCar.m_MaxDefensePoint = m_MaxDefensePoint;
-
-        packet.entityCar.m_Range = m_Range;
-
-        packet.entityCar.m_XP = m_XP;
-        packet.entityCar.m_MaxXP= m_MaxXP;
-
-        packet.entityCar.m_Level = m_Level;
-    }
-
-    void Player::sendUpdateOfSpells()
-    {
-        Packet packet;
-        packet.type = PacketType::UpdateSpells;
-        std::fill(packet.updateSpells.spells, packet.updateSpells.spells + MAX_SPELL_PER_PLAYER, static_cast<SpellType>(0));
-
-        if (m_SpellTab.size() > MAX_SPELL_PER_PLAYER)
-        {
-            std::copy_n(m_SpellTab.begin(), MAX_SPELL_PER_PLAYER, packet.updateSpells.spells);
-        }
-        else
-        {
-            std::copy(m_SpellTab.begin(), m_SpellTab.end(), packet.updateSpells.spells);
-        }
-        sendPacket(packet);
     }
 
     void Player::playerSpawn(World &world, int playerSpawned){ // set spawn for a player 
@@ -460,9 +330,8 @@ namespace redsquare
         m_Inventory.setOwner(this);
     }
 
-    void Player::attack(SpellType spellType, ServerEntity *target){
-        m_PointInRound = 0;
-
+    void Player::attack(SpellType spellType, ServerEntity *target)
+    {
         switch (spellType)
         {
             case SpellType::BasicAttack:
@@ -530,14 +399,14 @@ namespace redsquare
 
     std::vector<Monster*> Player::attack(SpellType spellType, ServerEntity *target,std::map<gf::Id, Monster> &monsters)
     {
-        m_PointInRound = 0;
-
         switch (spellType){
             case SpellType::Reaper:
                 return Reaper(target,monsters);
                 break;
             case SpellType::LightningStrike:
                 return LightningStrike(target,monsters);
+                break;
+            default:
                 break;
         }
         std::vector<Monster*> empty;
@@ -656,12 +525,14 @@ namespace redsquare
 
         if(critical > 90){
             defense = m_DefensePoint / 2;
-            m_DefensePoint += defense;
+            m_MaxDefensePoint += defense;
+            m_DefensePoint = m_MaxDefensePoint;
             std::cout << " CRITICAL !!! " << std::endl;
             createSystemMessage(" CRITICAL",m_Name,m_Name);
         }else{
             defense = m_DefensePoint / 4;
-            m_DefensePoint += defense;
+            m_MaxDefensePoint += defense;
+            m_DefensePoint = m_MaxDefensePoint;
         }
 
         m_ManaPoint -= 5;
@@ -735,12 +606,12 @@ namespace redsquare
         int critical = rand() % 100;
         int heal;
         if(critical > 90){
-            heal = m_LifePoint / 5;
+            heal = m_LifePoint / 2;
             heal += Variance(-(heal / 10));
             std::cout << " CRITICAL !!! " << std::endl;
             createSystemMessage("CRITICAL !!!",m_Name,m_Name);
         }else{
-            heal = m_LifePoint / 10;
+            heal = m_LifePoint / 3;
             heal += Variance(-(heal / 15));
         }
 
@@ -799,13 +670,13 @@ namespace redsquare
         if(critical > 90){
             attack = m_AttackPoint / 5;
             attack += Variance(-(m_AttackPoint / 15));
-            m_AttackPoint += attack;
             m_MaxAttackPoint += attack;
+            m_AttackPoint = m_MaxAttackPoint;
         }else{
             attack = m_AttackPoint / 10;
             attack += Variance(-(m_AttackPoint / 15));
-            m_AttackPoint += attack;
             m_MaxAttackPoint += attack;
+            m_AttackPoint = m_MaxAttackPoint;
         }
 
         m_ManaPoint -= 5;
@@ -827,11 +698,13 @@ namespace redsquare
         if(critical > 90){
             defense = target->m_DefensePoint / 5;
             defense += Variance(-(target->m_DefensePoint / 15));
-            target->m_DefensePoint += defense;
+            target->m_MaxDefensePoint += defense;
+            target->m_DefensePoint = m_MaxDefensePoint;
         }else{
             defense = target->m_DefensePoint / 10;
             defense += Variance(-(target->m_DefensePoint / 15));
-            target->m_DefensePoint += defense;
+            target->m_MaxDefensePoint += defense;
+            target->m_DefensePoint = m_MaxDefensePoint;
         }
 
         m_ManaPoint -= 5;
@@ -882,17 +755,20 @@ namespace redsquare
 
         int critical = rand() % 100;
         int damage;
-        double currentHealth = (target->m_LifePoint / target->m_MaxLifePoint) * 2;
+        double currentHealth = (m_LifePoint)/25;
+        std::cout << "CURRENT HEALTH : " << currentHealth << std::endl;
         if(currentHealth == 0){
             currentHealth = 0.5;
         }
         if(critical > 90){
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) * currentHealth;
+            damage = ((m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint)*0.8) + currentHealth;
             damage *= 2;
             damage += Variance(-(damage / 10));
+            std::cout << "CRITICAL damage : " << damage << std::endl;
         }else{ 
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) * currentHealth;
+            damage = ((m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint)*0.8) + currentHealth;
             damage += Variance(-(damage / 10));
+            std::cout << "damage : " << damage << std::endl;
         }
         if(target->m_LifePoint - damage < 0){
             target->m_LifePoint = 0;
@@ -1527,6 +1403,10 @@ namespace redsquare
     }
     void Player::BoostDefense(float ratio){
         int defense = (m_MaxDefensePoint*ratio);
+        if(defense == 0){
+            defense = 1;
+        }
+        std::cout << " m_MaxDefensePoint +" << defense << std::endl;
         m_MaxDefensePoint += defense; 
         m_DefensePoint = m_MaxDefensePoint;
         std::string messToChat("");
@@ -1534,8 +1414,13 @@ namespace redsquare
         createSystemMessage(messToChat,m_Name,m_Name);
         std::cout << " m_MaxDefensePoint +" << defense << std::endl;
     }
+    
     void Player::BoostAttack(float ratio){
         int attack = (m_MaxAttackPoint*ratio);
+        if(attack == 0){
+            attack = 1;
+        }
+        std::cout << " m_MaxAttackPoint +" << attack << std::endl;
         m_MaxAttackPoint += attack;
         m_AttackPoint = m_MaxAttackPoint;
         std::string messToChat("");
@@ -1543,42 +1428,49 @@ namespace redsquare
         createSystemMessage(messToChat,m_Name,m_Name);
         std::cout << " m_MaxAttackPoint +" << attack << std::endl;
     }
+    
     void Player::BoostXP(float ratio){
         int XP = (m_MaxXP*ratio);
+        if(XP == 0){
+            XP = 1;
+        }
+        std::cout << " m_XP +" << XP << std::endl;
         m_XP += XP;
         if(m_XP > m_MaxXP){
             levelUp();
         }
-        std::string messToChat("");
-        messToChat = " m_XP +" + std::to_string(XP);
-        createSystemMessage(messToChat,m_Name,m_Name);
-        std::cout << " m_XP +" << XP << std::endl;
     }
     void Player::BoostMana(float ratio){
         int mana = (m_MaxManaPoint*ratio);
+        if(mana == 0){
+            mana = 1;
+        }
+        std::cout << " m_MaxManaPoint +" << mana << std::endl;
         m_MaxManaPoint += mana; 
-        m_ManaPoint = m_MaxManaPoint;
         std::string messToChat("");
         messToChat = " m_MaxManaPoint +" + std::to_string(mana);
         createSystemMessage(messToChat,m_Name,m_Name);
-        std::cout << " m_MaxManaPoint +" << mana << std::endl;
     }
     void Player::BoostHealth(float ratio){
         int health = (m_MaxLifePoint*ratio);
+        if(health == 0){
+            health = 1;
+        }
+        std::cout << " m_MaxLifePoint +" << health << std::endl;
         m_MaxLifePoint += health; 
         m_LifePoint = m_MaxLifePoint;
+
         std::string messToChat("");
         messToChat = " m_MaxLifePoint +" + std::to_string(health);
         createSystemMessage(messToChat,m_Name,m_Name);
-        std::cout << " m_MaxLifePoint +" << health << std::endl;
     }
 
-    void Player::sendMessageToChat(std::string str){
+    /*void Player::sendMessageToChat(std::string str){
         Message mess;
         int length = str.copy(mess.message,str.length());
         mess.message[length]='\0';
         m_Socket.send(mess);
-    }
+    }*/
 
     void Player::createSystemMessage(std::string message, std::string to, std::string name){
             std::cout<<message<<std::endl;
@@ -1598,6 +1490,41 @@ namespace redsquare
                 length = sys.copy(packet.to, sys.length());
                 packet.to[length]='\0';
             }
-            Chat::getInstance().sendMessage(packet);  
+            //Chat::getInstance().sendMessage(packet); */
+    }
+
+    void Player::onMovedItem(ServerItem &item, bool remove)
+    {
+        if (remove)
+        {
+            m_MaxAttackPoint -= item.m_GiveAttackPoint;
+            m_AttackPoint -= item.m_GiveAttackPoint;
+            m_MaxDefensePoint -= item.m_GiveDefensePoint;
+            m_DefensePoint -= item.m_GiveDefensePoint; 
+            m_MaxLifePoint -= item.m_GiveLifePoint;
+            m_LifePoint -= item.m_GiveLifePoint;
+
+            m_MaxManaPoint -= item.m_GiveManaPoint;
+            if (m_ManaPoint > m_MaxManaPoint)
+            {
+                m_ManaPoint = m_MaxManaPoint;
+            }
+        }
+        else
+        {
+            m_MaxAttackPoint += item.m_GiveAttackPoint;
+            m_AttackPoint += item.m_GiveAttackPoint;
+            m_MaxDefensePoint += item.m_GiveDefensePoint;
+            m_DefensePoint += item.m_GiveDefensePoint; 
+            m_MaxLifePoint += item.m_GiveLifePoint;
+            m_LifePoint += item.m_GiveLifePoint;
+            m_MaxManaPoint += item.m_GiveManaPoint;
+        }
+
+        RedsquareServerUpdateCharacteristic packet;
+        packet.entityType = getEntityType();
+        packet.id = getEntityID();
+        createCarPacket(packet.characteristics);
+        m_RedsquareInstance.broadcast(packet);
     }
 }

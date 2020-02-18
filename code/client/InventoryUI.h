@@ -17,12 +17,15 @@
 namespace redsquare
 {
     //Forward classes
-    class Game;
+    class GameScene;
+    class ClientNetwork;
     
     class InventoryUI
     {
     public:
-        InventoryUI(gf::Font &font, Game &game);
+        InventoryUI(gf::Font &font, GameScene &game, ClientNetwork &network);
+
+        void initialize();
 
         void update(gf::Time time);
 
@@ -32,12 +35,15 @@ namespace redsquare
 
         void setVinicityObject(ClientEntity *vinicityObject);
 
+        void inventoryHid();
+
     private:
+        ClientNetwork& m_Network;
     
         gf::MessageStatus onItemUpdateUI(gf::Id id, gf::Message *msg);
         gf::MessageStatus onMyPlayerReceived(gf::Id id, gf::Message *msg);
 
-        Game &m_Game;
+        GameScene &m_Game;
         gf::UI m_UI;
 
         Player *m_PlayerEntity;

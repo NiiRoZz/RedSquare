@@ -1,6 +1,9 @@
 #include "Hud.h"
+#include "Scenes.h"
+#include "GameScene.h"
 #include "../common/Singletons.h"
-#include "Game.h"
+#include "ClientNetwork.h"
+#include "../common/ImGuiConstants.h"
 
 #include <gf/Event.h>
 #include <gf/RenderWindow.h>
@@ -11,27 +14,41 @@
 #include <gf/Color.h>
 #include <gf/Text.h>
 #include <gf/Particles.h>
+#include <gf/Unused.h>
 #include <vector>
 
 namespace redsquare
 {
-    Hud::Hud(Game &game, gf::Font &font,char* port,char* hostname, gf::ExtendView &view,const char* name)
-    : m_Game(game)
-    , m_Chat(font,port,hostname,name)
-    , m_InventoryUI(font, game)
-    , m_MainMenu(font)
+    Hud::Hud(Scenes &scenes, GameScene &game, gf::Font &font, ClientNetwork &network)
+    : m_Scenes(scenes)
+    , m_Network(network)
+    , m_Game(game)
+    , m_Chat(network, game)
+    , m_InventoryUI(font, game, network)
     , m_Font(font)
-    , m_UI(font) 
-    , m_View(view)
+    , m_UI(font)
     , m_SpellWidgetHover(nullptr)
     , m_ShowMap(false)
     , m_ShowChat(true)
     , m_ShowHelp(false)
     , m_ShowInventory(false)
-    , m_PlayerDead(false)
+    , m_ShowEscape(false)
+    , m_QuitWidget("Back to Menu", m_Font)
+    , m_BackgroundTexture(gResourceManager().getTexture("img/Inventory/BorderSlot.png"))
+    , m_Background(m_BackgroundTexture)
     {
         gMessageManager().registerHandler<SpellUpdateMessage>(&Hud::onSpellUpdate, this);
-        gMessageManager().registerHandler<MyPlayerDeadMessage>(&Hud::onPlayerDeadUpdate, this);
+    }
+
+    void Hud::initialize()
+    {
+        m_SpellWidgetHover = nullptr;
+        m_ShowMap = false;
+        m_ShowChat = false;
+        m_ShowHelp = false;
+        m_ShowInventory = false;
+        m_ShowEscape = false;
+        m_InventoryUI.initialize();
     }
 
     static constexpr float HudSpellSize = 55.0f;
@@ -41,7 +58,7 @@ namespace redsquare
     {
         gf::Coordinates coordinates(target);
 
-        if (m_PlayerDead)
+        if (m_Game.playerDead())
         {
             gf::Text text;
             text.setFont(m_Font);
@@ -58,10 +75,21 @@ namespace redsquare
             text.setOutlineColor(gf::Color::Black);
             text.setOutlineThickness(coordinates.getRelativeSize({ 1.0f, 0.002f }).height);
             text.setCharacterSize(coordinates.getRelativeCharacterSize(0.045f));
-            text.setString("Floor : " + std::to_string(m_Game.m_Floor));
+            text.setString("Floor : " + std::to_string(m_Game.getCurrentFloor()));
             text.setAnchor(gf::Anchor::TopLeft);
             text.setPosition(coordinates.getRelativePoint({ 0.03f, 0.05f }));
             target.draw(text, states);
+
+            unsigned characterSize = coordinates.getRelativeCharacterSize(0.1f);
+            auto startPosition = coordinates.getRelativePoint({ 0.5f, 0.7f });
+            m_QuitWidget.setCharacterSize(characterSize);
+            m_QuitWidget.setAnchor(gf::Anchor::Center);
+            m_QuitWidget.setPosition(startPosition);
+            m_QuitWidget.setDefaultTextColor(gf::Color::White);
+            m_QuitWidget.setDefaultTextOutlineColor(gf::Color::Black);
+            m_QuitWidget.setSelectedTextOutlineColor(gf::Color::Black);
+            m_QuitWidget.setTextOutlineThickness(characterSize * 0.05f);
+            target.draw(m_QuitWidget, states);
         }
         else
         {
@@ -70,7 +98,7 @@ namespace redsquare
             {
                 gf::Vector2f baseCoordinatesMiniMap = coordinates.getRelativePoint({ 0.03f, 0.1f });
                 gf::Vector2f miniMapShapeSize = coordinates.getRelativeSize({ 0.001953125f, 0.003472222f });
-                Player *myPlayer = m_Game.getMyPlayer();
+                Player *myPlayer = m_Game.getEntities().getPlayer(m_Scenes.myPlayerId);
                 gf::ShapeParticles shapeParticles;
 
                 for(uint i = 0; i < World::MapSize; ++i)
@@ -100,7 +128,7 @@ namespace redsquare
 
                         if (draw)
                         {
-                            Player *playerAtPos = m_Game.getPlayer({(int)i,(int)j});
+                            Player *playerAtPos = m_Game.getEntities().getPlayer({(int)i,(int)j});
                             if (playerAtPos != nullptr)
                             {
                                 if (playerAtPos != myPlayer)
@@ -127,7 +155,7 @@ namespace redsquare
             text.setOutlineColor(gf::Color::White);
             text.setOutlineThickness(coordinates.getRelativeSize({ 1.0f, 0.002f }).height);
             text.setCharacterSize(coordinates.getRelativeCharacterSize(0.045f));
-            text.setString("Floor : " + std::to_string(m_Game.m_Floor));
+            text.setString("Floor : " + std::to_string(m_Game.getCurrentFloor()));
             text.setAnchor(gf::Anchor::TopLeft);
             text.setPosition(coordinates.getRelativePoint({ 0.03f, 0.05f }));
             target.draw(text, states);
@@ -140,7 +168,7 @@ namespace redsquare
             target.draw(text, states);
 
             //Draw it's your turn
-            if (m_Game.m_CanPlay)
+            if (m_Game.canPlay())
             {
                 gf::Text text;
                 text.setFont(m_Font);
@@ -166,7 +194,7 @@ namespace redsquare
                 target.draw(it, states);
                 x += 1.2;
                 
-                if(it.m_SpellType == m_Game.m_CurrentSpell)
+                if( it.m_SpellType == m_Game.m_CurrentSpell )
                 {
                     gf::Sprite sprite;
                     sprite.setTexture( gResourceManager().getTexture("img/SpellIcon/frame-9-red.png") );
@@ -174,7 +202,6 @@ namespace redsquare
                     sprite.setScale(scale);
                     target.draw(sprite, states);
                 }
-
 
                 if ( index % 4 == 0 )
                 {
@@ -185,93 +212,85 @@ namespace redsquare
                 index++;
             }
 
-            if (m_SpellWidgetHover != nullptr)
+            if (m_SpellWidgetHover != nullptr && !m_ShowHelp && !m_ShowInventory)
             {
-                gf::Vector2f DescriptionWindowSize=coordinates.getRelativeSize({ 0.4f,0.2f });
-
                 std::string desc = m_SpellWidgetHover->m_Description;
                 std::string cost = m_SpellWidgetHover->m_ManaCost;
+                std::string name = m_SpellWidgetHover->m_SpellName;
 
-                if( m_UI.begin("Description", gf::RectF::fromPositionSize(coordinates.getRelativePoint({ 0.40f,0.55f }),DescriptionWindowSize), gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
-                {   
-                    m_UI.setCharacterSize(coordinates.getRelativeCharacterSize(0.025f));
-                    m_UI.layoutRowDynamic(coordinates.getRelativeCharacterSize(0.03f), 1);
-                    m_UI.label("! Spell need to be selected before using it !");
-                    m_UI.layoutRowDynamic(coordinates.getRelativeCharacterSize(0.04f), 1);
-                    m_UI.label("Mana cost: " + cost);
-                    m_UI.label(desc);
-                    m_UI.end();
-                }
-                target.draw(m_UI);
+                gf::Vector2f SpellDescriptionWindowSize = coordinates.getRelativeSize({0.5f,0.22f });
+                gf::Vector2f SpellDescriptionWindowPos = coordinates.getRelativePoint({ 0.3f,0.6f });
+                ImGui::SetNextWindowSize(ImVec2(SpellDescriptionWindowSize[0], SpellDescriptionWindowSize[1]));
+                ImGui::SetNextWindowPos(ImVec2(SpellDescriptionWindowPos[0], SpellDescriptionWindowPos[1]));
+
+                ImGui::Begin("Spell desciption", nullptr, DefaultWindowFlags);
+                ImVec2 charP=ImGui::GetWindowSize();
+                std::string text= "! Spell need to be selected before using it ! | Mana cost: " + cost + "\n\n" + name + ": \n"+ desc ;
+                ImGui::TextWrapped(text.c_str());
+                ImGui::SetWindowFontScale(charP[0]/500);
+                ImGui::End();
             }
 
             if (m_ShowChat)
             {
-                m_Chat.render(target, states);
+                m_Chat.display(coordinates);
             }
 
             if (m_ShowHelp) 
             {
-                
-                gf::Coordinates coordinates(target);
-                gf::Vector2f DescriptionWindowSize=coordinates.getRelativeSize({ 0.4f,0.3f });
-                if( m_UI.begin("Help", gf::RectF::fromPositionSize(coordinates.getRelativePoint({ 0.60f,0.6f }),DescriptionWindowSize), gf::UIWindow::Title|gf::UIWindow::NoScrollbar))
-                {   
-                    m_UI.setCharacterSize(coordinates.getRelativeCharacterSize(0.024f));
-                    m_UI.layoutRowDynamic(coordinates.getRelativeCharacterSize(0.024f), 1);
-                    m_UI.label("Escape -> Close the game");
-                    m_UI.label("C -> Hide/Chat");
-                    m_UI.label("I -> Inventory/Hide");
-                    m_UI.label("F -> Fullscreen");
-                    m_UI.label("M -> Map/Hide");
-                    m_UI.label("Spell description : pass your mouse hover spells icons");
-                    m_UI.layoutRowDynamic(coordinates.getRelativeCharacterSize(0.024f), 2);
-                    m_UI.label("Spell Shortcuts");
-                    m_UI.label(" 1 2 3 4 ");
-                    m_UI.layoutRowDynamic(coordinates.getRelativeCharacterSize(0.024f), 2);
-                    m_UI.label("");
-                    m_UI.label(" 5 6 7 8 ");
-                    m_UI.end();
-                }
-                target.draw(m_UI);
+                gf::Vector2f DescriptionWindowSize = coordinates.getRelativeSize({0.4f,0.3f });
+                gf::Vector2f DescriptionWindowPos = coordinates.getRelativePoint({ 0.6f,0.6f });
+                ImGui::SetNextWindowSize(ImVec2(DescriptionWindowSize[0], DescriptionWindowSize[1]));
+                ImGui::SetNextWindowPos(ImVec2(DescriptionWindowPos[0], DescriptionWindowPos[1]));
+
+                ImGui::Begin("Help Menu", nullptr, DefaultWindowFlags);
+                ImVec2 charP=ImGui::GetWindowSize();
+                std::string text= "Escape -> Echap menu \n C -> Hide/Chat \n I -> Inventory/Hide \n F -> Fullscreen \n M -> Map/Hide \n Spell description : pass your mouse hover spells icons \n Spell selection : click on it or press number touch ";
+                ImGui::TextWrapped(text.c_str());
+                ImGui::SetWindowFontScale(charP[0]/470);
+                ImGui::End();
             }
 
             if (m_ShowInventory)
             {
                 m_InventoryUI.render(target, states);
             }
+
+            if(m_ShowEscape)
+            {
+                gf::Vector2f InventoryWindowSize = coordinates.getRelativeSize({ 1.0f, 1.0f });
+                m_Background.setScale({InventoryWindowSize[0],InventoryWindowSize[1]});
+                
+                unsigned characterSize = coordinates.getRelativeCharacterSize(0.095f);
+                auto startPosition = coordinates.getRelativePoint({ 0.5f, 0.5f });
+                m_QuitWidget.setCharacterSize(characterSize);
+                m_QuitWidget.setAnchor(gf::Anchor::Center);
+                m_QuitWidget.setPosition(startPosition);
+                m_QuitWidget.setDefaultTextColor(gf::Color::White);
+                m_QuitWidget.setDefaultTextOutlineColor(gf::Color::Black);
+                m_QuitWidget.setSelectedTextOutlineColor(gf::Color::Black);
+                m_QuitWidget.setTextOutlineThickness(characterSize * 0.05f);
+
+                target.draw( m_Background, states );
+                target.draw( m_QuitWidget, states );
+            }
         }
-        m_MainMenu.render(target,states);
     }
 
     void Hud::update(gf::Time time)
     {
-        if (m_ShowChat)
-        {
-            m_Chat.update(time);
-        }
-
         if (m_ShowInventory)
         {
             m_InventoryUI.update(time);
         }
-
-        m_MainMenu.update(time);
     }
 
     void Hud::processEvent(const gf::Event &event)
     {
-        if (m_ShowChat)
-        {
-            m_Chat.processEvent(event);
-        }
-
         if (m_ShowInventory)
         {
             m_InventoryUI.processEvent(event);
         }
-        
-        m_MainMenu.processEvent(event);
 
         if (event.type == gf::EventType::MouseMoved)
         {
@@ -292,15 +311,48 @@ namespace redsquare
                 m_SpellWidgetHover = nullptr;
                 m_MouseHoverPostionOnSpell = {0,0};
             }
+
+            if ((m_ShowEscape || m_Game.playerDead()) && m_QuitWidget.contains(event.mouseCursor.coords))
+            {
+                m_QuitWidget.setState(gf::WidgetState::Selected);
+            }
+            else if ((m_ShowEscape || m_Game.playerDead()))
+            {
+                m_QuitWidget.setState(gf::WidgetState::Default);
+            }
+        }
+        else if (event.type == gf::EventType::MouseButtonPressed && event.mouseButton.button == gf::MouseButton::Left)
+        {
+            if ((m_ShowEscape || m_Game.playerDead()) && m_QuitWidget.contains(event.mouseButton.coords))
+            {
+                m_ShowEscape = false;
+                if (m_Network.isConnected())
+                {
+                    m_Network.disconnect();
+                }
+                m_Scenes.replaceScene(m_Scenes.mainMenu, m_Scenes.glitchEffect, gf::seconds(0.4f));
+            }
+
+            int index = 1;
+            for(auto &it: m_SpellsWidgets)
+            {
+                if (it.contains(event.mouseButton.coords))
+                {
+                    m_Game.changeSpell(index);
+                    break;
+                }
+
+                index++;
+            }
         }
     }
 
-    bool Hud::hoveringChat()
+    bool Hud::hoveringChat() const
     {
-        return m_Chat.m_HoveringChat;
+        return m_Chat.hoveringChat();
     }
 
-    bool Hud::shownInventory()
+    bool Hud::shownInventory() const
     {
         return m_ShowInventory;
     }
@@ -323,18 +375,9 @@ namespace redsquare
         {
             if (*it != SpellType::Unknow)
             {
-                m_SpellsWidgets.emplace_back(std::move(redsquare::SpellWidget(*it)));
+                m_SpellsWidgets.push_back(std::move(redsquare::SpellWidget(*it)));
             }
         }
-
-        return gf::MessageStatus::Keep;
-    }
-
-    gf::MessageStatus Hud::onPlayerDeadUpdate(gf::Id id, gf::Message *msg)
-    {
-        assert(id == MyPlayerDeadMessage::type);
-
-        m_PlayerDead = true;
 
         return gf::MessageStatus::Keep;
     }
@@ -346,10 +389,7 @@ namespace redsquare
 
     void Hud::showChat()
     {
-        if (!m_ShowInventory)
-        {
-            m_ShowChat = !m_ShowChat;
-        }
+        m_ShowChat = !m_ShowChat;
     }
 
     void Hud::showHelp()
@@ -364,11 +404,32 @@ namespace redsquare
         if (!m_ShowInventory)
         {
             m_InventoryUI.setVinicityObject(nullptr);
+            m_InventoryUI.inventoryHid();
         }
+    }
+
+    void Hud::showEscape()
+    {
+        m_ShowEscape = !m_ShowEscape;
+    }
+
+    bool Hud::escapeOpen() const
+    {
+        return m_ShowEscape;
     }
 
     InventoryUI& Hud::getInventoryUI()
     {
         return m_InventoryUI;
+    }
+
+    bool Hud::hoveringSpellWidgets() const
+    {
+        return (m_SpellWidgetHover != nullptr);
+    }
+
+    GameChat& Hud::getChat()
+    {
+        return m_Chat;
     }
 }

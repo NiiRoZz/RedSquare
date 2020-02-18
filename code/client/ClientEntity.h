@@ -3,13 +3,17 @@
 
 #include "../common/Entity.h"
 #include "Inventory.h"
-
 #include <gf/Entity.h>
+#include <gf/Texture.h>
+#include <gf/Animation.h>
 
 namespace redsquare
 {
-    class ClientEntity: public gf::Entity, public redsquare::Entity
+    class ClientEntity: public redsquare::Entity
     {
+    public:
+        static gf::Texture* loadTexture(const EntitySubType entitySubType);
+
     public:
         ClientEntity( gf::Id entityID, const EntityType entityType, const EntitySubType entitySubType );
 
@@ -17,12 +21,15 @@ namespace redsquare
 
         gf::Texture* getEntityTexture() const;
 
+        void loadCharacteristic(EntityCharacteristicData &characteristics);
+
+        void loadAnimation( gf::Path pathTextureAnimated, int line, int startFramePos, int nmbFrames, float frameDuration);
+
     protected:
         Inventory m_Inventory;
         gf::Texture* m_EntityTexture;
-
-    private:
-        gf::Texture* loadTexture() const;
+        bool m_Animated;
+        gf::Animation m_Animation;
     };
 }
 

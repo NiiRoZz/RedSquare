@@ -14,7 +14,7 @@
 namespace redsquare
 {
     // forward class
-    class Game;
+    class GameScene;
 
     class Player: public ClientEntity
     {
@@ -26,20 +26,22 @@ namespace redsquare
         int m_Max_XP;
         /* Characteristic*/
 
-        std::array<SpellType, MAX_SPELL_PER_PLAYER> m_SpellTab;
+        std::vector<SpellType> m_SpellTab;
         
         Player( gf::Id entityID, EntitySubType entitySubType, gf::Vector2i pos );
 
-        virtual void update(gf::Time time) override;
+        void render(gf::RenderTarget& target, const gf::RenderStates& states);
 
-        virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
+        bool canAttack( gf::Vector2i targetPos, GameScene &game);
+        bool canMove( gf::Vector2i targetPos, gf::SquareMap &map );
+        bool canOpenTargetInventory( gf::Vector2i targetPos, GameScene &game);
+        void update(gf::Time time);
 
-        bool canAttack( gf::Vector2i targetPos, Game &game);
-        bool canMove( gf::Vector2i targetPos, std::map<gf::Id, Player> &players, std::map<gf::Id, Monster> &monsters, std::map<gf::Id, Prop> &props, gf::SquareMap &map );
-        bool canOpenTargetInventory( gf::Vector2i targetPos, Game &game);
+        std::string getName() const;
 
     private:
         gf::Font &m_Font;
+        std::string m_Name;
 
     };
 }

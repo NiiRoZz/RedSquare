@@ -284,49 +284,49 @@ namespace redsquare
                 break;
 
             case ItemType::Chesplate1: 
-                return gResourceManager().getTexture("img/Item/Chesplate/Chesplate1.png");
+                return gResourceManager().getTexture("img/Item/Chestplate/Chestplate1.png");
                 break;
             case ItemType::Chesplate2: 
-                return gResourceManager().getTexture("img/Item/Chesplate/Chesplate2.png");
+                return gResourceManager().getTexture("img/Item/Chestplate/Chestplate2.png");
                 break;
             case ItemType::Chesplate3: 
-                return gResourceManager().getTexture("img/Item/Chesplate/Chesplate3.png");
+                return gResourceManager().getTexture("img/Item/Chestplate/Chestplate3.png");
                 break;
             case ItemType::Chesplate4: 
-                return gResourceManager().getTexture("img/Item/Chesplate/Chesplate4.png");
+                return gResourceManager().getTexture("img/Item/Chestplate/Chestplate4.png");
                 break;
             case ItemType::Chesplate5: 
-                return gResourceManager().getTexture("img/Item/Chesplate/Chesplate5.png");
+                return gResourceManager().getTexture("img/Item/Chestplate/Chestplate5.png");
                 break;
             case ItemType::Chesplate6: 
-                return gResourceManager().getTexture("img/Item/Chesplate/Chesplate6.png");
+                return gResourceManager().getTexture("img/Item/Chestplate/Chestplate6.png");
                 break;
             case ItemType::Chesplate7: 
-                return gResourceManager().getTexture("img/Item/Chesplate/Chesplate7.png");
+                return gResourceManager().getTexture("img/Item/Chestplate/Chestplate7.png");
                 break;
             case ItemType::Chesplate8: 
-                return gResourceManager().getTexture("img/Item/Chesplate/Chesplate8.png");
+                return gResourceManager().getTexture("img/Item/Chestplate/Chestplate8.png");
                 break;
             case ItemType::Chesplate9: 
-                return gResourceManager().getTexture("img/Item/Chesplate/Chesplate9.png");
+                return gResourceManager().getTexture("img/Item/Chestplate/Chestplate9.png");
                 break;
             case ItemType::Chesplate10: 
-                return gResourceManager().getTexture("img/Item/Chesplate/Chesplate10.png");
+                return gResourceManager().getTexture("img/Item/Chestplate/Chestplate10.png");
                 break;
             case ItemType::Chesplate11: 
-                return gResourceManager().getTexture("img/Item/Chesplate/Chesplate11.png");
+                return gResourceManager().getTexture("img/Item/Chestplate/Chestplate11.png");
                 break;
             case ItemType::Chesplate12: 
-                return gResourceManager().getTexture("img/Item/Chesplate/Chesplate12.png");
+                return gResourceManager().getTexture("img/Item/Chestplate/Chestplate12.png");
                 break;
             case ItemType::Chesplate13: 
-                return gResourceManager().getTexture("img/Item/Chesplate/Chesplate13.png");
+                return gResourceManager().getTexture("img/Item/Chestplate/Chestplate13.png");
                 break;
             case ItemType::Chesplate14: 
-                return gResourceManager().getTexture("img/Item/Chesplate/Chesplate14.png");
+                return gResourceManager().getTexture("img/Item/Chestplate/Chestplate14.png");
                 break;
             case ItemType::Chesplate15: 
-                return gResourceManager().getTexture("img/Item/Chesplate/Chesplate15.png");
+                return gResourceManager().getTexture("img/Item/Chestplate/Chestplate15.png");
                 break;
 
             case ItemType::Legging1: 
@@ -504,9 +504,18 @@ namespace redsquare
             case ItemType::BoostXP3: 
                 return gResourceManager().getTexture("img/Item/Consumables/Potion/BoostXP/BoostXP3.png");
                 break;
+            default:
+                break;
         }
 
-        return gResourceManager().getTexture("img/attackCursor.png");
+        return gResourceManager().getTexture("img/Cursor/attackCursor.png");
+    }
+
+    ClientItem::ClientItem()
+    : Item(ItemType::Unknow, 1u)
+    , m_Icon(ClientItem::getTexture(ItemType::Unknow))
+    {
+
     }
 
     ClientItem::ClientItem(ItemType type, uint8_t slotMask, uint baseFloor)

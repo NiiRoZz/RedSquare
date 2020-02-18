@@ -5,23 +5,29 @@
 #include <gf/Shapes.h>
 #include <gf/Sprite.h>
 #include <gf/RenderTarget.h>
+#include <gf/Animation.h>
+#include <gf/AnimatedSprite.h>
 #include <gf/Color.h>
 #include <gf/Text.h>
 
-#include "Game.h"
+#include "GameScene.h"
 
 namespace redsquare
 {
     Player::Player( gf::Id entityID, EntitySubType entitySubType, gf::Vector2i pos )
     : ClientEntity(entityID, EntityType::Player, entitySubType)
+    , m_ManaPoint(0)
+    , m_MaxManaPoint(0)
+    , m_XP(0)
+    , m_Max_XP(0)
     , m_Font(gResourceManager().getFont("font/arial.ttf"))
     {
         m_Pos = pos;
-        m_Max_XP = 0;
     }
 
     void Player::render(gf::RenderTarget& target, const gf::RenderStates& states)
     {
+        
         static constexpr gf::Vector2f BarSize = { 20.0f, 3.0f } ;
         static constexpr gf::Vector2f BarSize2 = { 20.0f, 1.5f } ;
         static constexpr gf::Vector2f BarOffset = { 2.0f, 6.0f };
@@ -30,12 +36,21 @@ namespace redsquare
         static constexpr gf::Vector2f BarOffsetMana2 = { 2.0f, 3.0f };
         static constexpr gf::Vector2f BarOffsetXp = { 4.0f, 4.0f };
 
-        gf::Sprite sprite;
+        if (m_Animated){
+            gf::AnimatedSprite animated;
+            animated.setAnimation(m_Animation);
+            animated.setPosition(m_Pos * World::TileSize);
+            animated.setScale(1.0f);
+            
+            target.draw(animated, states);
+        }else{
+            gf::Sprite sprite;
 
-        sprite.setPosition( m_Pos * World::TileSize );
-        sprite.setScale( 1 );
-        sprite.setTexture( *m_EntityTexture );
-        target.draw(sprite, states);
+            sprite.setPosition( m_Pos * World::TileSize );
+            sprite.setScale( 1 );
+            sprite.setTexture( *m_EntityTexture );
+            target.draw(sprite, states);
+        }
         
         gf::Color4f color(255,0,0,174);
         gf::RectangleShape bar;
@@ -74,7 +89,6 @@ namespace redsquare
         bar2.setAnchor(gf::Anchor::TopLeft);
         target.draw(bar2, states);
 
-
         gf::Text m_lvl;
         m_lvl.setCharacterSize(8);
         m_lvl.setColor(gf::Color::Black);
@@ -85,12 +99,7 @@ namespace redsquare
         target.draw(m_lvl, states);
     }
 
-    void Player::update(gf::Time time)
-    {
-        //Do something
-    }
-
-    bool Player::canAttack(gf::Vector2i targetPos, Game &game)
+    bool Player::canAttack(gf::Vector2i targetPos, GameScene &game)
     {
         gf::Distance2<int> distFn = gf::manhattanDistance<int, 2>;
 
@@ -107,7 +116,7 @@ namespace redsquare
                 if ( isInsideMe(targetPos) ){
                     return true;
                 }
-                if( game.getPlayer(targetPos) != nullptr){
+                if( game.getEntities().getPlayer(targetPos) != nullptr){
                     return true;
                 }
                 break;
@@ -115,7 +124,7 @@ namespace redsquare
                 if ( isInsideMe(targetPos) ){
                     return true;
                 }
-                if( game.getPlayer(targetPos) != nullptr){
+                if( game.getEntities().getPlayer(targetPos) != nullptr){
                     return true;
                 }
                 break;
@@ -123,7 +132,7 @@ namespace redsquare
                 if ( isInsideMe(targetPos) ){
                     return true;
                 }
-                if( game.getPlayer(targetPos) != nullptr){
+                if( game.getEntities().getPlayer(targetPos) != nullptr){
                     return true;
                 }
                 break;
@@ -131,7 +140,7 @@ namespace redsquare
                 if ( isInsideMe(targetPos) ){
                     return true;
                 }
-                if( game.getPlayer(targetPos) != nullptr){
+                if( game.getEntities().getPlayer(targetPos) != nullptr){
                     return true;
                 }
                 break;
@@ -139,7 +148,7 @@ namespace redsquare
                 if ( isInsideMe(targetPos) ){
                     return true;
                 }
-                if( game.getPlayer(targetPos) != nullptr){
+                if( game.getEntities().getPlayer(targetPos) != nullptr){
                     return true;
                 }
                 break;
@@ -164,107 +173,43 @@ namespace redsquare
             return false;
         }
 
-        auto it = game.m_Monsters.begin();
-
-        while ( it != game.m_Monsters.end() )
+        if (game.getEntities().getMonster(targetPos) != nullptr)
         {
-            if ( it->second.isInsideMe( targetPos ) )
-            {
-                return true;
-            }
-
-            ++it;
+            return true;
         }
 
-        auto it2 = game.m_Props.begin();
- 
-        while ( it2 != game.m_Props.end() )
+        if (game.getEntities().getProp(targetPos, false) != nullptr)
         {
-            if ( it2->second.isInsideMe( targetPos ) && !(it2->second.haveInventory()) )
-            {
-                return true;
-            }
-
-            ++it2;
+            return true;
         }
 
         return false;
     }
 
-    bool Player::canMove(gf::Vector2i targetPos, std::map<gf::Id, Player> &players, std::map<gf::Id, Monster> &monsters, std::map<gf::Id, Prop> &props, gf::SquareMap &map)
+    bool Player::canMove(gf::Vector2i targetPos, gf::SquareMap &map)
     {
         if ( m_Pos == targetPos || targetPos[0] < 0 || targetPos[1] < 0 )
         {
             return false;
         }
 
-        auto it = players.begin();
- 
-        while ( it != players.end() )
-        {
-            if ( it->second.isInsideMe( targetPos ) )
-            {
-                return false;
-            }
-
-            ++it;
-        }
-
-        auto it2 = monsters.begin();
- 
-        while ( it2 != monsters.end() )
-        {
-            if ( it2->second.isInsideMe( targetPos ) )
-            {
-                return false;
-            }
-
-            ++it2;
-        }
-
-        auto it3 = props.begin();
- 
-        while ( it3 != props.end() )
-        {
-            if ( it3->second.isInsideMe( targetPos ) )
-            {
-                return false;
-            }
-
-            ++it3;
-        }
-
         return map.isWalkable( targetPos );
     }
 
-    bool Player::canOpenTargetInventory(gf::Vector2i targetPos, Game &game)
+    bool Player::canOpenTargetInventory(gf::Vector2i targetPos, GameScene &game)
     {
         gf::Distance2<int> distFn = gf::manhattanDistance<int, 2>;
 
         float distance = distFn(m_Pos, targetPos);
 
-        if ( distance > m_Range )
+        return (distance <= m_Range && !(isInsideMe(targetPos)) && game.getEntities().getProp(targetPos, true) != nullptr);
+    }
+
+    void Player::update(gf::Time time)
+    {
+        if (m_Animated)
         {
-            return false;
+            m_Animation.update(time);
         }
-
-        if ( isInsideMe(targetPos) )
-        {
-            return false;
-        }
-
-        auto it = game.m_Props.begin();
- 
-        while ( it != game.m_Props.end() )
-        {
-            if ( it->second.isInsideMe( targetPos ) && it->second.haveInventory() )
-            {
-                return true;
-            }
-
-            ++it;
-        }
-
-        return false;
     }
 }

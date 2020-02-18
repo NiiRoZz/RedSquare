@@ -1,10 +1,9 @@
 #ifndef REDSQUARE_SERVER_PLAYER_H
 #define REDSQUARE_SERVER_PLAYER_H
 
-#include "../common/Sockets.h"
 #include "ServerEntity.h"
 #include "Monster.h"
-#include "../common/Packet.h"
+#include "../common/ProtocolData.h"
 #include "Inventory.h"
 
 #include <gf/Queue.h>
@@ -16,7 +15,7 @@ namespace redsquare
 {
     // forward class
     class Game;
-    class World;
+    class RedsquareInstance;
 
     class Player: public ServerEntity
     {
@@ -32,21 +31,12 @@ namespace redsquare
         SpellType m_CurrentSpell;
         std::vector<SpellType> m_SpellTab;
 
-        uint8_t m_PointInRound;
-        bool m_MovedInRound;
-
-        virtual void createCarPacket(Packet &packet) override;
+        bool m_PlayerTurn;
         
-        Player(SocketTcp socket, gf::Id playerID, const EntitySubType entitySubType, std::string name);
+        Player(gf::Id playerID, const EntitySubType entitySubType, const std::string name, RedsquareInstance &instance);
 
-        void sendPacket(Packet &packet);
-        void receivePacket(Packet &packet);
+        bool applyMove( gf::Vector2i dir, World &world );
 
-        void sendPacket(NewPlayer &packet);
-
-        bool applyMove( int dirX, int dirY,World &world );
-
-        bool playerDisconnected() const;
         void spawn();
 
         void attack(SpellType spellType, ServerEntity *target);
@@ -61,7 +51,9 @@ namespace redsquare
         virtual void defaultInventoryStuff() override;
         void UseItem(ItemType type);
 
-        void sendMessageToChat(std::string str);
+        void onMovedItem(ServerItem &item, bool remove);
+
+        //void sendMessageToChat(std::string str);
 
     private:
         void BasicAttack(ServerEntity *target); // DONE
@@ -95,8 +87,10 @@ namespace redsquare
         void BoostHealth(float ratio);
         void BoostXP(float ratio);
         void createSystemMessage(std::string message, std::string to,std::string name);
+
+    private:
+        RedsquareInstance &m_RedsquareInstance;
         std::string m_Name;
-        SocketTcp m_Socket;
     };
 }
 

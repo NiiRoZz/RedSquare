@@ -82,7 +82,7 @@ namespace redsquare
         return nullptr;
     }
 
-    bool Inventory::removeItem(InventorySlotType slotType, uint pos)
+    ClientItem Inventory::removeItem(InventorySlotType slotType, uint pos)
     {
         ItemUpdateUIMessage message;
         message.entityID = m_OwnerID;
@@ -95,11 +95,12 @@ namespace redsquare
             auto it = m_CargoItems.find(pos);
             if (it != m_CargoItems.end())
             {
+                ClientItem item = std::move(it->second);
                 m_CargoItems.erase(it);
 
                 gMessageManager().sendMessage(&message);
 
-                return true;
+                return item;
             }
         }
         else
@@ -107,60 +108,15 @@ namespace redsquare
             auto it = m_SpecialItems.find(slotType);
             if (it != m_SpecialItems.end())
             {
+                ClientItem item = std::move(it->second);
                 m_SpecialItems.erase(it);
 
                 gMessageManager().sendMessage(&message);
 
-                return true;
+                return item;
             }
         }
 
-        return false;
-    }
-
-    bool Inventory::moveItem(MoveItem moveItem)
-    {
-        ItemUpdateUIMessage messageOldSlot;
-        messageOldSlot.entityID = m_OwnerID;
-        messageOldSlot.itemRemoved = true;
-        messageOldSlot.slotType = moveItem.oldSlotType;
-        messageOldSlot.slotPos = moveItem.oldPos;
-
-        if (moveItem.oldSlotType == InventorySlotType::Cargo)
-        {
-            auto oldIt = m_CargoItems.find(moveItem.oldPos);
-            if (oldIt != m_CargoItems.end())
-            {
-                ClientItem item = std::move(oldIt->second);
-
-                gMessageManager().sendMessage(&messageOldSlot);
-
-                m_CargoItems.erase(oldIt);
-
-                if ( addItem(moveItem.newSlotType, std::move(item), moveItem.newPos) )
-                {
-                    return true;
-                }
-            }
-        }
-        else
-        {
-            auto oldIt = m_SpecialItems.find(moveItem.oldSlotType);
-            if (oldIt != m_SpecialItems.end())
-            {
-                ClientItem item = std::move(oldIt->second);
-
-                gMessageManager().sendMessage(&messageOldSlot);
-
-                m_SpecialItems.erase(oldIt);
-
-                if ( addItem(moveItem.newSlotType, std::move(item), moveItem.newPos) )
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return ClientItem();
     }
 }

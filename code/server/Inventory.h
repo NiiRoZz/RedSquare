@@ -4,21 +4,23 @@
 #include "ServerItem.h"
 
 #include <sys/types.h>
+#include <map>
 
 namespace redsquare
 {
     //Forwad classes
-    class ServerEntity;
+    class Player;
 
     class Inventory
     {
     public:
         Inventory();
 
-        void setOwner(ServerEntity *owner);
+        void setOwner(Player *owner);
 
         //Add the item at the first slot possible if it's == cargo, return >= 0 if succes or -1 if not
         ssize_t addItem(InventorySlotType slotType, ServerItem &&item);
+        ssize_t addItemRandom(InventorySlotType slotType, ServerItem &&item);
         bool addItem(InventorySlotType slotType, ServerItem &&item, uint pos);
 
         //pos is used only if slotType == Cargo
@@ -27,8 +29,6 @@ namespace redsquare
         //pos is used only if slotType == Cargo, nullptr if Item doesn't exist
         ServerItem* getItem(InventorySlotType slotType, uint pos = 0u);
 
-        bool moveItem(MoveItem moveItem);
-
     private:
         const uint RowCargoSlotNmb = 6;
         const uint ColumnCargoSlotNmb = 10;
@@ -36,7 +36,7 @@ namespace redsquare
 
         std::map<InventorySlotType, ServerItem> m_SpecialItems;
         
-        ServerEntity *m_Owner;
+        Player *m_Owner;
     };
 }
 

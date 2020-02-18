@@ -1,13 +1,14 @@
 #include "Inventory.h"
-#include "ServerEntity.h"
+#include "Player.h"
 
 namespace redsquare
 {
     Inventory::Inventory()
+    : m_Owner(nullptr)
     {
     }
 
-    void Inventory::setOwner(ServerEntity *owner)
+    void Inventory::setOwner(Player *owner)
     {
         m_Owner = owner;
     }
@@ -32,12 +33,37 @@ namespace redsquare
         {
             if (m_SpecialItems.find(slotType) == m_SpecialItems.end() && item.canBeInSlot(slotType))
             {
-                if (m_Owner) m_Owner->onMovedItem(item, false);
+                if (m_Owner != nullptr)
+                {
+                    m_Owner->onMovedItem(item, false);
+                }
                 m_SpecialItems.insert(std::make_pair(slotType, std::move(item)));
                 return 0;
             }
         }
-        
+        return -1;
+    }
+
+    ssize_t Inventory::addItemRandom(InventorySlotType slotType, ServerItem &&item)
+    {
+        if (slotType == InventorySlotType::Cargo && item.canBeInSlot(slotType))
+        {
+            std::cout << static_cast<uint16_t>(item.getType()) <<std::endl;
+            int nbTry = 20;
+            uint row;
+            uint column;
+            do{ 
+                nbTry--;
+                row = rand() % RowCargoSlotNmb;
+                column = rand() % ColumnCargoSlotNmb;
+                if(nbTry == 0){
+                    return -1;
+                }
+            }while(getItem(slotType,row * ColumnCargoSlotNmb + column) != nullptr);
+
+            m_CargoItems.insert(std::make_pair(row * ColumnCargoSlotNmb + column, std::move(item)));
+            return (row * ColumnCargoSlotNmb + column);
+        }
         return -1;
     }
 
@@ -57,7 +83,10 @@ namespace redsquare
             auto it = m_SpecialItems.find(slotType);
             if (it == m_SpecialItems.end() && item.canBeInSlot(slotType))
             {
-                if (m_Owner) m_Owner->onMovedItem(item, false);
+                if (m_Owner != nullptr)
+                {
+                    m_Owner->onMovedItem(item, false);
+                }
                 m_SpecialItems.insert(std::make_pair(slotType, std::move(item)));
                 return true;
             }
@@ -73,7 +102,7 @@ namespace redsquare
             auto it = m_CargoItems.find(pos);
             if (it != m_CargoItems.end())
             {
-                ServerItem item = it->second;
+                ServerItem item = std::move(it->second);
                 m_CargoItems.erase(it);
                 return item;
             }
@@ -83,8 +112,11 @@ namespace redsquare
             auto it = m_SpecialItems.find(slotType);
             if (it != m_SpecialItems.end())
             {
-                ServerItem item = it->second;
-                if (m_Owner) m_Owner->onMovedItem(item, true);
+                ServerItem item = std::move(it->second);
+                if (m_Owner != nullptr)
+                {
+                    m_Owner->onMovedItem(item, true);
+                }
                 m_SpecialItems.erase(it);
                 return item;
             }
@@ -113,41 +145,5 @@ namespace redsquare
         }
 
         return nullptr;
-    }
-
-    bool Inventory::moveItem(MoveItem moveItem)
-    {
-        if (moveItem.oldSlotType == InventorySlotType::Cargo)
-        {
-            auto oldIt = m_CargoItems.find(moveItem.oldPos);
-            if (oldIt != m_CargoItems.end())
-            {
-                ServerItem item = std::move(oldIt->second);
-                m_CargoItems.erase(oldIt);
-
-                if ( addItem(moveItem.newSlotType, std::move(item), moveItem.newPos) )
-                {
-                    return true;
-                }
-            }
-        }
-        else
-        {
-            auto oldIt = m_SpecialItems.find(moveItem.oldSlotType);
-            if (oldIt != m_SpecialItems.end())
-            {
-                ServerItem item = std::move(oldIt->second);
-                if (m_Owner) m_Owner->onMovedItem(item, true);
-                m_SpecialItems.erase(oldIt);
-
-                if (m_Owner && moveItem.newSlotType != InventorySlotType::Cargo) m_Owner->onMovedItem(item, false);
-                if ( addItem(moveItem.newSlotType, std::move(item), moveItem.newPos) )
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 }

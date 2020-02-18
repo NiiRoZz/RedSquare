@@ -1,6 +1,8 @@
 #include "InventoryUI.h"
+#include "../common/RedsquareProtocol.h"
 #include "../common/Singletons.h"
-#include "Game.h"
+#include "GameScene.h"
+#include "ClientNetwork.h"
 
 #include <iostream>
 #include <gf/UI.h>
@@ -16,8 +18,9 @@
 
 namespace redsquare
 {
-    InventoryUI::InventoryUI(gf::Font &font, Game &game)
-    : m_Game(game)
+    InventoryUI::InventoryUI(gf::Font &font, GameScene &game, ClientNetwork &network)
+    : m_Network(network)
+    , m_Game(game)
     , m_UI(font)
     , m_PlayerEntity(nullptr)
     , m_VinicityEntity(nullptr)
@@ -36,13 +39,6 @@ namespace redsquare
     {
         gMessageManager().registerHandler<ItemUpdateUIMessage>(&InventoryUI::onItemUpdateUI, this);
         gMessageManager().registerHandler<MyPlayerReceivedTypeMessage>(&InventoryUI::onMyPlayerReceived, this);
-
-        m_PlayerSpecialSlots.insert(std::make_pair(InventorySlotType::Helmet, std::move(InventorySlot(InventorySlotType::Helmet))));
-        m_PlayerSpecialSlots.insert(std::make_pair(InventorySlotType::ChestPlate, std::move(InventorySlot(InventorySlotType::ChestPlate))));
-        m_PlayerSpecialSlots.insert(std::make_pair(InventorySlotType::Legging, std::move(InventorySlot(InventorySlotType::Legging))));
-        m_PlayerSpecialSlots.insert(std::make_pair(InventorySlotType::Boot, std::move(InventorySlot(InventorySlotType::Boot))));
-        m_PlayerSpecialSlots.insert(std::make_pair(InventorySlotType::Weapon, std::move(InventorySlot(InventorySlotType::Weapon))));
-        m_PlayerSpecialSlots.insert(std::make_pair(InventorySlotType::Shield, std::move(InventorySlot(InventorySlotType::Shield))));
 
         m_NameText.setAlignment(gf::Alignment::Center);
         m_NameText.setColor(gf::Color::White);
@@ -67,6 +63,21 @@ namespace redsquare
         m_UseButton.setSelectedTextColor(gf::Color::Gray(0.5f));
         m_UseButton.setState(gf::WidgetState::Default);
         m_UseButton.setAnchor(gf::Anchor::TopLeft);
+    }
+
+    void InventoryUI::initialize()
+    {
+        m_PlayerEntity = nullptr;
+        m_VinicityEntity = nullptr;
+        m_OldSlot = nullptr;
+        m_CurrMovingWidget = nullptr;
+        m_CurrMovingItem = nullptr;
+        m_DraggingFromEntity = nullptr;
+        m_HoveringSlot = nullptr;
+        m_RightClickedSlot = nullptr;
+        m_RightClickedFromEntity = nullptr;
+        m_PlayerCargoSlots.clear();
+        m_VinicityCargoSlots.clear();
     }
 
     void InventoryUI::update(gf::Time time)
@@ -189,6 +200,8 @@ namespace redsquare
                         x.second.update(posVector, scale);
                         break;
                     }
+                    default:
+                        break;
                 }
 
             }
@@ -422,15 +435,13 @@ namespace redsquare
                             {
                                 if (m_RightClickedSlot != nullptr && m_RightClickedSlot->haveItem() && m_RightClickedSlot->getItem()->isUseable())
                                 {
-                                    Packet packet;
-                                    packet.type = PacketType::RequestUse;
-                                    packet.requestUse.entityID = m_RightClickedFromEntity->getEntityID();
-                                    packet.requestUse.entityType = m_RightClickedFromEntity->getEntityType();
-                                    packet.requestUse.playerID = m_PlayerEntity->getEntityID();
-                                    packet.requestUse.slotType = m_RightClickedSlot->getSlotType();
-                                    packet.requestUse.pos = m_RightClickedSlot->getSlotPos();
+                                    RedsquareClientUseItem packet;
+                                    packet.entityId = m_RightClickedFromEntity->getEntityID();
+                                    packet.entityType = m_RightClickedFromEntity->getEntityType();
+                                    packet.slotType = m_RightClickedSlot->getSlotType();
+                                    packet.pos = m_RightClickedSlot->getSlotPos();
 
-                                    m_Game.sendPacket(packet);
+                                    m_Network.send(packet);
                                 }
 
                                 m_RightClickedSlot = nullptr;
@@ -440,15 +451,13 @@ namespace redsquare
                             {
                                 if (m_RightClickedSlot != nullptr && m_RightClickedSlot->haveItem())
                                 {
-                                    Packet packet;
-                                    packet.type = PacketType::RequestDrop;
-                                    packet.requestDrop.entityID = m_RightClickedFromEntity->getEntityID();
-                                    packet.requestDrop.entityType = m_RightClickedFromEntity->getEntityType();
-                                    packet.requestDrop.playerID = m_PlayerEntity->getEntityID();
-                                    packet.requestDrop.slotType = m_RightClickedSlot->getSlotType();
-                                    packet.requestDrop.pos = m_RightClickedSlot->getSlotPos();
+                                    RedsquareClientDropItem packet;
+                                    packet.entityId = m_RightClickedFromEntity->getEntityID();
+                                    packet.entityType = m_RightClickedFromEntity->getEntityType();
+                                    packet.slotType = m_RightClickedSlot->getSlotType();
+                                    packet.pos = m_RightClickedSlot->getSlotPos();
 
-                                    m_Game.sendPacket(packet);
+                                    m_Network.send(packet);
                                 }
 
                                 m_RightClickedSlot = nullptr;
@@ -559,6 +568,9 @@ namespace redsquare
                         }
                         break;
                     }
+
+                    default:
+                        break;
                 }
 
                 break;
@@ -572,21 +584,20 @@ namespace redsquare
 
                     for( auto &x: m_PlayerSpecialSlots)
                     {
-                        if (x.second.contains(event.mouseButton.coords) && !(x.second.haveItem()) && m_CurrMovingItem->canBeInSlot(x.second.getSlotType()))
+                        if (x.second.contains(event.mouseButton.coords) && m_CurrMovingItem->canBeInSlot(x.second.getSlotType()) && (!(x.second.haveItem()) || (x.second.haveItem() && x.second.getItem()->canBeInSlot(m_OldSlot->getSlotType()))))
                         {
                             //Request move item here
-                            Packet packet;
-                            packet.type = PacketType::MoveItem;
-                            packet.moveItem.oldEntityID = m_DraggingFromEntity->getEntityID();
-                            packet.moveItem.oldEntityType = m_DraggingFromEntity->getEntityType();
-                            packet.moveItem.oldSlotType = m_OldSlot->getSlotType();
-                            packet.moveItem.oldPos = m_OldSlot->getSlotPos();
-                            packet.moveItem.newEntityID = m_PlayerEntity->getEntityID();
-                            packet.moveItem.newEntityType = m_PlayerEntity->getEntityType();
-                            packet.moveItem.newSlotType = x.second.getSlotType();
-                            packet.moveItem.newPos = x.second.getSlotPos();
+                            RedsquareClientMoveItem packet;
+                            packet.oldEntityID = m_DraggingFromEntity->getEntityID();
+                            packet.oldEntityType = m_DraggingFromEntity->getEntityType();
+                            packet.oldSlotType = m_OldSlot->getSlotType();
+                            packet.oldPos = m_OldSlot->getSlotPos();
+                            packet.newEntityID = m_PlayerEntity->getEntityID();
+                            packet.newEntityType = m_PlayerEntity->getEntityType();
+                            packet.newSlotType = x.second.getSlotType();
+                            packet.newPos = x.second.getSlotPos();
 
-                            m_Game.sendPacket(packet);
+                            m_Network.send(packet);
 
                             sendedPacket = true;
                             break;
@@ -597,21 +608,20 @@ namespace redsquare
                     {
                         for( auto &x: m_PlayerCargoSlots)
                         {
-                            if (x.second.contains(event.mouseButton.coords) && (!(x.second.haveItem())) && (m_CurrMovingItem->canBeInSlot(x.second.getSlotType())))
+                            if (x.second.contains(event.mouseButton.coords) && (m_CurrMovingItem->canBeInSlot(x.second.getSlotType())) && (!(x.second.haveItem()) || (x.second.haveItem() && x.second.getItem()->canBeInSlot(m_OldSlot->getSlotType()))))
                             {
                                 //Request move item here
-                                Packet packet;
-                                packet.type = PacketType::MoveItem;
-                                packet.moveItem.oldEntityID = m_DraggingFromEntity->getEntityID();
-                                packet.moveItem.oldEntityType = m_DraggingFromEntity->getEntityType();
-                                packet.moveItem.oldSlotType = m_OldSlot->getSlotType();
-                                packet.moveItem.oldPos = m_OldSlot->getSlotPos();
-                                packet.moveItem.newEntityID = m_PlayerEntity->getEntityID();
-                                packet.moveItem.newEntityType = m_PlayerEntity->getEntityType();
-                                packet.moveItem.newSlotType = x.second.getSlotType();
-                                packet.moveItem.newPos = x.second.getSlotPos();
+                                RedsquareClientMoveItem packet;
+                                packet.oldEntityID = m_DraggingFromEntity->getEntityID();
+                                packet.oldEntityType = m_DraggingFromEntity->getEntityType();
+                                packet.oldSlotType = m_OldSlot->getSlotType();
+                                packet.oldPos = m_OldSlot->getSlotPos();
+                                packet.newEntityID = m_PlayerEntity->getEntityID();
+                                packet.newEntityType = m_PlayerEntity->getEntityType();
+                                packet.newSlotType = x.second.getSlotType();
+                                packet.newPos = x.second.getSlotPos();
 
-                                m_Game.sendPacket(packet);
+                                m_Network.send(packet);
 
                                 sendedPacket = true;
                                 break;
@@ -622,21 +632,20 @@ namespace redsquare
                         {
                             for( auto &x: m_VinicityCargoSlots)
                             {
-                                if (x.second.contains(event.mouseButton.coords) && (!(x.second.haveItem())) && (m_CurrMovingItem->canBeInSlot(x.second.getSlotType())))
+                                if (x.second.contains(event.mouseButton.coords) && (m_CurrMovingItem->canBeInSlot(x.second.getSlotType())) && (!(x.second.haveItem()) || (x.second.haveItem() && x.second.getItem()->canBeInSlot(m_OldSlot->getSlotType()))))
                                 {
                                     //Request move item here
-                                    Packet packet;
-                                    packet.type = PacketType::MoveItem;
-                                    packet.moveItem.oldEntityID = m_DraggingFromEntity->getEntityID();
-                                    packet.moveItem.oldEntityType = m_DraggingFromEntity->getEntityType();
-                                    packet.moveItem.oldSlotType = m_OldSlot->getSlotType();
-                                    packet.moveItem.oldPos = m_OldSlot->getSlotPos();
-                                    packet.moveItem.newEntityID = m_VinicityEntity->getEntityID();
-                                    packet.moveItem.newEntityType = m_VinicityEntity->getEntityType();
-                                    packet.moveItem.newSlotType = x.second.getSlotType();
-                                    packet.moveItem.newPos = x.second.getSlotPos();
+                                    RedsquareClientMoveItem packet;
+                                    packet.oldEntityID = m_DraggingFromEntity->getEntityID();
+                                    packet.oldEntityType = m_DraggingFromEntity->getEntityType();
+                                    packet.oldSlotType = m_OldSlot->getSlotType();
+                                    packet.oldPos = m_OldSlot->getSlotPos();
+                                    packet.newEntityID = m_VinicityEntity->getEntityID();
+                                    packet.newEntityType = m_VinicityEntity->getEntityType();
+                                    packet.newSlotType = x.second.getSlotType();
+                                    packet.newPos = x.second.getSlotPos();
 
-                                    m_Game.sendPacket(packet);
+                                    m_Network.send(packet);
 
                                     sendedPacket = true;
                                     break;
@@ -657,6 +666,7 @@ namespace redsquare
                     m_DraggingFromEntity = nullptr;
                     m_OffsetDrag = {0,0};
                 }
+                break;
             }
 
             case gf::EventType::MouseMoved:
@@ -758,6 +768,9 @@ namespace redsquare
                 }
                 break;
             }
+
+            default:
+                break;
         }
     }
 
@@ -805,6 +818,14 @@ namespace redsquare
             m_PlayerWidget.setSelectedSprite(*playerTexture, gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 1.0f, 1.0f }));
 
             m_PlayerEntity = message->player;
+
+            m_PlayerSpecialSlots.clear();
+            m_PlayerSpecialSlots.insert(std::make_pair(InventorySlotType::Helmet, std::move(InventorySlot(InventorySlotType::Helmet))));
+            m_PlayerSpecialSlots.insert(std::make_pair(InventorySlotType::ChestPlate, std::move(InventorySlot(InventorySlotType::ChestPlate))));
+            m_PlayerSpecialSlots.insert(std::make_pair(InventorySlotType::Legging, std::move(InventorySlot(InventorySlotType::Legging))));
+            m_PlayerSpecialSlots.insert(std::make_pair(InventorySlotType::Boot, std::move(InventorySlot(InventorySlotType::Boot))));
+            m_PlayerSpecialSlots.insert(std::make_pair(InventorySlotType::Weapon, std::move(InventorySlot(InventorySlotType::Weapon))));
+            m_PlayerSpecialSlots.insert(std::make_pair(InventorySlotType::Shield, std::move(InventorySlot(InventorySlotType::Shield))));
 
             m_PlayerCargoSlots.clear();
             for(uint i = 0; i < m_PlayerEntity->m_RowCargoSlotNmb; ++i )
@@ -882,5 +903,11 @@ namespace redsquare
         }
 
         return gf::MessageStatus::Keep;
+    }
+
+    void InventoryUI::inventoryHid()
+    {
+        m_RightClickedSlot = nullptr;
+        m_HoveringSlot = nullptr;
     }
 }

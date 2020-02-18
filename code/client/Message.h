@@ -1,7 +1,7 @@
 #ifndef REDSQUARE_CLIENT_MESSAGE_H
 #define REDSQUARE_CLIENT_MESSAGE_H
 
-#include "../common/Packet.h"
+#include "../common/ProtocolData.h"
 #include "../common/Entity.h"
 #include "ClientEntity.h"
 #include "Player.h"
@@ -16,7 +16,7 @@ namespace redsquare
     struct SpellUpdateMessage : public gf::Message
     {
         static const gf::Id type = "SpellUpdate"_id;
-        std::array<SpellType, MAX_SPELL_PER_PLAYER> spells;
+        std::vector<SpellType> spells;
     };
     
     struct ItemUpdateUIMessage : public gf::Message
@@ -33,11 +33,6 @@ namespace redsquare
     {
         static const gf::Id type = "MyPlayerReceived"_id;
         Player *player;
-    };
-
-    struct MyPlayerDeadMessage : public gf::Message
-    {
-        static const gf::Id type = "MyPlayerDead"_id;
     };
 }
 

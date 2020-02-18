@@ -1,25 +1,32 @@
 #ifndef REDSQUARE_CLIENT_HUD_H
 #define REDSQUARE_CLIENT_HUD_H
 
-#include "Chat.h"
-#include "Game.h"
-#include "MainMenu.h"
 #include "InventoryUI.h"
 #include "Message.h"
 #include "SpellWidget.h"
+#include "GameChat.h"
 
 #include <gf/Font.h>
 #include <iostream>
 #include <gf/UI.h>
 #include <gf/Window.h>
 #include <gf/Entity.h>
+#include <gf/Widgets.h>
+#include <gf/WidgetContainer.h>
 
 namespace redsquare
 {
+    //Forward classes
+    class GameScene;
+    struct Scenes;
+    class ClientNetwork;
+
     class Hud: public gf::Entity
     {
     public:
-        Hud(Game &game, gf::Font &font,char* port, char *hostname, gf::ExtendView &view,const char* name);
+        Hud(Scenes &scenes, GameScene &game, gf::Font &font, ClientNetwork &network);
+
+        void initialize();
 
         virtual void update(gf::Time time) override;
 
@@ -27,39 +34,47 @@ namespace redsquare
 
         void processEvent(const gf::Event &event);
 
-        bool hoveringChat();
-        bool shownInventory();
+        bool hoveringChat() const;
+        bool shownInventory() const;
+        bool escapeOpen() const;
+        bool hoveringSpellWidgets() const;
 
         void showMap();
         void showChat();
         void showHelp();
         void showInventory();
+        void showEscape();
 
         InventoryUI& getInventoryUI();
 
-        MainMenu m_MainMenu;
+        GameChat& getChat();
         
     private:
         gf::MessageStatus onSpellUpdate(gf::Id id, gf::Message *msg);
         gf::MessageStatus onPlayerDeadUpdate(gf::Id id, gf::Message *msg);
 
-        Game &m_Game;
-        Chat m_Chat;
+        Scenes &m_Scenes;
+        ClientNetwork &m_Network;
+        GameScene &m_Game;
+        GameChat m_Chat;
         InventoryUI m_InventoryUI;
        
         gf::Font &m_Font;
         gf::UI m_UI;
-        //View of the game
-        gf::ExtendView &m_View;
-        std::vector<SpellWidget> m_SpellsWidgets;
         SpellWidget *m_SpellWidgetHover;
+        std::vector<SpellWidget> m_SpellsWidgets;
         gf::Vector2f m_MouseHoverPostionOnSpell;
 
         bool m_ShowMap;
         bool m_ShowChat;
         bool m_ShowHelp;
         bool m_ShowInventory;
-        bool m_PlayerDead;
+        bool m_ShowEscape;
+
+        gf::TextWidget m_QuitWidget;
+
+        gf::Texture &m_BackgroundTexture;
+        InventoryWidget m_Background;
     };
 
 }

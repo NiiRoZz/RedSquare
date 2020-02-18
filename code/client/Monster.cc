@@ -8,6 +8,8 @@
 #include <gf/RenderTarget.h>
 #include <gf/Color.h>
 #include <gf/Text.h>
+#include <gf/Animation.h>
+#include <gf/AnimatedSprite.h>
 
 namespace redsquare
 {
@@ -20,16 +22,27 @@ namespace redsquare
 
     void Monster::render(gf::RenderTarget& target, const gf::RenderStates& states)
     {
-        gf::Sprite sprite;
+
         static constexpr gf::Vector2f BarSize = { 20.0f, 3.0f } ;
-         static constexpr gf::Vector2f BarOffset = { 2.0f, 6.0f };
+        static constexpr gf::Vector2f BarOffset = { 2.0f, 6.0f };
         static constexpr gf::Vector2f BarOffset2 = { 2.0f, 6.0f };
         static constexpr gf::Vector2f BarOffsetXp = { 4.0f, 5.0f };
 
-        sprite.setPosition( m_Pos * World::TileSize );
-        sprite.setScale( 1 );
-        sprite.setTexture( *m_EntityTexture );
-        target.draw(sprite, states);
+        if (m_Animated){
+            gf::AnimatedSprite animated;
+            animated.setAnimation(m_Animation);
+            animated.setPosition(m_Pos * World::TileSize);
+            animated.setScale(1.0f);
+            
+            target.draw(animated, states);
+        }else{
+            gf::Sprite sprite;
+
+            sprite.setPosition( m_Pos * World::TileSize );
+            sprite.setScale( 1 );
+            sprite.setTexture( *m_EntityTexture );
+            target.draw(sprite, states);
+        }
 
         gf::Color4f color(255,0,0,174);
         gf::RectangleShape bar;
@@ -62,6 +75,9 @@ namespace redsquare
 
     void Monster::update(gf::Time time)
     {
-        //Do something
+        if (m_Animated)
+        {
+            m_Animation.update(time);
+        }
     }
 }
