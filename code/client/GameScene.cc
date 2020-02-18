@@ -380,11 +380,12 @@ namespace redsquare
 
     void GameScene::doUpdate(gf::Time time)
     {
-        gf::unused(time);
         if (!isActive())
         {
             return;
         }
+
+        ImGui_ImplGF_Update(time);
 
         ProtocolBytes bytes;
         while (m_Network.queue.poll(bytes))
