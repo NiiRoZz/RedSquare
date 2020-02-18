@@ -1402,9 +1402,9 @@ namespace redsquare
         m_MaxDefensePoint += ratio; 
         m_DefensePoint = m_MaxDefensePoint;
         std::string messToChat("");
-        messToChat = " m_MaxDefensePoint +" + std::to_string(defense);
+        messToChat = " m_MaxDefensePoint +" + std::to_string(m_MaxDefensePoint);
         createSystemMessage(messToChat,m_Name,m_Name);
-        std::cout << " m_MaxDefensePoint +" << defense << std::endl;
+        std::cout << " m_MaxDefensePoint +" << m_MaxDefensePoint << std::endl;
     }
 
     void Player::BoostAttack(float ratio){
@@ -1412,9 +1412,9 @@ namespace redsquare
         m_MaxAttackPoint += ratio;
         m_AttackPoint = m_MaxAttackPoint;
         std::string messToChat("");
-        messToChat = " m_MaxAttackPoint +" + std::to_string(attack);
+        messToChat = " m_MaxAttackPoint +" + std::to_string(m_MaxAttackPoint);
         createSystemMessage(messToChat,m_Name,m_Name);
-        std::cout << " m_MaxAttackPoint +" << attack << std::endl;
+        std::cout << " m_MaxAttackPoint +" << m_MaxAttackPoint << std::endl;
     }
     
     void Player::BoostXP(float ratio){
@@ -1435,7 +1435,7 @@ namespace redsquare
         messToChat = " m_MaxManaPoint +" + std::to_string(mana);
         createSystemMessage(messToChat,m_Name,m_Name);
     }
-    
+
     void Player::BoostHealth(float ratio){
         int health = (m_MaxLifePoint*ratio);
         if(health == 0){
