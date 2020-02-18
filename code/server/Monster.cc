@@ -69,11 +69,11 @@ namespace redsquare
        switch (m_EntitySubType)
        {
        case EntitySubType::Bat:  case EntitySubType::Demon:  case EntitySubType::Zombie: 
-            m_LifePoint = 150;
-            m_MaxLifePoint = 150;
+            m_LifePoint = 170;
+            m_MaxLifePoint = 170;
 
-            m_AttackPoint = 8;
-            m_MaxAttackPoint = 8;
+            m_AttackPoint = 50;
+            m_MaxAttackPoint = 50;
 
             m_DefensePoint = 4;
             m_MaxDefensePoint = 4;
@@ -86,8 +86,8 @@ namespace redsquare
             m_LifePoint = 220;
             m_MaxLifePoint = 220;
 
-            m_AttackPoint = 12;
-            m_MaxAttackPoint = 12;
+            m_AttackPoint = 60;
+            m_MaxAttackPoint = 60;
 
             m_DefensePoint = 5;
             m_MaxDefensePoint = 5;
@@ -97,11 +97,11 @@ namespace redsquare
            break;
 
         case EntitySubType::SkeletonMagus: case EntitySubType::Shaman:   
-            m_LifePoint = 200;
-            m_MaxLifePoint = 200;
+            m_LifePoint = 190;
+            m_MaxLifePoint = 190;
 
-            m_AttackPoint = 8;
-            m_MaxAttackPoint = 8;
+            m_AttackPoint = 50;
+            m_MaxAttackPoint = 50;
 
             m_DefensePoint = 5;
             m_MaxDefensePoint = 5;
@@ -114,8 +114,8 @@ namespace redsquare
             m_LifePoint = 160;
             m_MaxLifePoint = 160;
 
-            m_AttackPoint = 10;
-            m_MaxAttackPoint = 10;
+            m_AttackPoint = 45;
+            m_MaxAttackPoint = 45;
 
             m_DefensePoint = 5;
             m_MaxDefensePoint = 5;
@@ -125,11 +125,11 @@ namespace redsquare
            break;
 
         case EntitySubType::Spirit: case EntitySubType::LilZombie: case EntitySubType::LilGob: case EntitySubType::Imp:    
-            m_LifePoint = 120;
-            m_MaxLifePoint = 120;
+            m_LifePoint = 140;
+            m_MaxLifePoint = 140;
 
-            m_AttackPoint = 12;
-            m_MaxAttackPoint = 12;
+            m_AttackPoint = 45;
+            m_MaxAttackPoint = 45;
 
             m_DefensePoint = 5;
             m_MaxDefensePoint = 5;
@@ -141,8 +141,8 @@ namespace redsquare
             m_LifePoint = 220;
             m_MaxLifePoint = 220;
 
-            m_AttackPoint = 10;
-            m_MaxAttackPoint = 10;
+            m_AttackPoint = 50;
+            m_MaxAttackPoint = 50;
 
             m_DefensePoint = 5;
             m_MaxDefensePoint = 5;
@@ -162,7 +162,7 @@ namespace redsquare
 
     void Monster::attack(ServerEntity *target)
     {
-        int damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
+        int damage = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint);
         damage += Variance(-10);
         if(damage < 0){
             damage = -damage;
@@ -182,13 +182,11 @@ namespace redsquare
 
         int gain;
         if(m_Floor < 5){
-            gain = 2;
-        }else if(m_Floor >= 5 && m_Floor < 8){
-            gain = 3;
-        }else if(m_Floor >= 8 && m_Floor < 12){
             gain = 4;
-        }else if(m_Floor >= 12){
+        }else if(m_Floor >= 5 && m_Floor < 8){
             gain = 5;
+        }else{
+            gain = 6;
         }
         
         m_MaxLifePoint += gain*m_Floor;

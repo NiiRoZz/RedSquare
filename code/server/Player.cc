@@ -195,7 +195,7 @@ namespace redsquare
         m_MaxAttackPoint += 2;
  
         m_XP = 0;
-        m_MaxXP += 30;
+        m_MaxXP += 40;
 
         m_Level++;
 
@@ -426,7 +426,7 @@ namespace redsquare
         int damage;
         int critical = rand() % 100;
         if(critical > 95){ // critical hit
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
+            damage = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint);
             damage *= 2; // double the damage 
             //unique
             std::cout << " CRITICAL !!! " << std::endl;
@@ -435,7 +435,7 @@ namespace redsquare
             
 
         }else{
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
+            damage = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint);
         }
 
         damage += Variance(-(damage/10)); // -10% to +10% dmg 
@@ -468,12 +468,12 @@ namespace redsquare
         int critical = rand() % 100;
         
         if(critical > 90){
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
+            damage = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint);
             damage *= 2; // double the damage 
             //unique
             std::cout << " CRITICAL !!! " << std::endl;
         }else{
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
+            damage = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint);
         }
 
         damage += Variance(-(damage/10)); // -10% to +10% dmg 
@@ -513,12 +513,12 @@ namespace redsquare
         int defense;
 
         if(critical > 90){
-            defense = m_DefensePoint / 2;
+            defense = 10;
             m_MaxDefensePoint += defense;
             m_DefensePoint = m_MaxDefensePoint;
             std::cout << " CRITICAL !!! " << std::endl;
         }else{
-            defense = m_DefensePoint / 4;
+            defense = 5;
             m_MaxDefensePoint += defense;
             m_DefensePoint = m_MaxDefensePoint;
         }
@@ -538,19 +538,19 @@ namespace redsquare
         int damage1;
         int damage2;
         if(critical > 90){
-            damage1 = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) / 1.5;
+            damage1 = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint) / 1.5;
             damage1 += Variance(-(damage1/10)); // -10% to +10% dmg 
             target->m_LifePoint -= damage1;
 
-            damage2 = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) / 1.5;
+            damage2 = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint) / 1.5;
             damage2 += Variance(-(damage2/10)); // -10% to +10% dmg 
 
         }else{
-            damage1 = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) / 1.7 ;
+            damage1 = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint) / 1.7 ;
             damage1 += Variance(-(damage1/10)); // -10% to +10% dmg 
             target->m_LifePoint -= damage1;
 
-            damage2 = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) / 1.7;
+            damage2 = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint) / 1.7;
             damage2 += Variance(-(damage2/10)); // -10% to +10% dmg 
         }
 
@@ -639,13 +639,11 @@ namespace redsquare
         int critical = rand() % 100;
         int attack;
         if(critical > 90){
-            attack = m_AttackPoint / 5;
-            attack += Variance(-(m_AttackPoint / 15));
+            attack = 10;
             m_MaxAttackPoint += attack;
             m_AttackPoint = m_MaxAttackPoint;
         }else{
-            attack = m_AttackPoint / 10;
-            attack += Variance(-(m_AttackPoint / 15));
+            attack = 5;
             m_MaxAttackPoint += attack;
             m_AttackPoint = m_MaxAttackPoint;
         }
@@ -664,13 +662,11 @@ namespace redsquare
         int critical = rand() % 100;
         int defense;
         if(critical > 90){
-            defense = target->m_DefensePoint / 5;
-            defense += Variance(-(target->m_DefensePoint / 15));
+            defense = 10;
             target->m_MaxDefensePoint += defense;
             target->m_DefensePoint = m_MaxDefensePoint;
         }else{
-            defense = target->m_DefensePoint / 10;
-            defense += Variance(-(target->m_DefensePoint / 15));
+            defense = 5;
             target->m_MaxDefensePoint += defense;
             target->m_DefensePoint = m_MaxDefensePoint;
         }
@@ -691,11 +687,11 @@ namespace redsquare
         int missingHealth = (m_LifePoint*2)/ m_MaxLifePoint;
         //std::cout << "missingHealth " << missingHealth << std::endl;
         if(critical > 90){
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) * missingHealth;
+            damage = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint) * missingHealth;
             damage *= 2;
             damage += Variance(-(damage / 10));
         }else{ 
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) * missingHealth;
+            damage = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint) * missingHealth;
             damage += Variance(-(damage / 10));
         }
         if(target->m_LifePoint - damage < 0){
@@ -722,12 +718,12 @@ namespace redsquare
             currentHealth = 0.5;
         }
         if(critical > 90){
-            damage = ((m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint)*0.8) + currentHealth;
+            damage = ((m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint)*0.8) + currentHealth;
             damage *= 2;
             damage += Variance(-(damage / 10));
             std::cout << "CRITICAL damage : " << damage << std::endl;
         }else{ 
-            damage = ((m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint)*0.8) + currentHealth;
+            damage = ((m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint)*0.8) + currentHealth;
             damage += Variance(-(damage / 10));
             std::cout << "damage : " << damage << std::endl;
         }
@@ -754,7 +750,7 @@ namespace redsquare
             currentHealth = 0.5;
         }
         if(critical > 90){
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) * currentHealth;
+            damage = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint) * currentHealth;
             damage *= 2;
             damage += Variance(-(damage / 10));
             if(target->m_DefensePoint - 10 < 0){
@@ -763,7 +759,7 @@ namespace redsquare
                 target->m_DefensePoint -= 10;
             }
         }else{ 
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) * currentHealth;
+            damage = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint) * currentHealth;
             damage += Variance(-(damage / 10));
             if(target->m_DefensePoint - 5 < 0){
                 target->m_DefensePoint = 0;
@@ -791,12 +787,12 @@ namespace redsquare
         int damage;
         int health;
         if(critical > 90){
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
+            damage = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint);
             damage *= 1.5;
             damage += Variance(-(damage / 10));
             health = damage / 2;
         }else{
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
+            damage = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint);
             damage += Variance(-(damage / 10));
             health = damage / 3;
         }
@@ -844,7 +840,7 @@ namespace redsquare
         gf::Vector2i Pos4{ mainPos[0] , mainPos[1]-1};
         /* adjacent tile */
 
-        int damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint)*0.7;
+        int damage = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint)*0.7;
 
         auto it = monsters.begin();
         while(it != monsters.end()){
@@ -928,12 +924,12 @@ namespace redsquare
         int damage;
         int critical = rand() % 100;
         if(critical > 95){ // critical hit
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
+            damage = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint);
             damage *= 2; // double the damage 
             damage += Variance(-(damage / 10));
             std::cout << " CRITICAL !!! " << std::endl;
         }else{
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
+            damage = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint);
             damage += Variance(-(damage / 10));
         }
         
@@ -980,12 +976,12 @@ namespace redsquare
         int damage;
         int critical = rand() % 100;
         if(critical > 90){   
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
+            damage = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint);
             damage *= 2;
             damage += Variance(-(damage / 10));
             target->m_DefensePoint -= 5;
         }else{  
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
+            damage = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint);
             damage += Variance(-(damage / 10));
         }
 
@@ -1009,13 +1005,13 @@ namespace redsquare
         int damage;
         int critical = rand() % 100;
         if(critical > 90){   
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
+            damage = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint);
             damage *= 2;
             damage += Variance(-(damage / 10));
             m_AttackPoint += m_MaxAttackPoint / 10;
             m_MaxAttackPoint += m_MaxAttackPoint / 10;
         }else{  
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint);
+            damage = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint);
             damage += Variance(-(damage / 10));
             m_AttackPoint += m_MaxAttackPoint / 5;
             m_MaxAttackPoint += m_MaxAttackPoint / 5;
@@ -1039,13 +1035,13 @@ namespace redsquare
         }
         int damage;
         int critical = rand() % 100;
-        int missingHealth = m_LifePoint * 100 / m_MaxLifePoint;
+        int missingHealth = m_MaxLifePoint / (m_LifePoint*1.3);
         if(critical > 90){   
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) * missingHealth;
-            damage *= 2;
+            damage = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint) * missingHealth;
+            damage *= 1.5;
             damage += Variance(-(damage / 10));
         }else{  
-            damage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint) * missingHealth;
+            damage = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint) * missingHealth;
             damage += Variance(-(damage / 10));
         }
 
@@ -1088,7 +1084,7 @@ namespace redsquare
         gf::Vector2i Pos4{ mainPos[0] , mainPos[1]-1};
         /* adjacent tile */
 
-        int mainDamage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + target->m_DefensePoint)*0.7;
+        int mainDamage = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + target->m_DefensePoint)*0.7;
         mainDamage += Variance(-(mainDamage / 10));
         int sideDamage;
 
@@ -1098,7 +1094,7 @@ namespace redsquare
         while(it != monsters.end()){
             if(it->second.m_Pos == Pos1){
                 if(m_Pos != Pos2){ // avoid dealing damage to the tile behind the main target
-                    sideDamage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + it->second.m_DefensePoint) * 0.6;
+                    sideDamage = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + it->second.m_DefensePoint) * 0.6;
                     sideDamage += Variance(-(sideDamage / 10));
 
                     if(it->second.m_LifePoint - sideDamage < 0){
@@ -1117,7 +1113,7 @@ namespace redsquare
                 }
             }else if(it->second.m_Pos == Pos2){
                 if(m_Pos != Pos1){ // avoid dealing damage to the tile behind the main target
-                    sideDamage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + it->second.m_DefensePoint) * 0.6;
+                    sideDamage = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + it->second.m_DefensePoint) * 0.6;
                     sideDamage += Variance(-(sideDamage / 10));
 
                     if(it->second.m_LifePoint - sideDamage < 0){
@@ -1135,7 +1131,7 @@ namespace redsquare
                 }
             }else if(it->second.m_Pos == Pos3){
                 if(m_Pos != Pos4){ // avoid dealing damage to the tile behind the main target
-                    sideDamage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + it->second.m_DefensePoint) * 0.6;
+                    sideDamage = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + it->second.m_DefensePoint) * 0.6;
                     sideDamage += Variance(-(sideDamage / 10));
 
                     if(it->second.m_LifePoint - sideDamage < 0){
@@ -1152,7 +1148,7 @@ namespace redsquare
                 }
             }else if(it->second.m_Pos == Pos4){
                 if(m_Pos != Pos3){ // avoid dealing damage to the tile behind the main target
-                    sideDamage = (m_AttackPoint*m_AttackPoint / m_AttackPoint + it->second.m_DefensePoint) * 0.6;
+                    sideDamage = (m_AttackPoint*m_AttackPoint) / (m_AttackPoint + it->second.m_DefensePoint) * 0.6;
                     sideDamage += Variance(-(sideDamage / 10));
 
                     if(it->second.m_LifePoint - sideDamage < 0){
@@ -1305,50 +1301,28 @@ namespace redsquare
         HealthPot(ratio);
     }
     void Player::BoostDefense(float ratio){
-        int defense = (m_MaxDefensePoint*ratio);
-        if(defense == 0){
-            defense = 1;
-        }
-        std::cout << " m_MaxDefensePoint +" << defense << std::endl;
-        m_MaxDefensePoint += defense; 
+
+        m_MaxDefensePoint += ratio; 
         m_DefensePoint = m_MaxDefensePoint;
 
     }
     void Player::BoostAttack(float ratio){
-        int attack = (m_MaxAttackPoint*ratio);
-        if(attack == 0){
-            attack = 1;
-        }
-        std::cout << " m_MaxAttackPoint +" << attack << std::endl;
-        m_MaxAttackPoint += attack;
+
+        m_MaxAttackPoint += ratio;
         m_AttackPoint = m_MaxAttackPoint;
     }
     void Player::BoostXP(float ratio){
-        int XP = (m_MaxXP*ratio);
-        if(XP == 0){
-            XP = 1;
-        }
-        std::cout << " m_XP +" << XP << std::endl;
+        int XP = ratio;
         m_XP += XP;
-        if(m_XP > m_MaxXP){
+        if(m_XP >= m_MaxXP){
             levelUp();
         }
     }
     void Player::BoostMana(float ratio){
-        int mana = (m_MaxManaPoint*ratio);
-        if(mana == 0){
-            mana = 1;
-        }
-        std::cout << " m_MaxManaPoint +" << mana << std::endl;
-        m_MaxManaPoint += mana; 
+        m_MaxManaPoint += ratio; 
     }
     void Player::BoostHealth(float ratio){
-        int health = (m_MaxLifePoint*ratio);
-        if(health == 0){
-            health = 1;
-        }
-        std::cout << " m_MaxLifePoint +" << health << std::endl;
-        m_MaxLifePoint += health; 
+        m_MaxLifePoint += ratio; 
     }
 
     /*void Player::sendMessageToChat(std::string str){
