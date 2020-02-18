@@ -1425,25 +1425,11 @@ namespace redsquare
         }
     }
     void Player::BoostMana(float ratio){
-        int mana = (m_MaxManaPoint*ratio);
-        if(mana == 0){
-            mana = 1;
-        }
-        std::cout << " m_MaxManaPoint +" << mana << std::endl;
-        m_MaxManaPoint += mana; 
-        std::string messToChat("");
-        messToChat = " m_MaxManaPoint +" + std::to_string(mana);
-        createSystemMessage(messToChat,m_Name,m_Name);
+        m_MaxManaPoint += ratio; 
     }
 
     void Player::BoostHealth(float ratio){
-        int health = (m_MaxLifePoint*ratio);
-        if(health == 0){
-            health = 1;
-        }
-        std::cout << " m_MaxLifePoint +" << health << std::endl;
-        m_MaxLifePoint += health; 
-        m_LifePoint = m_MaxLifePoint;
+        m_MaxLifePoint += ratio; 
 
         std::string messToChat("");
         messToChat = " m_MaxLifePoint +" + std::to_string(health);
