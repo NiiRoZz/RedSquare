@@ -181,9 +181,9 @@ namespace redsquare
     void Monster::levelUp(uint m_Floor){ // method to level up a monster
 
         int gain;
-        if(m_Floor < 5){
+        if(m_Floor < 3){
             gain = 4;
-        }else if(m_Floor >= 5 && m_Floor < 8){
+        }else if(m_Floor >= 3 && m_Floor < 8){
             gain = 5;
         }else{
             gain = 6;

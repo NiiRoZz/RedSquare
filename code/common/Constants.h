@@ -57,9 +57,9 @@ namespace redsquare
     constexpr double POTRATIO2 = 0.50;
     constexpr double POTRATIO3 = 0.70;
 
-    constexpr double BOOSTRATIO1 = 5;
-    constexpr double BOOSTRATIO2 = 10;
-    constexpr double BOOSTRATIO3 = 15;
+    constexpr double BOOSTRATIO1 = 2;
+    constexpr double BOOSTRATIO2 = 5;
+    constexpr double BOOSTRATIO3 = 10;
 
     constexpr int MINSIZE = 6;
 
@@ -88,7 +88,7 @@ namespace redsquare
 
     constexpr int WARRIOR_LIFEPOINT = 270; 
     constexpr int WARRIOR_MANAPOINT = 20; 
-    constexpr int WARRIOR_MAXLIFEPOINT = 300;
+    constexpr int WARRIOR_MAXLIFEPOINT = 270;
     constexpr int WARRIOR_MAXMANAPOINT = 20; 
     constexpr int WARRIOR_ATTACKPOINT = 70; 
     constexpr int WARRIOR_DEFENSEPOINT = 20; 
