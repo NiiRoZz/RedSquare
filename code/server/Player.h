@@ -16,6 +16,7 @@ namespace redsquare
     // forward class
     class Game;
     class RedsquareInstance;
+    class World;
 
     class Player: public ServerEntity
     {

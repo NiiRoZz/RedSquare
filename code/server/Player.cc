@@ -1414,7 +1414,7 @@ namespace redsquare
         createSystemMessage(messToChat,m_Name,m_Name);
         std::cout << " m_MaxDefensePoint +" << defense << std::endl;
     }
-    
+
     void Player::BoostAttack(float ratio){
         int attack = (m_MaxAttackPoint*ratio);
         if(attack == 0){
@@ -1465,32 +1465,20 @@ namespace redsquare
         createSystemMessage(messToChat,m_Name,m_Name);
     }
 
-    /*void Player::sendMessageToChat(std::string str){
-        Message mess;
-        int length = str.copy(mess.message,str.length());
-        mess.message[length]='\0';
-        m_Socket.send(mess);
-    }*/
-
     void Player::createSystemMessage(std::string message, std::string to, std::string name){
             std::cout<<message<<std::endl;
-            Message packet;
-            int length=0;
-            std::string myMessage;
-            myMessage =  name + " -> "+message;
-            std::string sys("system");
-            length = myMessage.copy(packet.message, myMessage.length());
-            packet.message[length]='\0';
-            length = sys.copy(packet.from, sys.length());
-            packet.from[length]='\0';
-            if(to != "system"){
-                length = to.copy(packet.to, to.length());
-                packet.to[length]='\0';
-            }else{
-                length = sys.copy(packet.to, sys.length());
-                packet.to[length]='\0';
+            ServerChatMessage packet;
+            packet.message.origin = gf::InvalidId;
+            packet.message.author = "server";
+            packet.message.content = message;
+            if (to == "system")
+            {
+                m_RedsquareInstance.broadcast(packet);
             }
-            //Chat::getInstance().sendMessage(packet); */
+            else
+            {
+                m_RedsquareInstance.send(getEntityID(), packet);
+            }
     }
 
     void Player::onMovedItem(ServerItem &item, bool remove)
