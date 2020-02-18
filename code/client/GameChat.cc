@@ -30,7 +30,7 @@ namespace redsquare
     {
         // Chat window
         gf::Vector2f chatWindowSize = coordinates.getRelativeSize({ 0.35f, 0.46f });
-        gf::Vector2f chatWindowPos = coordinates.getRelativePoint({ 0.82f, 0.76f });
+        gf::Vector2f chatWindowPos = coordinates.getRelativePoint({ 0.18f, 0.77f });
 
         ImGui::SetNextWindowSize(ImVec2(chatWindowSize[0], chatWindowSize[1]));
         ImGui::SetNextWindowPos(ImVec2(chatWindowPos[0], chatWindowPos[1]), 0, ImVec2(0.5f, 0.5f));
