@@ -69,14 +69,12 @@ namespace redsquare
 
     void ConnectionScene::doRender(gf::RenderTarget& target, const gf::RenderStates& states)
     {
-        ImGui::NewFrame();
-        
         if (!isActive())
         {
-            ImGui::Render();
-            ImGui_ImplGF_RenderDrawData(ImGui::GetDrawData());
             return;
         }
+
+        ImGui::NewFrame();
 
         gf::Coordinates coordinates(target);
 
