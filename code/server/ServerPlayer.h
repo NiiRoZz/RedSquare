@@ -5,8 +5,8 @@
 #include <string>
 
 #include <gf/TcpSocket.h>
+#include <gf/Packet.h>
 
-#include "../common/ProtocolBytes.h"
 #include "../common/RedsquareProtocol.h"
 
 namespace redsquare
@@ -25,9 +25,9 @@ namespace redsquare
         template<typename T>
         void send(const T& data)
         {
-            ProtocolBytes bytes;
+            gf::Packet bytes;
             bytes.is(data);
-            socket.sendPacket(bytes.packet);
+            socket.sendPacket(bytes);
         }
     };
 }

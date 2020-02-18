@@ -61,9 +61,9 @@ namespace redsquare
 
         for (;;)
         {
-            ProtocolBytes bytes;
+            gf::Packet bytes;
 
-            switch (m_Socket.recvPacket(bytes.packet))
+            switch (m_Socket.recvPacket(bytes))
             {
                 case gf::SocketStatus::Data:
                     queue.push(std::move(bytes));

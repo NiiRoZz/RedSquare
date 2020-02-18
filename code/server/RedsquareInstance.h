@@ -22,7 +22,7 @@ namespace redsquare
 
         bool isFinished() override;
 
-        void update(ServerPlayer& player, ProtocolBytes& bytes) override;
+        void update(ServerPlayer& player, gf::Packet& bytes) override;
 
         Player* getPlayer( gf::Id playerID );
         Player* getPlayer( gf::Vector2i pos ); // getter of player pos

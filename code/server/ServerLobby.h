@@ -17,7 +17,7 @@ namespace redsquare
     public:
         ServerLobby(gf::Random& random, GameFactory& factory);
 
-        void update(ServerPlayer& player, ProtocolBytes& bytes) override;
+        void update(ServerPlayer& player, gf::Packet& bytes) override;
 
         std::vector<RoomData> getRooms();
 

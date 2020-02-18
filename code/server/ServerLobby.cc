@@ -16,7 +16,7 @@ namespace redsquare
     {
     }
 
-    void ServerLobby::update(ServerPlayer& player, ProtocolBytes& bytes) {
+    void ServerLobby::update(ServerPlayer& player, gf::Packet& bytes) {
         switch (bytes.getType())
         {
             case ClientHello::type:

@@ -104,7 +104,7 @@ namespace redsquare
         return (getPlayersCount() <= 0);
     }
 
-    void RedsquareInstance::update(ServerPlayer& player, ProtocolBytes& bytes)
+    void RedsquareInstance::update(ServerPlayer& player, gf::Packet& bytes)
     {
         switch (bytes.getType())
         {

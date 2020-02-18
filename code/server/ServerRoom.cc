@@ -16,7 +16,7 @@ namespace redsquare
     {
     }
 
-    void ServerRoom::update(ServerPlayer& player, ProtocolBytes& bytes)
+    void ServerRoom::update(ServerPlayer& player, gf::Packet& bytes)
     {
         assert(player.room == this);
 

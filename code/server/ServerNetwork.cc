@@ -53,9 +53,9 @@ namespace redsquare
 
                 if (m_Selector.isReady(player.socket))
                 {
-                    ProtocolBytes bytes;
+                    gf::Packet bytes;
 
-                    switch (player.socket.recvPacket(bytes.packet))
+                    switch (player.socket.recvPacket(bytes))
                     {
                         case gf::SocketStatus::Data:
                         {

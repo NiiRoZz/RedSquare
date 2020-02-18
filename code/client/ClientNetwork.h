@@ -7,8 +7,7 @@
 
 #include <gf/Queue.h>
 #include <gf/TcpSocket.h>
-
-#include "../common/ProtocolBytes.h"
+#include <gf/Packet.h>
 
 namespace redsquare
 {
@@ -25,13 +24,13 @@ namespace redsquare
         template<typename T>
         void send(const T& data)
         {
-            ProtocolBytes bytes;
+            gf::Packet bytes;
             bytes.is(data);
-            m_Socket.sendPacket(bytes.packet);
+            m_Socket.sendPacket(bytes);
         }
 
     public:
-        gf::Queue<ProtocolBytes> queue;
+        gf::Queue<gf::Packet> queue;
 
     private:
         void run(std::string hostname);

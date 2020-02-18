@@ -10,6 +10,7 @@
 #include <gf/Sprite.h>
 #include <gf/RenderTarget.h>
 #include <gf/Unused.h>
+#include <gf/Packet.h>
 
 #include <imgui.h>
 #include <imgui_impl_gf.h>
@@ -387,7 +388,7 @@ namespace redsquare
 
         ImGui_ImplGF_Update(time);
 
-        ProtocolBytes bytes;
+        gf::Packet bytes;
         while (m_Network.queue.poll(bytes))
         {
             switch (bytes.getType())

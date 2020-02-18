@@ -44,7 +44,7 @@ namespace redsquare
 
         ImGui_ImplGF_Update(time);
 
-        ProtocolBytes bytes;
+        gf::Packet bytes;
 
         while (m_Network.queue.poll(bytes))
         {

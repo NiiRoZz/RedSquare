@@ -6,7 +6,6 @@
 
 #include <gf/Ref.h>
 
-#include "../common/ProtocolBytes.h"
 #include "../common/ProtocolData.h"
 
 #include "ServerPlayer.h"
@@ -36,19 +35,19 @@ namespace redsquare
 
         bool areAllPlayersReady();
 
-        virtual void update(ServerPlayer& player, ProtocolBytes& bytes) = 0;
+        virtual void update(ServerPlayer& player, gf::Packet& bytes) = 0;
 
         template<typename T>
         void send(gf::Id id, const T& data)
         {
-            ProtocolBytes bytes;
+            gf::Packet bytes;
             bytes.is(data);
 
             for (ServerPlayer& player : m_players)
             {
                 if (player.id == id)
                 {
-                    player.socket.sendPacket(bytes.packet);
+                    player.socket.sendPacket(bytes);
                     return;
                 }
             }
@@ -57,12 +56,12 @@ namespace redsquare
         template<typename T>
         void broadcast(const T& data)
         {
-            ProtocolBytes bytes;
+            gf::Packet bytes;
             bytes.is(data);
 
             for (ServerPlayer& player : m_players)
             {
-                player.socket.sendPacket(bytes.packet);
+                player.socket.sendPacket(bytes);
             }
         }
 
