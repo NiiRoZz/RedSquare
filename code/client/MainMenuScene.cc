@@ -55,19 +55,6 @@ namespace redsquare
     void MainMenuScene::doUpdate(gf::Time time)
     {
         gf::unused(time);
-        switch (m_MenuChoice)
-        {
-            case MenuChoice::None:
-                break;
-            case MenuChoice::Start:
-                m_Scenes.replaceScene(m_Scenes.connection, m_Scenes.glitchEffect, gf::seconds(0.4f));
-                break;
-            case MenuChoice::Quit:
-                m_Scenes.popScene();
-                break;
-        }
-
-        m_MenuChoice = MenuChoice::None;
     }
 
     void MainMenuScene::doRender(gf::RenderTarget& target, const gf::RenderStates& states)
@@ -94,5 +81,20 @@ namespace redsquare
         m_QuitWidget.setSelectedTextOutlineColor(gf::Color::Black);
         m_QuitWidget.setTextOutlineThickness(characterSize * 0.05f);
         target.draw(m_QuitWidget, states);
+
+        //Temp fix
+        switch (m_MenuChoice)
+        {
+            case MenuChoice::None:
+                break;
+            case MenuChoice::Start:
+                m_Scenes.replaceScene(m_Scenes.connection, m_Scenes.glitchEffect, gf::seconds(0.4f));
+                break;
+            case MenuChoice::Quit:
+                m_Scenes.popScene();
+                break;
+        }
+
+        m_MenuChoice = MenuChoice::None;
     }
 }
