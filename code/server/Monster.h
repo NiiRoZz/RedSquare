@@ -20,6 +20,7 @@ namespace redsquare
         void attack(ServerEntity *target);
         void levelUp(uint m_Floor);
         int Variance(int range);
+        //void createSystemMessage(std::string message, std::string to,std::string name);
        
 
     private:

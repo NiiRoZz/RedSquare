@@ -86,7 +86,7 @@ namespace redsquare
     constexpr int MAGUS_MAXDEFENSEPOINT = 10; 
     constexpr int MAGUS_RANGE = 2; 
 
-    constexpr int WARRIOR_LIFEPOINT = 270; 
+    constexpr int WARRIOR_LIFEPOINT = 300; 
     constexpr int WARRIOR_MANAPOINT = 20; 
     constexpr int WARRIOR_MAXLIFEPOINT = 270;
     constexpr int WARRIOR_MAXMANAPOINT = 20; 
@@ -116,7 +116,7 @@ namespace redsquare
     constexpr int RANGER_MAXDEFENSEPOINT = 15; 
     constexpr int RANGER_RANGE = 2;
 
-    constexpr int HEALER_LIFEPOINT = 220; 
+    constexpr int HEALER_LIFEPOINT = 200; 
     constexpr int HEALER_MANAPOINT = 40; 
     constexpr int HEALER_MAXLIFEPOINT = 200;
     constexpr int HEALER_MAXMANAPOINT = 40; 
@@ -124,7 +124,7 @@ namespace redsquare
     constexpr int HEALER_DEFENSEPOINT = 20; 
     constexpr int HEALER_MAXATTACKPOINT = 55; 
     constexpr int HEALER_MAXDEFENSEPOINT = 20; 
-    constexpr int HEALER_RANGE = 2; 
+    constexpr int HEALER_RANGE = 3; 
 }
 
 #endif // REDSQUARE_CONSTANTS_H

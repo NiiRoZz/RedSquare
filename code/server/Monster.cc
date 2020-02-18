@@ -169,13 +169,17 @@ namespace redsquare
         }
         if(target->m_LifePoint - damage < 0){
             std::cout << "The monster killed a player " << std::endl;
+            /*createSystemMessage("The monster killed a player " , "system","monster");*/
+
             target->m_LifePoint = 0;
             return;
         }
     
         target->m_LifePoint -= damage;
-
-        std::cout << "The monster dealed " << damage << " damage " << std::endl;
+        std::string messToChat("");
+        /*std::cout << "The monster dealed " << damage << " damage " << std::endl;
+        messToChat = "The monster dealed " +std::to_string(damage)+" damage ";
+        createSystemMessage("The monster killed a player " , "system","monster");*/
     }
 
     void Monster::levelUp(uint m_Floor){ // method to level up a monster
@@ -201,5 +205,26 @@ namespace redsquare
         int randomNum = rand() % (range*2) + (range);
         return randomNum;
     }
+
+    /*void Monster::createSystemMessage(std::string message, std::string to,std::string name){
+        std::cout<<message<<std::endl;
+            Message packet;
+            int length=0;
+            std::string myMessage;
+            myMessage =  name + " -> "+message;
+            std::string sys("system");
+            length = myMessage.copy(packet.message, myMessage.length());
+            packet.message[length]='\0';
+            length = sys.copy(packet.from, sys.length());
+            packet.from[length]='\0';
+            if(to != "system"){
+                length = to.copy(packet.to, to.length());
+                packet.to[length]='\0';
+            }else{
+                length = sys.copy(packet.to, sys.length());
+                packet.to[length]='\0';
+            }
+            Chat::getInstance().sendMessage(packet);  
+    }*/
 
 }

@@ -2,7 +2,6 @@
 #define REDSQUARE_SERVER_PLAYER_H
 
 #include "ServerEntity.h"
-#include "World.h"
 #include "Monster.h"
 #include "../common/ProtocolData.h"
 #include "Inventory.h"
@@ -17,6 +16,7 @@ namespace redsquare
     // forward class
     class Game;
     class RedsquareInstance;
+    class World;
 
     class Player: public ServerEntity
     {
@@ -87,7 +87,7 @@ namespace redsquare
         void BoostMana(float ratio);
         void BoostHealth(float ratio);
         void BoostXP(float ratio);
-        void createSystemMessage(std::string message, std::string to);
+        void createSystemMessage(std::string message, std::string to,std::string name);
 
     private:
         RedsquareInstance &m_RedsquareInstance;
