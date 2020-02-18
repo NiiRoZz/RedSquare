@@ -88,7 +88,7 @@ namespace redsquare
 
     constexpr int WARRIOR_LIFEPOINT = 300; 
     constexpr int WARRIOR_MANAPOINT = 20; 
-    constexpr int WARRIOR_MAXLIFEPOINT = 270;
+    constexpr int WARRIOR_MAXLIFEPOINT = 300;
     constexpr int WARRIOR_MAXMANAPOINT = 20; 
     constexpr int WARRIOR_ATTACKPOINT = 70; 
     constexpr int WARRIOR_DEFENSEPOINT = 20; 
