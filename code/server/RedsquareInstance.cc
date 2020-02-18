@@ -268,6 +268,8 @@ namespace redsquare
                                     packet.id = itemHolder->getEntityID();
                                     broadcast(packet);
 
+                                    m_ItemHolders.erase(itemHolder->getEntityID());
+
                                     broadcast(playerTarget->createUpdateItemPacket(InventorySlotType::Cargo, false, pos));
                                 }
                             }
