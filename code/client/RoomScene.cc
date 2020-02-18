@@ -41,8 +41,6 @@ namespace redsquare
 
         m_DroiteButton.setCallback([this]() { displayNextSubEntityTexture(1); });
         m_Container.addWidget(m_DroiteButton);
-
-        displayNextSubEntityTexture(1);
     }
 
     void RoomScene::startRoom()
