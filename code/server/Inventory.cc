@@ -48,7 +48,7 @@ namespace redsquare
     {
         if (slotType == InventorySlotType::Cargo && item.canBeInSlot(slotType))
         {
-            std::cout << static_cast<uint16_t>(item.getType()) <<std::endl;
+            //std::cout << static_cast<uint16_t>(item.getType()) <<std::endl;
             int nbTry = 20;
             uint row;
             uint column;
