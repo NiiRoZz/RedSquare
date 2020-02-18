@@ -57,9 +57,9 @@ namespace redsquare
     constexpr double POTRATIO2 = 0.50;
     constexpr double POTRATIO3 = 0.70;
 
-    constexpr double BOOSTRATIO1 = 0.05;
-    constexpr double BOOSTRATIO2 = 0.10;
-    constexpr double BOOSTRATIO3 = 0.15;
+    constexpr double BOOSTRATIO1 = 5;
+    constexpr double BOOSTRATIO2 = 10;
+    constexpr double BOOSTRATIO3 = 15;
 
     constexpr int MINSIZE = 6;
 
@@ -86,7 +86,7 @@ namespace redsquare
     constexpr int MAGUS_MAXDEFENSEPOINT = 10; 
     constexpr int MAGUS_RANGE = 2; 
 
-    constexpr int WARRIOR_LIFEPOINT = 300; 
+    constexpr int WARRIOR_LIFEPOINT = 270; 
     constexpr int WARRIOR_MANAPOINT = 20; 
     constexpr int WARRIOR_MAXLIFEPOINT = 300;
     constexpr int WARRIOR_MAXMANAPOINT = 20; 
@@ -106,24 +106,24 @@ namespace redsquare
     constexpr int ROGUE_MAXDEFENSEPOINT = 15; 
     constexpr int ROGUE_RANGE = 1; 
 
-    constexpr int RANGER_LIFEPOINT = 190; 
+    constexpr int RANGER_LIFEPOINT = 220; 
     constexpr int RANGER_MANAPOINT = 20; 
-    constexpr int RANGER_MAXLIFEPOINT = 190;
+    constexpr int RANGER_MAXLIFEPOINT = 220;
     constexpr int RANGER_MAXMANAPOINT = 20; 
-    constexpr int RANGER_ATTACKPOINT = 45; 
-    constexpr int RANGER_DEFENSEPOINT = 10; 
-    constexpr int RANGER_MAXATTACKPOINT = 45; 
-    constexpr int RANGER_MAXDEFENSEPOINT = 10; 
+    constexpr int RANGER_ATTACKPOINT = 50; 
+    constexpr int RANGER_DEFENSEPOINT = 15; 
+    constexpr int RANGER_MAXATTACKPOINT = 50; 
+    constexpr int RANGER_MAXDEFENSEPOINT = 15; 
     constexpr int RANGER_RANGE = 2;
 
-    constexpr int HEALER_LIFEPOINT = 190; 
+    constexpr int HEALER_LIFEPOINT = 220; 
     constexpr int HEALER_MANAPOINT = 40; 
-    constexpr int HEALER_MAXLIFEPOINT = 190;
+    constexpr int HEALER_MAXLIFEPOINT = 200;
     constexpr int HEALER_MAXMANAPOINT = 40; 
     constexpr int HEALER_ATTACKPOINT = 55; 
-    constexpr int HEALER_DEFENSEPOINT = 10; 
+    constexpr int HEALER_DEFENSEPOINT = 20; 
     constexpr int HEALER_MAXATTACKPOINT = 55; 
-    constexpr int HEALER_MAXDEFENSEPOINT = 10; 
+    constexpr int HEALER_MAXDEFENSEPOINT = 20; 
     constexpr int HEALER_RANGE = 2; 
 }
 
