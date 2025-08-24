@@ -5,6 +5,8 @@
 
 #include "ClientItem.h"
 
+#include <map>
+
 namespace redsquare
 {
     //Forward class
